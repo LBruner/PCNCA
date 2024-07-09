@@ -6,7 +6,22 @@ const paths = {
         return `/home`;
     },
     login() {
-        return `/login`;
+        return `/auth/login`;
+    },
+    cadastro() {
+        return `/auth/cadastro`;
+    },
+    vendas() {
+        return `/vendas`;
+    },
+    createVenda() {
+        return `/vendas/new`;
+    },
+    showVenda(vendaId: string) {
+        return `/vendas/${vendaId}`;
+    },
+    editVenda(vendaId: string) {
+        return `/vendas/${vendaId}/edit`;
     },
     noticias() {
         return `/noticias`;
@@ -47,7 +62,12 @@ const paths = {
     configuracoes() {
         return `/configuracoes`;
     },
-
+    cotacoes(){
+        return '/cotacoes'
+    },
+    clima(){
+        return '/clima'
+    }
 }
 
 export default paths;
