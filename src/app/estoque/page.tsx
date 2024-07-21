@@ -1,9 +1,12 @@
 import React from "react";
+import Estoques from "@/components/estoque/estoques";
+import {getCotacoes} from "@/actions/cotacoes";
 
-const EstoquePage: React.FC = _ => {
+const EstoquePage: React.FC = async _ => {
+    const cotacoes = await getCotacoes();
     return (
         <div>
-            <h1>Estoque</h1>
+            <Estoques products={cotacoes}/>
         </div>
     )
 }
