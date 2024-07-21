@@ -9,7 +9,8 @@ import {
     DropdownTrigger,
     Link,
     NavbarContent,
-    NavbarItem, Spinner
+    NavbarItem,
+    Spinner
 } from "@nextui-org/react";
 import {Avatar} from "@nextui-org/avatar";
 import {signOut, useSession} from "next-auth/react";
@@ -21,25 +22,25 @@ const CustomAvatar: React.FC = () => {
     let authContent: React.ReactNode;
 
     if (session.status === 'loading') {
-        authContent = <NavbarContent as="div" className="items-center" justify="end"><Spinner/></NavbarContent>
+        authContent = <Spinner className={'w-36'}></Spinner>
     } else if (session?.data?.user) {
-        authContent = <NavbarContent as="div" className="items-center" justify="end">
+        const user = session.data.user;
+        authContent = <NavbarContent className={'w-36'}>
             <Dropdown disableAnimation={true} placement="bottom-end">
                 <DropdownTrigger>
                     <Avatar
                         isBordered
                         as="button"
                         className="transition-transform"
-                        color="success"
-                        name="Jason Hughes"
-                        size="sm"
+                        color="default"
+                        size="md"
                         src={'https://i.pravatar.cc/150?u=a042581f4e29026704d' ?? null}
                     />
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Profile Actions" variant="flat">
                     <DropdownItem key="perfil" className="h-14 gap-2">
                         <p className="font-semibold">Logado como</p>
-                        <p className="font-semibold">{session.data?.user?.email}</p>
+                        <p className="font-semibold">{user.email}</p>
                     </DropdownItem>
                     <DropdownItem key="meu_perfil">Meu Perfil</DropdownItem>
                     <DropdownItem key="configuracoes">Configurações</DropdownItem>
@@ -51,6 +52,10 @@ const CustomAvatar: React.FC = () => {
                     </DropdownItem>
                 </DropdownMenu>
             </Dropdown>
+            <div className={'w-20'}>
+                <p className={'text-sm text-orange-400 font-semibold'}>EliteTech Corp</p>
+                <p className={'text-sm font-medium'}>{user.name}</p>
+            </div>
         </NavbarContent>
     } else {
         authContent =
