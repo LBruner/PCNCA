@@ -1,5 +1,5 @@
 import React, {ChangeEvent} from 'react';
-import FormInput from "@/components/UI/form/form-input";
+import RegisterFormInput from "@/components/UI/form/register-form-input";
 
 interface CPFInputProps {
     onChange: (value: string) => void;
@@ -34,7 +34,7 @@ const CPFInput: React.FC<CPFInputProps> = (props) => {
     };
 
     return (
-        <FormInput
+        <RegisterFormInput
             title={'CPF'}
             errorMessage={props.errorMessage}
             isInvalid={props.hasError}

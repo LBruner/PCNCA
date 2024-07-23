@@ -19,10 +19,10 @@ const CotacaoAutoComplete: React.FC<CotacoesProps> = ({cotacoes, selectedKey, se
                 selectedKey={selectedKey}
                 size={'lg'}
                 listboxProps={{
-                    emptyContent: 'Nenhum produto encontrado'
+                    emptyContent: 'Nenhum produtos encontrado'
                 }}
                 labelPlacement={'outside'}
-                label={`${!selectedKey ? 'Nenhum produto' : ''} `}
+                label={`${!selectedKey ? 'Nenhum produtos' : ''} `}
                 className="w-80"
                 onSelectionChange={(value) => {
                     setSelectedKey(value?.toString() ?? '');
@@ -52,7 +52,6 @@ const CotacaoAutoComplete: React.FC<CotacoesProps> = ({cotacoes, selectedKey, se
                                 src={cotacoes.find(produto => produto.id.toString() === selectedKey)?.imageUrl || ''}
                                 onLoadingComplete={() => {
                                     setImageLoaded(true)
-                                    console.log(imageLoaded)
                                 }}
                             />
                         </div>

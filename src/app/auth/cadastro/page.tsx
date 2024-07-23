@@ -11,7 +11,7 @@ import * as actions from '@/actions';
 import {CreateUserProps} from "@/actions/cadastro";
 import {signIn} from "next-auth/react";
 import FormErrorText from "@/components/UI/form/form-error-text";
-import FormInput from "@/components/UI/form/form-input";
+import RegisterFormInput from "@/components/UI/form/register-form-input";
 
 function CadastroPage() {
     const [name, setFirstName] = useState('');
@@ -20,7 +20,6 @@ function CadastroPage() {
     const [cpf, setCpf] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
 
     const registerUser = async (formState: CreateUserProps, formData: FormData): Promise<CreateUserProps> => {
         setIsLoading(true);
@@ -67,7 +66,7 @@ function CadastroPage() {
                     </p>
                     <form action={action} className="space-y-4">
                         <div className="flex space-x-4">
-                            <FormInput
+                            <RegisterFormInput
                                 name={'nome'}
                                 title={'Nome Completo'}
                                 value={name}
@@ -82,7 +81,7 @@ function CadastroPage() {
                                       onChange={() => {
                                       }}/>
                         </div>
-                        <FormInput
+                        <RegisterFormInput
                             name={'empresa'}
                             title={'Empresa'}
                             value={company}
@@ -93,7 +92,7 @@ function CadastroPage() {
                             endContent={<MdWorkOutline size={18}/>}
                         />
                         <div className="flex space-x-4">
-                            <FormInput
+                            <RegisterFormInput
                                 name={'email'}
                                 title={'Email'}
                                 value={email}
@@ -103,7 +102,7 @@ function CadastroPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 endContent={<MdOutlineMailOutline size={18}/>}
                             />
-                            <FormInput
+                            <RegisterFormInput
                                 name={'senha'}
                                 title={'Senha'}
                                 type={'password'}

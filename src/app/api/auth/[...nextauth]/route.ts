@@ -24,7 +24,6 @@ const handler = NextAuth({
                     const user = await prisma.user.findUnique({
                         where: {email: credentials.email, password: credentials.password}
                     });
-                    console.log(user);
                     if (user) {
                         return user;
                     } else {
@@ -45,9 +44,9 @@ const handler = NextAuth({
             newUser: '/auth/register',
         },
         callbacks: {
-            session: async ({ session, token }) => {
-                if (session?.user) {
-                    session.user.id = token.sub;
+            async session({session, user}: any) {
+                if (session && user) {
+                    session.user.id = user.id;
                 }
                 return session;
             },
@@ -56,7 +55,6 @@ const handler = NextAuth({
                     token.uid = user.id;
                 }
                 return token;
-
             },
             signIn: async () => {
                 return true;

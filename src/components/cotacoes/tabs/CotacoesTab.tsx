@@ -14,7 +14,6 @@ const CotacoesTab: React.FC<CotacoesTabProps> = ({setShowMaisVistos, showMaisVis
         <div className={'flex'}>
             <Tabs onSelectionChange={event => {
                 setShowMaisVistos(event === 'mais-vistos')
-                console.log(showMaisVistos)
             }} aria-label="Options" color="default" variant="bordered">
                 <Tab
                     key="mais-vistos"

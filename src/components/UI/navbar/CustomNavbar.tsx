@@ -10,7 +10,6 @@ import {usePathname} from "next/navigation";
 
 const CustomNavbar: React.FC = () => {
     const session = usePathname();
-    console.log(session);
 
     if(session == paths.login() || session == paths.cadastro()){
         return null;

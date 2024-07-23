@@ -8,7 +8,7 @@ import {useFormState} from "react-dom";
 import {LoginProps, validarLogin} from "@/actions/login";
 import {signIn} from "next-auth/react";
 import FormErrorText from "@/components/UI/form/form-error-text";
-import FormInput from "@/components/UI/form/form-input";
+import RegisterFormInput from "@/components/UI/form/register-form-input";
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -22,7 +22,6 @@ function LoginPage() {
         const hasErrors = Object.values(validatedForm.errors).some(value => value && value.length > 0)
 
         if(hasErrors){
-            console.log(validatedForm.errors)
             setIsLoading(false);
             return {
                 errors: validatedForm.errors
@@ -64,7 +63,7 @@ function LoginPage() {
                     <h1 className="text-5xl font-bold mb-2">Login</h1>
                     <form action={action} className="space-y-4">
                         <div className="flex flex-col gap-4">
-                            <FormInput
+                            <RegisterFormInput
                                 name={'email'}
                                 title={'Email'}
                                 value={email}
@@ -74,7 +73,7 @@ function LoginPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 endContent={<MdOutlineMailOutline size={18}/>}
                             />
-                            <FormInput
+                            <RegisterFormInput
                                 name={'senha'}
                                 title={'Senha'}
                                 type={'password'}

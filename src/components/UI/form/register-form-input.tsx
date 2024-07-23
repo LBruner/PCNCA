@@ -23,7 +23,7 @@ interface FormInputProps {
     minLength?: number;
 }
 
-const FormInput: React.FC<FormInputProps> = (props) => {
+const RegisterFormInput: React.FC<FormInputProps> = (props) => {
     return (
         <div className={' h-full w-full'}>
             <Input
@@ -50,4 +50,4 @@ const FormInput: React.FC<FormInputProps> = (props) => {
     )
 }
 
-export default FormInput;
+export default RegisterFormInput;
