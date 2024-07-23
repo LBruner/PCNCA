@@ -40,7 +40,7 @@ const TopContentDropDown: React.FC<TopContentDropDownProps> = (
                     closeOnSelect={false}
                     selectedKeys={filterStatus}
                     selectionMode={selectionType ?? 'multiple'}
-                    onSelectionChange={(keys) => setFilterStatus(keys as unknown as string[])}
+                    onSelectionChange={(keys) => setFilterStatus([...keys as unknown as string[]])}
                 >
                     {collection.map((status) => (
                         <DropdownItem key={status.uid} className="capitalize">
