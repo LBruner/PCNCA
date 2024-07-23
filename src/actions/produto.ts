@@ -181,3 +181,12 @@ export async function editarProduto(productId:string, _: CreatePostFormState, fo
         });
     });
 }
+
+export async function deletarProduto(productId:string) {
+    await db.product.delete({
+        where: {
+            id: parseInt(productId),
+        },
+    });
+    revalidatePath(paths.estoque());
+}

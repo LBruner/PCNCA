@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, {useState} from "react";
 import {
     ChipProps, SortDescriptor,
     Table,
@@ -9,7 +9,7 @@ import {
     TableColumn,
     TableHeader,
     TableRow,
-    Tooltip,
+    Tooltip, useDisclosure,
     User
 } from "@nextui-org/react";
 import type {Product} from '@prisma/client';
@@ -21,6 +21,7 @@ import {categoriesOptions, priceOptions, statusOptions, stockOptions} from "@/mo
 import {getFilteredItems, getSortedItem} from "@/helpers/tabela";
 import Link from "next/link";
 import paths from "@/paths";
+import ProdutoDeleteModal from "@/components/produtos/ProdutoDeleteModal";
 
 const columns = [
     {name: "ID", uid: "id", sortable: true},
@@ -50,6 +51,9 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
         column: "id",
         direction: "ascending",
     });
+
+    const {isOpen, onOpen, onClose} = useDisclosure();
+    const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
 
     const rowsPerPage = 5;
 
@@ -157,9 +161,9 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
                             <Link href={`${paths.editProduto(product.id.toString())}`}><EditIcon/></Link>
                           </span>
                         </Tooltip>
-                        <Tooltip color="danger" content="Desativar Produto">
+                        <Tooltip color="danger" content="Deletar Produto">
                           <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                            <DeleteIcon/>
+                            <DeleteIcon onClick={() =>{setSelectedProductId(product.id); onOpen();}}/>
                           </span>
                         </Tooltip>
                     </div>
@@ -186,6 +190,7 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
 
     return (
         <div className={'w-11/12'}>
+    <ProdutoDeleteModal isOpen={isOpen} onClose={onClose} productId={selectedProductId}/>
             <div className={'bg-white rounded-md p-4 mb-4'}>
                 <TabelaTopContent setCategoryFilter={setCategoryFilter}
                                   categoryFilter={categoryFilter} filterValue={filterValue}
