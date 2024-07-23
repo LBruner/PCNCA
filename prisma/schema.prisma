@@ -46,6 +46,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
+  products      Product[]
 }
 
 model VerificationRequest {
@@ -66,9 +67,12 @@ model Product {
   category    String
   stock       Float
   status      String
+  unity       String
   price       Float
   imageUrl    String?
   weight      Float?
   dimensions  String?
+  userId      String
   dateAdded   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
 }

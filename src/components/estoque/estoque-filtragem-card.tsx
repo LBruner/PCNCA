@@ -19,6 +19,8 @@ import TabelaTopContent from "@/components/estoque/tabela/tabela-top-content";
 import TabelaBottomContent from "@/components/estoque/tabela/tabela-bottom-content";
 import {categoriesOptions, priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
 import {getFilteredItems, getSortedItem} from "@/helpers/tabela";
+import Link from "next/link";
+import paths from "@/paths";
 
 const columns = [
     {name: "ID", uid: "id", sortable: true},
@@ -58,7 +60,6 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
     const filteredItems = React.useMemo(() => {
         let filteredProducts = [...products];
 
-        console.log(statusFilter)
         if (hasSearchFilter) {
             filteredProducts = filteredProducts.filter((user) =>
                 user.name.toLowerCase().includes(filterValue.toLowerCase()),
@@ -153,7 +154,7 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
                         </Tooltip>
                         <Tooltip content="Editar Produto">
                           <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                            <EditIcon/>
+                            <Link href={`${paths.editProduto(product.id.toString())}`}><EditIcon/></Link>
                           </span>
                         </Tooltip>
                         <Tooltip color="danger" content="Desativar Produto">
@@ -220,7 +221,7 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody emptyContent={"Nenhum produto encontrado"} items={sortedItems}>
+                <TableBody emptyContent={"Nenhum produtos encontrado"} items={sortedItems}>
                     {(product: Product) => (
                         <TableRow key={product.id}>
                             {

@@ -4,7 +4,7 @@ import {db} from "@/db";
 
 const prisma = new PrismaClient();
 
- const agribusinessCategories = [
+ export const agribusinessCategories = [
     'Grains',
     'Fruits',
     'Vegetables',
@@ -15,6 +15,30 @@ const prisma = new PrismaClient();
     'Beverages',
     'Processed Foods',
     'Other'
+];
+
+export const unidadesDeMedida = [
+    "Quilogramas (kg)",
+    "Toneladas (t)",
+    "Gramas (g)",
+    "Miligramas (mg)",
+    "Litros (L)",
+    "Mililitros (mL)",
+    "Barril (bbl)",
+    "Galão (gal)",
+    "Metro cúbico (m³)",
+    "Centímetro cúbico (cm³)",
+    "Pé cúbico (ft³)",
+    "Polegada cúbica (in³)",
+    "Hectolitros (hL)",
+    "Quilolitros (kL)",
+    "Sacas (sc)",
+    "Arrobas (arroba)",
+    "Caixas (cx)",
+    "Fardos (fd)",
+    "Pacotes (pct)",
+    "Unidades (un)",
+    "Dúzias (dz)"
 ];
 
 const agribusinessProductNames = [
@@ -134,14 +158,17 @@ export async function main() {
         const category = faker.helpers.arrayElement(agribusinessCategories);
         const name = faker.helpers.arrayElement(agribusinessProductNames);
         const status = faker.helpers.arrayElement(statuses);
+        const unity = faker.helpers.arrayElement(unidadesDeMedida);
 
         await db.product.create({
             data: {
                 name: name,
                 description: `${name} from our finest ${category.toLowerCase()} collection.`,
                 price: parseFloat(faker.commerce.price()),
+                userId: 'cly7x8ymz0000ptxy8r3tcfjk',
                 category: category,
                 status: status,
+                unity: unity,
                 stock: parseInt(faker.string.numeric(2)),
                 imageUrl: faker.image.url(),
                 weight: parseFloat(faker.string.numeric(2)),
@@ -154,11 +181,11 @@ export async function main() {
     console.log(`Inserted ${numberOfProducts} agribusiness products into the database.`);
 }
 
-main()
-    .catch((e) => {
-        console.error(e);
-        process.exit(1);
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+// main()
+//     .catch((e) => {
+//         console.error(e);
+//         process.exit(1);
+//     })
+//     .finally(async () => {
+//         await prisma.$disconnect();
+//     });

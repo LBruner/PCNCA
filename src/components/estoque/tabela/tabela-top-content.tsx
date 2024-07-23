@@ -5,7 +5,8 @@ import {PlusIcon} from "@/components/estoque/plus-icon";
 import {PiPrinterFill} from "react-icons/pi";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
 import {categoriesOptions, priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
-
+import Link from "next/link";
+import paths from "@/paths";
 interface TabelaTopContentProps {
     statusFilter: string | string[];
     setStatusFilter: (keys:string | string[]) => void;
@@ -59,7 +60,7 @@ const TabelaTopContent: React.FC<TabelaTopContentProps> = (
                     </div>
                     <div className="flex gap-1 ">
                         <Button className={'text-white bg-orange-600 w-56'} startContent={<PlusIcon/>}>
-                            Adicionar novo produto
+                            <Link href={paths.createProduto()}>Adicionar novo produto</Link>
                         </Button>
                         <Button variant={'bordered'} className={'w-52'} startContent={<PiPrinterFill size={20}/>}>
                             Imprimir Estoque

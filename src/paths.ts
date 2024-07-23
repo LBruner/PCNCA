@@ -41,11 +41,11 @@ const paths = {
     showProduto(produtoId: string) {
         return `/produtos/${produtoId}`;
     },
-    produtoCreate() {
-        return `/produtos/new`;
+    createProduto() {
+        return `vendas/produtos/criar`;
     },
     editProduto(produtoId: string) {
-        return `/produtos/${produtoId}/edit`;
+        return `vendas/produtos/${produtoId}/editar`;
     },
     pessoas(){
         return `/pessoas`;
