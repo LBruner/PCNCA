@@ -198,12 +198,13 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
             <Table
                 isHeaderSticky
                 bottomContentPlacement="outside"
-                bottomContent={<TabelaBottomContent currentPage={currentPage} setCurrentPage={setCurrentPage}
-                                                    filteredItemsLength={filteredItems.length}
-                                                    totalPagesQuantity={totalPagesQuantity}
-                                                    hasSearchFilter={hasSearchFilter} selectedKeys={selectedKeys}/>}
+                bottomContent={<TabelaBottomContent
+                    currentPage={currentPage} setCurrentPage={setCurrentPage}
+                    filteredItemsLength={filteredItems.length}
+                    totalPagesQuantity={totalPagesQuantity}
+                    hasSearchFilter={hasSearchFilter} selectedKeys={selectedKeys}/>}
                 selectionMode="multiple"
-                onSelectionChange={keys => setSelectedKeys(keys as unknown as string[])}
+                onSelectionChange={keys => setSelectedKeys([...keys as unknown as string[]])}
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
                 classNames={{

@@ -38,7 +38,7 @@ const TabelaBottomContent: React.FC<TabelaBottomContentProps> = (
         <span className="w-[30%] text-small text-default-400">
           {selectedKeys === "all"
               ? "Todos produtos selecionados"
-              : `${typeof selectedKeys !== "string" ? selectedKeys?.length : 0} de ${filteredItemsLength} items selecionado${typeof selectedKeys !== "string" && selectedKeys?.length != 1 ? "s" : ""}`}
+              : `${typeof selectedKeys !== "string" && selectedKeys ? selectedKeys?.length : 0} de ${filteredItemsLength} items selecionado${typeof selectedKeys !== "string" && selectedKeys?.length != 1 ? "s" : ""}`}
         </span>
                 <Pagination
                     isCompact
