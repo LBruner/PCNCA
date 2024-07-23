@@ -19,7 +19,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState,action, produto}) =>
         <form action={action} className={'flex flex-col justify-center items-center mt-40'}>
             <div className={'w-5/6 flex justify-between mb-4 items-center'}>
                 <p className={'text-2xl font-semibold'}>Criar Produto</p>
-                <Button type={'submit'}>Criar Produto</Button>
+                <Button type={'submit'}>{produto ? 'Editar' : 'Criar'} Produto</Button>
             </div>
             <div className={'w-5/6 flex justify-center bg-white rounded border-1 border-gray-200'}>
                 <div className={'flex flex-col gap-4 w-full px-8 py-6'}>
@@ -78,7 +78,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState,action, produto}) =>
                         <div className={'mt-1'}>
                             <p className={'mb-2'}>Visibilidade</p>
                             <Switch isSelected={hideProduct} onValueChange={setHideProduct}
-                            value={hideProduct ? 'true' : 'false'} name={'status'}>
+                            value={hideProduct ? 'Ativado' : 'Desativado'} name={'status'}>
                                 Ocultar produto
                             </Switch>
                         </div>
@@ -136,7 +136,7 @@ const CustomSelect: React.FC<CustomInput & { collection: string[] }> = (
     }
 ) => {
     return <Select
-        selectedKeys={defaultValue ? [defaultValue] : []}
+        selectedKeys={defaultValue ? [defaultValue] : undefined }
         multiple={false}
         name={name}
         isRequired={true}

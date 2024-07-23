@@ -50,7 +50,7 @@ function validateForm(formData: FormData): FormDataValidationResult {
         estoque: parseFloat(formData.get('estoque') as string) || 0,
         imagem: formData.get('imagem'),
         unidade: formData.get('unidade'),
-        status: (formData.get('status') == null ? 'true' : 'false'),
+        status: (formData.get('status') == null ? 'Desativado' : 'Ativo'),
     });
 
     return {
@@ -162,6 +162,7 @@ export async function criarProduto(_: CreatePostFormState, formData: FormData): 
 export async function editarProduto(productId:string, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
 
     return handleFormSubmission(formData, async (data, userId) => {
+        console.log(data.status)
         await db.product.update({
             where: {
                 id: parseInt(productId),
