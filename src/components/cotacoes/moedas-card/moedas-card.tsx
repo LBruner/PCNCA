@@ -9,7 +9,7 @@ const MoedasCard: React.FC = _ => {
     const usFlagURL = 'https://upload.wikimedia.org/wikipedia/commons/d/de/Flag_of_the_United_States.png';
 
     return (
-        <div className={'w-28 mt-5'}>
+        <div className={'w-28 '}>
             <div className={'flex gap-3 mb-1'}>
                 <Image src={usFlagURL} width={35} height={40} alt={'US Flag'}/>
                 <p className={'text-green-600 text-sm'}>R$ 5,65</p>

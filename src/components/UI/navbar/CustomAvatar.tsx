@@ -25,7 +25,7 @@ const CustomAvatar: React.FC = () => {
         authContent = <Spinner className={'w-36'}></Spinner>
     } else if (session?.data?.user) {
         const user = session.data.user;
-        authContent = <NavbarContent className={'w-36'}>
+        authContent = <NavbarContent className={'w-36 mr-5'}>
             <Dropdown disableAnimation={true} placement="bottom-end">
                 <DropdownTrigger>
                     <Avatar
@@ -53,8 +53,8 @@ const CustomAvatar: React.FC = () => {
                 </DropdownMenu>
             </Dropdown>
             <div className={'w-20'}>
-                <p className={'text-sm text-orange-400 font-semibold'}>EliteTech Corp</p>
-                <p className={'text-sm font-medium'}>{user.name}</p>
+                <p className={'text-md text-orange-400 font-semibold'}>EliteTech Corp</p>
+                <p className={'text-md font-medium'}>{user.name}</p>
             </div>
         </NavbarContent>
     } else {
