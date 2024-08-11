@@ -7,21 +7,22 @@ import CustomAvatar from '@/components/UI/navbar/CustomAvatar';
 import Link from "next/link";
 import NavLink from "@/components/UI/navbar/NavLink";
 import {usePathname} from "next/navigation";
+import MoedasCard from "@/components/cotacoes/moedas-card/moedas-card";
 
 const CustomNavbar: React.FC = () => {
     const session = usePathname();
 
-    if(session == paths.login() || session == paths.cadastro()){
+    if (session == paths.login() || session == paths.cadastro()) {
         return null;
     }
     return (
         <Navbar maxWidth={'full'} shouldHideOnScroll
-                className={'fixed  bg-slate-50  flex mt-2 top-0 left-0 h-28 items-start'}>
+                className={'fixed flex top-0 left-0 h-28 items-start py-5'}>
             <div>
-                <h1>CARD DOLAR</h1>
+                <MoedasCard/>
             </div>
             <NavbarItem className={'w-60 flex flex-col'}>
-                <div className={'flex items-center justify-center mt-10 mb-2'}>
+                <div className={'flex items-center justify-center mb-2'}>
                     <Link href={paths.home()}>
                         <h1 className={'text-5xl text-orange-400 font-bold'}>
                             PCNCA
@@ -32,7 +33,7 @@ const CustomNavbar: React.FC = () => {
                     <NavLink path={paths.home()} text={'Home'}/>
                     <NavLink path={paths.noticias()} text={'Notícias'}/>
                     <NavLink path={paths.vendas()} text={'Vendas'}/>
-                    <NavLink path={paths.cotacoes()} text={'Cotações'}/>
+                    <NavLink path={paths.cotacoesMoedas()} text={'Cotações'}/>
                     <NavLink path={paths.estoque()} text={'Estoque'}/>
                     <NavLink path={paths.clima()} text={'Clima'}/>
                     <NavLink path={paths.configuracoes()} text={'Configurações'}/>

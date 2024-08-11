@@ -62,8 +62,8 @@ const paths = {
     configuracoes() {
         return `/configuracoes`;
     },
-    cotacoes(){
-        return '/cotacoes'
+    cotacoesMoedas(){
+        return '/cotacoes/moedas'
     },
     clima(){
         return '/clima'
