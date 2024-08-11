@@ -22,10 +22,10 @@ const CustomAvatar: React.FC = () => {
     let authContent: React.ReactNode;
 
     if (session.status === 'loading') {
-        authContent = <Spinner className={'w-36'}></Spinner>
+        authContent = <Spinner className={'w-40'}></Spinner>
     } else if (session?.data?.user) {
         const user = session.data.user;
-        authContent = <NavbarContent className={'w-36 mr-5'}>
+        authContent = <NavbarContent className={'w-40'}>
             <Dropdown disableAnimation={true} placement="bottom-end">
                 <DropdownTrigger>
                     <Avatar

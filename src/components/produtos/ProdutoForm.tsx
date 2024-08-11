@@ -79,7 +79,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState,action, produto}) =>
                             <p className={'mb-2'}>Visibilidade</p>
                             <Switch isSelected={hideProduct} onValueChange={setHideProduct}
                             value={hideProduct ? 'Ativado' : 'Desativado'} name={'status'}>
-                                Ocultar produto
+                                Mostrar produto
                             </Switch>
                         </div>
                     </div>
