@@ -17,7 +17,7 @@ const CustomNavbar: React.FC = () => {
     }
     return (
         <Navbar maxWidth={'full'} shouldHideOnScroll
-                className={'fixed flex top-0 left-0 h-28 items-start py-5'}>
+                className={'fixed bg-slate-50 bg-opacity-70 flex top-0 left-0 h-28 items-start py-5'}>
             <div>
                 <MoedasCard/>
             </div>
