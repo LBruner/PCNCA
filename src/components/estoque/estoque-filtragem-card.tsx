@@ -213,7 +213,7 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
                 classNames={{
-                    wrapper: "max-h-2/4",
+                    wrapper: "max-h-2/4 min-h-[30rem] h-[30rem]",
                 }}
             >
                 <TableHeader columns={columns}>
@@ -227,7 +227,7 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody emptyContent={"Nenhum produtos encontrado"} items={sortedItems}>
+                <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhum produtos encontrado"} items={sortedItems}>
                     {(product: Product) => (
                         <TableRow key={product.id}>
                             {
