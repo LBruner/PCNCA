@@ -26,7 +26,7 @@ const paths = {
     noticias() {
         return `/noticias`;
     },
-    showNoticia(noticiaId: string) {
+    showNoticia(noticiaId: number) {
         return `/noticias/${noticiaId}`;
     },
     estoque() {
