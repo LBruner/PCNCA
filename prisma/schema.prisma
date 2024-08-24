@@ -76,3 +76,49 @@ model Product {
   dateAdded   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
 }
+
+model Article {
+  id                 Int      @id @default(autoincrement())
+  title              String
+  subtitle           String
+  thumbnailText      String
+  content            String
+  publishedAt        DateTime
+  author             Author   @relation(fields: [authorId], references: [id])
+  authorId           Int
+  category           Category @relation(fields: [categoryId], references: [id])
+  categoryId         Int
+  tags               Tag[]    @relation("ArticleTags")
+  imageUrl           String?
+  status             String
+  Media              Media[]
+}
+
+model Author {
+  id                Int       @id @default(autoincrement())
+  name              String
+  bio               String?
+  profile_picture_url String?
+  articles          Article[]
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  articles    Article[]
+}
+
+model Tag {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  articles Article[] @relation("ArticleTags")
+}
+
+model Media {
+  id        Int     @id @default(autoincrement())
+  url       String
+  type      String
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId Int
+}
