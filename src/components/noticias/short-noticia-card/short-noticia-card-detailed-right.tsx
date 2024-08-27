@@ -12,7 +12,7 @@ interface NoticiaCardShortProps {
     showDetails?: boolean;
 }
 
-const NoticiaCardDetailedRight: React.FC<NoticiaCardShortProps> = (
+const ShortNoticiaCardDetailedRight: React.FC<NoticiaCardShortProps> = (
     {
         title,
         imageUrl,
@@ -25,7 +25,7 @@ const NoticiaCardDetailedRight: React.FC<NoticiaCardShortProps> = (
     return (
         <Link href={paths.showNoticia(id)} className={'grid grid-cols-4 grid-rows-2 gap-4 h-full'}>
             <div className={`${showDetails ? 'row-span-2 col-span-2' : 'row-span-4 col-span-4'}`}>
-                <NoticiaImagemWrapper title={title} imageUrl={imageUrl} id={id}/>
+                <NoticiaImagemWrapper showDetails={true} title={title} imageUrl={imageUrl}/>
             </div>
             {showDetails &&
                 <div className="row-span-2 col-span-2 justify-start items-start">
@@ -36,4 +36,4 @@ const NoticiaCardDetailedRight: React.FC<NoticiaCardShortProps> = (
     )
 }
 
-export default NoticiaCardDetailedRight;
+export default ShortNoticiaCardDetailedRight;
