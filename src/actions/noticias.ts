@@ -10,3 +10,11 @@ export const getNoticias = async () => {
 
     return db.article.findMany();
 }
+
+export const getCategorias = async () => {
+    const session = await getServerSession();
+
+    if (!session) return;
+
+    return db.category.findMany();
+}
