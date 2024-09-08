@@ -10,6 +10,7 @@ interface NoticiaCardShortProps {
     imageUrl: string;
     id: number;
     showDetails?: boolean;
+    isClicable?: boolean
 }
 
 const ShortNoticiaCardDetailedRight: React.FC<NoticiaCardShortProps> = (
@@ -19,19 +20,35 @@ const ShortNoticiaCardDetailedRight: React.FC<NoticiaCardShortProps> = (
         subTitle,
         description,
         id,
-        showDetails
+        showDetails,
+        isClicable = true
     }
 ) => {
-    return (
-        <Link href={paths.showNoticia(id)} className={'grid grid-cols-4 grid-rows-2 gap-4 h-full'}>
+
+    const contentToRender =
+        <>
             <div className={`${showDetails ? 'row-span-2 col-span-2' : 'row-span-4 col-span-4'}`}>
                 <NoticiaImagemWrapper showDetails={true} title={title} imageUrl={imageUrl}/>
             </div>
-            {showDetails &&
+            {
+                showDetails &&
                 <div className="row-span-2 col-span-2 justify-start items-start">
                     <p className={'font-bold overflow-ellipsis'}>{subTitle}</p>
                     <p>{description}</p>
-                </div>}
+                </div>
+            }
+        </>
+
+    if (!isClicable) {
+        return (
+            <div className={'grid grid-cols-4 grid-rows-2 gap-4 h-full'}>
+                {contentToRender}
+            </div>);
+    }
+
+    return (
+        <Link href={paths.showNoticia(id)} className={'grid grid-cols-4 grid-rows-2 gap-4 h-full'}>
+            {contentToRender}
         </Link>
     )
 }
