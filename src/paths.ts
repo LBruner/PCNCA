@@ -26,8 +26,14 @@ const paths = {
     noticias() {
         return `/noticias`;
     },
+    criarNoticia() {
+        return `/noticias/criar`;
+    },
     maisNoticias() {
         return `/noticias/lista`;
+    },
+    culturas() {
+        return `/noticias/culturas`;
     },
     showNoticia(noticiaId: number) {
         return `/noticias/${noticiaId}`;
