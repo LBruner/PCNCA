@@ -1,6 +1,6 @@
 'use client'
 // InitializedMDXEditor.tsx
-import type {ForwardedRef} from 'react'
+import type { ForwardedRef } from 'react'
 import {
     headingsPlugin,
     listsPlugin,
@@ -13,11 +13,10 @@ import {
 } from '@mdxeditor/editor'
 
 // Only import this to the next file
-export default function InitializedMDXEditor(
-    {
-        editorRef,
-        ...props
-    }: { editorRef: ForwardedRef<MDXEditorMethods> | null } & MDXEditorProps) {
+export default function InitializedMDXEditor({
+                                                 editorRef,
+                                                 ...props
+                                             }: { editorRef: ForwardedRef<MDXEditorMethods> | null } & MDXEditorProps) {
     return (
         <MDXEditor
             plugins={[
