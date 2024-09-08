@@ -11,6 +11,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      typography: {
+        // Customize the prose variant here
+        'full': {
+          css: {
+            maxWidth: '100%', // Remove max-width
+          },
+        },
+      },
       colors: {
         customGray: '#EAEAEA',
         customDarkBrown: '#E1AD7C'
