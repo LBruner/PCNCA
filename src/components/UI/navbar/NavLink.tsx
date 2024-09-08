@@ -12,7 +12,7 @@ interface NavLinkProps {
 
 const NavLink: React.FC<NavLinkProps> = ({path, text}) => {
     const pathName = usePathname();
-    const isActive = pathName == path;
+    const isActive = pathName.includes(path);
     return (
         <NavbarItem>
             <Link className={`font-medium drop-shadow-sm ${isActive ? 'text-orange-400' : 'text-gray-800'} text-lg`} href={path}>
