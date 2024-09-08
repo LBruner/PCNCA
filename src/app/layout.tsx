@@ -20,11 +20,11 @@ export default function RootLayout(
     }>) {
 
     return (
-        <html lang="en">
-        <body className={`${inter.className} h-screen`}>
+        <html className={'h-screen bg-slate-50'} lang="en">
+        <body className={`${inter.className} `}>
         <Providers>
             <CustomNavbar/>
-            <div className="w-auto  flex flex-col bg-slate-50">
+            <div className="flex flex-col">
                 {children}
             </div>
         </Providers>

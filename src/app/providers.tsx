@@ -12,7 +12,7 @@ interface ProvidersProps {
 export default function Providers({children}: ProvidersProps) {
     return (
         <SessionProvider>
-            <NextUIProvider className={'bg-slate-50 h-screen'}>
+            <NextUIProvider className={''}>
                 {/*<NextThemesProvider attribute="class" defaultTheme="light">*/}
                 {children}
                 {/*</NextThemesProvider>*/}
