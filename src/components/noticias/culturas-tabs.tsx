@@ -5,6 +5,8 @@ import {Button, Tab, Tabs} from "@nextui-org/react";
 import {Article, Category} from "@prisma/client";
 import ShortNoticiaCardDetailedBottom
     from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-bottom";
+import Link from "next/link";
+import paths from "@/paths";
 
 interface CulturasListProps {
     noticias: Article[];
@@ -28,8 +30,13 @@ const CulturasTabs: React.FC<CulturasListProps> = ({noticias, categorias}) => {
 
     return (
         <div className={'row-span-8 col-span-4'}>
-            <p className={'text-xl font-bold mb-8'}>DESTAQUE EM CULTURAS</p>
-            <Tabs selectedKey={selectedCategory}  onSelectionChange={handleCategoryChange} aria-label="Options">
+            <div className={'flex items-center justify-between'}>
+                <p className={'text-xl font-bold mb-8'}>DESTAQUE EM CULTURAS</p>
+                <Link className={'text-green-700 text-sm'} href={paths.culturas()}>
+                    <p>Mais culturas</p>
+                </Link>
+            </div>
+            <Tabs selectedKey={selectedCategory} onSelectionChange={handleCategoryChange} aria-label="Options">
                 {categorias.map((categoria) => (
                     <Tab title={categoria.name} key={categoria.id} className="mb-2">
                         {noticiasAmostradas.length == 0 ? <p>Nenhuma notícia encontrada</p> :
@@ -64,7 +71,7 @@ const CulturasList: React.FC<{ noticiasFiltradas: Article[] }> = ({noticiasFiltr
         <div className="w-full">
             <div className={`grid grid-cols-${gridCols} grid-rows-${gridRows} gap-y-8 gap-x-4`}>
                 {duasPrimeirasNoticias.map((noticia) => (
-                    <div key={noticia.id} className="col-span-2 row-span-1">
+                    <div key={noticia.id} className="h-72 col-span-2 row-span-1">
                         <ShortNoticiaCardDetailedBottom
                             height={'h-[23.6rem]'}
                             showDetails={true}
