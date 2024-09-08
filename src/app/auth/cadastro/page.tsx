@@ -24,7 +24,7 @@ function CadastroPage() {
     const registerUser = async (formState: CreateUserProps, formData: FormData): Promise<CreateUserProps> => {
         setIsLoading(true);
 
-        const validatedForm = await actions.validarLogin(formState, formData);
+        const validatedForm = await actions.validarCadastro(formState, formData);
         const hasErrors = Object.values(validatedForm.errors).some(value => value && value.length > 0)
 
         if (hasErrors) {
