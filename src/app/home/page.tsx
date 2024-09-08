@@ -15,6 +15,11 @@ const HomePage: React.FC = () => {
 
 const CotacoesWrapper: React.FC = async () => {
     const cotacoes = await getCotacoes();
+
+    if(cotacoes?.length == 0 || !cotacoes){
+        return <p>Nenhum produto encontrado</p>
+    }
+
     return <Cotacoes cotacoes={cotacoes} />;
 }
 
