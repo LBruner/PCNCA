@@ -13,6 +13,8 @@ interface CreateNoticiaArgs {
     categoryName: string;
     authorId?: number;
     categoryId?: number;
+    thumbnailSubtitle?: string,
+    status?: string;
 }
 
 export const createNoticia = async (
@@ -22,8 +24,10 @@ export const createNoticia = async (
         content,
         imageUrl,
         categoryName,
+        thumbnailSubtitle,
         authorId = 2,
         categoryId = 1,
+        status = 'Publicado'
     }: CreateNoticiaArgs) => {
     const novaNoticia = await db.article.create({
         data: {
@@ -34,8 +38,8 @@ export const createNoticia = async (
             authorId: authorId,
             categoryId: categoryId,
             imageUrl: imageUrl,
-            thumbnailText: categoryName,
-            status: 'Publicado',
+            thumbnailText: thumbnailSubtitle || categoryName,
+            status: status,
         }
     });
 

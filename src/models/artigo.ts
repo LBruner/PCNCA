@@ -5,4 +5,6 @@ export interface Artigo {
     categoryId: number;
     categoryNome: string;
     authorId?: number;
+    status: string;
+    thumbnailSubtitle?: string;
 }

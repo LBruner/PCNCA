@@ -36,6 +36,8 @@ const NoticiaCreateForm: React.FC<NoticiaCreateForm> = ({categories}) => {
                 categoryName: article?.categoryNome!,
                 authorId: 3,
                 categoryId: article?.categoryId!,
+                thumbnailSubtitle: article?.thumbnailSubtitle,
+                status: article?.status,
                 content: content,
             });
         setIsLoading(false);
@@ -62,7 +64,6 @@ const NoticiaCreateForm: React.FC<NoticiaCreateForm> = ({categories}) => {
         };
 
         await handleScreenAction();
-
     }
 
     let currentScreen;

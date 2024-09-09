@@ -27,6 +27,8 @@ const CriarNoticiaInformacoesBasicas: React.FC<ProdutoFormProps> = forwardRef((p
     const [subtitle, setSubtitle] = useState(article?.subtitle || '');
     const [imageUrl, setImageUrl] = useState(article?.imageUrl || '');
     const [category, setCategory] = useState(article?.categoryNome);
+    const [status, setStatus] = useState(article?.status || '');
+    const [thumbnailSubtitle, setThumbnailSubtitle] = useState(article?.thumbnailSubtitle || '')
 
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -37,12 +39,16 @@ const CriarNoticiaInformacoesBasicas: React.FC<ProdutoFormProps> = forwardRef((p
             if (formRef.current.checkValidity()) {
                 const categoria = categories.find(item => item.name == category);
 
+                console.log(thumbnailSubtitle)
+                console.log(status);
                 setArticle({
                     title,
                     subtitle,
                     imageUrl: imageUrl,
                     categoryNome: categoria?.name || '',
                     categoryId: categoria?.id || 0,
+                    thumbnailSubtitle: thumbnailSubtitle ?? categoria?.name,
+                    status
                 });
                 setScreenIndex(1);
             } else {
@@ -76,11 +82,26 @@ const CriarNoticiaInformacoesBasicas: React.FC<ProdutoFormProps> = forwardRef((p
                         setImageUrl(newValue)
                     }}
                 />
+                <CriarNoticiaInformacoesBasicasInputField
+                    titulo={'Legenda do artigo'}
+                    subtitulo={'Campo será adicionado à thumbnail da imagem. Caso seja nulo, a categoria será utilizada.'} value={thumbnailSubtitle}
+                    onChange={(newValue) => {
+                        setThumbnailSubtitle(newValue)
+                    }}
+                />
                 <CriarNoticiaInformacoesBasicasSelectField
                     titulo={'Categoria da Notícia'} valor={category}
                     subtitulo={'Categoria em que o artigo será exibido'}
+                    placeholder={'Selecione a categoria'}
                     collection={categories.map((category) => category.name)}
                     onChange={(novaCategoria) => setCategory(novaCategoria)}
+                />
+                <CriarNoticiaInformacoesBasicasSelectField
+                    titulo={'Status da Notícia'} valor={status}
+                    placeholder={'Selecione o status'}
+                    subtitulo={`Apenas notícias marcadas como 'Publicado' serão exibidas.`}
+                    collection={['Publicado', 'Em espera', 'Rascunho']}
+                    onChange={(novoStatus) => setStatus(novoStatus)}
                 />
                 <div className={'flex flex-col justify-start w-full border-t-1 '}>
                     <p className={'text-start font-semibold text-lg mt-4'}>Thumbnail preview</p>
