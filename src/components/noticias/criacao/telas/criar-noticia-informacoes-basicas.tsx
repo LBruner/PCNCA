@@ -11,7 +11,7 @@ import {Artigo} from "@/models/artigo";
 const defaultTitle = 'Aqui vai o título da notícia'
 const defaultSubtitle = 'Aqui vai o subtítulo da notícia'
 const defaultImagem = 'https://placehold.co/600x400.png'
-const defaultCategory = 'Categoria'
+const defaultThumbnail = 'Legenda'
 
 interface ProdutoFormProps {
     setScreenIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -117,7 +117,7 @@ const CriarNoticiaInformacoesBasicas: React.FC<ProdutoFormProps> = forwardRef((p
                                 title={title == '' ? defaultTitle : title}
                                 subTitle={subtitle == '' ? defaultSubtitle : subtitle}
                                 imageUrl={imageUrl == '' ? defaultImagem : imageUrl}
-                                description={!category || category == '' ? defaultCategory : category}
+                                description={!category || category == '' ? defaultThumbnail : category}
                                 id={0}
                                 showDetails={false}
                             />
@@ -127,7 +127,7 @@ const CriarNoticiaInformacoesBasicas: React.FC<ProdutoFormProps> = forwardRef((p
                             <ShortNoticiaCardDetailedBottom
                                 isClicable={false}
                                 showDetails={true}
-                                title={!category || category == '' ? defaultCategory : category}
+                                title={thumbnailSubtitle != '' ? thumbnailSubtitle :  defaultThumbnail}
                                 shortDescription={title == '' ? defaultTitle : title}
                                 imageUrl={imageUrl == '' ? defaultImagem : imageUrl}
                                 id={7}
@@ -137,7 +137,7 @@ const CriarNoticiaInformacoesBasicas: React.FC<ProdutoFormProps> = forwardRef((p
                             <p className={'mb-3 text-lg font-semibold'}>Pequeno</p>
                             <ShortNoticiaCardDetailedRight
                                 isClicable={false}
-                                title={!category || category == '' ? defaultCategory : category}
+                                title={thumbnailSubtitle != '' ? thumbnailSubtitle :  defaultThumbnail}
                                 subTitle={title == '' ? defaultTitle : title}
                                 imageUrl={imageUrl == '' ? defaultImagem : imageUrl}
                                 description={subtitle == '' ? defaultSubtitle : subtitle}
