@@ -56,14 +56,31 @@ export const getNoticias = async () => {
 }
 
 export const getNoticia = async (noticiaId: string ) => {
-    // const session = await getServerSession();
-    //
-    // if (!session) return;
-
     return db.article.findUnique({
         where: {
             id: parseInt(noticiaId),
         }
+    });
+}
+
+export const getRandomNoticias = async (quantity: number) => {
+    if (quantity <= 0) {
+        throw new Error('Quantity must be greater than 0');
+    }
+
+    const count = await db.article.count(); // Get total count of articles
+
+    if (count === 0) {
+        return [];
+    }
+
+    const limit = Math.min(quantity, count);
+
+    const skip = Math.floor(Math.random() * (count - limit + 1));
+
+    return db.article.findMany({
+        skip,
+        take: limit,
     });
 }
 
