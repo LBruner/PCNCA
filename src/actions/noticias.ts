@@ -47,12 +47,22 @@ export const createNoticia = async (
     redirect(paths.showNoticia(novaNoticia.id))
 };
 
-export const getNoticias = async () => {
-    // const session = await getServerSession();
-    //
-    // if (!session) return;
+type getNoticiasArgs = {
+    categoryId?: string;
+}
 
-    return db.article.findMany();
+
+export const getNoticias = async ({categoryId}: getNoticiasArgs = {}) => {
+    const where = categoryId ? {
+        categoryId: parseInt(categoryId)
+    } : {};
+
+    return db.article.findMany({
+        where,
+        orderBy: {
+            publishedAt: 'desc'
+        }
+    });
 }
 
 export const getNoticia = async (noticiaId: string ) => {

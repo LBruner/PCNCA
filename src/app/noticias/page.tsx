@@ -19,10 +19,10 @@ const NoticiasPage: React.FC = async _ => {
     }
 
     return (
-        <div className={'mt-32 flex justify-center items-center h-screen w-screen'}>
+        <div className={'mt-32 flex justify-center items-center h-screen'}>
             <div className={'h-full w-3/4 max-w-screen-lg'}>
                 <div className={'flex items-center justify-between'}>
-                    <p className={'text-xl font-bold my-6'}>MAIS VISTAS</p>
+                    <p className={'text-xl font-bold my-6'}>MAIS RECENTES</p>
                     <Link className={'text-green-700 text-sm'} href={paths.maisNoticias()}>
                         <p>Ver mais</p>
                     </Link>

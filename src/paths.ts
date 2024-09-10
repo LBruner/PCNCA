@@ -35,6 +35,9 @@ const paths = {
     culturas() {
         return `/noticias/culturas`;
     },
+    getCultura(id: number) {
+        return `/noticias/culturas/${id}`;
+    },
     showNoticia(noticiaId: number) {
         return `/noticias/${noticiaId}`;
     },

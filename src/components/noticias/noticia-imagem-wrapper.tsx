@@ -13,7 +13,7 @@ const NoticiaImagemWrapper: React.FC<NoticiaCardProps> = ({title, imageUrl,showD
             <div className={`relative flex rounded-md overflow-hidden w-auto h-full ${classes}`}>
                 <Image
                     src={imageUrl}
-                    alt="Milho"
+                    alt={title ?? 'Sem legenda'}
                     fill={true}
                     className="object-cover"
                 />
