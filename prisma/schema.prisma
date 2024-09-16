@@ -47,17 +47,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   products      Product[]
-}
-
-model VerificationRequest {
-  id         String   @id @default(cuid())
-  identifier String
-  token      String   @unique
-  expires    DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@unique([identifier, token])
+  sales         Sale[]
 }
 
 model Product {
@@ -75,6 +65,44 @@ model Product {
   userId      String
   dateAdded   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
+  saleItems   SaleItem[]
+}
+
+model Sale {
+  id           Int       @id @default(autoincrement())
+  date         DateTime  @default(now())
+  totalPrice   Float
+  discount     Float?
+  paymentMethod String
+  status       String
+  customerName String
+  deliveryAddress String?
+  sellerId     String
+  seller       User      @relation(fields: [sellerId], references: [id])
+  saleItems    SaleItem[]
+}
+
+model SaleItem {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id])
+  saleId     Int
+  sale       Sale     @relation(fields: [saleId], references: [id])
+  quantity   Float
+  unitPrice  Float
+  totalPrice Float
+}
+
+
+model VerificationRequest {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, token])
 }
 
 model Article {

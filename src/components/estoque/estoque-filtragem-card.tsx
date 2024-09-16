@@ -18,7 +18,7 @@ import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import TabelaTopContent from "@/components/estoque/tabela/tabela-top-content";
 import TabelaBottomContent from "@/components/estoque/tabela/tabela-bottom-content";
 import {categoriesOptions, priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
-import {getFilteredItems, getSortedItem} from "@/helpers/tabela";
+import {getFilteredItems, getSortedProduto} from "@/helpers/tabela";
 import Link from "next/link";
 import paths from "@/paths";
 import ProdutoDeleteModal from "@/components/produtos/ProdutoDeleteModal";
@@ -102,7 +102,7 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
     }, [currentPage, filteredItems, rowsPerPage]);
 
     const sortedItems = React.useMemo(() => {
-        return getSortedItem(items, sortDescriptor)
+        return getSortedProduto(items, sortDescriptor)
     }, [sortDescriptor, items, hasSearchFilter]);
 
     const renderCell = React.useCallback((product: Product, columnKey: string) => {

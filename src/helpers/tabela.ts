@@ -1,4 +1,4 @@
-import type {Product} from "@prisma/client";
+import type {Product, Sale} from "@prisma/client";
 import {SortDescriptor} from "@nextui-org/react";
 import {IFilterable} from "@/models/estoque/filters";
 
@@ -33,7 +33,7 @@ export const getFilteredItems = (productField: number, stockFilter:FilterableIte
     return stockMatch;
 }
 
-export const getSortedItem = (items: Product[], sortDescriptor: SortDescriptor) => {
+export const getSortedProduto = (items: Product[], sortDescriptor: SortDescriptor) => {
     return [...items].sort((a: Product, b: Product) => {
         const first = a[sortDescriptor.column as keyof Product];
         const second = b[sortDescriptor.column as keyof Product];
@@ -43,3 +43,39 @@ export const getSortedItem = (items: Product[], sortDescriptor: SortDescriptor) 
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
 }
+
+
+type SortableFields = keyof Pick<Sale, 'id' | 'customerName' | 'date' | 'status' | 'totalPrice'>;
+
+
+//TODO: quem sabe usar uma interface aqui
+export const getSortedVenda = (items: Sale[], sortDescriptor: SortDescriptor): Sale[] => {
+    return [...items].sort((a: Sale, b: Sale) => {
+        const column = sortDescriptor.column as SortableFields;
+        let first = a[column];
+        let second = b[column];
+
+        if (first == null) return sortDescriptor.direction === "descending" ? 1 : -1;
+        if (second == null) return sortDescriptor.direction === "descending" ? -1 : 1;
+
+        if (typeof first === 'string' && typeof second === 'string') {
+            first = first.toLowerCase();
+            second = second.toLowerCase();
+        } else if (first instanceof Date && second instanceof Date) {
+            return sortDescriptor.direction === "descending"
+                ? second.getTime() - first.getTime()
+                : first.getTime() - second.getTime();
+        } else if (typeof first === 'number' && typeof second === 'number') {
+            return sortDescriptor.direction === "descending"
+                ? second - first
+                : first - second;
+        } else {
+            first = String(first);
+            second = String(second);
+        }
+
+        return sortDescriptor.direction === "descending"
+            ? second.localeCompare(first)
+            : first.localeCompare(second);
+    });
+};
