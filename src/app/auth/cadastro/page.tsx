@@ -12,6 +12,8 @@ import {CreateUserProps} from "@/actions/cadastro";
 import {signIn} from "next-auth/react";
 import FormErrorText from "@/components/UI/form/form-error-text";
 import RegisterFormInput from "@/components/UI/form/register-form-input";
+import Link from "next/link";
+import paths from "@/paths";
 
 function CadastroPage() {
     const [name, setFirstName] = useState('');
@@ -138,6 +140,10 @@ function CadastroPage() {
                             </Button>}
                         </div>
                     </form>
+                </div>
+                <div>
+                    <p className={'mt-14'}>Já possui uma conta? <Link className={'text-orange-400 font-semibold'}
+                                                                       href={paths.login()}>Entrar</Link></p>
                 </div>
             </div>
             <div className="w-2/5 relative">

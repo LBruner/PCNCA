@@ -9,6 +9,8 @@ import {LoginProps, validarLogin} from "@/actions/login";
 import {signIn} from "next-auth/react";
 import FormErrorText from "@/components/UI/form/form-error-text";
 import RegisterFormInput from "@/components/UI/form/register-form-input";
+import Link from "next/link";
+import paths from "@/paths";
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -100,12 +102,16 @@ function LoginPage() {
 
                     </form>
                 </div>
+                <div>
+                    <p className={'mt-14'}>Não possui uma conta? <Link className={'text-orange-400 font-semibold'} href={paths.cadastro()}>Cadastre-se</Link></p>
+                </div>
             </div>
             <div className="w-2/5 relative">
                 <div className="absolute inset-0" style={{backgroundImage: `url('/images/login_background.jpg')`}}>
                     <Image src={'/images/login_background.jpg'} objectFit="cover" fill={true} alt={'field plantation'}/>
                 </div>
             </div>
+
         </div>
     );
 }
