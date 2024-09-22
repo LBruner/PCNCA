@@ -1,7 +1,7 @@
 import React from "react";
 import ReactMarkdown from 'react-markdown';
 import {notFound} from "next/navigation";
-import {getNoticia, getRandomNoticias} from "@/actions/noticias";
+import {getNoticia, getRelatedArticles} from "@/actions/noticias";
 import {generateMarkdown} from "@/helpers/noticia/criacao/criar-noticia";
 import ShortNoticiaCardDetailedBottom
     from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-bottom";
@@ -14,7 +14,7 @@ interface NoticiaPageProps {
 
 const NoticiaShowPage: React.FC<NoticiaPageProps> = async ({params}) => {
     const noticia = await getNoticia(params.id);
-    const noticiasRelacionadas = await getRandomNoticias(6);
+    const noticiasRelacionadas = await getRelatedArticles(params.id,6);
 
     if (!noticia) return notFound();
 
@@ -32,7 +32,7 @@ const NoticiaShowPage: React.FC<NoticiaPageProps> = async ({params}) => {
                         {content}
                     </ReactMarkdown>
                 </div>
-                <div className={'mt-12'}>
+                {noticiasRelacionadas.length > 0 && <div className={'mt-12'}>
                     <p className={'text-2xl font-bold text-orange-500'}>VEJA TAMBÉM:</p>
                     <div className="mt-12 mb-4 grid grid-cols-6 gap-4">
                         {noticiasRelacionadas.map(noticia => (
@@ -47,7 +47,7 @@ const NoticiaShowPage: React.FC<NoticiaPageProps> = async ({params}) => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div>}
             </div>
         </div>
     );
