@@ -30,7 +30,6 @@ import VendasTabelaTopContent, {SelectItem} from "@/components/vendas/vendas-tab
 const columns = [
     {name: "ID", uid: "id", sortable: true},
     {name: "CLIENTE", uid: "cliente", sortable: true},
-    {name: "VENDEDOR", uid: "vendedor", sortable: true},
     {name: "DATA", uid: "data", sortable: true},
     {name: "PRODUTOS", uid: "produtos", sortable: true},
     {name: "STATUS", uid: "status", sortable: true},
@@ -49,9 +48,6 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
         column: "id",
         direction: "ascending",
     });
-
-    console.log(sortDescriptor);
-    // console.log(dateRange?.start.day)
 
     const hasSearchFilter = Boolean(filterValue);
 
@@ -104,7 +100,7 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
         }
 
         return filteredVendas;
-    }, [vendas, filterValue, statusFilter, clienteFilter, priceFilter, stockFilter,dateRange, ]);
+    }, [vendas, filterValue, statusFilter, clienteFilter, priceFilter, stockFilter, dateRange,]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -131,12 +127,6 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
                 return (
                     <p>
                         {venda.customerName}
-                    </p>
-                );
-            case "vendedor":
-                return (
-                    <p>
-                        {venda.seller.name}
                     </p>
                 );
             case "vrTotal":
@@ -215,10 +205,12 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
     }, [])
 
     return (
-        <div className={'w-11/12'}>
+        <div className={'w-full'}>
             <ProdutoDeleteModal isOpen={isOpen} onClose={onClose} productId={selectedProductId}/>
             <div className={'bg-white rounded-md p-4 mb-4'}>
-                <VendasTabelaTopContent setDatesRange={setDateRange} datesRange={dateRange!} hasSearchFilter={hasSearchFilter} statusOptions={statusOptions} clientesOptions={clientesOptions}
+                <VendasTabelaTopContent setDatesRange={setDateRange} datesRange={dateRange!}
+                                        hasSearchFilter={hasSearchFilter} statusOptions={statusOptions}
+                                        clientesOptions={clientesOptions}
                                         setCategoryFilter={setClienteFilter}
                                         categoryFilter={clienteFilter} filterValue={filterValue}
                                         setStatusFilter={setStatusFilter} onClear={onClear}
@@ -274,5 +266,14 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
     );
 };
 
+
+import {db} from "@/db";
+
+
+
+
+// Uso da função
+
+// Uso da função
 
 export default EstoqueFiltragemCard;

@@ -1,15 +1,14 @@
 'use client';
 
 import React from "react";
-import {Button, DateRangePicker, DateValue, Divider, Input, RangeValue} from "@nextui-org/react";
+import {Button, DateRangePicker, DateValue, Input, ModalContent, RangeValue, useDisclosure} from "@nextui-org/react";
 import {SearchIcon} from "@nextui-org/shared-icons";
-import {PlusIcon} from "@/components/estoque/plus-icon";
-import {PiPrinterFill} from "react-icons/pi";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
-import Link from "next/link";
-import paths from "@/paths";
 import VendasTopContentDropDown from "@/components/vendas/vendas-top-content-dropdown";
 import {I18nProvider} from "@react-aria/i18n";
+import {DownloadIcon} from "@radix-ui/react-icons";
+import {Modal, ModalBody, ModalFooter, ModalHeader} from "@nextui-org/modal";
+import {GoFilter} from "react-icons/go";
 
 export type SelectItem = {
     name: string;
@@ -55,54 +54,74 @@ const VendasTabelaTopContent: React.FC<TabelaTopContentProps> = (
         setDatesRange,
     }
 ) => {
-    const size = 'w-1/5';
+    const size = 'w-[80%]';
+
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     return (React.useMemo(() => {
         return (
             <div className="flex flex-col gap-4">
-                <div className="flex justify-between gap-3">
-                    <div className={'flex gap-1 w-10/12'}>
+                <div className="flex justify-between gap-3 items-center">
+                    <p className={'font-bold'}>Tabela de Vendas</p>
+                    <div className="flex gap-2">
                         <Input
                             size={'md'}
+                            variant={'bordered'}
                             isClearable
-                            className=" h-3"
-                            placeholder="Procurar por nome..."
+                            className="w-36 h-3 font-bold"
+                            placeholder="Procurar..."
                             startContent={<SearchIcon/>}
                             value={filterValue}
                             onClear={() => onClear()}
                             onValueChange={onSearchChange}
                         />
-                    </div>
-                    <div className="flex gap-1 ">
-                        <Button className={'text-white bg-orange-600 w-56'} startContent={<PlusIcon/>}>
-                            <Link href={paths.createProduto()}>Adicionar novo produto</Link>
-                        </Button>
-                        <Button variant={'bordered'} className={'w-52'} startContent={<PiPrinterFill size={20}/>}>
-                            Imprimir Estoque
+                        <Button variant={'bordered'} startContent={<GoFilter size={20}/>} onPress={onOpen} className="max-w-fit font-bold">Filtrar</Button>
+                        <Button variant={'bordered'} className={'w-32 font-bold'} startContent={<DownloadIcon/>}>
+                            Exportar
                         </Button>
                     </div>
                 </div>
-                <Divider/>
-                <div className="flex justify-center gap-8 items-center">
-                    <VendasTopContentDropDown collection={clientesOptions}
-                                              label={'Cliente'} width={size}
-                                              filterStatus={categoryFilter} setFilterStatus={setCategoryFilter}
-                                              allSelectedLabel={'Todos Clientes'}
-                                              multipleSelectedLabel={'Vários Clientes'}/>
-                    <TopContentDropDown
-                        collection={statusOptions} label={'Status'}
-                        width={size}
-                        filterStatus={statusFilter} setFilterStatus={setStatusFilter}
-                        multipleSelectedLabel={'Vários Status'} allSelectedLabel={'Todos Status'}/>
-                    <I18nProvider locale="pt-BR">
-                        <DateRangePicker
-                            label={'Data de início e fim'}
-                            labelPlacement={'outside'}
-                            className="max-w-xs"
-                            onChange={setDatesRange}
-                            disableAnimation={false} size={'md'} variant={'flat'}/>
-                    </I18nProvider>
-                </div>
+                <Modal
+                    isOpen={isOpen}
+                    placement={'center'}
+                    onOpenChange={onOpenChange}
+                >
+                    <ModalContent>
+                        {(onClose) => (
+                            <>
+                                <ModalHeader className="flex flex-col gap-1">Filtrar conteúdo</ModalHeader>
+                                <ModalBody>
+                                    <div className="flex flex-col justify-center gap-8 items-center">
+                                        <VendasTopContentDropDown collection={clientesOptions}
+                                                                  label={'Cliente'} width={size}
+                                                                  filterStatus={categoryFilter}
+                                                                  setFilterStatus={setCategoryFilter}
+                                                                  allSelectedLabel={'Todos Clientes'}
+                                                                  multipleSelectedLabel={'Vários Clientes'}/>
+                                        <TopContentDropDown
+                                            collection={statusOptions} label={'Status'}
+                                            width={size}
+                                            filterStatus={statusFilter} setFilterStatus={setStatusFilter}
+                                            multipleSelectedLabel={'Vários Status'} allSelectedLabel={'Todos Status'}/>
+                                        <I18nProvider locale="pt-BR">
+                                            <DateRangePicker
+                                                label={'Data de início e fim'}
+                                                labelPlacement={'outside'}
+                                                className="max-w-xs"
+                                                onChange={setDatesRange}
+                                                disableAnimation={false} size={'md'} variant={'flat'}/>
+                                        </I18nProvider>
+                                    </div>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button  color="success" onPress={onClose}>
+                                        Filtrar
+                                    </Button>
+                                </ModalFooter>
+                            </>
+                        )}
+                    </ModalContent>
+                </Modal>
             </div>
         );
     }, [
@@ -115,6 +134,7 @@ const VendasTabelaTopContent: React.FC<TabelaTopContentProps> = (
         onSearchChange,
         hasSearchFilter,
         datesRange,
+        onOpenChange
     ]))
 }
 
