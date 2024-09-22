@@ -17,7 +17,7 @@ interface NoticiaCreateForm {
 }
 
 const NoticiaCreateForm: React.FC<NoticiaCreateForm> = ({categories}) => {
-    const [content, setNoticiaContent] = useState("# Hello, MDX!");
+    const [content, setNoticiaContent] = useState("# Escreva aqui sua notícia");
     const [screenIndex, setScreenIndex] = useState(0);
     const [article, setArticle] = useState<Artigo | undefined>();
     const [isLoading, setIsLoading] = useState(false);

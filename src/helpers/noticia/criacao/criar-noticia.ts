@@ -2,7 +2,7 @@ export function generateMarkdown(articleTitle: string, articleSubtitle: string, 
     return `# ${articleTitle}
 ${articleSubtitle}
 
-**PCNCA - Usuário ADM** ${getPublicacaoData()}
+**PCNCA - Usuário ADM** Publicado em: ${getPublicacaoData(true)}
 
 ![](${articleImage})
 
@@ -10,15 +10,21 @@ ${articleContent}
 `;
 }
 
-export const getPublicacaoData = () => {
-    const data = new Date();
+export const getPublicacaoData = (mostrarHorario?: boolean,data?: string, ) => {
+    let dataAtual;
 
-    const dia = String(data.getDate()).padStart(2, '0');
-    const mes = String(data.getMonth() + 1).padStart(2, '0'); // Janeiro é 0, por isso +1
-    const ano = data.getFullYear();
+    if(data)
+        dataAtual = new Date(data);
+    else
+        dataAtual = new Date();
 
-    const horas = String(data.getHours()).padStart(2, '0');
-    const minutos = String(data.getMinutes()).padStart(2, '0');
+    const dia = String(dataAtual.getDate()).padStart(2, '0');
+    const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Janeiro é 0, por isso +1
+    const ano = dataAtual.getFullYear();
 
-    return `Publicado em ${dia}/${mes}/${ano} às ${horas}:${minutos}h.`;
+    const horas = String(dataAtual.getHours()).padStart(2, '0');
+    const minutos = String(dataAtual.getMinutes()).padStart(2, '0');
+
+    return `${dia}/${mes}/${ano} ${mostrarHorario ? `às ${horas}:${minutos}h.` : ''}`;
 };
+

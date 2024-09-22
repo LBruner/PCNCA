@@ -6,16 +6,19 @@ import paths from "@/paths";
 import ShortNoticiaCardDetailedRight from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-right";
 import ShortNoticiaCardDetailedBottom
     from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-bottom";
+import {articles} from "@/dummy_data/articles";
+import {categories} from "@/dummy_data/categories";
 
 
 const NoticiasPage: React.FC = async _ => {
     // const noticias = dados;
-    const noticias = await getNoticias();
-    const categorias = await getCategorias();
+    // const noticias = await getNoticias();
+    // const categorias = await getCategorias();
+    const noticias = articles;
     // const noticias = noticiasPCNCA;
 
     if (!noticias || noticias.length == 0) {
-        return <p>Nenhuma notícia</p>
+        return <p className={'mt-48 font-semibold  text-center text-2xl'}>Nenhuma notícia encontrada</p>
     }
 
     return (
@@ -24,7 +27,7 @@ const NoticiasPage: React.FC = async _ => {
                 <div className={'flex items-center justify-between'}>
                     <p className={'text-xl font-bold my-6'}>MAIS RECENTES</p>
                     <Link className={'text-green-700 text-sm'} href={paths.maisNoticias()}>
-                        <p>Ver mais</p>
+                        <p className={'font-semibold'}>Ver mais</p>
                     </Link>
                 </div>
                 <div className="grid grid-cols-4 grid-rows-8 gap-4">
@@ -69,7 +72,7 @@ const NoticiasPage: React.FC = async _ => {
                             />
                         </div>
                     ))}
-                    <CulturasTabs noticias={noticias} categorias={categorias || []}/>
+                    <CulturasTabs noticias={noticias} categorias={categories || []}/>
                 </div>
             </div>
         </div>
