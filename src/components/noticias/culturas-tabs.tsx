@@ -33,11 +33,11 @@ const CulturasTabs: React.FC<CulturasListProps> = ({noticias, categorias}) => {
             <div className={'flex items-center justify-between  mb-10'}>
                 <p className={'text-xl font-bold'}>DESTAQUE EM CULTURAS</p>
                 <Link className={'text-green-700 text-sm'} href={paths.culturas()}>
-                    <p>Mais culturas</p>
+                    <p className={'font-semibold'}>Mais culturas</p>
                 </Link>
             </div>
             <Tabs selectedKey={selectedCategory} onSelectionChange={handleCategoryChange} aria-label="Options">
-                {categorias.map((categoria) => (
+                {categorias.slice(0,4).map((categoria) => (
                     <Tab title={categoria.name} key={categoria.id} className="mb-2">
                         {noticiasAmostradas.length == 0 ? <p>Nenhuma notícia encontrada</p> :
                             <CulturasList noticiasFiltradas={noticiasAmostradas}/>

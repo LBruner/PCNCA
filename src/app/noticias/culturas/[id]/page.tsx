@@ -2,6 +2,7 @@ import React from "react";
 import LargeNoticiaCard from "@/components/noticias/large-noticia-card/large-noticia-card";
 import {getNoticias} from "@/actions/noticias";
 import {notFound} from "next/navigation";
+import {Pagination} from "@nextui-org/react";
 
 interface CulturaShowPageProps {
     params: {
@@ -19,11 +20,16 @@ const CulturaShowPage: React.FC<CulturaShowPageProps> = async ({params: {id}}) =
 
     return (
         <div className={'mt-32'}>
-            <div className={'flex flex-col gap-12'}>
+            <div className={'flex flex-col gap-12 my-12'}>
                 {noticiasFiltradas.map((noticia) => (
-                    <LargeNoticiaCard id={noticia.id} title={noticia.title} imageUrl={noticia.imageUrl!} content={noticia.content}
+                    <LargeNoticiaCard id={noticia.id} title={noticia.title} imageUrl={noticia.imageUrl!}
+                                      content={noticia.content}
                                       date={noticia.publishedAt.toString()} key={noticia.id}/>
                 ))}
+            </div>
+
+            <div className={'flex justify-center mb-12'}>
+                <Pagination total={2}/>
             </div>
         </div>
     )

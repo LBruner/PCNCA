@@ -73,7 +73,7 @@ export const getNoticia = async (noticiaId: string ) => {
     });
 }
 
-export const getRandomNoticias = async (quantity: number) => {
+export const getRelatedArticles = async (currentArticleId: string, quantity: number) => {
     if (quantity <= 0) {
         throw new Error('Quantity must be greater than 0');
     }
@@ -91,6 +91,11 @@ export const getRandomNoticias = async (quantity: number) => {
     return db.article.findMany({
         skip,
         take: limit,
+        where: {
+            id: {
+                not: parseInt(currentArticleId),
+            },
+        },
     });
 }
 

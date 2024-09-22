@@ -13,7 +13,7 @@ interface LargeNoticiaCardProps {
 }
 
 const LargeNoticiaCard: React.FC<LargeNoticiaCardProps> = ({date, content, imageUrl, title,id}) => {
-    const displayingSummary = removerTextoEntreParenteses(content).slice(0, 200).concat(` [...]`);
+    const displayingSummary = removerTextoEntreParenteses(content).slice(0, 250).concat(` [...]`);
     return (
         <div className={'flex justify-center items-center'}>
             <Link href={paths.showNoticia(id)} className={'h-full w-3/4'}>
@@ -22,7 +22,7 @@ const LargeNoticiaCard: React.FC<LargeNoticiaCardProps> = ({date, content, image
                         <NoticiaImagemWrapper classes={'rounded-none'}
                                               imageUrl={imageUrl}/>
                     </div>
-                    <div className="h-72 flex-1 flex flex-col gap-2 border-b-1 border-blue-900 px-3 overflow-hidden">
+                    <div className="h-72 flex-1 flex flex-col gap-2 border-b-1 border-green-900 px-3 overflow-hidden">
                         <div>
                             <p className={'text-sm fill-blue-900'}>
                                 {getPublicacaoData(false,date)}
@@ -30,7 +30,7 @@ const LargeNoticiaCard: React.FC<LargeNoticiaCardProps> = ({date, content, image
                         </div>
                         <div className={'flex flex-col'}>
                             <div>
-                                <p className={'text-2xl font-bold text-blue-900'}>
+                                <p className={'text-2xl font-bold text-green-800'}>
                                     {title}
                                 </p>
                             </div>
