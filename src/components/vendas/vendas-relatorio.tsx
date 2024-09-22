@@ -84,7 +84,6 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
         }
 
         if (statusFilter !== "all" && Array.from(statusOptions).length !== statusFilter.length) {
-            console.log(statusFilter);
             filteredVendas = filteredVendas.filter((venda) =>
                 Array.from(statusFilter).includes(venda.status),
             );

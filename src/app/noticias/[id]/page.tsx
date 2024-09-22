@@ -5,6 +5,7 @@ import {getNoticia, getRelatedArticles} from "@/actions/noticias";
 import {generateMarkdown} from "@/helpers/noticia/criacao/criar-noticia";
 import ShortNoticiaCardDetailedBottom
     from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-bottom";
+import {articles} from "@/dummy_data/articles";
 
 interface NoticiaPageProps {
     params: {
@@ -13,7 +14,8 @@ interface NoticiaPageProps {
 }
 
 const NoticiaShowPage: React.FC<NoticiaPageProps> = async ({params}) => {
-    const noticia = await getNoticia(params.id);
+    // const noticia = await getNoticia(params.id);
+    const noticia = articles.find((item) => item.id == params.id);
     const noticiasRelacionadas = await getRelatedArticles(params.id,6);
 
     if (!noticia) return notFound();
@@ -34,7 +36,7 @@ const NoticiaShowPage: React.FC<NoticiaPageProps> = async ({params}) => {
                 </div>
                 {noticiasRelacionadas.length > 0 && <div className={'mt-12'}>
                     <p className={'text-2xl font-bold text-orange-500'}>VEJA TAMBÉM:</p>
-                    <div className="mt-12 mb-4 grid grid-cols-6 gap-4">
+                    <div className="mt-12 mb-4 grid grid-cols-4 gap-4">
                         {noticiasRelacionadas.map(noticia => (
                             <div key={noticia.id} className="">
                                 <ShortNoticiaCardDetailedBottom

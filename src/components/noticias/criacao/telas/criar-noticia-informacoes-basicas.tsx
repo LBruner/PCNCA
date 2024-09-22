@@ -39,8 +39,6 @@ const CriarNoticiaInformacoesBasicas: React.FC<ProdutoFormProps> = forwardRef((p
             if (formRef.current.checkValidity()) {
                 const categoria = categories.find(item => item.name == category);
 
-                console.log(thumbnailSubtitle)
-                console.log(status);
                 setArticle({
                     title,
                     subtitle,

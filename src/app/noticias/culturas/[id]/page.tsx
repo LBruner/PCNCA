@@ -3,6 +3,7 @@ import LargeNoticiaCard from "@/components/noticias/large-noticia-card/large-not
 import {getNoticias} from "@/actions/noticias";
 import {notFound} from "next/navigation";
 import {Pagination} from "@nextui-org/react";
+import {articles} from "@/dummy_data/articles";
 
 interface CulturaShowPageProps {
     params: {
@@ -12,7 +13,8 @@ interface CulturaShowPageProps {
 
 const CulturaShowPage: React.FC<CulturaShowPageProps> = async ({params: {id}}) => {
 
-    const noticiasFiltradas = await getNoticias({categoryId: id});
+    // const noticiasFiltradas = await getNoticias({categoryId: id});
+    const noticiasFiltradas = articles.filter((article) => article.categoryId == id);
 
     if (noticiasFiltradas.length == 0) {
         return notFound();

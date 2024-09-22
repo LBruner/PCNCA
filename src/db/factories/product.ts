@@ -177,8 +177,6 @@ export async function main() {
             },
         });
     }
-
-    console.log(`Inserted ${numberOfProducts} agribusiness products into the database.`);
 }
 
 // main()
