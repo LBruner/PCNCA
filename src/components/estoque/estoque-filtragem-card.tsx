@@ -27,7 +27,6 @@ const columns = [
     {name: "ID", uid: "id", sortable: true},
     {name: "NOME", uid: "name", sortable: true},
     {name: "CATEGORIA", uid: "category", sortable: true},
-    {name: "DESCRIÇÃO", uid: "description", sortable: true},
     {name: "PREÇO", uid: "price", sortable: true},
     {name: "STATUS", uid: "status", sortable: true},
     {name: "ESTOQUE", uid: "stock", sortable: true},
@@ -133,11 +132,6 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
                         {product.category}
                     </Chip>
                 );
-            case "description":
-                return (
-                    <div className="flex flex-col max-w-36">
-                        <p className="text-bold text-small capitalize">{product.description}</p>
-                    </div>);
             case "price":
                 return (
                     <div className="flex flex-col">
