@@ -1,30 +1,59 @@
-import React from "react";
+'use client';
+
+import React, {useState} from "react";
+import {Tab, Tabs} from "@nextui-org/react";
+import {BsBarChart, BsCashCoin} from "react-icons/bs";
+import CurrencySelect from "@/components/cotacoes/currency-select";
+import {currencies, Currency} from "@/helpers/moedas";
+import {MdOutlineCurrencyExchange} from "react-icons/md";
 import TradingViewChart from "@/components/cotacoes/moedas-card/trading-view-chart";
-import TradingViewHeader from "@/components/cotacoes/moedas-card/trading-view-header";
-import {Button} from "@nextui-org/react";
 
 const CotacoesMoedasPage: React.FC = _ => {
+
+    const [moedaOrigem, setMoedaOrigem] = useState<Currency>(
+        currencies.find(item => item.code === 'us') || currencies[0]
+    );
+    const [moedaDestino, setMoedaDestino] = useState<Currency>(currencies.find(item => item.code === 'br') || currencies[0]);
+
     return (
-        <div className={'mt-28 flex flex-col items-center justify-start h-4/6'}>
-            <div className="w-4/5 flex justify-between items-center">
-                <div className={'flex items-center gap-3'}>
-                    <p className="mb-4 text-2xl my-4 font-bold text-left">Cotação do Dólar (USDBRL)</p>
-                    <Button color={'primary'} size={"sm"} className={''}>Alterar moeda</Button>
-
-                </div>
-                <p className="mb-4 text-md my-4 text-left">Fonte:
-                    <a target={'_blank'}
-                       className={'text-blue-800 font-semibold'}
-                       href={'https://br.tradingview.com/symbols/USDBRL/'}>TradingView</a>
-                </p>
+        <div className={'mt-32 flex flex-col items-center justify-start h-4/6'}>
+            <div className={'mb-12 flex flex-col items-center justify-center'}>
+                <p className={'text-3xl font-bold'}>Conversor de Moedas</p>
+                <p className={'text-lg'}>Verifique as taxas de câmbio de moeda estrangeira</p>
             </div>
+            <div className="w-4/5  border rounded-lg p-4 bg-white flex flex-col gap">
+                <div className={'flex justify-center w-full mt-2'}>
+                    <Tabs color={'warning'} variant={'underlined'} size={'lg'} className={''}>
+                        <Tab
+                            key="photos"
+                            title={
+                                <div className="flex items-center space-x-4 mx-5">
+                                    <BsBarChart size={19}/>
+                                    <span className={'text-xl'}>Gráficos</span>
+                                </div>
+                            }
+                        />
+                        <Tab
+                            key="music"
+                            title={
+                                <div className="flex items-center space-x-4 bg-white  mx-5">
+                                    <BsCashCoin size={19}/>
+                                    <span className={'text-xl'}>Converter</span>
+                                </div>
+                            }
+                        />
+                    </Tabs>
+                </div>
+                <div className={'mt-6 flex justify-around items-center'}>
+                    <CurrencySelect value={moedaOrigem} onChange={setMoedaOrigem}/>
+                    <MdOutlineCurrencyExchange color={'#808080'} size={30}/>
+                    <CurrencySelect value={moedaDestino} onChange={setMoedaDestino}/>
+                </div>
+                <div className={'h-96 my-12 mx-4'}>
+                    <TradingViewChart/>
+                </div>
 
-            <div className={'flex flex-col justify-center items-center w-4/5 h-full gap-3'}>
-                <TradingViewHeader/>
-                <TradingViewChart/>
-                <p className={'font-semibold text-sm'}>Lembramos que os valores são para consulta e oferecido por
-                    terceiros. Não nos
-                    responsabilizamos pela exatidão dos valores informados</p>
+                
             </div>
         </div>
     )
