@@ -1,56 +1,37 @@
-'use client';
+import React, { useEffect } from 'react';
 
-import React, {memo, useEffect, useRef} from 'react';
-
-interface TradingViewSingleQuoteProps {
-    symbol?: string;
-    width?: number | string;
-    isTransparent?: boolean;
-    colorTheme?: string;
-    locale?: string;
-    fontSize?: string;
-}
-
-const TradingViewSingleQuote: React.FC<TradingViewSingleQuoteProps> = memo((
-    {
-        symbol = 'FX_IDC:USDBRL',
-        width = '100%',
-        isTransparent = false,
-        colorTheme = 'light',
-        locale = 'pt',
-        fontSize = '14px',
-    }) => {
-    const containerRef = useRef<HTMLDivElement>(null);
-
+const TradingViewWidget = () => {
     useEffect(() => {
         const script = document.createElement('script');
-        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js';
-        script.type = 'text/javascript';
+        script.src = "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
         script.async = true;
+
         script.innerHTML = JSON.stringify({
-            symbol,
-            width,
-            isTransparent,
-            colorTheme,
-            locale,
+            "symbol": "FX_IDC:USDBRL",
+            "width": "100%",
+            "isTransparent": true,
+            "colorTheme": "light",
+            "locale": "br"
         });
 
-        if (containerRef.current) {
-            containerRef.current.appendChild(script);
+        const widgetContainer = document.getElementById('tradingview-widget-container');
+        if (widgetContainer) {
+            widgetContainer.appendChild(script);
         }
 
         return () => {
-            if (containerRef.current) {
-                containerRef.current.removeChild(script);
+            if (widgetContainer) {
+                widgetContainer.removeChild(script);
             }
         };
-    }, [symbol, width, isTransparent, colorTheme, locale]);
+    }, []);
 
     return (
-        <div className="tradingview-widget-container" ref={containerRef}>
-            <div className="tradingview-widget-container__widget" style={{fontSize}}/>
+        <div className="tradingview-widget-container" id="tradingview-widget-container">
+            <div className="tradingview-widget-container__widget">
+            </div>
         </div>
     );
-});
+};
 
-export default TradingViewSingleQuote;
+export default TradingViewWidget;
