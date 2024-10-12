@@ -77,8 +77,8 @@ const paths = {
     cotacoesMoedas(){
         return '/cotacoes/moedas'
     },
-    clima(){
-        return '/clima'
+    prodInternacional(){
+        return '/producao-internacional'
     }
 }
 

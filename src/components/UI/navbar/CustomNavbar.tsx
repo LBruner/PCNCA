@@ -36,8 +36,7 @@ const CustomNavbar: React.FC = () => {
                     <NavLink path={paths.vendas()} text={'Vendas'} />
                     <NavLink path={paths.cotacoesMoedas()} text={'Cotações'} />
                     <NavLink path={paths.estoque()} text={'Estoque'} />
-                    <NavLink path={paths.clima()} text={'Clima'} />
-                    <NavLink path={paths.configuracoes()} text={'Configurações'} />
+                    <NavLink path={paths.prodInternacional()} text={'Produção Internacional'} />
                 </NavbarContent>
             </NavbarItem>
             <NavbarItem>
