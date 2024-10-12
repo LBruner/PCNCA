@@ -7,8 +7,6 @@ import {
     getTopProductsMonthlySales
 } from "@/actions/vendas";
 import VendasGraficoPie from "@/components/vendas/graficos/vendas-grafico-pie";
-import {PrismaClient} from '@prisma/client'
-import {db} from "@/db";
 import {LineChartData, PieChartData} from "@/models/graficos/charts";
 import VendasGraficoBar from "@/components/vendas/graficos/vendas-grafico-bar";
 import VendasRelatorio from "@/components/vendas/vendas-relatorio";
@@ -60,9 +58,6 @@ const VendasPage: React.FC = async _ => {
         </div>
     )
 }
-
-const prisma = new PrismaClient()
-
 
 
 export default VendasPage;
