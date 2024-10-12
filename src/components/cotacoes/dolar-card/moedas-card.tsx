@@ -5,8 +5,8 @@ import paths from "@/paths";
 
 const MoedasCard: React.FC = _ => {
     return (
-        <Link href={paths.cotacoesMoedas()} className=" h-20 mt-3 fixed left-0 top-0" >
-            <div className="h-24 overflow-hidden  scale-90 pointer-events-none bg-white border rounded-xl" style={{}}>
+        <Link href={paths.cotacoesMoedas()} className="h-20 mt-2 fixed left-0 top-0" >
+            <div className="h-24 overflow-hidden scale-80 pointer-events-none bg-white border bg-opacity-10 rounded-xl" style={{}}>
                 <TradingViewWidget />
             </div>
         </Link>

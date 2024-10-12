@@ -12,8 +12,8 @@ import {
     NavbarItem,
     Spinner
 } from "@nextui-org/react";
-import {Avatar} from "@nextui-org/avatar";
-import {signOut, useSession} from "next-auth/react";
+import { Avatar } from "@nextui-org/avatar";
+import { signOut, useSession } from "next-auth/react";
 import paths from "@/paths";
 
 const CustomAvatar: React.FC = () => {
@@ -25,8 +25,8 @@ const CustomAvatar: React.FC = () => {
         authContent = <Spinner className={'w-40'}></Spinner>
     } else if (session?.data?.user) {
         const user = session.data.user;
-        authContent = <NavbarContent className={'w-40'}>
-            <Dropdown disableAnimation={true} placement="bottom-end">
+        authContent = <NavbarContent className={'w-40 pr-7 pb-1'}>
+            <Dropdown size="lg" disableAnimation={false} placement="bottom-end">
                 <DropdownTrigger>
                     <Avatar
                         isBordered
