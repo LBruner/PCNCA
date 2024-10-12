@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 const TradingViewWidget = () => {
     useEffect(() => {
         const script = document.createElement('script');
+        let scriptAppended = false;
         script.src = "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
         script.async = true;
 
@@ -17,10 +18,11 @@ const TradingViewWidget = () => {
         const widgetContainer = document.getElementById('tradingview-widget-container');
         if (widgetContainer) {
             widgetContainer.appendChild(script);
+            scriptAppended = true;
         }
 
         return () => {
-            if (widgetContainer) {
+            if (scriptAppended && widgetContainer && widgetContainer.contains(script)) {
                 widgetContainer.removeChild(script);
             }
         };
