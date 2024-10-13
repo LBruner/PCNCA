@@ -1,5 +1,4 @@
 import React from "react";
-import {getCategorias, getNoticias} from "@/actions/noticias";
 import CulturasTabs from "@/components/noticias/culturas-tabs";
 import Link from "next/link";
 import paths from "@/paths";
@@ -23,7 +22,7 @@ const NoticiasPage: React.FC = async _ => {
 
     return (
         <div className={'mt-32 flex justify-center items-center h-screen'}>
-            <div className={'h-full w-3/4 max-w-screen-lg'}>
+            <div className={'h-full w-3/4'}>
                 <div className={'flex items-center justify-between'}>
                     <p className={'text-xl font-bold my-6'}>MAIS RECENTES</p>
                     <Link className={'text-green-700 text-sm'} href={paths.maisNoticias()}>
@@ -31,7 +30,7 @@ const NoticiasPage: React.FC = async _ => {
                     </Link>
                 </div>
                 <div className="grid grid-cols-4 grid-rows-8 gap-4">
-                    <div className="col-span-2 row-span-8">
+                    <div className="col-span-2 row-span-8 h-80">
                         <ShortNoticiaCardDetailedRight
                             title={noticias[0].title}
                             subTitle={''}
