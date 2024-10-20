@@ -5,19 +5,21 @@ import {useFormState} from "react-dom";
 import * as actions from "@/actions";
 import ProdutoForm from "@/components/produtos/ProdutoForm";
 import {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
+import {Fornecedor} from "@/actions/produto";
 
 interface ProdutoEditFormProps {
     produtoId: string;
     produto: ProdutoEstoqueComRelacoes;
+    fornecedores?: Fornecedor[];
 }
 
-const ProdutoEditForm: React.FC<ProdutoEditFormProps> = ({produtoId,produto}) => {
+const ProdutoEditForm: React.FC<ProdutoEditFormProps> = ({produtoId,produto, fornecedores}) => {
     const [formState, action] = useFormState(actions.editarProduto.bind(null, produtoId), {
         errors: {},
     })
 
     return (
-        <ProdutoForm formState={formState} action={action} produto={produto}/>
+        <ProdutoForm fornecedores={fornecedores} formState={formState} action={action} produto={produto}/>
     )
 }
 

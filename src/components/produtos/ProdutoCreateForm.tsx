@@ -4,9 +4,9 @@ import React from "react";
 import {useFormState} from "react-dom";
 import * as actions from "@/actions";
 import ProdutoForm from "@/components/produtos/ProdutoForm";
-import {User} from "@prisma/client";
+import {Fornecedor} from "@/actions/produto";
 
-const ProdutoCreateForm: React.FC<{ fornecedores: User[] }> = async ({fornecedores}) => {
+const ProdutoCreateForm: React.FC<{ fornecedores: Fornecedor[] }> = ({fornecedores}) => {
     const [formState, action] = useFormState(actions.criarProduto, {
         errors: {},
     })

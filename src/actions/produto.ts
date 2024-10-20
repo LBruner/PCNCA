@@ -7,7 +7,6 @@ import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {redirect} from "next/navigation";
 import {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
-// import {CommodityType} from "@prisma/client";
 
 const createProductSchema = z.object({
     nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
@@ -51,14 +50,13 @@ function validateForm(formData: FormData): FormDataValidationResult {
         categoria: formData.get('categoria'),
         descricao: formData.get('descricao'),
         tipoComodity: formData.get('tipoComodity') || '',
-        fornecedor: formData.get('fornecedor') || '',
+        fornecedor: formData.get('chave_fornecedor') || '',
         preco: parseFloat(formData.get('preco') as string) || 0,
         estoque: parseFloat(formData.get('estoque') as string) || 0,
         imagem: formData.get('imagem'),
         unidade: formData.get('unidade'),
         status: (formData.get('status') == null ? 'Desativado' : 'Ativo'),
     });
-
 
 
     return {
@@ -127,21 +125,23 @@ async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOr
     try {
         const userId = await getUserId(session!.user.email);
 
+        console.log(`FORN: ${result.data}`)
         await createOrUpdate(result!.data!, userId);
 
 
     } catch (error) {
+        console.log(`Erro ao criar produto: ${error}`)
         return {
             errors: {
                 _form: ['Erro ao processar a solicitação.'],
             }
         };
     }
-    // revalidatePath(paths.estoque());
-    // redirect(paths.estoque());
+    revalidatePath(paths.estoque());
+    redirect(paths.estoque());
 }
 
-export async function pegaProduto(produtoId: string): Promise<ProdutoEstoqueComRelacoes | null>{
+export async function pegaProduto(produtoId: string): Promise<ProdutoEstoqueComRelacoes | null> {
     return db.product.findUnique({
         where: {
             id: parseInt(produtoId),
@@ -152,75 +152,79 @@ export async function pegaProduto(produtoId: string): Promise<ProdutoEstoqueComR
     }) as Promise<ProdutoEstoqueComRelacoes | null>;
 }
 
-type Fornecedor = {
+export type Fornecedor = {
     id: string;
-    name: string;
-    email: string;
-    image: string | null;
+    name: string | null;
+    email: string | null;
+    image: string | null
 }
 
-export async function pegaFornecedor(): Promise<Fornecedor[] | null>{
-    return db.user.findMany({
+export async function pegaFornecedor(): Promise<Fornecedor[]> {
+    const fornecedores = await db.user.findMany({
         select: {
             id: true,
             name: true,
             email: true,
             image: true,
         },
-    }) as  Promise<Fornecedor[] | null>;
+    })
+    if (!fornecedores) return [];
+    return fornecedores;
 }
 
-export async function
-criarProduto(_: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
-    return handleFormSubmission(formData, async (data, userId) => {
-        // await db.product.create({
-        //     data: {
-        //         name: data.nome,
-        //         category: data.categoria,
-        //         description: data.descricao,
-        //         price: data.preco,
-        //         tipoCommoditie: data.tipoComodity,
-        //         stock: data.estoque,
-        //         imageUrl: data.imagem,
-        //         userId: userId,
-        //         unity: data.unidade,
-        //         status: data.status,
-        //         supplierId: data.fornecedor,
-        //     }
-        // });
-    });
-}
+    export async function
+    criarProduto(_: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
+        return handleFormSubmission(formData, async (data, userId) => {
+            await db.product.create({
+                data: {
+                    name: data.nome,
+                    category: data.categoria,
+                    description: data.descricao,
+                    price: data.preco,
+                    tipoCommoditie: data.tipoComodity,
+                    stock: data.estoque,
+                    imageUrl: data.imagem,
+                    userId: userId,
+                    unity: data.unidade,
+                    status: data.status,
+                    supplierId: data.fornecedor,
+                }
+            });
+        });
+    }
 
-export async function editarProduto(productId:string, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
+    export async function editarProduto(productId: string, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
 
-    return handleFormSubmission(formData, async (data, userId) => {
-        await db.product.update({
+        return handleFormSubmission(formData, async (data, userId) => {
+            await db.product.update({
+                where: {
+                    id: parseInt(productId),
+                },
+                data: {
+                    name: data.nome,
+                    category: data.categoria,
+                    description: data.descricao,
+                    price: data.preco,
+                    stock: data.estoque,
+                    imageUrl: data.imagem,
+                    userId: userId,
+                    unity: data.unidade,
+                    status: data.status,
+                    supplierId: data.fornecedor,
+                }
+            });
+        });
+    }
+
+    export async function deletarProduto(productId: string) {
+        await db.product.delete({
             where: {
                 id: parseInt(productId),
             },
-            data: {
-                name: data.nome,
-                category: data.categoria,
-                description: data.descricao,
-                price: data.preco,
-                stock: data.estoque,
-                imageUrl: data.imagem,
-                userId: userId,
-                unity: data.unidade,
-                status: data.status,
-            }
         });
-    });
-}
+        revalidatePath(paths.estoque());
+    }
 
-export async function deletarProduto(productId:string) {
-    await db.product.delete({
-        where: {
-            id: parseInt(productId),
-        },
-    });
-    revalidatePath(paths.estoque());
-}
 //
 // export async function pegaTipoCommodities(): Promise<CommodityType | null>{
 //     console.log(`aqui ${db.commodityType.findMany()}`)

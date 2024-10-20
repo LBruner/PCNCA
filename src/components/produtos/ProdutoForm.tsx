@@ -1,24 +1,27 @@
-import React from "react";
+import React, {useState} from "react";
 import {Autocomplete, AutocompleteItem, Button, Input, Select, SelectItem, Switch} from "@nextui-org/react";
-import {agribusinessCategories, tipoCommodities, unidadesDeMedida} from "@/db/factories/product";
+import {agribusinessCategories, unidadesDeMedida} from "@/db/factories/product";
 import {Textarea} from "@nextui-org/input";
 import {Radio, RadioGroup} from "@nextui-org/radio";
-import {CreatePostFormState} from "@/actions/produto";
+import {CreatePostFormState, Fornecedor} from "@/actions/produto";
 import {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
-import {User} from "@prisma/client";
 
 interface ProdutoFormProps {
     formState: CreatePostFormState,
     action: (payload: FormData) => void,
     produto?: ProdutoEstoqueComRelacoes;
-    fornecedores?: User[];
+    fornecedores?: Fornecedor[];
 }
 
 const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fornecedores}) => {
     const [hideProduct, setHideProduct] = React.useState<boolean>(!!(produto?.status && produto.status === 'Ativo'));
+    const [selectedChaveFornecedor, setSelectedChaveFornecedor] = useState(produto?.supplier.id ?? '');
 
     return (
-        <form action={action} className={'flex flex-col justify-center items-center mt-40'}>
+        <form action={formData => {
+            formData.append('chave_fornecedor',selectedChaveFornecedor);
+            action(formData);
+        }} className={'flex flex-col justify-center items-center mt-40'}>
             <div className={'w-5/6 flex justify-between mb-4 items-center'}>
                 <p className={'text-2xl font-semibold'}>Criar Produto</p>
                 <Button type={'submit'}>{produto ? 'Editar' : 'Criar'} Produto</Button>
@@ -40,10 +43,6 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
                                       label={'Categoria'} placeholder={'Seleciona a categoria'}
                                       collection={agribusinessCategories} isInvalid={!!formState.errors.categoria}
                                       errorMessage={formState.errors.categoria?.join(', ')}/>
-                        <CustomSelect defaultValue={produto?.commodity_type.name ?? undefined} name={'tipoComodity'}
-                                      label={'Tipo de commodity'} placeholder={'Seleciona o tipo de commodity'}
-                                      collection={tipoCommodities!} isInvalid={!!formState.errors.tipoComodity}
-                                      errorMessage={formState.errors.tipoComodity?.join(', ')}/>
                         <Textarea defaultValue={produto?.description ?? undefined} name={'descricao'} size={'lg'}
                                   minRows={1}
                                   className={'font-semibold'}
@@ -61,24 +60,26 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
                 <div className={'flex flex-col gap-4 w-full px-8 py-6 mt-11'}>
                     <div className={'flex flex-col gap-7'}>
                         <Autocomplete
+                            defaultSelectedKey={selectedChaveFornecedor ?? undefined}
                             name={'fornecedor'}
                             size={'lg'}
                             labelPlacement={'outside'}
                             label="Fornecedor"
-                            required={true}
+                            isRequired={true}
+                            multiple={false}
                             placeholder={'Selecione um fornecedor'}
-                            className="w-full"
+                            className="w-full font-semibold"
+                            onSelectionChange={key => {
+                                setSelectedChaveFornecedor(key!.toString());
+                                console.log(`${selectedChaveFornecedor}`)
+                            }}
                         >
                             {fornecedores!.map((fornecedor) => (
-                                <AutocompleteItem key={fornecedor.id} value={fornecedor.id}>
+                                <AutocompleteItem  value={fornecedor.id} key={fornecedor.id} >
                                     {fornecedor.name}
                                 </AutocompleteItem>
                             ))}
                         </Autocomplete>
-                        {/*<CustomSelect defaultValue={produto?.supplier.name ?? undefined} name={'fornecedor'}*/}
-                        {/*              label={'Tipo de commodity'} placeholder={'Seleciona o fornecedor'}*/}
-                        {/*              collection={tipoCommodities!} isInvalid={!!formState.errors.tipoComodity}*/}
-                        {/*              errorMessage={formState.errors.tipoComodity?.join(', ')}/>*/}
                         <CustomInputButton defaultValue={produto?.stock.toString() ?? undefined} name={'estoque'}
                                            type={'number'} label={'Estoque'}
                                            placeholder={'0 Unidades'}
@@ -90,7 +91,6 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
                                       collection={unidadesDeMedida} isInvalid={!!formState.errors.unidade}
                                       errorMessage={formState.errors.unidade?.join(', ')}/>
                         <RadioGroup
-                            //TODO: Adicionar tipo de commodity na tabela
                             defaultValue={'agricola'}
                             name={'tipoComodity'}
                             isRequired={true}
@@ -159,7 +159,7 @@ const CustomInputButton: React.FC<CustomInput> = (
 };
 
 
-const CustomSelect: React.FC<CustomInput & { collection: string[] }> = (
+const CustomSelect: React.FC<CustomInput & { collection: any[] }> = (
     {
         defaultValue,
         name,
