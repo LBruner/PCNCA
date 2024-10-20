@@ -35,64 +35,76 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  cpf           String    @unique
-  email         String?   @unique
-  password      String
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
-  products      Product[]
-  sales         Sale[]
+  id               String    @id @default(cuid())
+  name             String?
+  cpf              String    @unique
+  email            String?   @unique
+  password         String
+  emailVerified    DateTime?
+  image            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  accounts         Account[]
+  sessions         Session[]
+  products         Product[]
+  suppliedProducts Product[] @relation("SupplierRelation")
+  sales            Sale[]
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  category    String
-  stock       Float
-  status      String
-  unity       String
-  price       Float
-  imageUrl    String?
-  weight      Float?
-  dimensions  String?
-  userId      String
-  dateAdded   DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id])
-  saleItems   SaleItem[]
+  id              Int           @id @default(autoincrement())
+  name            String
+  description     String?
+  category        String
+  stock           Float
+  status          String
+  unity           String
+  price           Float
+  tipoCommoditie String @default("Agrícola")
+  // commodityTypeId Int @default(1)
+  // commodity_type  CommodityType @relation(fields: [commodityTypeId], references: [id])
+  imageUrl        String?
+  weight          Float?
+  dimensions      String?
+  userId          String
+  user            User          @relation(fields: [userId], references: [id]) // Dono do produto
+  supplierId      String @default("clydofcr8000oh3tdxqhk1rqb")
+  supplier        User          @relation("SupplierRelation", fields: [supplierId], references: [id]) // Relação com User como fornecedor
+  createdAt       DateTime      @default(now()) // Data de criação do produto
+  dateAdded       DateTime      @default(now())
+  saleItems       SaleItem[]
 }
 
+// model CommodityType {
+//   id       Int       @id @default(autoincrement())
+//   name     String
+//   products Product[]
+// }
+
 model Sale {
-  id           Int       @id @default(autoincrement())
-  date         DateTime  @default(now())
-  totalPrice   Float
-  discount     Float?
-  paymentMethod String
-  status       String
-  customerName String
+  id              Int        @id @default(autoincrement())
+  date            DateTime   @default(now())
+  totalPrice      Float
+  discount        Float?
+  paymentMethod   String
+  status          String
+  customerName    String
   deliveryAddress String?
-  sellerId     String
-  seller       User      @relation(fields: [sellerId], references: [id])
-  saleItems    SaleItem[]
+  sellerId        String
+  seller          User       @relation(fields: [sellerId], references: [id])
+  saleItems       SaleItem[]
 }
 
 model SaleItem {
-  id         Int      @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
   productId  Int
-  product    Product  @relation(fields: [productId], references: [id])
+  product    Product @relation(fields: [productId], references: [id])
   saleId     Int
-  sale       Sale     @relation(fields: [saleId], references: [id])
+  sale       Sale    @relation(fields: [saleId], references: [id])
   quantity   Float
   unitPrice  Float
   totalPrice Float
 }
-
 
 model VerificationRequest {
   id         String   @id @default(cuid())
@@ -106,28 +118,28 @@ model VerificationRequest {
 }
 
 model Article {
-  id                 Int      @id @default(autoincrement())
-  title              String
-  subtitle           String
-  thumbnailText      String
-  content            String
-  publishedAt        DateTime
-  author             Author   @relation(fields: [authorId], references: [id])
-  authorId           Int
-  category           Category @relation(fields: [categoryId], references: [id])
-  categoryId         Int
-  tags               Tag[]    @relation("ArticleTags")
-  imageUrl           String?
-  status             String
-  Media              Media[]
+  id            Int      @id @default(autoincrement())
+  title         String
+  subtitle      String
+  thumbnailText String
+  content       String
+  publishedAt   DateTime
+  author        Author   @relation(fields: [authorId], references: [id])
+  authorId      Int
+  category      Category @relation(fields: [categoryId], references: [id])
+  categoryId    Int
+  tags          Tag[]    @relation("ArticleTags")
+  imageUrl      String?
+  status        String
+  Media         Media[]
 }
 
 model Author {
-  id                Int       @id @default(autoincrement())
-  name              String
-  bio               String?
+  id                  Int       @id @default(autoincrement())
+  name                String
+  bio                 String?
   profile_picture_url String?
-  articles          Article[]
+  articles            Article[]
 }
 
 model Category {

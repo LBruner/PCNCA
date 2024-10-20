@@ -6,9 +6,12 @@ import {getServerSession} from "next-auth";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {redirect} from "next/navigation";
+import {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
+// import {CommodityType} from "@prisma/client";
 
 const createProductSchema = z.object({
     nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
+    fornecedor: z.string({message: 'Você deve escolher um fornecedor'}),
     categoria: z.string().min(3),
     preco: z.number().min(0, 'O preço deve ser maior que 0'),
     estoque: z.number().min(0, 'O valor em estoque deve ser maior que 0'),
@@ -28,6 +31,7 @@ export interface CreatePostFormState {
         descricao?: string[],
         imagem?: string[],
         tipoComodity?: string[],
+        fornecedor?: string[],
         unidade?: string[],
         status?: string[],
         _form?: string[],
@@ -41,17 +45,21 @@ type FormDataValidationResult = {
 };
 
 function validateForm(formData: FormData): FormDataValidationResult {
+    console.log(formData.get('fornecedor'))
     const result = createProductSchema.safeParse({
         nome: formData.get('nome'),
         categoria: formData.get('categoria'),
         descricao: formData.get('descricao'),
         tipoComodity: formData.get('tipoComodity') || '',
+        fornecedor: formData.get('fornecedor') || '',
         preco: parseFloat(formData.get('preco') as string) || 0,
         estoque: parseFloat(formData.get('estoque') as string) || 0,
         imagem: formData.get('imagem'),
         unidade: formData.get('unidade'),
         status: (formData.get('status') == null ? 'Desativado' : 'Ativo'),
     });
+
+
 
     return {
         success: result.success,
@@ -112,6 +120,7 @@ async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOr
     const {session, result, errors} = await getSessionAndValidateForm(formData);
 
     if (errors) {
+        console.log(errors);
         return {errors};
     }
 
@@ -122,47 +131,69 @@ async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOr
 
 
     } catch (error) {
-        console.log(error);
         return {
             errors: {
                 _form: ['Erro ao processar a solicitação.'],
             }
         };
     }
-    revalidatePath(paths.estoque());
-    redirect(paths.estoque());
+    // revalidatePath(paths.estoque());
+    // redirect(paths.estoque());
 }
 
-export async function pegaProduto(produtoId: string){
+export async function pegaProduto(produtoId: string): Promise<ProdutoEstoqueComRelacoes | null>{
     return db.product.findUnique({
         where: {
             id: parseInt(produtoId),
+        }, include: {
+            supplier: true,
+            // commodity_type: true,
         },
-    });
+    }) as Promise<ProdutoEstoqueComRelacoes | null>;
 }
 
-export async function criarProduto(_: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
+type Fornecedor = {
+    id: string;
+    name: string;
+    email: string;
+    image: string | null;
+}
+
+export async function pegaFornecedor(): Promise<Fornecedor[] | null>{
+    return db.user.findMany({
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+        },
+    }) as  Promise<Fornecedor[] | null>;
+}
+
+export async function
+criarProduto(_: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
     return handleFormSubmission(formData, async (data, userId) => {
-        await db.product.create({
-            data: {
-                name: data.nome,
-                category: data.categoria,
-                description: data.descricao,
-                price: data.preco,
-                stock: data.estoque,
-                imageUrl: data.imagem,
-                userId: userId,
-                unity: data.unidade,
-                status: data.status,
-            }
-        });
+        // await db.product.create({
+        //     data: {
+        //         name: data.nome,
+        //         category: data.categoria,
+        //         description: data.descricao,
+        //         price: data.preco,
+        //         tipoCommoditie: data.tipoComodity,
+        //         stock: data.estoque,
+        //         imageUrl: data.imagem,
+        //         userId: userId,
+        //         unity: data.unidade,
+        //         status: data.status,
+        //         supplierId: data.fornecedor,
+        //     }
+        // });
     });
 }
 
 export async function editarProduto(productId:string, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
 
     return handleFormSubmission(formData, async (data, userId) => {
-        console.log(data.status)
         await db.product.update({
             where: {
                 id: parseInt(productId),
@@ -190,3 +221,8 @@ export async function deletarProduto(productId:string) {
     });
     revalidatePath(paths.estoque());
 }
+//
+// export async function pegaTipoCommodities(): Promise<CommodityType | null>{
+//     console.log(`aqui ${db.commodityType.findMany()}`)
+//     return db.commodityType.findMany() as Promise<CommodityType | null>;
+// }

@@ -4,9 +4,14 @@ import React from "react";
 import {useFormState} from "react-dom";
 import * as actions from "@/actions";
 import ProdutoForm from "@/components/produtos/ProdutoForm";
-import {Product} from "@prisma/client";
+import {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
 
-const ProdutoEditForm: React.FC<{produto: Product, produtoId: string}> = ({produtoId,produto}) => {
+interface ProdutoEditFormProps {
+    produtoId: string;
+    produto: ProdutoEstoqueComRelacoes;
+}
+
+const ProdutoEditForm: React.FC<ProdutoEditFormProps> = ({produtoId,produto}) => {
     const [formState, action] = useFormState(actions.editarProduto.bind(null, produtoId), {
         errors: {},
     })

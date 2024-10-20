@@ -1,20 +1,19 @@
 import React from "react";
 import Estoques from "@/components/estoque/estoques";
 import {getCotacoes} from "@/actions/cotacoes";
-import {productsInventory} from "@/dummy_data/products_inventory";
 
 const EstoquePage: React.FC = async _ => {
-    // const cotacoes = await getCotacoes();
+    const produtosEstoque = await getCotacoes();
 
-    const cotacoes = productsInventory;
+    // const cotacoes = productsInventory;
 
-    if(!cotacoes){
+    if(!produtosEstoque){
         return <h1>Algo deu errado</h1>
     }
 
     return (
         <div>
-            <Estoques products={cotacoes}/>
+            <Estoques products={produtosEstoque}/>
         </div>
     )
 }

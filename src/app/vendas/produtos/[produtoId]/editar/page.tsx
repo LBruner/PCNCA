@@ -1,6 +1,8 @@
 import React from "react";
 import ProdutoEditForm from "@/components/produtos/ProdutoEditForm";
 import {pegaProduto} from "@/actions/produto";
+import {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
+// import {CommodityType} from "@prisma/client";
 
 interface EditProductPageProps {
     params: {
@@ -9,7 +11,7 @@ interface EditProductPageProps {
 }
 
 const EditProductPage: React.FC<EditProductPageProps> = async ({params}) => {
-    const produto = await pegaProduto(params.produtoId);
+    const produto: ProdutoEstoqueComRelacoes | null = await pegaProduto(params.produtoId);
 
     if (!produto) {
         return <h1>Produto Invalido</h1>

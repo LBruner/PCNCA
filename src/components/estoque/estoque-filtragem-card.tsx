@@ -10,9 +10,9 @@ import {
     TableHeader,
     TableRow,
     Tooltip, useDisclosure,
-    User
+    User as Usuario
 } from "@nextui-org/react";
-import type {Product} from '@prisma/client';
+import type {Product, User} from '@prisma/client';
 import {Chip} from "@nextui-org/chip";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import TabelaTopContent from "@/components/estoque/tabela/tabela-top-content";
@@ -27,6 +27,9 @@ const columns = [
     {name: "ID", uid: "id", sortable: true},
     {name: "NOME", uid: "name", sortable: true},
     {name: "CATEGORIA", uid: "category", sortable: true},
+    {name: "TIPO", uid: "tipo", sortable: false},
+    {name: "FORNECEDOR", uid: "fornecedor", sortable: false},
+    {name: "DATA DE ADIÇÃO", uid: "data", sortable: true},
     {name: "PREÇO", uid: "price", sortable: true},
     {name: "STATUS", uid: "status", sortable: true},
     {name: "ESTOQUE", uid: "stock", sortable: true},
@@ -39,7 +42,12 @@ const statusColorMap: Record<Product['status'], ChipProps['color']> = {
     'Desativado': "danger",
 };
 
-const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => {
+export type ProdutoEstoqueComRelacoes = Product & {
+    supplier: User;
+    commodity_type: CommodityType;
+};
+
+const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> = ({products}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<string | string[]>([]);
     const [statusFilter, setStatusFilter] = React.useState<string | string[]>("all");
@@ -104,7 +112,7 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
         return getSortedProduto(items, sortDescriptor)
     }, [sortDescriptor, items, hasSearchFilter]);
 
-    const renderCell = React.useCallback((product: Product, columnKey: string) => {
+    const renderCell = React.useCallback((product: ProdutoEstoqueComRelacoes, columnKey: string) => {
         switch (columnKey) {
             case "id":
                 return (
@@ -113,12 +121,12 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
                     </div>);
             case "name":
                 return (
-                    <User
+                    <Usuario
                         avatarProps={{radius: "lg", src: product.imageUrl!}}
                         name={product.name}
                     >
                         {product.name}
-                    </User>
+                    </Usuario>
                 );
             case "status":
                 return (
@@ -130,6 +138,28 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
                 return (
                     <Chip className="capitalize" size="sm" variant="flat">
                         {product.category}
+                    </Chip>
+                );
+            case "fornecedor":
+                return (
+                        <p>
+                            {product.supplier.name}
+                        </p>
+                );
+            case "tipo":
+                return (
+                    <Chip className="capitalize" size="sm" variant="flat">
+                        {product.tipoCommoditie}
+                    </Chip>
+                );
+            case "data":
+                return (
+                    <Chip className="capitalize" size="sm" variant="flat">
+                        {new Date(product.createdAt).toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                        })}
                     </Chip>
                 );
             case "price":
@@ -163,7 +193,7 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
                     </div>
                 );
             default:
-                return <h1>oi</h1>;
+                return <h1>Implementar</h1>;
         }
     }, []);
 
@@ -221,8 +251,8 @@ const EstoqueFiltragemCard: React.FC<{ products: Product[] }> = ({products}) => 
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhum produtos encontrado"} items={sortedItems}>
-                    {(product: Product) => (
+                <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhum produtos encontrado"} items={sortedItems as ProdutoEstoqueComRelacoes[]}>
+                    {(product: ProdutoEstoqueComRelacoes) => (
                         <TableRow key={product.id}>
                             {
                                 columns.map((column) => (

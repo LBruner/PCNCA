@@ -41,6 +41,11 @@ export const unidadesDeMedida = [
     "Dúzias (dz)"
 ];
 
+export const tipoCommodities = [
+    'Agrícola',
+    'Agropecuária',
+];
+
 const agribusinessProductNames = [
     'Milho',
     'Trigo',
