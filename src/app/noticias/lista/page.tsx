@@ -4,7 +4,7 @@ import LargeNoticiaCard from "@/components/noticias/large-noticia-card/large-not
 import {articles} from "@/dummy_data/articles";
 import {Pagination} from '@nextui-org/react';
 import CustomBreadcumbs from "@/components/custom-breadcumbs";
-import paths from "@/paths"; // Imp
+import paths from "@/paths";
 
 const NoticiasLista: React.FC = () => {
     const noticias = articles.sort((a, b) => {

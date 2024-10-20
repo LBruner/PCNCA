@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/app/providers";
 import React from "react";
 import CustomNavbar from "@/components/UI/navbar/CustomNavbar";
+import ScrollToTop from "@/components/UI/scroll-to-top";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -27,6 +28,7 @@ export default function RootLayout(
             <div className="flex flex-col">
                 {children}
             </div>
+            <ScrollToTop/>
         </Providers>
         </body>
         </html>
