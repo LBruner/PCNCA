@@ -5,8 +5,11 @@ import NoticiaCreateForm from "@/components/noticias/criacao/noticia-create-form
 
 const CreateNoticiaPage: React.FC = async () => {
     const categories = await getCategorias();
+
     return (
-        <NoticiaCreateForm categories={categories}/>
+        <div className={'ml-64 flex justify-center mt-12'}>
+            <NoticiaCreateForm categories={categories}/>
+        </div>
     );
 };
 

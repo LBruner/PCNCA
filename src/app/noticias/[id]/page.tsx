@@ -1,11 +1,10 @@
 import React from "react";
 import ReactMarkdown from 'react-markdown';
 import {notFound} from "next/navigation";
-import { getRelatedArticles} from "@/actions/noticias";
+import {getNoticia, getRelatedArticles} from "@/actions/noticias";
 import {generateMarkdown} from "@/helpers/noticia/criacao/criar-noticia";
 import ShortNoticiaCardDetailedBottom
     from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-bottom";
-import {articles} from "@/dummy_data/articles";
 
 interface NoticiaPageProps {
     params: {
@@ -14,8 +13,8 @@ interface NoticiaPageProps {
 }
 
 const NoticiaShowPage: React.FC<NoticiaPageProps> = async ({params}) => {
-    // const noticia = await getNoticia(params.id);
-    const noticia = articles.find((item) => item.id == params.id);
+    const noticia = await getNoticia(params.id);
+    // const noticia = articles.find((item) => item.id == params.id);
     const noticiasRelacionadas = await getRelatedArticles(params.id,6);
 
     if (!noticia) return notFound();

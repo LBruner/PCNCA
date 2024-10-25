@@ -4,8 +4,10 @@ import {db} from "@/db";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {redirect} from "next/navigation";
+import {NoticiasComAutorEstoque} from "@/components/adm/noticias/adm-noticias-table";
 
 interface CreateNoticiaArgs {
+    id?: string;
     title: string;
     subtitle: string;
     content: string;
@@ -47,25 +49,66 @@ export const createNoticia = async (
     redirect(paths.showNoticia(novaNoticia.id))
 };
 
-type getNoticiasArgs = {
+export type getNoticiasArgs = {
     categoryId?: string;
 }
 
+export const editNoticia = async (
+    {
+        id,
+        title,
+        subtitle,
+        content,
+        imageUrl,
+        categoryName,
+        thumbnailSubtitle,
+        authorId = 2,
+        categoryId = 1,
+        status = 'Publicado'
+    }: CreateNoticiaArgs) => {
+    const noticiaEditada = await db.article.update({
+        where: {id: parseInt(id!)},
+        data: {
+            title: title,
+            subtitle: subtitle,
+            content: content,
+            authorId: authorId,
+            categoryId: categoryId,
+            imageUrl: imageUrl,
+            thumbnailText: thumbnailSubtitle || categoryName,
+            status: status,
+        }
+    });
 
-export const getNoticias = async ({categoryId}: getNoticiasArgs = {}) => {
-    const where = categoryId ? {
-        categoryId: parseInt(categoryId)
-    } : {};
+    revalidatePath(paths.noticias());
+    revalidatePath(paths.showNoticia(noticiaEditada.id));
+    redirect(paths.showNoticia(noticiaEditada.id))
+};
 
-    return db.article.findMany({
-        where,
-        orderBy: {
-            publishedAt: 'desc'
+export const deleteNoticia = async (noticiaId: number) => {
+    await db.article.delete({
+        where: {
+            id: noticiaId,
+        },
+    })
+
+    revalidatePath(paths.noticias());
+};
+
+
+export const getNoticiaById = async (noticiaId: string): Promise<NoticiasComAutorEstoque | null> => {
+    return db.article.findUnique({
+        where: {
+            id: parseInt(noticiaId),
+        },
+        include: {
+            author: true,
+            category: true,
         }
     });
 }
 
-export const getNoticia = async (noticiaId: string ) => {
+export const getNoticia = async (noticiaId: string) => {
     return db.article.findUnique({
         where: {
             id: parseInt(noticiaId),
@@ -152,10 +195,6 @@ export const getRelatedArticles = async (currentArticleId: string, quantity: num
 }
 
 export const getCategorias = async () => {
-    // const session = await getServerSession();
-    //
-    // if (!session) return;
-
     return [
         {
             "id": 2,

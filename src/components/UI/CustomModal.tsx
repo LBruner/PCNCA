@@ -36,10 +36,10 @@ const CustomModal: React.FC<CustomModalProps> = (
                     </p>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="danger" variant="light" onPress={onClose}>
+                    <Button color="default" variant="light" onPress={onClose}>
                         {closeText}
                     </Button>
-                    <Button color="primary" onPress={action}>
+                    <Button color="danger" onPress={action}>
                         {actionText}
                     </Button>
                 </ModalFooter>

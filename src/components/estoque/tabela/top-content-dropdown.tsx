@@ -1,6 +1,7 @@
 import React from "react";
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@nextui-org/react";
 import {ChevronDownIcon} from "@nextui-org/shared-icons";
+import {FilterCollection} from "@/models/shared/FilterCollection";
 
 interface TopContentDropDownProps {
     width: string;
@@ -10,9 +11,7 @@ interface TopContentDropDownProps {
     selectionType?: 'single' | 'multiple';
     filterStatus: string | string[];
     setFilterStatus: (status: string | string[]) => void;
-    collection: {
-        name: string;
-        uid: string;}[]
+    collection: FilterCollection[]
 }
 const TopContentDropDown: React.FC<TopContentDropDownProps> = (
     {
@@ -40,7 +39,7 @@ const TopContentDropDown: React.FC<TopContentDropDownProps> = (
                     closeOnSelect={false}
                     selectedKeys={filterStatus}
                     selectionMode={selectionType ?? 'multiple'}
-                    onSelectionChange={(keys) => setFilterStatus([...keys as unknown as string[]])}
+                    onSelectionChange={(keys) => { setFilterStatus([...keys as unknown as string[]])}}
                 >
                     {collection.map((status) => (
                         <DropdownItem key={status.uid} className="capitalize">

@@ -1,6 +1,7 @@
 import type {Product, Sale} from "@prisma/client";
 import {SortDescriptor} from "@nextui-org/react";
 import {IFilterable} from "@/models/estoque/filters";
+import {NoticiasComAutorEstoque} from "@/components/adm/noticias/adm-noticias-table";
 
 type FilterableItem = string | string[];
 
@@ -37,6 +38,28 @@ export const getSortedProduto = (items: Product[], sortDescriptor: SortDescripto
     return [...items].sort((a: Product, b: Product) => {
         const first = a[sortDescriptor.column as keyof Product];
         const second = b[sortDescriptor.column as keyof Product];
+
+        const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
+
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+    });
+}
+
+export const getSortedNoticia = (items: NoticiasComAutorEstoque[], sortDescriptor: SortDescriptor) => {
+    if(sortDescriptor.column == 'author'){
+        return [...items].sort((a: NoticiasComAutorEstoque, b: NoticiasComAutorEstoque) => {
+            const first = a.author.name;
+            const second = b.author.name;
+
+            const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
+
+            return sortDescriptor.direction === "descending" ? -cmp : cmp;
+        });
+    }
+
+    return [...items].sort((a: NoticiasComAutorEstoque, b: NoticiasComAutorEstoque) => {
+        const first = a[sortDescriptor.column as keyof NoticiasComAutorEstoque];
+        const second = b[sortDescriptor.column as keyof NoticiasComAutorEstoque];
 
         const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
 

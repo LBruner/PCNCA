@@ -12,7 +12,7 @@ import {
     Tooltip, useDisclosure,
     User as Usuario
 } from "@nextui-org/react";
-import type {Product, User} from '@prisma/client';
+import type {Category, Product, User} from '@prisma/client';
 import {Chip} from "@nextui-org/chip";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import TabelaTopContent from "@/components/estoque/tabela/tabela-top-content";
@@ -21,7 +21,8 @@ import {categoriesOptions, priceOptions, statusOptions, stockOptions} from "@/mo
 import {getFilteredItems, getSortedProduto} from "@/helpers/tabela";
 import Link from "next/link";
 import paths from "@/paths";
-import ProdutoDeleteModal from "@/components/produtos/ProdutoDeleteModal";
+import ItemDeleteModal, {DeleteModalSettings} from "@/components/produtos/ItemDeleteModal";
+import {deletarProduto} from "@/actions/produto";
 
 const columns = [
     {name: "ID", uid: "id", sortable: true},
@@ -33,7 +34,6 @@ const columns = [
     {name: "PREÇO", uid: "price", sortable: true},
     {name: "STATUS", uid: "status", sortable: true},
     {name: "ESTOQUE", uid: "stock", sortable: true},
-    {name: "AÇÕES", uid: "actions"},
 ];
 
 const statusColorMap: Record<Product['status'], ChipProps['color']> = {
@@ -44,7 +44,7 @@ const statusColorMap: Record<Product['status'], ChipProps['color']> = {
 
 export type ProdutoEstoqueComRelacoes = Product & {
     supplier: User;
-    commodity_type: CommodityType;
+    commodity_type: Category;
 };
 
 const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> = ({products}) => {
@@ -212,9 +212,17 @@ const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> 
         setCurrentPage(1)
     }, [])
 
+    const itemDeleteModalSettings: DeleteModalSettings = {
+        title: 'Excluir Produto',
+        text: 'Tem certeza que deseja excluir este produto?',
+        deletingFunction: deletarProduto,
+        isOpen: isOpen,
+        onClose: onClose,
+    }
+
     return (
         <div className={'w-11/12'}>
-    <ProdutoDeleteModal isOpen={isOpen} onClose={onClose} productId={selectedProductId}/>
+            <ItemDeleteModal itemId={selectedProductId} settings={itemDeleteModalSettings}/>
             <div className={'bg-white rounded-md p-4 mb-4'}>
                 <TabelaTopContent setCategoryFilter={setCategoryFilter}
                                   categoryFilter={categoryFilter} filterValue={filterValue}
