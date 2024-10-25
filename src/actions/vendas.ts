@@ -1,20 +1,19 @@
 'use server';
 
 import {sales} from "@/dummy_data/sales";
-import {vendas} from "@/dummy_data/vendas";
+import {db} from "@/db";
 
 export const buscarVendas = async () => {
-    // return await db.sale.findMany({
-    //     include: {
-    //         saleItems: {
-    //             include: {
-    //                 product: true,
-    //             },
-    //         },
-    //         seller: true,
-    //     },
-    // });
-    return vendas;
+    return db.sale.findMany({
+        include: {
+            saleItems: {
+                include: {
+                    product: true,
+                },
+            },
+            seller: true,
+        },
+    });
 }
 
 export const buscarNomeClientes = async () => {

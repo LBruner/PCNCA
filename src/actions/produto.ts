@@ -124,10 +124,7 @@ async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOr
 
     try {
         const userId = await getUserId(session!.user.email);
-
-        console.log(`FORN: ${result.data}`)
-        await createOrUpdate(result!.data!, userId);
-
+        await createOrUpdate(result?.data!, userId);
 
     } catch (error) {
         console.log(`Erro ao criar produto: ${error}`)
@@ -216,10 +213,10 @@ export async function pegaFornecedor(): Promise<Fornecedor[]> {
         });
     }
 
-    export async function deletarProduto(productId: string) {
+    export async function deletarProduto(productId: number) {
         await db.product.delete({
             where: {
-                id: parseInt(productId),
+                id: productId,
             },
         });
         revalidatePath(paths.estoque());

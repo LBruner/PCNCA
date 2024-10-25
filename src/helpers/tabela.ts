@@ -2,6 +2,7 @@ import type {Product, Sale} from "@prisma/client";
 import {SortDescriptor} from "@nextui-org/react";
 import {IFilterable} from "@/models/estoque/filters";
 import {NoticiasComAutorEstoque} from "@/components/adm/noticias/adm-noticias-table";
+import {VendasComProdutos} from "@/models/vendas";
 
 type FilterableItem = string | string[];
 
@@ -72,8 +73,8 @@ type SortableFields = keyof Pick<Sale, 'id' | 'customerName' | 'date' | 'status'
 
 
 //TODO: quem sabe usar uma interface aqui
-export const getSortedVenda = (items: Sale[], sortDescriptor: SortDescriptor): Sale[] => {
-    return [...items].sort((a: Sale, b: Sale) => {
+export const getSortedVenda = (items: VendasComProdutos[], sortDescriptor: SortDescriptor): VendasComProdutos[] => {
+    return [...items].sort((a: VendasComProdutos, b: VendasComProdutos) => {
         const column = sortDescriptor.column as SortableFields;
         let first = a[column];
         let second = b[column];

@@ -12,20 +12,14 @@ import {
     TableCell,
     TableColumn,
     TableHeader,
-    TableRow,
-    Tooltip,
-    useDisclosure
+    TableRow
 } from "@nextui-org/react";
-import type {Sale} from '@prisma/client';
 import {Chip} from "@nextui-org/chip";
-import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import {getSortedVenda} from "@/helpers/tabela";
-import Link from "next/link";
-import paths from "@/paths";
-import ProdutoDeleteModal from "@/components/produtos/ProdutoDeleteModal";
 import VendasTabelaBottomContent from "@/components/vendas/vendas-tabela-bottom-content";
 import {getPublicacaoData} from "@/helpers/noticia/criacao/criar-noticia";
 import VendasTabelaTopContent, {SelectItem} from "@/components/vendas/vendas-tabela-top-content";
+import {VendasComProdutos} from "@/models/vendas";
 
 const columns = [
     {name: "ID", uid: "id", sortable: true},
@@ -34,10 +28,9 @@ const columns = [
     {name: "PRODUTOS", uid: "produtos", sortable: true},
     {name: "STATUS", uid: "status", sortable: true},
     {name: "VALOR TOTAL", uid: "vrTotal", sortable: true},
-    {name: "AÇÕES", uid: "actions"},
 ];
 
-const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }> = ({vendas, clientes}) => {
+const EstoqueFiltragemCard: React.FC<{ vendas: VendasComProdutos[], clientes: Array<string> }> = ({vendas, clientes}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [statusFilter, setStatusFilter] = React.useState<string | string[]>("all");
     const [clienteFilter, setClienteFilter] = React.useState<string | string[]>("all");
@@ -49,10 +42,8 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
         direction: "ascending",
     });
 
+    console.log(vendas);
     const hasSearchFilter = Boolean(filterValue);
-
-    const {isOpen, onOpen, onClose} = useDisclosure();
-    const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
 
     const rowsPerPage = 5;
 
@@ -62,7 +53,6 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
         return {name: item, uid: item}
     });
 
-    //TODO: Quem sabe criar uma table pros status
     const statusOptions = [
         {name: 'Concluída', uid: 'Concluída'}, {name: 'Em espera', uid: 'Em espera'}, {
             name: 'Desativado',
@@ -74,7 +64,9 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
         let filteredVendas = [...vendas];
 
         if (hasSearchFilter) {
-            filteredVendas = vendas.filter(sale => sale.saleItems.some(item => item.product.name.toLowerCase().includes(filterValue.toLowerCase())));
+            filteredVendas = vendas.filter(sale => sale.saleItems.some(item => {
+                return item.product.name.toLowerCase().includes(filterValue.toLowerCase());
+            }));
         }
 
         if (clienteFilter !== "all" && Array.from(clientesOptions).length !== clienteFilter.length) {
@@ -110,12 +102,12 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
         return filteredItems.slice(start, end);
     }, [currentPage, filteredItems, rowsPerPage, sortDescriptor]);
 
-    const sortedItems = React.useMemo(() => {
+    const sortedItems: VendasComProdutos[] = React.useMemo(() => {
         return getSortedVenda(items, sortDescriptor)
     }, [sortDescriptor, items]);
 
 
-    const renderCell = React.useCallback((venda: Sale, columnKey: string) => {
+    const renderCell = React.useCallback((venda: VendasComProdutos, columnKey: string) => {
         switch (columnKey) {
             case "id":
                 return (
@@ -135,7 +127,7 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
             case "data":
                 return (
                     <Chip className="capitalize" size="sm" variant="flat">
-                        <p>{getPublicacaoData(false, venda.date)}</p>
+                        <p>{getPublicacaoData(false, venda.date.toString())}</p>
                     </Chip>
                 );
             case "produtos":
@@ -146,7 +138,7 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
                             onAction={(key) => alert(`Produto selecionado: ${key}`)}
                         >
                             {venda.saleItems.map((item) => (
-                                <ListboxItem key={item.id}>
+                                <ListboxItem key={item.product.id}>
                                     {`${item.product.name}`}
                                 </ListboxItem>
                             ))}
@@ -160,29 +152,6 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
                             {`${venda.status}`}
                         </Chip>
                     </div>);
-            case "actions":
-                return (
-                    <div className="relative flex items-center justify-center gap-2">
-                        <Tooltip content="Detalhes">
-                          <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                            <EyeIcon/>
-                          </span>
-                        </Tooltip>
-                        <Tooltip content="Editar Produto">
-                          <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                            <Link href={`${paths.editProduto(venda.id.toString())}`}><EditIcon/></Link>
-                          </span>
-                        </Tooltip>
-                        <Tooltip color="danger" content="Deletar Produto">
-                          <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                            <DeleteIcon onClick={() => {
-                                setSelectedProductId(venda.id);
-                                onOpen();
-                            }}/>
-                          </span>
-                        </Tooltip>
-                    </div>
-                );
             default:
                 return <h1>oi</h1>;
         }
@@ -205,7 +174,6 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
 
     return (
         <div className={'w-full'}>
-            <ProdutoDeleteModal isOpen={isOpen} onClose={onClose} productId={selectedProductId}/>
             <div className={'bg-white rounded-md p-4 mb-4'}>
                 <VendasTabelaTopContent setDatesRange={setDateRange} datesRange={dateRange!}
                                         hasSearchFilter={hasSearchFilter} statusOptions={statusOptions}
@@ -248,8 +216,8 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
                     )}
                 </TableHeader>
                 <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhum produtos encontrado"}
-                           items={sortedItems}>
-                    {(sale: Sale) => (
+                           items={[...sortedItems]}>
+                    {(sale: VendasComProdutos) => (
                         <TableRow key={sale.id}>
                             {
                                 columns.map((column) => (
@@ -264,11 +232,6 @@ const EstoqueFiltragemCard: React.FC<{ vendas: Sale[], clientes: Array<string> }
         </div>
     );
 };
-
-
-import {db} from "@/db";
-
-
 
 
 // Uso da função
