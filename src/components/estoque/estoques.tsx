@@ -1,8 +1,7 @@
 import React from "react";
-import EstoqueFiltragemCard from "@/components/estoque/estoque-filtragem-card";
-import type {Product} from "@prisma/client";
+import EstoqueFiltragemCard, {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
 
-const Estoques: React.FC<{products: Product[]}> = ({products}) => {
+const Estoques: React.FC<{products: ProdutoEstoqueComRelacoes[]}> = ({products}) => {
     return (
         <div className={'flex flex-col justify-center items-center mt-40'}>
             <EstoqueFiltragemCard products={products}/>
