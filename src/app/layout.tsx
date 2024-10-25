@@ -5,6 +5,7 @@ import Providers from "@/app/providers";
 import React from "react";
 import CustomNavbar from "@/components/UI/navbar/CustomNavbar";
 import ScrollToTop from "@/components/UI/scroll-to-top";
+import AdmNavbar from "@/components/adm/adm-navbar";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -24,6 +25,7 @@ export default function RootLayout(
         <html className={'h-screen bg-slate-50'} lang="en">
         <body className={`${inter.className} `}>
         <Providers>
+            <AdmNavbar/>
             <CustomNavbar/>
             <div className="flex flex-col">
                 {children}

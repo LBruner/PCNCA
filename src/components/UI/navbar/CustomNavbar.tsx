@@ -12,7 +12,7 @@ import MoedasCard from "@/components/cotacoes/dolar-card/moedas-card";
 const CustomNavbar: React.FC = () => {
     const session = usePathname();
 
-    if (session == paths.login() || session == paths.cadastro()) {
+    if (session == paths.login() || session == paths.cadastro() || session.startsWith('/adm')) {
         return null;
     }
     return (

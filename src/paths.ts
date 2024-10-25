@@ -2,6 +2,12 @@ const paths = {
     landingPage() {
         return '/';
     },
+    adm(){
+        return `/adm`;
+    },
+    admNoticias(){
+        return `/adm/noticias`;
+    },
     home() {
         return `/home`;
     },
@@ -27,7 +33,7 @@ const paths = {
         return `/noticias`;
     },
     criarNoticia() {
-        return `/noticias/criar`;
+        return `/adm/noticias/criar`;
     },
     maisNoticias() {
         return `/noticias/lista`;
@@ -40,6 +46,9 @@ const paths = {
     },
     showNoticia(noticiaId: number) {
         return `/noticias/${noticiaId}`;
+    },
+    editNoticia(noticiaId: number) {
+        return `/adm/noticias/${noticiaId}/editar`;
     },
     estoque() {
         return `/estoque`;
