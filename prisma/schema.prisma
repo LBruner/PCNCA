@@ -52,27 +52,27 @@ model User {
 }
 
 model Product {
-  id              Int           @id @default(autoincrement())
-  name            String
-  description     String?
-  category        String
-  stock           Float
-  status          String
-  unity           String
-  price           Float
-  tipoCommoditie String @default("Agrícola")
+  id             Int        @id @default(autoincrement())
+  name           String
+  description    String?
+  category       String
+  stock          Float
+  status         String
+  unity          String
+  price          Float
+  tipoCommoditie String     @default("Agrícola")
   // commodityTypeId Int @default(1)
   // commodity_type  CommodityType @relation(fields: [commodityTypeId], references: [id])
-  imageUrl        String?
-  weight          Float?
-  dimensions      String?
-  userId          String
-  user            User          @relation(fields: [userId], references: [id]) // Dono do produto
-  supplierId      String @default("clydofcr8000oh3tdxqhk1rqb")
-  supplier        User          @relation("SupplierRelation", fields: [supplierId], references: [id]) // Relação com User como fornecedor
-  createdAt       DateTime      @default(now()) // Data de criação do produto
-  dateAdded       DateTime      @default(now())
-  saleItems       SaleItem[]
+  imageUrl       String?
+  weight         Float?
+  dimensions     String?
+  userId         String
+  user           User       @relation(fields: [userId], references: [id]) // Dono do produto
+  supplierId     String     @default("clydofcr8000oh3tdxqhk1rqb")
+  supplier       User       @relation("SupplierRelation", fields: [supplierId], references: [id]) // Relação com User como fornecedor
+  createdAt      DateTime   @default(now()) // Data de criação do produto
+  dateAdded      DateTime   @default(now())
+  saleItems      SaleItem[]
 }
 
 // model CommodityType {
@@ -146,6 +146,7 @@ model Category {
   id          Int       @id @default(autoincrement())
   name        String    @unique
   description String?
+  url         String?
   articles    Article[]
 }
 
