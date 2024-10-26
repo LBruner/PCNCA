@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import CustomModal from "@/components/UI/CustomModal";
 
-export type DeleteModalSettings = {
+export type DeletingItemModalSettings = {
     title: string
     text: string
     actionText?: string
@@ -13,7 +13,7 @@ export type DeleteModalSettings = {
 
 interface CustomModalProps {
     itemId: number | null,
-    settings: DeleteModalSettings
+    settings: DeletingItemModalSettings
 }
 
 const ItemDeleteModal: React.FC<CustomModalProps> = ({itemId, settings}) => {

@@ -1,4 +1,4 @@
-import type {Product, Sale} from "@prisma/client";
+import type {Category, Product, Sale} from "@prisma/client";
 import {SortDescriptor} from "@nextui-org/react";
 import {IFilterable} from "@/models/estoque/filters";
 import {NoticiasComAutorEstoque} from "@/components/adm/noticias/adm-noticias-table";
@@ -6,7 +6,7 @@ import {VendasComProdutos} from "@/models/vendas";
 
 type FilterableItem = string | string[];
 
-export const getFilteredItems = (productField: number, stockFilter:FilterableItem, filterOption: IFilterable[], symbolToReplace: string) => {
+export const getFilteredItems = (productField: number, stockFilter: FilterableItem, filterOption: IFilterable[], symbolToReplace: string) => {
     let stockMatch = false;
 
     Array.from(stockFilter).forEach((filter) => {
@@ -19,8 +19,7 @@ export const getFilteredItems = (productField: number, stockFilter:FilterableIte
             if (option.uid === "Sem estoque") {
                 stockMatch = stockMatch || (productField === 0);
             } else {
-                const [min, max] = option.name.split(' - ').map(stock =>
-                    {
+                const [min, max] = option.name.split(' - ').map(stock => {
                         return stock.includes('Acima de') ? 500 : parseInt(stock.replace(symbolToReplace, ''), 10);
                     }
                 );
@@ -46,8 +45,19 @@ export const getSortedProduto = (items: Product[], sortDescriptor: SortDescripto
     });
 }
 
+export const getSortedCategoria = (items: Category[], sortDescriptor: SortDescriptor) => {
+    return [...items].sort((a: Category, b: Category) => {
+        const first = a.name;
+        const second = b.name;
+
+        const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
+
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+    });
+}
+
 export const getSortedNoticia = (items: NoticiasComAutorEstoque[], sortDescriptor: SortDescriptor) => {
-    if(sortDescriptor.column == 'author'){
+    if (sortDescriptor.column == 'author') {
         return [...items].sort((a: NoticiasComAutorEstoque, b: NoticiasComAutorEstoque) => {
             const first = a.author.name;
             const second = b.author.name;

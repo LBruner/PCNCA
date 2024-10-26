@@ -21,7 +21,7 @@ import {categoriesOptions, priceOptions, statusOptions, stockOptions} from "@/mo
 import {getFilteredItems, getSortedProduto} from "@/helpers/tabela";
 import Link from "next/link";
 import paths from "@/paths";
-import ItemDeleteModal, {DeleteModalSettings} from "@/components/produtos/ItemDeleteModal";
+import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
 import {deletarProduto} from "@/actions/produto";
 
 const columns = [
@@ -212,7 +212,7 @@ const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> 
         setCurrentPage(1)
     }, [])
 
-    const itemDeleteModalSettings: DeleteModalSettings = {
+    const itemDeleteModalSettings: DeletingItemModalSettings = {
         title: 'Excluir Produto',
         text: 'Tem certeza que deseja excluir este produto?',
         deletingFunction: deletarProduto,

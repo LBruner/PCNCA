@@ -1,12 +1,15 @@
-import React from "react";
+import React, {ReactNode} from "react";
 import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@nextui-org/modal";
 import {Button, Spinner} from "@nextui-org/react";
 
-interface CustomModalProps {
+export interface CustomModalProps {
     title: string,
     text: string,
+    modalDisplayBody?: ReactNode,
     action: () => void,
     actionText: string,
+    actionButtonColor?: "primary" | "secondary" | "success" | "warning" | "danger" | "default" | undefined
+    closeButtonColor?: "primary" | "secondary" | "success" | "warning" | "danger" | "default" | undefined,
     closeText?: string,
     isOpen: boolean,
     onClose: () => void,
@@ -16,7 +19,18 @@ interface CustomModalProps {
 
 const CustomModal: React.FC<CustomModalProps> = (
     {
-        isOpen, isLoading, onClose, size, text, title, action, closeText, actionText
+        modalDisplayBody,
+        isOpen,
+        isLoading,
+        onClose,
+        size,
+        text,
+        title,
+        action,
+        closeText,
+        actionText,
+        closeButtonColor,
+        actionButtonColor
     }) => {
 
     let modalBody;
@@ -31,17 +45,11 @@ const CustomModal: React.FC<CustomModalProps> = (
             <>
                 <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
                 <ModalBody>
-                    <p>
-                        {text}
-                    </p>
+                    {modalDisplayBody ? modalDisplayBody : text}
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="default" variant="light" onPress={onClose}>
-                        {closeText}
-                    </Button>
-                    <Button color="danger" onPress={action}>
-                        {actionText}
-                    </Button>
+                    {closeText && <Button color={closeButtonColor ?? 'default'} variant="light" onPress={onClose}>{closeText}</Button>}
+                    {actionText && <Button  color={actionButtonColor ?? 'primary'} onPress={action}>{actionText} </Button>}
                 </ModalFooter>
             </>
     }

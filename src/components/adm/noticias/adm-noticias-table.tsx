@@ -24,7 +24,7 @@ import {statusOptions} from "@/models/estoque/filters";
 import {getSortedNoticia} from "@/helpers/tabela";
 import Link from "next/link";
 import paths from "@/paths";
-import ItemDeleteModal, {DeleteModalSettings} from "@/components/produtos/ItemDeleteModal";
+import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
 import AdmNoticiasTableTopContent from "@/components/adm/noticias/adm-noticias-table-top-content";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import {deleteNoticia} from "@/actions/noticias";
@@ -58,7 +58,6 @@ interface AdmNoticiasProps {
 
 const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCollection, categoryFilterCollection}) => {
     const [filterValue, setFilterValue] = React.useState("");
-    const [selectedKeys, setSelectedKeys] = React.useState<string | string[]>([]);
     const [statusFilter, setStatusFilter] = React.useState<string | string[]>("all");
     const [authorFilter, setAuthorFilter] = React.useState<string | string[]>("all");
     const [categoryFilter, setCategoryFilter] = React.useState<string | string[]>("all");
@@ -229,7 +228,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
         setCurrentPage(1)
     }, [])
 
-    const itemDeleteModalSettings: DeleteModalSettings = {
+    const itemDeleteModalSettings: DeletingItemModalSettings = {
         title: 'Excluir Notícia',
         text: 'Tem certeza que deseja excluir esta notícia? Essa ação não pode ser desfeita...',
         deletingFunction: deleteNoticia,
@@ -242,32 +241,35 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
             <ItemDeleteModal itemId={selectedProductId}
                              settings={itemDeleteModalSettings}/>
             <div className={'bg-white rounded-md p-4 mb-4'}>
-                <AdmNoticiasTableTopContent setDatesRange={setDateRange} datesRange={dateRange!}
-                                            authorFilterCollection={authorFilterCollection}
-                                            categoryFilterCollection={categoryFilterCollection}
-                                            setCategoryFilter={setCategoryFilter}
 
-                                            authorFilter={authorFilter} filterValue={filterValue}
-                                            setStatusFilter={setStatusFilter} onClear={onClear}
-                                            onSearchChange={onSearchChange} statusFilter={statusFilter}
-                                            categoryFilter={categoryFilter}
-                                            setAuthorFilter={setAuthorFilter} hasSearchFilter={hasSearchFilter}
-                                            itemsLenght={noticias.length}/>
             </div>
             <Table
                 isHeaderSticky={false}
+                topContent={<AdmNoticiasTableTopContent
+                    setDatesRange={setDateRange} datesRange={dateRange!}
+                    authorFilterCollection={authorFilterCollection}
+                    categoryFilterCollection={categoryFilterCollection}
+                    setCategoryFilter={setCategoryFilter}
+
+                    authorFilter={authorFilter} filterValue={filterValue}
+                    setStatusFilter={setStatusFilter} onClear={onClear}
+                    onSearchChange={onSearchChange} statusFilter={statusFilter}
+                    categoryFilter={categoryFilter}
+                    setAuthorFilter={setAuthorFilter}
+                    hasSearchFilter={hasSearchFilter}
+                    itemsLenght={noticias.length}/>}
+                topContentPlacement={'inside'}
                 bottomContentPlacement="outside"
                 bottomContent={<TabelaBottomContent
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
                     filteredItemsLength={filteredItems.length}
                     totalPagesQuantity={totalPagesQuantity}
-                    hasSearchFilter={hasSearchFilter} selectedKeys={selectedKeys}/>}
+                    hasSearchFilter={hasSearchFilter} selectedKeys={[]}/>}
                 selectionMode="none"
-                onSelectionChange={keys => setSelectedKeys([...keys as unknown as string[]])}
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
                 classNames={{
-                    wrapper: "max-h-2/4 min-h-[30rem] h-[38rem]",
+                    wrapper: "h-auto",
                 }}
             >
                 <TableHeader columns={columns}>

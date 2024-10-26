@@ -1,8 +1,9 @@
 import React from "react";
 import '@mdxeditor/editor/style.css';
-import {getCategorias, getNoticiaById} from "@/actions/noticias";
 import NoticiaCreateForm from "@/components/noticias/criacao/noticia-create-form";
 import NotFound from "next/dist/client/components/not-found-error";
+import {getCategorias} from "@/actions/categorias";
+import {getNoticiaById} from "@/actions/noticias";
 
 interface EditNoticiaPageProps {
     params: {

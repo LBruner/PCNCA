@@ -8,6 +8,9 @@ const paths = {
     admNoticias(){
         return `/adm/noticias`;
     },
+    admCategorias(){
+        return `/adm/categorias`;
+    },
     home() {
         return `/home`;
     },
@@ -36,7 +39,7 @@ const paths = {
         return `/adm/noticias/criar`;
     },
     maisNoticias() {
-        return `/noticias/lista`;
+        return `/noticias/ver-mais`;
     },
     culturas() {
         return `/noticias/culturas`;

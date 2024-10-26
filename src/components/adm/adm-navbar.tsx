@@ -40,13 +40,19 @@ const AdmNavbar: React.FC = () => {
                         >
                             <div className="flex flex-col w-36 gap-2">
                                 <Link href={paths.admNoticias()}>
-                                    <Button className="text-right w-full justify-start" color={pathname === paths.admNoticias() ? "primary" : "default"} startContent={<BiNews />}>
+                                    <Button className="text-right w-full justify-start"
+                                            color={pathname === paths.admNoticias() ? "primary" : "default"}
+                                            startContent={<BiNews/>}>
                                         Notícias
                                     </Button>
                                 </Link>
-                                <Button className="text-right justify-start" startContent={<BiCategory />}>
-                                    Categorias
-                                </Button>
+                                <Link href={paths.admCategorias()}>
+                                    <Button className="text-right w-full justify-start"
+                                            color={pathname === paths.admCategorias() ? "primary" : "default"}
+                                            startContent={<BiCategory/>}>
+                                        Categorias
+                                    </Button>
+                                </Link>
                             </div>
                         </AccordionItem>
                     </Accordion>
