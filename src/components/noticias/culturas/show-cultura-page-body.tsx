@@ -43,6 +43,7 @@ const ShowCulturaPageBody: React.FC<ShowCulturaPageBodyProps> = ({noticiasFiltra
                         content={noticia.content}
                         date={new Date(noticia.publishedAt).toString()}
                         key={noticia.id}
+                        from={`culturas/${categoria?.name ?? 'desconhecido'}/${categoria?.id}`}
                     />
                 ))}
             </div>

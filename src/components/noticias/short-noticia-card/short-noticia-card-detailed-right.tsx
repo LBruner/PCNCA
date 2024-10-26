@@ -11,6 +11,7 @@ interface NoticiaCardShortProps {
     id: number;
     showDetails?: boolean;
     isClicable?: boolean
+    from?: string;
 }
 
 const ShortNoticiaCardDetailedRight: React.FC<NoticiaCardShortProps> = (
@@ -21,10 +22,10 @@ const ShortNoticiaCardDetailedRight: React.FC<NoticiaCardShortProps> = (
         description,
         id,
         showDetails,
-        isClicable = true
+        isClicable = true,
+        from
     }
 ) => {
-
     const contentToRender =
         <>
             <div className={`${showDetails ? 'row-span-2 col-span-2' : 'row-span-4 col-span-4'}`}>
@@ -47,7 +48,7 @@ const ShortNoticiaCardDetailedRight: React.FC<NoticiaCardShortProps> = (
     }
 
     return (
-        <Link href={paths.showNoticia(id)} className={'grid grid-cols-4 grid-rows-2 gap-4 h-full'}>
+        <Link href={`${paths.showNoticia(id)}${from ? `?from=${from}`: ''}`} className={'grid grid-cols-4 grid-rows-2 gap-4 h-full'}>
             {contentToRender}
         </Link>
     )

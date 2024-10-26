@@ -11,6 +11,7 @@ interface NoticiaCardProps {
     showDetails?: boolean;
     height?: string;
     isClicable?: boolean
+    from?: string;
 }
 
 const ShortNoticiaCardDetailedBottom: React.FC<NoticiaCardProps> = (
@@ -21,7 +22,8 @@ const ShortNoticiaCardDetailedBottom: React.FC<NoticiaCardProps> = (
         shortDescription,
         showDetails,
         height,
-        isClicable = true
+        isClicable = true,
+        from
     }
 ) => {
 
@@ -44,7 +46,7 @@ const ShortNoticiaCardDetailedBottom: React.FC<NoticiaCardProps> = (
     }
 
     return (
-        <Link href={paths.showNoticia(id)}>
+        <Link href={`${paths.showNoticia(id)}${from ? `?from=${from}`: ''}`}>
             {contentToRender}
         </Link>
     )

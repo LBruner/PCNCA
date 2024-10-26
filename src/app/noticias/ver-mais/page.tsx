@@ -46,6 +46,7 @@ const NoticiasLista: React.FC = () => {
                         content={noticia.content}
                         date={new Date(noticia.publishedAt).toString()}
                         key={noticia.id}
+                        from={'mais-noticias'}
                     />
                 ))}
 

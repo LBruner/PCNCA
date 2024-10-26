@@ -81,6 +81,7 @@ const CulturasList: React.FC<{ noticiasFiltradas: Article[] }> = ({noticiasFiltr
                             shortDescription={noticia.title}
                             imageUrl={noticia.imageUrl!}
                             id={noticia.id}
+                            from={'all-news'}
                         />
                     </div>
                 ))}
@@ -92,6 +93,7 @@ const CulturasList: React.FC<{ noticiasFiltradas: Article[] }> = ({noticiasFiltr
                             shortDescription={noticia.title}
                             imageUrl={noticia.imageUrl!}
                             id={noticia.id}
+                            from={'all-news'}
                         />
                     </div>
                 ))}

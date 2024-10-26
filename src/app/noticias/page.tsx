@@ -38,6 +38,7 @@ const NoticiasPage: React.FC = async _ => {
                             description={''}
                             id={noticias[0].id}
                             showDetails={false}
+                            from={'all-news'}
                         />
                     </div>
                     <div className="col-span-2 row-span-4 col-start-3">
@@ -48,6 +49,7 @@ const NoticiasPage: React.FC = async _ => {
                             description={noticias[1].subtitle}
                             id={noticias[1].id}
                             showDetails={true}
+                            from={'all-news'}
                         />
                     </div>
                     <div className="col-span-2 row-span-4 col-start-3 row-start-5">
@@ -58,6 +60,7 @@ const NoticiasPage: React.FC = async _ => {
                             description={noticias[2].subtitle}
                             id={noticias[2].id}
                             showDetails={true}
+                            from={'all-news'}
                         />
                     </div>
                     {noticias.slice(4, 8).map(noticia => (
@@ -68,6 +71,7 @@ const NoticiasPage: React.FC = async _ => {
                                 shortDescription={noticia.title}
                                 imageUrl={noticia.imageUrl!}
                                 id={noticia.id}
+                                from={'all-news'}
                             />
                         </div>
                     ))}
