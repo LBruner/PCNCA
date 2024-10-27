@@ -26,7 +26,7 @@ const CulturasTabs: React.FC<CulturasListProps> = ({noticias, categorias}) => {
     }
 
     return (
-        <div className={'row-span-8 col-span-4 mt-8'}>
+        <div className={'row-span-8 col-span-4 mt-12 h-full'}>
             <div className={'flex items-center justify-between mb-10'}>
                 <p className={'text-xl font-bold'}>DESTAQUE EM CULTURAS</p>
                 <Link className={'text-green-700 text-sm'} href={paths.culturas()}>
@@ -42,7 +42,7 @@ const CulturasTabs: React.FC<CulturasListProps> = ({noticias, categorias}) => {
                     </Tab>
                 ))}
             </Tabs>
-            <div className={'flex justify-center mb-12'}>
+            <div className={'flex justify-center'}>
                 <Link href={paths.maisNoticias()}>
                     <Button className={'px-4 py-6 text-white bg-green-800 font-semibold'} radius={'sm'}>
                         CARREGAR MAIS NOTÍCIAS

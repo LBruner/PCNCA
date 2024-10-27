@@ -6,6 +6,7 @@ import React from "react";
 import CustomNavbar from "@/components/UI/navbar/CustomNavbar";
 import ScrollToTop from "@/components/UI/scroll-to-top";
 import AdmNavbar from "@/components/adm/adm-navbar";
+import CustomFooter from "@/components/UI/footer/custom-footer";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -31,6 +32,7 @@ export default function RootLayout(
                 {children}
             </div>
             <ScrollToTop/>
+            <CustomFooter/>
         </Providers>
         </body>
         </html>

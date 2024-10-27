@@ -29,7 +29,7 @@ const ShortNoticiaCardDetailedBottom: React.FC<NoticiaCardProps> = (
 
     const contentToRender =
         <div className="flex flex-1 flex-col h-full w-full">
-            <div className={`relative ${showDetails ? `${height ? height : 'h-[11.6rem]'}  w-full` : 'w-full'}`}>
+            <div className={`relative ${showDetails ? `${height ? height : 'h-[13.6rem]'}  w-full` : 'w-full'}`}>
                 <NoticiaImagemWrapper showDetails={true} title={title} imageUrl={imageUrl}/>
             </div>
             {showDetails && <div className="flex flex-col items-start justify-start">
