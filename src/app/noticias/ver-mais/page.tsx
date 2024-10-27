@@ -1,5 +1,5 @@
 'use client';
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import LargeNoticiaCard from "@/components/noticias/large-noticia-card/large-noticia-card";
 import {articles} from "@/dummy_data/articles";
 import {Pagination} from '@nextui-org/react';
@@ -24,6 +24,13 @@ const NoticiasLista: React.FC = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentArticles = noticias.slice(startIndex, endIndex);
+
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, [currentPage]);
 
     return (
         <div className={'mt-36'}>

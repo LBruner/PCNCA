@@ -1,5 +1,5 @@
 'use client';
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import CustomBreadcumbs from "@/components/custom-breadcumbs";
 import paths from "@/paths";
 import LargeNoticiaCard from "@/components/noticias/large-noticia-card/large-noticia-card";
@@ -11,13 +11,20 @@ interface ShowCulturaPageBodyProps {
     categoria?: Category;
 }
 
-const ShowCulturaPageBody: React.FC<ShowCulturaPageBodyProps> = ({noticiasFiltradas,categoria}) => {
+const ShowCulturaPageBody: React.FC<ShowCulturaPageBodyProps> = ({noticiasFiltradas, categoria}) => {
     const itemsPerPage = 10;
     const [currentPage, setCurrentPage] = useState(1);
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentNoticias = noticiasFiltradas.slice(startIndex, endIndex);
+
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, [currentPage]);
 
     return (
         <div className={'mt-36'}>
@@ -57,7 +64,7 @@ const ShowCulturaPageBody: React.FC<ShowCulturaPageBodyProps> = ({noticiasFiltra
                 />
             </div>
         </div>
-    )
+    );
 }
 
 export default ShowCulturaPageBody;
