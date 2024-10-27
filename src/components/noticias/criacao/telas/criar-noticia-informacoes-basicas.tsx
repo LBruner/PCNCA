@@ -7,10 +7,11 @@ import ShortNoticiaCardDetailedBottom
     from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-bottom";
 import {Category} from "@prisma/client";
 import {Artigo} from "@/models/artigo";
+import {fallbackImgUrl} from "@/constants/messages/images";
 
 const defaultTitle = 'Aqui vai o título da notícia'
 const defaultSubtitle = 'Aqui vai o subtítulo da notícia'
-const defaultImagem = 'https://placehold.co/600x400.png'
+const defaultImagem = fallbackImgUrl;
 const defaultThumbnail = 'Legenda'
 
 interface ProdutoFormProps {
