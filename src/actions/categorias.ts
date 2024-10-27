@@ -12,7 +12,7 @@ export const getCategoryById = async (id: number) => {
     })
 }
 
-export const getCategorias = async () => {
+export const getCategorias = async (): Promise<Category[]>=> {
     // return [
     //     {
     //         "id": 6,
@@ -52,7 +52,12 @@ export const getCategorias = async () => {
     //     }
     // ]
 
-    return db.category.findMany();
+    const categories = await db.category.findMany();
+    if (!categories || categories.length == 0){
+        return [];
+    }
+
+    return categories;
 }
 
 export const createCategory = async (name: string, description: string, url: string) => {

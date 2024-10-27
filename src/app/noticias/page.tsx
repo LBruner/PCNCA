@@ -7,13 +7,16 @@ import ShortNoticiaCardDetailedBottom
     from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-bottom";
 import {articles} from "@/dummy_data/articles";
 import {categories} from "@/dummy_data/categories";
+import {getNoticias} from "@/actions/adm";
+import {getCategorias} from "@/actions/categorias";
+import {Article, Category} from "@prisma/client";
 
 
 const NoticiasPage: React.FC = async _ => {
     // const noticias = dados;
-    // const noticias = await getNoticias();
-    // const categorias = await getCategorias();
-    const noticias = articles;
+     const noticias = await getNoticias();
+     const categorias: Category[] = await getCategorias();
+    //const noticias = articles;
     // const noticias = noticiasPCNCA;
 
     if (!noticias || noticias.length == 0) {
@@ -63,7 +66,7 @@ const NoticiasPage: React.FC = async _ => {
                             from={'all-news'}
                         />
                     </div>
-                    {noticias.slice(4, 8).map(noticia => (
+                    {noticias.slice(4, 8).map((noticia: Article) => (
                         <div key={noticia.id} className="row-span-2 row-start-9">
                             <ShortNoticiaCardDetailedBottom
                                 showDetails={true}
@@ -75,11 +78,10 @@ const NoticiasPage: React.FC = async _ => {
                             />
                         </div>
                     ))}
-                    <CulturasTabs noticias={noticias} categorias={categories || []}/>
+                    <CulturasTabs noticias={noticias} categorias={categorias.reverse().slice(0,4)}/>
                 </div>
             </div>
         </div>
-
     )
 }
 
