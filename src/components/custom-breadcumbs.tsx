@@ -1,7 +1,7 @@
+'use client';
 import React from "react";
 import {BreadcrumbItem, Breadcrumbs} from "@nextui-org/react";
 import Link from "next/link";
-import paths from "@/paths";
 
 interface  CustomBreadcumbProps {
     breadcumbs: CustomBreadcumb[];
@@ -13,6 +13,7 @@ type CustomBreadcumb = {
 }
 
 const CustomBreadcumbs: React.FC<CustomBreadcumbProps> = ({breadcumbs}) => {
+    console.log('om');
     return (
         <div className={'px-12 mb-8'}>
             <Breadcrumbs size={'lg'}>
