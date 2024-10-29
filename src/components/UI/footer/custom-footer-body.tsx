@@ -22,7 +22,7 @@ const CustomFooterBody: React.FC<CustomFooterProps> = ({categories,}) => {
         return null;
     }
 
-    if (pathname.startsWith('/adm') || pathname.startsWith('/auth')) {
+    if (pathname.startsWith('/adm') || pathname.startsWith('/auth')){
         return null;
     }
     return (
