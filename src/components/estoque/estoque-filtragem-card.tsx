@@ -44,7 +44,6 @@ const statusColorMap: Record<Product['status'], ChipProps['color']> = {
 
 export type ProdutoEstoqueComRelacoes = Product & {
     supplier: User;
-    commodity_type: Category;
 };
 
 const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> = ({products}) => {
@@ -97,7 +96,7 @@ const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> 
             filteredProducts = filteredProducts.filter((product) => getFilteredItems(product.price, priceFilter, priceOptions, 'R$'));
         }
         return filteredProducts;
-    }, [products, filterValue, statusFilter, categoryFilter, priceFilter, stockFilter]);
+    }, [products, filterValue, statusFilter, categoryFilter, priceFilter, stockFilter, hasSearchFilter]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -110,7 +109,7 @@ const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> 
 
     const sortedItems = React.useMemo(() => {
         return getSortedProduto(items, sortDescriptor)
-    }, [sortDescriptor, items, hasSearchFilter]);
+    }, [sortDescriptor, items]);
 
     const renderCell = React.useCallback((product: ProdutoEstoqueComRelacoes, columnKey: string) => {
         switch (columnKey) {
@@ -195,7 +194,7 @@ const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> 
             default:
                 return <h1>Implementar</h1>;
         }
-    }, []);
+    }, [onOpen]);
 
 
     const onSearchChange = React.useCallback((value: string | null) => {

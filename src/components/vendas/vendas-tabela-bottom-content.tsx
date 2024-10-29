@@ -15,7 +15,6 @@ const VendasTabelaBottomContent: React.FC<TabelaBottomContentProps> = (
         setCurrentPage,
         currentPage,
         totalPagesQuantity,
-        hasSearchFilter,
         selectedKeys,
         filteredItemsLength,
     }

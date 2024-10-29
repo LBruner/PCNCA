@@ -17,11 +17,11 @@ interface CustomModalProps {
 }
 
 const ItemDeleteModal: React.FC<CustomModalProps> = ({itemId, settings}) => {
-    if (!itemId)
-        return null;
 
     const [isLoading, setIsLoading] = useState(false)
 
+    if (!itemId)
+        return null;
     const onDeleteProduct = async () => {
         setIsLoading(true);
         await settings.deletingFunction(itemId);
