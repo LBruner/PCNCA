@@ -24,13 +24,13 @@ const TabelaBottomContent: React.FC<TabelaBottomContentProps> = (
         if (currentPage < totalPagesQuantity) {
             setCurrentPage(currentPage + 1);
         }
-    }, [currentPage, totalPagesQuantity]);
+    }, [currentPage, totalPagesQuantity, setCurrentPage]);
 
     const onPreviousPage = React.useCallback(() => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1);
         }
-    }, [currentPage]);
+    }, [currentPage, setCurrentPage]);
 
     return React.useMemo(() => {
         return (
@@ -59,7 +59,7 @@ const TabelaBottomContent: React.FC<TabelaBottomContentProps> = (
                 </div>
             </div>
         );
-    }, [selectedKeys, filteredItemsLength, currentPage, totalPagesQuantity, hasSearchFilter, setCurrentPage, onNextPage, onPreviousPage]);
+    }, [selectedKeys, filteredItemsLength, currentPage, totalPagesQuantity, setCurrentPage, onNextPage, onPreviousPage]);
 }
 
 

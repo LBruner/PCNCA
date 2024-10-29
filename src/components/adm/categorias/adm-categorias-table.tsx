@@ -65,7 +65,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
             );
         }
         return filteredProducts;
-    }, [categorias, filterValue]);
+    }, [categorias, filterValue, hasSearchFilter]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -78,7 +78,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
 
     const sortedItems = React.useMemo(() => {
         return getSortedCategoria(items, sortDescriptor)
-    }, [sortDescriptor, items, hasSearchFilter]);
+    }, [sortDescriptor, items]);
 
     const renderCell = React.useCallback((categoria: Category, columnKey: string) => {
         switch (columnKey) {
@@ -147,7 +147,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
             default:
                 return <h1>Implementar</h1>;
         }
-    }, []);
+    }, [deleteModal, editModal, previewModal]);
 
 
     const onSearchChange = React.useCallback((value: string | null) => {

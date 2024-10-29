@@ -17,8 +17,6 @@ const AdmCategoriasTableTopContent: React.FC<TabelaTopContentProps> = (
         filterValue,
         onSearchChange,
         onClear,
-        itemsLenght,
-        hasSearchFilter,
         openCreateCategoryModal,
     }
 ) => {
@@ -45,10 +43,10 @@ const AdmCategoriasTableTopContent: React.FC<TabelaTopContentProps> = (
             </div>
         );
     }, [
+        onClear,
+        openCreateCategoryModal,
         filterValue,
-        itemsLenght,
         onSearchChange,
-        hasSearchFilter,
     ]))
 }
 

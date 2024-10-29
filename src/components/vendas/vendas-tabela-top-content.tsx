@@ -43,14 +43,10 @@ const VendasTabelaTopContent: React.FC<TabelaTopContentProps> = (
         statusFilter,
         filterValue,
         stockFilter,
-        priceFilter,
         onSearchChange,
         onClear,
-        itemsLenght,
         clientesOptions,
         statusOptions,
-        hasSearchFilter,
-        datesRange,
         setDatesRange,
     }
 ) => {
@@ -128,12 +124,16 @@ const VendasTabelaTopContent: React.FC<TabelaTopContentProps> = (
         filterValue,
         statusFilter,
         stockFilter,
-        priceFilter,
         categoryFilter,
-        itemsLenght,
+        clientesOptions,
+        isOpen,
+        onOpen,
+        setCategoryFilter,
+        setDatesRange,
+        setStatusFilter,
+        onClear,
+        statusOptions,
         onSearchChange,
-        hasSearchFilter,
-        datesRange,
         onOpenChange
     ]))
 }

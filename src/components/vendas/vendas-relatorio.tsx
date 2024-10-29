@@ -91,7 +91,7 @@ const EstoqueFiltragemCard: React.FC<{ vendas: VendasComProdutos[], clientes: Ar
         }
 
         return filteredVendas;
-    }, [vendas, filterValue, statusFilter, clienteFilter, priceFilter, stockFilter, dateRange,]);
+    }, [vendas, filterValue, statusFilter, clienteFilter, dateRange,clientesOptions, hasSearchFilter, statusOptions]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -100,7 +100,7 @@ const EstoqueFiltragemCard: React.FC<{ vendas: VendasComProdutos[], clientes: Ar
         const end = start + rowsPerPage;
 
         return filteredItems.slice(start, end);
-    }, [currentPage, filteredItems, rowsPerPage, sortDescriptor]);
+    }, [currentPage, filteredItems, rowsPerPage]);
 
     const sortedItems: VendasComProdutos[] = React.useMemo(() => {
         return getSortedVenda(items, sortDescriptor)

@@ -115,7 +115,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
         }
 
         return filteredProducts;
-    }, [noticias, filterValue, statusFilter, authorFilter, categoryFilter, dateRange]);
+    }, [noticias, filterValue, statusFilter, authorFilter, categoryFilter, dateRange,authorFilterCollection,categoryFilterCollection,hasSearchFilter]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -128,7 +128,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
 
     const sortedItems = React.useMemo(() => {
         return getSortedNoticia(items, sortDescriptor)
-    }, [sortDescriptor, items, hasSearchFilter]);
+    }, [sortDescriptor, items]);
 
     const renderCell = React.useCallback((noticia: NoticiasComAutorEstoque, columnKey: string) => {
         switch (columnKey) {
@@ -211,7 +211,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
             default:
                 return <h1>Implementar</h1>;
         }
-    }, []);
+    }, [onOpen]);
 
 
     const onSearchChange = React.useCallback((value: string | null) => {
@@ -240,9 +240,6 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
         <div className={'ml-64 mt-12 w-9/12'}>
             <ItemDeleteModal itemId={selectedProductId}
                              settings={itemDeleteModalSettings}/>
-            <div className={'bg-white rounded-md p-4 mb-4'}>
-
-            </div>
             <Table
                 isHeaderSticky={false}
                 topContent={<AdmNoticiasTableTopContent

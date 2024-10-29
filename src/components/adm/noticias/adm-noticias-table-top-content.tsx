@@ -39,9 +39,6 @@ const AdmNoticiasTableTopContent: React.FC<TabelaTopContentProps> = (
         filterValue,
         onSearchChange,
         onClear,
-        itemsLenght,
-        hasSearchFilter,
-        datesRange,
         setDatesRange
     }
 ) => {
@@ -100,12 +97,16 @@ const AdmNoticiasTableTopContent: React.FC<TabelaTopContentProps> = (
     }, [
         filterValue,
         statusFilter,
-        datesRange,
         authorFilter,
         categoryFilter,
-        itemsLenght,
+        authorFilterCollection,
+        categoryFilterCollection,
+        onClear,
+        setAuthorFilter,
+        setCategoryFilter,
+        setDatesRange,
+        setStatusFilter,
         onSearchChange,
-        hasSearchFilter,
     ]))
 }
 

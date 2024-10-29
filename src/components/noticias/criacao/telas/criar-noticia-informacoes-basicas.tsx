@@ -151,4 +151,6 @@ const CriarNoticiaInformacoesBasicas: React.FC<ProdutoFormProps> = forwardRef((p
     )
 })
 
+CriarNoticiaInformacoesBasicas.displayName = 'CriarNoticiaInformacoesBasicas';
+
 export default CriarNoticiaInformacoesBasicas;

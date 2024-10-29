@@ -95,7 +95,11 @@ const TabelaTopContent: React.FC<TabelaTopContentProps> = (
         categoryFilter,
         itemsLenght,
         onSearchChange,
-        hasSearchFilter,
+        onClear,
+        setCategoryFilter,
+        setPriceFilter,
+        setStatusFilter,
+        setStockFilter
     ]))
 }
 

@@ -35,6 +35,8 @@ const CriarNoticiaInformacoesBasicasInputField: React.FC<ConfigurarNoticiaFormFi
     )
 }
 
+CriarNoticiaInformacoesBasicasInputField.displayName = "CriarNoticiaInformacoesBasicasInputField";
+
 interface CustomInput {
     defaultValue?: string,
     value?: string,
