@@ -1,7 +1,5 @@
 import React from "react";
 import {Avatar} from "@nextui-org/avatar";
-import {EditIcon} from "@nextui-org/shared-icons";
-import {Button, Input} from "@nextui-org/react";
 import {User} from "@prisma/client";
 import {fallbackImgUrl} from "@/constants/messages/images";
 

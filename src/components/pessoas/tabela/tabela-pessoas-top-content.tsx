@@ -1,11 +1,8 @@
 import React from "react";
-import {Button, Divider, Input} from "@nextui-org/react";
+import {Button, Input} from "@nextui-org/react";
 import {SearchIcon} from "@nextui-org/shared-icons";
 import {PlusIcon} from "@/components/estoque/plus-icon";
-import {PiPrinterFill} from "react-icons/pi";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
-import Link from "next/link";
-import paths from "@/paths";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 
 interface TabelaPessoasTopContentProps {

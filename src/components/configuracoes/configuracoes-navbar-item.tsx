@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import paths from "@/paths";
 
 interface ConfiguracoesNavbarItemProps {
     title: string;

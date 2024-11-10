@@ -7,7 +7,7 @@ const CreateNoticiaPage: React.FC = async () => {
     const categories = await getCategorias();
 
     return (
-        <div className={'ml-64 flex justify-center mt-12'}>
+        <div className={'ml-64 h-full flex justify-center mt-12'}>
             <NoticiaCreateForm categories={categories}/>
         </div>
     );
