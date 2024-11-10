@@ -45,7 +45,7 @@ const CulturasTabs: React.FC<CulturasListProps> = ({noticias, categorias}) => {
             <div className={'flex justify-center'}>
                 <Link href={paths.maisNoticias()}>
                     <Button className={'px-4 py-6 text-white bg-green-800 font-semibold'} radius={'sm'}>
-                        CARREGAR MAIS NOTÍCIAS
+                        MAIS NOTÍCIAS
                     </Button>
                 </Link>
             </div>
