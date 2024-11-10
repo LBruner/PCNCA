@@ -4,10 +4,12 @@ import {SearchIcon} from "@nextui-org/shared-icons";
 import {PlusIcon} from "@/components/estoque/plus-icon";
 import {PiPrinterFill} from "react-icons/pi";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
-import {categoriesOptions, priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
+import {priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
 import Link from "next/link";
 import paths from "@/paths";
+import {FilterCollection} from "@/models/shared/FilterCollection";
 interface TabelaTopContentProps {
+    categoriesOptions: FilterCollection[]
     statusFilter: string | string[];
     setStatusFilter: (keys:string | string[]) => void;
     priceFilter: string | string[];
@@ -25,6 +27,7 @@ interface TabelaTopContentProps {
 
 const TabelaTopContent: React.FC<TabelaTopContentProps> = (
     {
+        categoriesOptions,
         categoryFilter,
         setCategoryFilter,
         setStatusFilter,

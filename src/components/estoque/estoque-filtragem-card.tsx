@@ -2,27 +2,30 @@
 
 import React, {useState} from "react";
 import {
-    ChipProps, SortDescriptor,
+    ChipProps,
+    SortDescriptor,
     Table,
     TableBody,
     TableCell,
     TableColumn,
     TableHeader,
     TableRow,
-    Tooltip, useDisclosure,
+    Tooltip,
+    useDisclosure,
     User as Usuario
 } from "@nextui-org/react";
-import type {Category, Product, User} from '@prisma/client';
+import type {Product, User} from '@prisma/client';
 import {Chip} from "@nextui-org/chip";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import TabelaTopContent from "@/components/estoque/tabela/tabela-top-content";
 import TabelaBottomContent from "@/components/estoque/tabela/tabela-bottom-content";
-import {categoriesOptions, priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
+import {priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
 import {getFilteredItems, getSortedProduto} from "@/helpers/tabela";
 import Link from "next/link";
 import paths from "@/paths";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
 import {deletarProduto} from "@/actions/produto";
+import {FilterCollection} from "@/models/shared/FilterCollection";
 
 const columns = [
     {name: "ID", uid: "id", sortable: true},
@@ -34,6 +37,7 @@ const columns = [
     {name: "PREÇO", uid: "price", sortable: true},
     {name: "STATUS", uid: "status", sortable: true},
     {name: "ESTOQUE", uid: "stock", sortable: true},
+    {name: "AÇÕES", uid: "actions", sortable: true},
 ];
 
 const statusColorMap: Record<Product['status'], ChipProps['color']> = {
@@ -46,7 +50,10 @@ export type ProdutoEstoqueComRelacoes = Product & {
     supplier: User;
 };
 
-const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> = ({products}) => {
+const EstoqueFiltragemCard: React.FC<{
+    products: ProdutoEstoqueComRelacoes[],
+    categoriesCollection: FilterCollection[]
+}> = ({products, categoriesCollection}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<string | string[]>([]);
     const [statusFilter, setStatusFilter] = React.useState<string | string[]>("all");
@@ -76,9 +83,12 @@ const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> 
             );
         }
 
-        if (categoryFilter !== "all" && Array.from(categoriesOptions).length !== categoryFilter.length) {
-            filteredProducts = filteredProducts.filter((product) =>
-                Array.from(categoryFilter).includes(product.category),
+        if (categoryFilter !== "all" && Array.from(categoriesCollection).length !== categoryFilter.length) {
+            filteredProducts = filteredProducts.filter((product) => {
+                console.log(categoryFilter)
+                console.log(product.category)
+                    return Array.from(categoryFilter).includes(product.category)
+                }
             );
         }
 
@@ -141,9 +151,9 @@ const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> 
                 );
             case "fornecedor":
                 return (
-                        <p>
-                            {product.supplier.name}
-                        </p>
+                    <p>
+                        {product.supplier.name}
+                    </p>
                 );
             case "tipo":
                 return (
@@ -181,12 +191,15 @@ const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> 
                         </Tooltip>
                         <Tooltip content="Editar Produto">
                           <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                            <Link href={`${paths.editProduto(product.id.toString())}`}><EditIcon/></Link>
+                            <Link href={paths.editProduto(product.id.toString())}><EditIcon/></Link>
                           </span>
                         </Tooltip>
                         <Tooltip color="danger" content="Deletar Produto">
                           <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                            <DeleteIcon onClick={() =>{setSelectedProductId(product.id); onOpen();}}/>
+                            <DeleteIcon onClick={() => {
+                                setSelectedProductId(product.id);
+                                onOpen();
+                            }}/>
                           </span>
                         </Tooltip>
                     </div>
@@ -223,15 +236,18 @@ const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> 
         <div className={'w-11/12'}>
             <ItemDeleteModal itemId={selectedProductId} settings={itemDeleteModalSettings}/>
             <div className={'bg-white rounded-md p-4 mb-4'}>
-                <TabelaTopContent setCategoryFilter={setCategoryFilter}
-                                  categoryFilter={categoryFilter} filterValue={filterValue}
-                                  setStatusFilter={setStatusFilter} onClear={onClear}
-                                  onSearchChange={onSearchChange} statusFilter={statusFilter} priceFilter={priceFilter}
-                                  setPriceFilter={setPriceFilter} stockFilter={stockFilter}
-                                  setStockFilter={setStockFilter} hasSearchFilter={hasSearchFilter}
-                                  itemsLenght={products.length}/>
+                <TabelaTopContent
+                    categoriesOptions={categoriesCollection}
+                    setCategoryFilter={setCategoryFilter}
+                    categoryFilter={categoryFilter} filterValue={filterValue}
+                    setStatusFilter={setStatusFilter} onClear={onClear}
+                    onSearchChange={onSearchChange} statusFilter={statusFilter} priceFilter={priceFilter}
+                    setPriceFilter={setPriceFilter} stockFilter={stockFilter}
+                    setStockFilter={setStockFilter} hasSearchFilter={hasSearchFilter}
+                    itemsLenght={products.length}/>
             </div>
             <Table
+
                 isHeaderSticky
                 bottomContentPlacement="outside"
                 bottomContent={<TabelaBottomContent
@@ -239,7 +255,7 @@ const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> 
                     filteredItemsLength={filteredItems.length}
                     totalPagesQuantity={totalPagesQuantity}
                     hasSearchFilter={hasSearchFilter} selectedKeys={selectedKeys}/>}
-                selectionMode="multiple"
+                selectionMode="single"
                 onSelectionChange={keys => setSelectedKeys([...keys as unknown as string[]])}
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
@@ -258,7 +274,8 @@ const EstoqueFiltragemCard: React.FC<{ products: ProdutoEstoqueComRelacoes[] }> 
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhum produtos encontrado"} items={sortedItems as ProdutoEstoqueComRelacoes[]}>
+                <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhum produtos encontrado"}
+                           items={sortedItems as ProdutoEstoqueComRelacoes[]}>
                     {(product: ProdutoEstoqueComRelacoes) => (
                         <TableRow key={product.id}>
                             {
