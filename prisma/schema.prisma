@@ -163,3 +163,18 @@ model Media {
   article   Article @relation(fields: [articleId], references: [id])
   articleId Int
 }
+
+model CategoriaPessoa {
+  id        Int      @id @default(autoincrement())
+  titulo    String
+  descricao String
+  pessoas   Pessoa[]
+}
+
+model Pessoa {
+  id          Int             @id @default(autoincrement())
+  email       String?
+  nome   String
+  categoriaId Int
+  categoria   CategoriaPessoa @relation(fields: [categoriaId], references: [id])
+}

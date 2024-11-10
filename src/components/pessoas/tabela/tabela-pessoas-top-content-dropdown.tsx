@@ -11,10 +11,9 @@ interface TopContentDropDownProps {
     selectionType?: 'single' | 'multiple';
     filterStatus: string | string[];
     setFilterStatus: (status: string | string[]) => void;
-    collection: FilterCollection[],
-    size?: 'sm' | 'md' | 'lg';
+    collection: FilterCollection[]
 }
-const TopContentDropDown: React.FC<TopContentDropDownProps> = (
+const TabelaPessoasTopContentDropdown: React.FC<TopContentDropDownProps> = (
     {
         width,
         collection,
@@ -23,13 +22,12 @@ const TopContentDropDown: React.FC<TopContentDropDownProps> = (
         setFilterStatus,
         multipleSelectedLabel,
         allSelectedLabel,
-        selectionType,
-        size
+        selectionType
     }) => {
     return (
         <div className={`flex flex-col ${width}`}>
-            <p className={'text-sm '}>{label}</p>
-            <Dropdown size={size ?? 'sm'}>
+            <p className={'text-sm mb-2'}>{label}</p>
+            <Dropdown size={'sm'}>
                 <DropdownTrigger className="hidden justify-between sm:flex font-semibold h-9">
                     <Button endContent={<ChevronDownIcon className="text-small"/>} variant="flat">
                         {filterStatus.length === 1 ? Array.from(filterStatus)[0] : filterStatus.length === collection.length || filterStatus === 'all' ? allSelectedLabel : Array.from(filterStatus)[0] === 'Desativado' ? 'Desativado' :multipleSelectedLabel}
@@ -37,13 +35,14 @@ const TopContentDropDown: React.FC<TopContentDropDownProps> = (
                 </DropdownTrigger>
                 <DropdownMenu
                     disallowEmptySelection
+                    aria-label="Table Columns"
                     closeOnSelect={false}
                     selectedKeys={filterStatus}
                     selectionMode={selectionType ?? 'multiple'}
                     onSelectionChange={(keys) => { setFilterStatus([...keys as unknown as string[]])}}
                 >
                     {collection.map((status) => (
-                        <DropdownItem key={status.name} className="capitalize">
+                        <DropdownItem key={status.uid} className="capitalize">
                             {capitalize(status.name)}
                         </DropdownItem>
                     ))}
@@ -57,4 +56,4 @@ function capitalize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export default TopContentDropDown;
+export default TabelaPessoasTopContentDropdown;

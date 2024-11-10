@@ -3,6 +3,7 @@ import {SortDescriptor} from "@nextui-org/react";
 import {IFilterable} from "@/models/estoque/filters";
 import {NoticiasComAutorEstoque} from "@/components/adm/noticias/adm-noticias-table";
 import {VendasComProdutos} from "@/models/vendas";
+import {PessoasComCategoria} from "@/components/pessoas/tabela/tabela-pessoas";
 
 type FilterableItem = string | string[];
 
@@ -56,6 +57,16 @@ export const getSortedCategoria = (items: Category[], sortDescriptor: SortDescri
     });
 }
 
+export const getSortedPessoas = (items: PessoasComCategoria[], sortDescriptor: SortDescriptor) => {
+    return [...items].sort((a: PessoasComCategoria, b: PessoasComCategoria) => {
+        const first = a[sortDescriptor.column as keyof PessoasComCategoria];
+        const second = b[sortDescriptor.column as keyof PessoasComCategoria];
+
+        const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
+
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+    });
+}
 export const getSortedNoticia = (items: NoticiasComAutorEstoque[], sortDescriptor: SortDescriptor) => {
     if (sortDescriptor.column == 'author') {
         return [...items].sort((a: NoticiasComAutorEstoque, b: NoticiasComAutorEstoque) => {
