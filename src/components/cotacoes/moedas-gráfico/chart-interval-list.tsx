@@ -11,7 +11,7 @@ const TradingViewChartIntervalPicker: React.FC<Props> = ({ selectedInterval, set
     return (
         <div className={`my-4 w-full flex justify-center gap-1`}>
             {
-                intervals.map((item: ChartInterval) => <ChartIntervalItem interval={item} selectedInterval={selectedInterval} setSelectInterval={setSelectInterval} />)
+                intervals.map((item: ChartInterval) => <ChartIntervalItem key={item.value} interval={item} selectedInterval={selectedInterval} setSelectInterval={setSelectInterval} />)
             }
         </div>
     )

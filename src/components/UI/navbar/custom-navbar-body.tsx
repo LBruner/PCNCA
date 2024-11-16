@@ -38,7 +38,7 @@ const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
                     <NavLink path={paths.home()} text={'Home'} />
                     <NavLink path={paths.noticias()} text={'Notícias'} />
                     <NavLink path={paths.vendas()} text={'Vendas'} />
-                    <NavLink path={paths.cotacoesMoedas()} text={'Cotações'} />
+                    <NavLink path={paths.cotacoesCommodities()} text={'Cotações'} />
                     {user && <NavLink path={paths.estoque()} text={'Estoque'} />}
                     {user && <NavLink path={paths.pessoas()} text={'Pessoas'} />}
                     <NavLink path={paths.prodInternacional()} text={'Produção Internacional'} />
