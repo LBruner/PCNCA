@@ -89,6 +89,9 @@ const paths = {
     cotacoesMoedas(){
         return '/cotacoes/moedas'
     },
+    cotacoesCommodities(){
+        return '/cotacoes/commodities'
+    },
     prodInternacional(){
         return '/producao-internacional'
     }

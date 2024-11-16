@@ -2,7 +2,7 @@
 
 import TradingViewChartIntervalPicker from "@/components/cotacoes/moedas-gráfico/chart-interval-list";
 import CurrencySelect from "@/components/cotacoes/moedas-gráfico/currency-select";
-import TradingViewChart from "@/components/cotacoes/moedas-gráfico/trading-view-chart";
+import TradingViewChart from "@/components/cotacoes/moedas-gráfico/trading-view-advanced-chart";
 import { currencies, Currency } from "@/helpers/moedas";
 import { ChartInterval, intervals } from "@/models/moedas/grafico/intervals";
 import Link from "next/link";

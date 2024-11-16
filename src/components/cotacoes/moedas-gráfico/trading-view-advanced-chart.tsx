@@ -14,7 +14,7 @@ interface TradingViewChartWidgetProps {
     supportHost?: string;
 }
 
-const TradingViewChartWidget: React.FC<TradingViewChartWidgetProps> = (
+const TradingViewAdvancedChartWidget: React.FC<TradingViewChartWidgetProps> = (
     {
         symbol,
         interval,
@@ -82,4 +82,4 @@ const TradingViewChartWidget: React.FC<TradingViewChartWidgetProps> = (
     );
 };
 
-export default TradingViewChartWidget;
+export default TradingViewAdvancedChartWidget;
