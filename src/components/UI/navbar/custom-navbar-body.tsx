@@ -37,7 +37,7 @@ const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
                 </div>
                 <NavbarContent className="hidden sm:flex gap-4" justify="center">
                     <NavLink path={paths.noticias()} text={'Notícias'} />
-                    <NavLink path={paths.vendas()} text={'Vendas'} />
+                    {user && <NavLink path={paths.vendas()} text={'Vendas'} />}
                     <NavLink path={paths.cotacoesCommodities()} text={'Cotações'} />
                     {user && <NavLink path={paths.estoque()} text={'Estoque'} />}
                     {user && <NavLink path={paths.pessoas()} text={'Pessoas'} />}
