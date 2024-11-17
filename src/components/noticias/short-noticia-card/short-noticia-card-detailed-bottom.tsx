@@ -34,7 +34,7 @@ const ShortNoticiaCardDetailedBottom: React.FC<NoticiaCardProps> = (
             </div>
             {showDetails && <div className="flex flex-col items-start justify-start">
                 <div className="mt-2">
-                    <p className={'font-bold'}>{shortDescription}</p>
+                    <p className={'font-semibold'}>{shortDescription}</p>
                 </div>
             </div>}
         </div>
