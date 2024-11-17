@@ -16,7 +16,7 @@ interface CustomNavbarBodyProps {
 const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
     const pathName = usePathname();
 
-    if (pathName == paths.login() || pathName == paths.cadastro() || pathName.startsWith('/adm') || pathName.startsWith('/configuracoes')) {
+    if (pathName == paths.login() || pathName == paths.home() || pathName == paths.cadastro() || pathName.startsWith('/adm') || pathName.startsWith('/configuracoes')) {
         return null;
     }
     return (
