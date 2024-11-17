@@ -143,7 +143,7 @@ const HomePage: React.FC = () => {
             </div>
             <div
                 className={'w-full mt-32 border py-24 bg-blue-950 flex flex-col items-center gap-8 shadow-xl'}>
-                <div className={'flex px-12 py-6 flex-col h-full w-[55%] rounded-lg shadow-xl'}>
+                <div className={'flex px-12 py-6 flex-col h-full w-[55%] rounded-lg '}>
                     <div className={'mb-8'}>
                         <p className={'text-white text-3xl font-bold'}>Visualize a Produção Global
                         </p>
