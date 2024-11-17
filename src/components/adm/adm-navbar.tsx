@@ -27,7 +27,7 @@ const AdmNavbar: React.FC = () => {
         <Navbar className="h-screen fixed w-64 flex-col items-start justify-start p-4 bg-gray-100" position="static">
             <NavbarContent className="flex-col items-start gap-4">
                 <NavbarItem>
-                    <Link href={paths.home()} className="flex items-center gap-2 text-foreground">
+                    <Link href={paths.noticias()} className="flex items-center gap-2 text-foreground">
                         <p className="font-bold text-xl">PCNCA</p>
                     </Link>
                 </NavbarItem>
