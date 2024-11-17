@@ -11,9 +11,6 @@ const paths = {
     admCategorias(){
         return `/adm/categorias`;
     },
-    home() {
-        return `/home`;
-    },
     login() {
         return `/auth/login`;
     },

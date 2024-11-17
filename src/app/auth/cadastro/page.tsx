@@ -47,7 +47,7 @@ function CadastroPage() {
                 }
             }
         }
-        window.location.href = '/home';
+        window.location.href = '/noticias';
 
         return {errors: {}}
     }

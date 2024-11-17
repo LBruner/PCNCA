@@ -37,7 +37,7 @@ function LoginPage() {
         });
 
         if (loginResponse && loginResponse.ok) {
-            window.location.href = '/home';
+            window.location.href = '/noticias';
 
             return {
                 errors: {}

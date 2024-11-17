@@ -16,26 +16,26 @@ interface CustomNavbarBodyProps {
 const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
     const pathName = usePathname();
 
-    if (pathName == paths.login() || pathName == paths.home() || pathName == paths.cadastro() || pathName.startsWith('/adm') || pathName.startsWith('/configuracoes')) {
+    if (pathName == paths.login() || pathName == '/' || pathName == paths.cadastro() || pathName.startsWith('/adm') || pathName.startsWith('/configuracoes')) {
         return null;
     }
+
     return (
         <Navbar maxWidth={'full'} shouldHideOnScroll={true}
-                className={'fixed border rounded bg-gray-100 bg-opacity-70 flex top-0 left-0 h-28 items-start py-5'}>
+                className={'fixed shadow-sm bg-gray-100 bg-opacity-70 flex top-0 left-0 h-28 items-start py-5'}>
             <div>
                 <MoedasCard />
                 <div className='w-40' />
             </div>
             <NavbarItem className={'w-60 flex flex-col'}>
                 <div className={'flex items-center justify-center mb-2'}>
-                    <Link href={paths.home()}>
+                    <Link href={paths.noticias()}>
                         <p className={'text-4xl text-orange-400 font-bold'}>
                             PCNCA
                         </p>
                     </Link>
                 </div>
                 <NavbarContent className="hidden sm:flex gap-4" justify="center">
-                    <NavLink path={paths.home()} text={'Home'} />
                     <NavLink path={paths.noticias()} text={'Notícias'} />
                     <NavLink path={paths.vendas()} text={'Vendas'} />
                     <NavLink path={paths.cotacoesCommodities()} text={'Cotações'} />
