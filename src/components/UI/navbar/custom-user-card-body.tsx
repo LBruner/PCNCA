@@ -47,8 +47,8 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                         <DropdownItem onClick={onOpen}>
                             Meu Perfil
                         </DropdownItem>
-                        <DropdownItem >Configurações </DropdownItem>
-                        <DropdownItem color={'warning'} href={paths.adm()}>
+                         {/*<DropdownItem >Configurações </DropdownItem>*/}
+                        <DropdownItem color={'warning'} href={paths.admNoticias()}>
                             ADM
                         </DropdownItem>
                         <DropdownItem onClick={() => {

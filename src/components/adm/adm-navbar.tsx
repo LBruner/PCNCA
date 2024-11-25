@@ -57,21 +57,6 @@ const AdmNavbar: React.FC = () => {
                         </AccordionItem>
                     </Accordion>
                 </NavbarItem>
-                <NavbarItem>
-                    <Link href="#" className="flex items-center gap-2 text-foreground">
-                        Profile
-                    </Link>
-                </NavbarItem>
-                <NavbarItem>
-                    <Link href="#" className="flex items-center gap-2 text-foreground">
-                        Messages
-                    </Link>
-                </NavbarItem>
-                <NavbarItem>
-                    <Link href="#" className="flex items-center gap-2 text-foreground">
-                        Settings
-                    </Link>
-                </NavbarItem>
             </NavbarContent>
         </Navbar>
     );

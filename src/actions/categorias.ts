@@ -12,7 +12,7 @@ export const getCategoryById = async (id: number) => {
     })
 }
 
-export const getCategorias = async (): Promise<Category[]>=> {
+export const getCategorias = async (): Promise<Category[]> => {
     // return [
     //     {
     //         "id": 6,
@@ -52,8 +52,16 @@ export const getCategorias = async (): Promise<Category[]>=> {
     //     }
     // ]
 
-    const categories = await db.category.findMany();
-    if (!categories || categories.length == 0){
+    const categories = await db.category.findMany({
+        where: {
+            name: {
+                in: ['Aves', 'Milho', 'Soja', 'Bovinos']
+            }
+        }
+    });
+
+    console.log(categories)
+    if (!categories || categories.length == 0) {
         return [];
     }
 

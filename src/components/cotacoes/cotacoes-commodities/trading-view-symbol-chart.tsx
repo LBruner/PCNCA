@@ -10,6 +10,7 @@ interface TradingViewWidgetProps {
     showVolume?: boolean;
     width?: string | number;
     height?: string | number;
+    timezone?: string;
 }
 
 const TradingViewWidget: React.FC<TradingViewWidgetProps> = (
@@ -54,6 +55,7 @@ const TradingViewWidget: React.FC<TradingViewWidgetProps> = (
                 autosize,
                 showVolume,
                 width,
+                timezone,
                 height,
                 scalePosition: 'right',
                 fontFamily: '-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif',

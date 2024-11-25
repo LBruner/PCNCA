@@ -18,9 +18,11 @@ const NoticiasPage: React.FC = async _ => {
     //const noticias = articles;
     // const noticias = noticiasPCNCA;
 
+
     if (!noticias || noticias.length == 0) {
         return <p className={'mt-48 font-semibold  text-center text-2xl'}>Nenhuma notícia encontrada</p>
     }
+
 
     return (
             <div className={'mt-32 flex justify-center items-center'}>

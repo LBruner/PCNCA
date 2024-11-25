@@ -9,18 +9,6 @@ export const statusOptions: IFilterable[] = [
     {name: "Desativado", uid: "Desativado"},
 ];
 
-export const categoriesOptions: IFilterable[] = [
-    {name: 'Grains', uid: 'Grains'},
-    {name: 'Fruits', uid: 'Fruits'},
-    {name: 'Vegetables', uid: 'Vegetables'},
-    {name: 'Livestock', uid: 'Livestock'},
-    {name: 'Dairy Products', uid: 'Dairy Products'},
-    {name: 'Poultry', uid: 'Poultry'},
-    {name: 'Seafood', uid: 'Seafood'},
-    {name: 'Beverages', uid: 'Beverages'},
-    {name: 'Processed Foods', uid: 'Processed'},
-    {name: 'Other', uid: 'Other'}
-];
 export const priceOptions: IFilterable[] = [
     {name: "R$0 - R$50", uid: "R$0 - R$50"},
     {name: "R$50 - R$100", uid: "R$50 - R$100"},

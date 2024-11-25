@@ -10,7 +10,7 @@ const CotacaoCommodityList: React.FC<CotacaoCommodityListProps> = ({cotacoes}) =
     return (
         <div className={'grid grid-cols-2 gap-x-12 gap-y-6'}>
             {cotacoes.map((cotacao) => (
-                    <CotacaoCommodityItem cotacao={cotacao}/>
+                    <CotacaoCommodityItem key={cotacao.id} cotacao={cotacao}/>
                 )
             )
             }

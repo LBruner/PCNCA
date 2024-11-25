@@ -4,7 +4,7 @@ import {User} from "@prisma/client";
 import {fallbackImgUrl} from "@/constants/messages/images";
 
 interface ProfileSettingsBodyProps {
-    user: User;
+    user: any;
 }
 
 const InformationDisplay: React.FC<{ title: string, value?: string }> = ({title, value}) => {
@@ -40,19 +40,23 @@ const ProfileSettingsBody: React.FC<ProfileSettingsBodyProps> = ({user}) => {
                 </div>
                 <div className={'my-5 w-1/2 flex gap-12'}>
                     <InformationDisplay title={'Email'} value={user.email ?? undefined}/>
-                    <InformationDisplay title={'Celular'} value='14532583272387'/>
+                    <InformationDisplay title={'Celular'} value='14997345430'/>
                 </div>
                 <div className={'flex justify-between w-full items-center'}>
                     <p className={'text-2xl font-semibold'}>Endereço</p>
                 </div>
                 <div className={'my-5 w-1/2 flex gap-12'}>
                     <div className={'flex flex-col gap-4 w-1/2'}>
-                        <InformationDisplay title={'País'} value={user.email ?? undefined}/>
-                        <InformationDisplay title={'CEP'} value={user.email ?? undefined}/>
+                      {/*  <InformationDisplay title={'País'} value={user.email ?? undefined}/>
+                        <InformationDisplay title={'CEP'} value={user.email ?? undefined}/> */}
+                        <InformationDisplay title={'País'} value={'Brasil'}/>
+                        <InformationDisplay title={'CEP'} value={'18940-051'}/>
                     </div>
                     <div className={'flex flex-col gap-4 w-1/2'}>
-                        <InformationDisplay title={'Estado'} value={user.email ?? undefined}/>
-                        <InformationDisplay title={'Cidade'} value={user.email ?? undefined}/>
+                       {/* <InformationDisplay title={'Estado'} value={user.email ?? undefined}/>
+                        <InformationDisplay title={'Cidade'} value={user.email ?? undefined}/> */}
+                        <InformationDisplay title={'Estado'} value={'São Paulo'}/>
+                        <InformationDisplay title={'Cidade'} value={'Umuarama'}/>
                     </div>
                 </div>
             </div>

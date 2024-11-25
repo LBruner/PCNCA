@@ -1,0 +1,1 @@
+export const defaultPadding = 'px-36';

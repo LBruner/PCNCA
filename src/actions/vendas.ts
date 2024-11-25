@@ -2,8 +2,11 @@
 
 import {sales} from "@/dummy_data/sales";
 import {db} from "@/db";
+import {VendasComProdutos} from "@/models/vendas";
 
-export const buscarVendas = async () => {
+//TODO: Resolver
+
+export const buscarVendas = async (): Promise<any[]> => {
     return db.sale.findMany({
         include: {
             saleItems: {

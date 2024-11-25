@@ -25,6 +25,7 @@ const CulturasTabs: React.FC<CulturasListProps> = ({noticias, categorias}) => {
         return <p>Nenhuma categoria adicionada...</p>;
     }
 
+
     return (
         <div className={'row-span-8 col-span-4 mt-12 h-full'}>
             <div className={'flex items-center justify-between mb-10'}>
@@ -34,7 +35,7 @@ const CulturasTabs: React.FC<CulturasListProps> = ({noticias, categorias}) => {
                 </Link>
             </div>
             <Tabs selectedKey={selectedCategory} onSelectionChange={handleCategoryChange} aria-label="Options">
-                {categorias.slice(0, 8).map((categoria) => (
+                {categorias.slice(0, 4).map((categoria) => (
                     <Tab title={categoria.name} key={categoria.id} className="mb-2">
                         {noticiasAmostradas.length === 0 ? <p>Nenhuma notícia encontrada</p> :
                             <CulturasList noticiasFiltradas={noticiasAmostradas}/>
