@@ -1,5 +1,5 @@
 import React from "react";
-import {getCategorias} from "@/actions/categorias";
+import {getAllCategories} from "@/actions/categorias";
 import NoItemsFallback from "@/components/shared/no-items-fallback";
 import CulturaPageBody from "@/components/noticias/culturas/cultura-page-body";
 import {noCulturesFallbackData} from "@/constants/messages/noticias/culturas";
@@ -7,7 +7,7 @@ import {Category} from "@prisma/client";
 
 
 const CategoriasPage: React.FC = async _ => {
-    const categorias: Category[] = await getCategorias();
+    const categorias: Category[] = await getAllCategories();
 
     let renderingContent;
 

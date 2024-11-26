@@ -12,6 +12,10 @@ export const getCategoryById = async (id: number) => {
     })
 }
 
+export const getAllCategories = async () => {
+    return db.category.findMany();
+}
+
 export const getCategorias = async (): Promise<Category[]> => {
     // return [
     //     {
