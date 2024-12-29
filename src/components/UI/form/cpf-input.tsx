@@ -1,5 +1,6 @@
 import React, {ChangeEvent} from 'react';
 import RegisterFormInput from "@/components/UI/form/register-form-input";
+import {formatCPF} from "@/helpers";
 
 interface CPFInputProps {
     onChange: (value: string) => void;
@@ -10,21 +11,6 @@ interface CPFInputProps {
 }
 
 const CPFInput: React.FC<CPFInputProps> = (props) => {
-
-
-    const formatCPF = (value: string): string => {
-        const cleanedValue = value.replace(/\D/g, '');
-
-        if (cleanedValue.length <= 3) {
-            return cleanedValue;
-        } else if (cleanedValue.length <= 6) {
-            return `${cleanedValue.slice(0, 3)}.${cleanedValue.slice(3)}`;
-        } else if (cleanedValue.length <= 9) {
-            return `${cleanedValue.slice(0, 3)}.${cleanedValue.slice(3, 6)}.${cleanedValue.slice(6)}`;
-        } else {
-            return `${cleanedValue.slice(0, 3)}.${cleanedValue.slice(3, 6)}.${cleanedValue.slice(6, 9)}-${cleanedValue.slice(9, 11)}`;
-        }
-    };
 
     const handleCPFChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {value} = event.target;

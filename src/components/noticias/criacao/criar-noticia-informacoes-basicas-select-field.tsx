@@ -13,10 +13,10 @@ interface ConfigurarNoticiaFormFieldProps {
 const CriarNoticiaInformacoesBasicasSelectField: React.FC<ConfigurarNoticiaFormFieldProps> = ({valor, titulo, subtitulo, collection, onChange, placeholder}) => {
         const selectedKeys = valor == null ? [] : [valor];
     return (
-        <div className={'flex gap-12 w-full justify-around'}>
+        <div className={'flex w-full items-start'}>
             <div className={'flex flex-col'}>
-                <p className={'text-lg w-64 font-semibold'}>{titulo}</p>
-                <p className={'text-md w-80 text-gray-500'}>{subtitulo}</p>
+                <p className={'text-lg w-48 font-semibold'}>{titulo}</p>
+                <p className={'text-md w-48 text-gray-500'}>{subtitulo}</p>
             </div>
             <Select
                 onChange={event => onChange(event.target.value)}

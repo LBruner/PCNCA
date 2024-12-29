@@ -71,11 +71,11 @@ const paths = {
     pessoas(){
         return `/pessoas`;
     },
+    createPessoa() {
+        return `/pessoas/criar`;
+    },
     showPessoa(pessoaId: string) {
         return `/pessoas/${pessoaId}`;
-    },
-    createPessoa() {
-        return `/pessoas/new`;
     },
     editPessoa(pessoaId: string) {
         return `/pessoas/${pessoaId}/edit`;

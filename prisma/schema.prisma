@@ -164,17 +164,27 @@ model Media {
   articleId Int
 }
 
-model CategoriaPessoa {
-  id        Int      @id @default(autoincrement())
-  titulo    String
-  descricao String
-  pessoas   Pessoa[]
-}
-
+// schema.prisma
 model Pessoa {
-  id          Int             @id @default(autoincrement())
-  email       String?
-  nome   String
-  categoriaId Int
-  categoria   CategoriaPessoa @relation(fields: [categoriaId], references: [id])
+  id                Int      @id @default(autoincrement())
+  nome              String
+  email             String   @unique
+  cpf               String?  @unique
+  dataNascimento    DateTime
+  rg                String? // Opcional
+  endereco          String
+  cep               String
+  imagem            String
+  cidade            String
+  estado            String
+  contato           String
+  categoria         String
+  razaoSocial       String?
+  cnpj              String?  @unique
+  inscricaoEstadual String?
+  nomeFantasia      String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("pessoa")
 }

@@ -4,7 +4,7 @@ import React, {useRef, useState} from "react";
 import {createNoticia, editNoticia} from "@/actions/noticias";
 import CriarNoticiaVizualizarPublicar from "@/components/noticias/criacao/telas/criar-noticia-vizualizar-publicar";
 import {generateMarkdown} from "@/helpers/noticia/criacao/criar-noticia";
-import StepsGuide from "@/components/noticias/criacao/steps-guide";
+import RoundedStepsGuide from "@/components/noticias/criacao/rounded-steps-guide";
 import Spacer from "@/components/noticias/criacao/spacer";
 import {Button, Spinner} from "@nextui-org/react";
 import {Category} from "@prisma/client";
@@ -117,11 +117,11 @@ const NoticiaCreateForm: React.FC<NoticiaCreateForm> = ({categories, createdNoti
                 <div className={'mb-8 bg-white w-full h-full border rounded-lg'}>
                     <div className={'flex px-4 border-b-1 items-center justify-between'}>
                         <div className={'flex items-center gap-2'}>
-                            <StepsGuide isEnabled={screenIndex == 0} number={1} text={'Informações Básicas'}/>
+                            <RoundedStepsGuide isEnabled={screenIndex == 0} number={1} text={'Informações Básicas'}/>
                             <Spacer/>
-                            <StepsGuide isEnabled={screenIndex == 1} number={2} text={'Conteúdo da Notícia'}/>
+                            <RoundedStepsGuide isEnabled={screenIndex == 1} number={2} text={'Conteúdo da Notícia'}/>
                             <Spacer/>
-                            <StepsGuide isEnabled={screenIndex == 2} number={3} text={'Visualizar e Publicar'}/>
+                            <RoundedStepsGuide isEnabled={screenIndex == 2} number={3} text={'Visualizar e Publicar'}/>
                         </div>
                         <div className={'flex gap-3'}>
                             {screenIndex != 0 &&

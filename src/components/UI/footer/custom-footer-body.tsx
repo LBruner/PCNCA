@@ -6,6 +6,7 @@ import {FaEnvelope, FaFacebook, FaInstagram, FaLinkedin, FaTwitter, FaYoutube} f
 import Link from "next/link";
 import paths from "@/paths";
 import {Category} from "@prisma/client";
+import {shouldHideFooterPaths} from "@/constants";
 
 interface CustomFooterProps{
     categories: Category[],
@@ -22,9 +23,10 @@ const CustomFooterBody: React.FC<CustomFooterProps> = ({categories,}) => {
         return null;
     }
 
-    if (pathname.startsWith('/adm') || pathname.startsWith('/auth')){
+    if(shouldHideFooterPaths.some((path) => pathname.startsWith(path))){
         return null;
     }
+
     return (
         <footer className="shadow mt-14 bg-green-900 text-white py-10 px-5">
             <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">

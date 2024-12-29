@@ -5,6 +5,7 @@ import {PessoasComCategoria} from "@/components/pessoas/tabela/tabela-pessoas";
 import {CategoriaPessoa, Pessoa} from "@prisma/client";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
+import {redirect} from "next/navigation";
 
 export async function pegaTodasPessoas(): Promise<PessoasComCategoria[] | null> {
     const pessoasData = await db.pessoa.findMany({
@@ -29,17 +30,31 @@ export async function pegaTodasCategoriasPessoas(): Promise<CategoriaPessoa[]> {
     return categoriasPessoasData;
 }
 
-export const createPessoa = async (name: string, email: string, categoria: number) => {
+export const createPessoa = async (pessoa: Pessoa) => {
     await db.pessoa.create({
         data: {
-            nome: name,
-            email: email,
-            categoriaId: parseInt(categoria.toString())
-        }
+            nome: pessoa.nome,
+            email: pessoa.email,
+            cpf: pessoa.cpf || null,
+            dataNascimento: pessoa.dataNascimento,
+            rg: pessoa.rg || null,
+            endereco: pessoa.endereco,
+            cep: pessoa.cep,
+            imagem: pessoa.imagem,
+            cidade: pessoa.cidade,
+            estado: pessoa.estado,
+            contato: pessoa.contato,
+            categoria: pessoa.categoria,
+            razaoSocial: pessoa.razaoSocial || null,
+            cnpj: pessoa.cnpj || null,
+            inscricaoEstadual: pessoa.inscricaoEstadual || null,
+            nomeFantasia: pessoa.nomeFantasia || null,
+        },
     });
 
     revalidatePath(paths.pessoas());
-}
+    redirect(paths.pessoas())
+};
 
 export const updatePessoa = async (pessoa: Pessoa) => {
     await db.pessoa.update({
