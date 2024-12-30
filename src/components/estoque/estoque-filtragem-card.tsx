@@ -131,7 +131,7 @@ const EstoqueFiltragemCard: React.FC<{
             case "name":
                 return (
                     <Usuario
-                        avatarProps={{radius: "lg", src: product.imageUrl!}}
+                        avatarProps={{radius: "lg", size: 'lg', src: product.imageUrl!}}
                         name={product.name}
                     >
                         {product.name}
@@ -251,6 +251,7 @@ const EstoqueFiltragemCard: React.FC<{
                 isHeaderSticky
                 bottomContentPlacement="outside"
                 bottomContent={<TabelaBottomContent
+                    showPagination={true}
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
                     filteredItemsLength={filteredItems.length}
                     totalPagesQuantity={totalPagesQuantity}

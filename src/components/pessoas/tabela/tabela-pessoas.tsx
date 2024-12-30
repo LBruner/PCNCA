@@ -98,7 +98,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
             case "pessoa":
                 return (
                     <User
-                        avatarProps={{radius: "lg", src: pessoa.imagem}}
+                        avatarProps={{radius: "sm", size: 'lg', src: pessoa.imagem}}
                         description={pessoa.email}
                         name={pessoa.nome}
                     >
@@ -107,7 +107,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                 )
             case "categoria":
                 return (
-                    <Chip className="capitalize" color={`${pessoa.categoria == 'Física' ? 'primary' : 'warning'}`}
+                    <Chip className="capitalize" color={`${pessoa.categoria == 'Física' ? 'success' : 'warning'}`}
                           size="sm" variant="flat">
                         {pessoa.categoria}
                     </Chip>

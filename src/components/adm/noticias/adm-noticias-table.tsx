@@ -258,6 +258,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
                 topContentPlacement={'inside'}
                 bottomContentPlacement="outside"
                 bottomContent={<TabelaBottomContent
+                    showPagination={true}
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
                     filteredItemsLength={filteredItems.length}
                     totalPagesQuantity={totalPagesQuantity}

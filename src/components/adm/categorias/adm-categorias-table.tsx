@@ -219,6 +219,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
                 bottomContentPlacement="inside"
                 topContentPlacement={'inside'}
                 bottomContent={<TabelaBottomContent
+                    showPagination={true}
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
                     filteredItemsLength={filteredItems.length}
                     totalPagesQuantity={totalPagesQuantity}
