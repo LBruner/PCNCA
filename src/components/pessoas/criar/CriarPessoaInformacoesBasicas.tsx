@@ -7,13 +7,14 @@ import CriarNoticiaInformacoesBasicasSelectField
 import {DateInput} from "@nextui-org/react";
 import {I18nProvider} from "@react-aria/i18n";
 import {parseDate} from "@internationalized/date";
-import {PessoaBasica} from "@/components/pessoas/CriarPessoaForm";
 import CriarPessoaFormControls from "@/components/pessoas/criar/CriarPessoaFormControls";
+import {Pessoa} from "@prisma/client";
+import {formatPhoneNumber} from "@/helpers";
 
 
 interface PessoaFormProps {
-    pessoa: PessoaBasica | null;
-    setPessoa: React.Dispatch<React.SetStateAction<PessoaBasica | null>>;
+    pessoa: Pessoa | null;
+    setPessoa: React.Dispatch<React.SetStateAction<Pessoa | null>>;
     currentScreenIndex: number;
     setScreenIndex: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -26,7 +27,7 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = forwardRef((pro
     const [contato, setContato] = useState(pessoa?.contato ?? '');
     const [dataNascimento, setDataNascimento] = useState(pessoa?.dataNascimento.toISOString().slice(0, 10) ?? new Date().toISOString().slice(0, 10));
     const [categoria, setCategoria] = useState(pessoa?.categoria ?? '');
-    const [imagemUrl, setImagemUrl] = useState(pessoa?.imagemUrl ?? '')
+    const [imagemUrl, setImagemUrl] = useState(pessoa?.imagem ?? '')
 
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -43,10 +44,16 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = forwardRef((pro
             contato: contato,
             dataNascimento: new Date(dataNascimento),
             categoria: categoria,
-            imagemUrl: imagemUrl,
-        });
+            imagem: imagemUrl,
+        } as any);
         setScreenIndex(prevState => prevState + 1);
     }
+
+    const handleContatoChange = (newValue: string) => {
+        const formattedNumber = formatPhoneNumber(newValue);
+        setContato(formattedNumber);
+    };
+
     return (
         <form ref={formRef}
               className={'flex flex-col items-center pt-8 h-auto overflow-hidden mb-5'}>
@@ -82,9 +89,7 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = forwardRef((pro
                         subtitulo={'Número de celular'}
                         value={contato}
                         type={'tel'}
-                        onChange={(newValue) => {
-                            setContato(newValue)
-                        }}
+                        onChange={handleContatoChange}
                     />
                 </InputWrapper>
                 <InputWrapper>

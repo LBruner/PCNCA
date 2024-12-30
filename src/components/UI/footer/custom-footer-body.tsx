@@ -23,7 +23,7 @@ const CustomFooterBody: React.FC<CustomFooterProps> = ({categories,}) => {
         return null;
     }
 
-    if(shouldHideFooterPaths.some((path) => pathname.startsWith(path))){
+    if(shouldHideFooterPaths.some((path) => pathname.includes(path))){
         return null;
     }
 

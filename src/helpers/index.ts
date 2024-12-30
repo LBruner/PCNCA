@@ -6,6 +6,21 @@ export function formatarData(data: Date) {
     return `${dia}/${mes}/${ano}`;
 }
 
+export const formatPhoneNumber = (value: string): string => {
+    const cleanedValue = value.replace(/\D/g, ''); // Remove caracteres não numéricos
+
+    if (cleanedValue.length <= 2) {
+        return `(${cleanedValue}`;
+    } else if (cleanedValue.length <= 6) {
+        return `(${cleanedValue.slice(0, 2)}) ${cleanedValue.slice(2)}`;
+    } else if (cleanedValue.length <= 10) {
+        return `(${cleanedValue.slice(0, 2)}) ${cleanedValue.slice(2, 6)}-${cleanedValue.slice(6)}`;
+    } else {
+        return `(${cleanedValue.slice(0, 2)}) ${cleanedValue.slice(2, 7)}-${cleanedValue.slice(7, 11)}`;
+    }
+};
+
+
 export const formatCPF = (value: string): string => {
     const cleanedValue = value.replace(/\D/g, '');
 

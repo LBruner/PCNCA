@@ -12,37 +12,39 @@ import {
     Tooltip,
     useDisclosure,
 } from "@nextui-org/react";
-import type {CategoriaPessoa, Pessoa} from '@prisma/client';
+import type {Pessoa} from '@prisma/client';
 import {Chip} from "@nextui-org/chip";
-import {DeleteIcon, EditIcon} from "@nextui-org/shared-icons";
+import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import TabelaBottomContent from "@/components/estoque/tabela/tabela-bottom-content";
 import {getSortedPessoas} from "@/helpers/tabela";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import TabelaPessoasTopContent from "@/components/pessoas/tabela/tabela-pessoas-top-content";
-import CreatePessoaModal, {CreatePessoaModalSettings} from "@/components/pessoas/create_pessoa_modal";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
 import {deletePessoa} from "@/actions/pessoas";
+import {User} from "@nextui-org/user";
+import PerfilModal from "@/components/configuracoes/perfil-modal";
+import Link from "next/link";
+import paths from "@/paths";
+import {formatPhoneNumber} from "@/helpers";
 
 const columns = [
-    {name: "ID", uid: "id", sortable: true},
-    {name: "NOME", uid: "nome", sortable: true},
-    {name: "EMAIL", uid: "email", sortable: false},
+    {name: "PESSOA", uid: "pessoa", sortable: true},
     {name: "CATEGORIA", uid: "categoria", sortable: false},
+    {name: "CONTATO", uid: "contato", sortable: false},
+    {name: "ENDEREÇO", uid: "endereco", sortable: false},
+    {name: "LOCALIZAÇÃdO", uid: "localizacao", sortable: false},
     {name: "AÇÕES", uid: "actions"},
 ];
 
-export type PessoasComCategoria = Pessoa & {
-    categoria: CategoriaPessoa;
-};
 
 interface PessoasTableProps {
-    pessoas: PessoasComCategoria[];
+    pessoas: Pessoa[];
     categoryFilterCollection: FilterCollection[];
 }
 
 const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterCollection}) => {
     const [filterValue, setFilterValue] = React.useState("");
-    const [selectedPessoa, setSelectedPessoa] = React.useState<PessoasComCategoria | null>();
+    const [selectedPessoa, setSelectedPessoa] = React.useState<Pessoa | null>();
 
     const [categoryFilter, setCategoryFilter] = React.useState<string | string[]>("all");
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
@@ -50,11 +52,10 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
         direction: "ascending",
     });
 
-    const createModal = useDisclosure();
-    const editModal = useDisclosure();
+    const addPessoaModal = useDisclosure();
     const deleteModal = useDisclosure();
 
-    const rowsPerPage = 7;
+    const rowsPerPage = 100;
 
     const [currentPage, setCurrentPage] = React.useState(1);
 
@@ -71,7 +72,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
 
         if (categoryFilter !== "all" && Array.from(categoryFilterCollection).length !== categoryFilter.length) {
             filteredPessoas = filteredPessoas.filter((pessoa) => {
-                    return categoryFilter.includes(pessoa.categoria.titulo.toString());
+                    return categoryFilter.includes(pessoa.categoria.toString());
                 }
             );
         }
@@ -92,39 +93,63 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
         return getSortedPessoas(items, sortDescriptor)
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((pessoa: PessoasComCategoria, columnKey: string) => {
+    const renderCell = React.useCallback((pessoa: Pessoa, columnKey: string) => {
         switch (columnKey) {
-            case "id":
+            case "pessoa":
                 return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-small capitalize">{pessoa.id}</p>
-                    </div>);
-            case "nome":
-                return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-small ">{pessoa.nome}</p>
-                    </div>
-                )
-            case "email":
-                return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-small ">{pessoa.email}</p>
-                    </div>
+                    <User
+                        avatarProps={{radius: "lg", src: pessoa.imagem}}
+                        description={pessoa.email}
+                        name={pessoa.nome}
+                    >
+                        {pessoa.email}
+                    </User>
                 )
             case "categoria":
                 return (
-                    <Chip className="capitalize" size="sm" variant="flat">
-                        {pessoa.categoria.titulo}
+                    <Chip className="capitalize" color={`${pessoa.categoria == 'Física' ? 'primary' : 'warning'}`}
+                          size="sm" variant="flat">
+                        {pessoa.categoria}
                     </Chip>
+                );
+            case "contato":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-small ">{formatPhoneNumber(pessoa.contato)}</p>
+                    </div>
+                );
+            case "localizacao":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize">{pessoa.cidade}</p>
+                        <p className="text-bold text-sm capitalize text-default-400">{pessoa.estado}</p>
+                    </div>
+                );
+            case "endereco":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-small ">{pessoa.endereco}</p>
+                    </div>
                 );
             case "actions":
                 return (
                     <div className="relative flex items-center justify-center gap-2">
-                        <Tooltip content="Editar Notícia">
-                            <EditIcon onClick={() => {
+                        <Tooltip content="Ver Detalhes">
+                          <span className="text-lg text-default-700 cursor-pointer">
+                            <EyeIcon onClick={() => {
                                 setSelectedPessoa(pessoa);
-                                editModal.onOpen();
-                            }}/>
+                                addPessoaModal.onOpen();
+                            }} color={'black'}/>
+                          </span>
+                        </Tooltip>
+                        <Tooltip content="Editar Pessoa">
+                            <Link href={paths.editPessoa(pessoa.id)}>
+                           <span className="text-lg text-default-700 cursor-pointer">
+                              <EditIcon onClick={() => {
+                                  setSelectedPessoa(pessoa);
+                              }}/>
+                           </span>
+                            </Link>
                         </Tooltip>
                         <Tooltip color="danger" content="Excluir Notícia">
                           <span className="text-lg text-danger cursor-pointer active:opacity-50">
@@ -164,37 +189,17 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
         onClose: deleteModal.onClose,
     }
 
-    const itemCreateModalSettings: CreatePessoaModalSettings = {
-        title: 'Adicionar Pessoa',
-        text: `Preencha abaixo os campos da nova pessoa.`,
-        actionText: 'Adicionar',
-        isOpen: createModal.isOpen,
-        onClose: createModal.onClose,
-        categorias: categoryFilterCollection,
-    }
-
-    const itemEditModalSettings: CreatePessoaModalSettings = {
-        pessoa: selectedPessoa!,
-        title: 'Editar Pessoa',
-        text: `Atualize abaixo os campos da pessoa.`,
-        actionText: 'Editar',
-        isOpen: editModal.isOpen,
-        onClose: editModal.onClose,
-        categorias: categoryFilterCollection
-    }
-
     return (
         <div className={'mt-12 w-9/12'}>
-            <CreatePessoaModal settings={itemCreateModalSettings}/>
-            <CreatePessoaModal settings={itemEditModalSettings}/>
+            <PerfilModal user={selectedPessoa! as any} isOpen={addPessoaModal.isOpen} onClose={addPessoaModal.onClose}/>
             <ItemDeleteModal
                 itemId={selectedPessoa?.id ?? 0}
                 settings={itemDeleteModalSettings}
             />
             <Table
+                isStriped={true}
                 isHeaderSticky={false}
                 topContent={<TabelaPessoasTopContent
-                    onOpenCreatePessoaModal={createModal.onOpen}
                     categoryColletion={categoryFilterCollection}
                     setCategoryFilter={setCategoryFilter}
                     filterValue={filterValue} onClear={onClear}
@@ -212,9 +217,6 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                 selectionMode="none"
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
-                classNames={{
-                    wrapper: "h-auto",
-                }}
             >
                 <TableHeader columns={columns}>
                     {(column) => (
@@ -227,9 +229,9 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhum produtos encontrado"}
-                           items={sortedItems as PessoasComCategoria[]}>
-                    {(noticia: PessoasComCategoria) => (
+                <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhuma pessoa encontrada"}
+                           items={sortedItems as Pessoa[]}>
+                    {(noticia: Pessoa) => (
                         <TableRow key={noticia.id}>
                             {
                                 columns.map((column) => (

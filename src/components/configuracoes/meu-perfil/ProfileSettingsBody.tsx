@@ -2,7 +2,7 @@ import React from "react";
 import {Avatar} from "@nextui-org/avatar";
 import {Pessoa} from "@prisma/client";
 import {fallbackImgUrl} from "@/constants/messages/images";
-import {formatarData} from "@/helpers";
+import {formatarData, formatCEP, formatCNPJ, formatCPF, formatPhoneNumber} from "@/helpers";
 
 interface ProfileSettingsBodyProps {
     user: Pessoa;
@@ -35,18 +35,18 @@ const ProfileSettingsBody: React.FC<ProfileSettingsBodyProps> = ({user}) => {
                     </div>
                 </div>
             </div>
-            <div className={'flex w-full'}>
-            <div className={'my-2 w-full border rounded-lg p-6 flex gap-5 items-center'}>
-                    <div className={'flex flex-col gap-4 w-1/2 h-64'}>
+            <div className={'flex w-full h-auto'}>
+            <div className={'h-auto my-2 w-full border rounded-lg p-6 flex gap-5'}>
+                    <div className={'flex flex-col gap-4 w-1/2 justify-start'}>
                         <div className={'flex justify-between items-center'}>
                             <p className={'text-2xl font-semibold'}>Informações Pessoais</p>
                         </div>
                         <div className={' flex flex-col gap-2'}>
                             <div className={'flex gap-12'}>
                                 <InformationDisplay title={'Email'} value={user.email ?? undefined}/>
-                                <InformationDisplay title={'Celular'} value={user.contato ?? 'Sem celular'}/>
+                                <InformationDisplay title={'Celular'} value={formatPhoneNumber(user.contato) ?? 'Sem celular'}/>
                             </div>
-                            <div className={'flex gap-12'}>
+                            <div className={'flex gap-12 items-start'}>
                                 {user.categoria == 'Jurídica' && user.razaoSocial &&
                                     <InformationDisplay title={'Razão Social'}
                                                         value={user.razaoSocial ?? 'Sem Razão Social'}/>}
@@ -59,11 +59,11 @@ const ProfileSettingsBody: React.FC<ProfileSettingsBodyProps> = ({user}) => {
                                     <InformationDisplay title={'Nome Fantasia'}
                                                         value={user.cnpj ?? 'Sem Nome Fantasia'}/>}
                                 {user.categoria == 'Jurídica' && user.cnpj &&
-                                    <InformationDisplay title={'CNPJ'} value={user.cnpj ?? 'Sem CNPJ'}/>}
+                                    <InformationDisplay title={'CNPJ'} value={formatCNPJ(user.cnpj) ?? 'Sem CNPJ'}/>}
                             </div>
                             <div className={'flex gap-12'}>
                                 {user.categoria == 'Física' && user.cpf &&
-                                    <InformationDisplay title={'CPF'} value={user.cpf ?? 'Sem CPF'}/>}
+                                    <InformationDisplay title={'CPF'} value={formatCPF(user.cpf) ?? 'Sem CPF'}/>}
                                 {user.categoria == 'Física' && user.rg &&
                                     <InformationDisplay title={'RG'} value={user.rg ?? 'Sem RG'}/>}
                             </div>
@@ -76,7 +76,7 @@ const ProfileSettingsBody: React.FC<ProfileSettingsBodyProps> = ({user}) => {
                         <div className={' flex flex-col gap-12'}>
                             <div className={'flex gap-12'}>
                                 <InformationDisplay title={'Endereço'} value={user.endereco ?? 'Sem endereço'}/>
-                                <InformationDisplay title={'CEP'} value={user.cep ?? 'Sem CEP'}/>
+                                <InformationDisplay title={'CEP'} value={formatCEP(user.cep) ?? 'Sem CEP'}/>
                             </div>
                             <div className={'flex gap-12'}>
                                 <InformationDisplay title={'Estado'} value={user.estado ?? 'Sem estado'}/>

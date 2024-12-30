@@ -6,19 +6,14 @@ import {Pessoa} from "@prisma/client";
 import CriarPessoaDetalhes from "@/components/pessoas/criar/CriarPessoaDetalhes";
 import CriarPessoaConfirmacao from "@/components/pessoas/criar/CriarPessoaConfirmacao";
 
-export interface PessoaBasica {
-    nome: string;
-    email: string;
-    contato: string;
-    imagemUrl: string;
-    dataNascimento: Date;
-    categoria: string;
+export interface CriarPessoaFormProps {
+    pessoaCriada?: Pessoa
 }
 
-const CriarPessoaForm: React.FC = _ => {
+const CriarPessoaForm: React.FC<CriarPessoaFormProps> = ({pessoaCriada}) => {
     const [screenIndex, setScreenIndex] = useState(0);
-    const [pessoaCompleta, setPessoaPessoaCompleta] = useState<Pessoa | null>(null);
-    const [pessoaBasica, setPessoaBasica] = useState<PessoaBasica | null>(null);
+    const [pessoaCompleta, setPessoaPessoaCompleta] = useState<Pessoa | null>(pessoaCriada ?? null);
+    const [pessoaBasica, setPessoaBasica] = useState<Pessoa | null>(pessoaCriada ?? null);
 
     let currentScreen;
 
@@ -43,7 +38,8 @@ const CriarPessoaForm: React.FC = _ => {
             break;
         case 2:
             currentScreen =
-                <CriarPessoaConfirmacao pessoa={pessoaCompleta!} currentScreenIndex={screenIndex}
+            // @ts-ignore
+                <CriarPessoaConfirmacao shouldCreatePessoa={!pessoaCriada} pessoa={pessoaCriada ?  {...pessoaCompleta, id: pessoaCriada.id} : pessoaCompleta} currentScreenIndex={screenIndex}
                  setScreenIndex={setScreenIndex}/>
             break;
     }
@@ -56,7 +52,7 @@ const CriarPessoaForm: React.FC = _ => {
     </div>
 
     return (
-        <div className={'flex justify-center items-center h-auto w-11/12'}>
+        <div className={'flex justify-center items-center h-auto w-full mt-36'}>
             <div className={'w-full h-full'}>
                 {header}
                 {<CriarPessoaInputWrapper screenIndex={screenIndex} setScreenIndex={setScreenIndex}>

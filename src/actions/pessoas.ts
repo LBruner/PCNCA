@@ -1,18 +1,13 @@
 'use server';
 
 import {db} from "@/db";
-import {PessoasComCategoria} from "@/components/pessoas/tabela/tabela-pessoas";
-import {CategoriaPessoa, Pessoa} from "@prisma/client";
+import {Pessoa} from "@prisma/client";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {redirect} from "next/navigation";
 
-export async function pegaTodasPessoas(): Promise<PessoasComCategoria[] | null> {
-    const pessoasData = await db.pessoa.findMany({
-        include: {
-            categoria: true
-        },
-    });
+export async function pegaTodasPessoas(): Promise<Pessoa[]> {
+    const pessoasData = await db.pessoa.findMany();
 
     if (pessoasData.length === 0) {
         return []
@@ -20,17 +15,17 @@ export async function pegaTodasPessoas(): Promise<PessoasComCategoria[] | null> 
     return pessoasData;
 }
 
-export async function pegaTodasCategoriasPessoas(): Promise<CategoriaPessoa[]> {
-    const categoriasPessoasData = await db.categoriaPessoa.findMany({
+export async function pegaUmaPessoa(id: number): Promise<Pessoa | null> {
+    const pessoa = await db.pessoa.findFirst({
+        where: {
+            id: parseInt(id.toString())
+        }
     });
 
-    if (categoriasPessoasData.length === 0) {
-        return []
-    }
-    return categoriasPessoasData;
+    return pessoa;
 }
 
-export const createPessoa = async (pessoa: Pessoa) => {
+export const criarPessoa = async (pessoa: Pessoa) => {
     await db.pessoa.create({
         data: {
             nome: pessoa.nome,
@@ -56,20 +51,22 @@ export const createPessoa = async (pessoa: Pessoa) => {
     redirect(paths.pessoas())
 };
 
-export const updatePessoa = async (pessoa: Pessoa) => {
-    await db.pessoa.update({
-        where: {
-            id: pessoa.id
-        },
-        data: {
-            nome: pessoa.nome,
-            email: pessoa.email,
-            categoriaId: parseInt(String(pessoa.categoriaId))
-        }
-    });
+export const editarPessoa = async (pessoa: Pessoa) => {
+    console.log(pessoa);
+    try {
+        console.log(await db.pessoa.update({
+            where: {
+                id: parseInt(pessoa.id.toString())
+            },
+            data: pessoa,
+        }));
 
-    revalidatePath(paths.admCategorias());
-    revalidatePath(paths.culturas());
+        revalidatePath(paths.pessoas());
+    }
+    catch (e) {
+        console.log(e)
+    }
+    redirect(paths.pessoas())
 }
 
 export const deletePessoa = async (pessoaId: number) => {

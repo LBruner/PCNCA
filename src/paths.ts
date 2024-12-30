@@ -77,8 +77,8 @@ const paths = {
     showPessoa(pessoaId: string) {
         return `/pessoas/${pessoaId}`;
     },
-    editPessoa(pessoaId: string) {
-        return `/pessoas/${pessoaId}/edit`;
+    editPessoa(pessoaId: number) {
+        return `/pessoas/${pessoaId}/editar`;
     },
     configuracoes() {
         return `/configuracoes`;

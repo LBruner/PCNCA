@@ -1,1 +1,8 @@
-export const defaultPadding = 'px-36';
+import paths from "@/paths";
+
+export const shouldHideFooterPaths = [
+    paths.adm(),
+    paths.createPessoa(),
+    '/editar',
+    '/auth',
+]

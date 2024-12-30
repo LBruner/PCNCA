@@ -4,6 +4,8 @@ import {SearchIcon} from "@nextui-org/shared-icons";
 import {PlusIcon} from "@/components/estoque/plus-icon";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
 import {FilterCollection} from "@/models/shared/FilterCollection";
+import Link from "next/link";
+import paths from "@/paths";
 
 interface TabelaPessoasTopContentProps {
     categoryColletion: FilterCollection[];
@@ -12,14 +14,12 @@ interface TabelaPessoasTopContentProps {
     hasSearchFilter: boolean;
     filterValue: string;
     itemsLenght: number;
-    onOpenCreatePessoaModal: () => void;
     onSearchChange: (value: string) => void;
     onClear: () => void;
 }
 
 const TabelaPessoasTopContent: React.FC<TabelaPessoasTopContentProps> = (
     {
-        onOpenCreatePessoaModal,
         categoryColletion,
         categoryFilter,
         setCategoryFilter,
@@ -43,15 +43,17 @@ const TabelaPessoasTopContent: React.FC<TabelaPessoasTopContentProps> = (
                     onClear={() => onClear()}
                     onValueChange={onSearchChange}
                 />
-                    <TopContentDropDown
-                        size={'lg'}
-                        collection={categoryColletion} label={''} width={size}
-                        filterStatus={categoryFilter} setFilterStatus={setCategoryFilter}
-                        allSelectedLabel={'Todas Categorias'}
-                        multipleSelectedLabel={'Várias Categorias'}/>
-                    <Button onClick={onOpenCreatePessoaModal} size={'sm'} className={'text-white py-4 bg-orange-600 w-56'} startContent={<PlusIcon/>}>
-                       Nova Pessoa
+                <TopContentDropDown
+                    size={'lg'}
+                    collection={categoryColletion} label={''} width={size}
+                    filterStatus={categoryFilter} setFilterStatus={setCategoryFilter}
+                    allSelectedLabel={'Todas Categorias'}
+                    multipleSelectedLabel={'Várias Categorias'}/>
+                <Link href={paths.createPessoa()}>
+                    <Button size={'sm'} className={'text-white py-4 bg-orange-600 w-56'} startContent={<PlusIcon/>}>
+                        Nova Pessoa
                     </Button>
+                </Link>
             </div>
         );
     }, [

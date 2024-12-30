@@ -1,5 +1,4 @@
 import React from "react";
-import {Button, Pagination} from "@nextui-org/react";
 
 interface TabelaBottomContentProps {
     currentPage: number;
@@ -39,23 +38,6 @@ const TabelaBottomContent: React.FC<TabelaBottomContentProps> = (
               ? "Todos produtos selecionados"
               : `${typeof selectedKeys !== "string" && selectedKeys ? selectedKeys?.length : 0} de ${filteredItemsLength} items selecionado${typeof selectedKeys !== "string" && selectedKeys?.length != 1 ? "s" : ""}`}
         </span>
-                <Pagination
-                    isCompact
-                    showControls
-                    showShadow
-                    color="primary"
-                    page={currentPage}
-                    total={totalPagesQuantity}
-                    onChange={setCurrentPage}
-                />
-                <div className="hidden sm:flex w-[30%] justify-end gap-2">
-                    <Button isDisabled={totalPagesQuantity === 1} size="sm" variant="flat" onPress={onPreviousPage}>
-                        Anterior
-                    </Button>
-                    <Button isDisabled={totalPagesQuantity === 1} size="sm" variant="flat" onPress={onNextPage}>
-                        Próximo
-                    </Button>
-                </div>
             </div>
         );
     }, [selectedKeys, filteredItemsLength, currentPage, totalPagesQuantity, setCurrentPage, onNextPage, onPreviousPage]);

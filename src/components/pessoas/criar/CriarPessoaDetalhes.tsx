@@ -4,13 +4,13 @@ import CriarNoticiaInformacoesBasicasInputField
     from "@/components/noticias/criacao/criar-noticia-informacoes-basicas-input-field";
 import CriarNoticiaInformacoesBasicasSelectField
     from "@/components/noticias/criacao/criar-noticia-informacoes-basicas-select-field";
-import {PessoaBasica} from "@/components/pessoas/CriarPessoaForm";
 import {formatCEP, formatCNPJ, formatCPF, formatInscricaoEstadual, formatRG} from "@/helpers";
 import CriarPessoaFormControls from "@/components/pessoas/criar/CriarPessoaFormControls";
+import {Pessoa} from "@prisma/client";
 
 
 interface PessoaFormProps {
-    pessoaBasica: PessoaBasica;
+    pessoaBasica: Pessoa;
     pessoaCompleta: any;
     setPessoaPessoaCompleta: React.Dispatch<any>;
     currentScreenIndex: number;
@@ -51,7 +51,7 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = forwardRef((props) => {
             cidade: cidade,
             estado: estado,
             dataNascimento: pessoaBasica.dataNascimento,
-            imagem: pessoaBasica.imagemUrl,
+            imagem: pessoaBasica.imagem,
             categoria: pessoaBasica.categoria,
             razaoSocial: razaoSocial,
             cnpj: cnpj,
