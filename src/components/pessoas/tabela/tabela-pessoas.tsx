@@ -29,13 +29,13 @@ import {formatPhoneNumber} from "@/helpers";
 
 const columns = [
     {name: "PESSOA", uid: "pessoa", sortable: true},
+    {name: "TIPO", uid: "tipo", sortable: false},
     {name: "CATEGORIA", uid: "categoria", sortable: false},
     {name: "CONTATO", uid: "contato", sortable: false},
     {name: "ENDEREÇO", uid: "endereco", sortable: false},
-    {name: "LOCALIZAÇÃdO", uid: "localizacao", sortable: false},
+    {name: "LOCALIZAÇÃO", uid: "localizacao", sortable: false},
     {name: "AÇÕES", uid: "actions"},
 ];
-
 
 interface PessoasTableProps {
     pessoas: Pessoa[];
@@ -105,6 +105,12 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                         {pessoa.email}
                     </User>
                 )
+            case "tipo":
+                return (
+                    <div className="flex flex-col">
+                        <p className="text-bold text-small ">{pessoa.tipo}</p>
+                    </div>
+                );
             case "categoria":
                 return (
                     <Chip className="capitalize" color={`${pessoa.categoria == 'Física' ? 'success' : 'warning'}`}

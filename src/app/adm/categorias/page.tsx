@@ -1,11 +1,11 @@
 import React from "react";
 import AdmCategoriasTable from "@/components/adm/categorias/adm-categorias-table";
-import {getCategorias} from "@/actions/categorias";
+import {getAllCategories} from "@/actions/categorias";
 import NoItemsFallback from "@/components/shared/no-items-fallback";
 import {noCulturesFallbackData} from "@/constants/messages/noticias/culturas";
 
 const AdmCategoriasPage: React.FC = async _ => {
-    const categorias = await getCategorias();
+    const categorias = await getAllCategories();
 
     let renderingContent;
 
