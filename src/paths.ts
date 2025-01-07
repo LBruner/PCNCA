@@ -21,7 +21,7 @@ const paths = {
         return `/vendas`;
     },
     createVenda() {
-        return `/vendas/new`;
+        return `/vendas/criar`;
     },
     showVenda(vendaId: string) {
         return `/vendas/${vendaId}`;

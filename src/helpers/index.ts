@@ -1,3 +1,10 @@
+export const formatToBrazilianCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+    }).format(value);
+};
+
 export function formatarData(data: Date) {
     const dia = String(data.getDate()).padStart(2, '0');
     const mes = String(data.getMonth() + 1).padStart(2, '0'); // Janeiro é 0

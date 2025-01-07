@@ -5,4 +5,5 @@ export const shouldHideFooterPaths = [
     paths.createPessoa(),
     '/editar',
     '/auth',
+    '/vendas/criar',
 ]

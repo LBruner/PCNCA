@@ -6,7 +6,7 @@ import {getServerSession} from "next-auth";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {redirect} from "next/navigation";
-import {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
+import {ProdutoEstoqueComRelacoes} from "@/components/estoque/TabelaEstoque";
 
 const createProductSchema = z.object({
     nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),

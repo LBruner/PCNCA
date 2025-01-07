@@ -19,7 +19,7 @@ import {
 import type {Article, Author, Category} from '@prisma/client';
 import {Chip} from "@nextui-org/chip";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
-import TabelaBottomContent from "@/components/estoque/tabela/tabela-bottom-content";
+import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {statusOptions} from "@/models/estoque/filters";
 import {getSortedNoticia} from "@/helpers/tabela";
 import Link from "next/link";
@@ -115,7 +115,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
         }
 
         return filteredProducts;
-    }, [noticias, filterValue, statusFilter, authorFilter, categoryFilter, dateRange,authorFilterCollection,categoryFilterCollection,hasSearchFilter]);
+    }, [noticias, filterValue, statusFilter, authorFilter, categoryFilter, dateRange, authorFilterCollection, categoryFilterCollection, hasSearchFilter]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -242,12 +242,12 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
                              settings={itemDeleteModalSettings}/>
             <Table
                 isHeaderSticky={false}
-                topContent={<AdmNoticiasTableTopContent
+                topContent={<
+                    AdmNoticiasTableTopContent
                     setDatesRange={setDateRange} datesRange={dateRange!}
                     authorFilterCollection={authorFilterCollection}
                     categoryFilterCollection={categoryFilterCollection}
                     setCategoryFilter={setCategoryFilter}
-
                     authorFilter={authorFilter} filterValue={filterValue}
                     setStatusFilter={setStatusFilter} onClear={onClear}
                     onSearchChange={onSearchChange} statusFilter={statusFilter}
@@ -257,7 +257,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
                     itemsLenght={noticias.length}/>}
                 topContentPlacement={'inside'}
                 bottomContentPlacement="outside"
-                bottomContent={<TabelaBottomContent
+                bottomContent={<TabelaEstoqueBottomContent
                     showPagination={true}
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
                     filteredItemsLength={filteredItems.length}

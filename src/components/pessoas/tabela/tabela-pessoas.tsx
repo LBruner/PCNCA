@@ -15,7 +15,7 @@ import {
 import type {Pessoa} from '@prisma/client';
 import {Chip} from "@nextui-org/chip";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
-import TabelaBottomContent from "@/components/estoque/tabela/tabela-bottom-content";
+import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getSortedPessoas} from "@/helpers/tabela";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import TabelaPessoasTopContent from "@/components/pessoas/tabela/tabela-pessoas-top-content";
@@ -215,7 +215,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                     itemsLenght={pessoas.length}/>}
                 topContentPlacement={'inside'}
                 bottomContentPlacement="outside"
-                bottomContent={<TabelaBottomContent
+                bottomContent={<TabelaEstoqueBottomContent
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
                     filteredItemsLength={filteredItems.length}
                     totalPagesQuantity={totalPagesQuantity}

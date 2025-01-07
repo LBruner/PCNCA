@@ -15,7 +15,7 @@ import {
 } from "@nextui-org/react";
 import type {Category} from '@prisma/client';
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
-import TabelaBottomContent from "@/components/estoque/tabela/tabela-bottom-content";
+import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getSortedCategoria} from "@/helpers/tabela";
 import AdmCategoriasTableTopContent from "@/components/adm/categorias/adm-categorias-table-top-content";
 import CustomModal from "@/components/UI/CustomModal";
@@ -218,7 +218,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
                     itemsLenght={categorias.length}/>}
                 bottomContentPlacement="inside"
                 topContentPlacement={'inside'}
-                bottomContent={<TabelaBottomContent
+                bottomContent={<TabelaEstoqueBottomContent
                     showPagination={true}
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
                     filteredItemsLength={filteredItems.length}

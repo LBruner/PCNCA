@@ -52,7 +52,7 @@ const CriarPessoaForm: React.FC<CriarPessoaFormProps> = ({pessoaCriada}) => {
     </div>
 
     return (
-        <div className={'flex justify-center items-center h-auto w-full mt-36'}>
+        <div className={'flex justify-center items-center h-auto w-full'}>
             <div className={'w-full h-full'}>
                 {header}
                 {<CriarPessoaInputWrapper screenIndex={screenIndex} setScreenIndex={setScreenIndex}>

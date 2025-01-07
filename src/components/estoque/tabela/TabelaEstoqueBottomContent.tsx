@@ -11,7 +11,7 @@ interface TabelaBottomContentProps {
     showPagination?: boolean;
 }
 
-const TabelaBottomContent: React.FC<TabelaBottomContentProps> = (
+const TabelaEstoqueBottomContent: React.FC<TabelaBottomContentProps> = (
     {
         setCurrentPage,
         currentPage,
@@ -67,4 +67,4 @@ const TabelaBottomContent: React.FC<TabelaBottomContentProps> = (
 }
 
 
-export default TabelaBottomContent;
+export default TabelaEstoqueBottomContent;

@@ -1,9 +1,9 @@
 'use server';
 
 import {db} from "@/db";
-import {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
+import {ProdutoEstoqueComRelacoes} from "@/components/estoque/TabelaEstoque";
 
-export const getCotacoes = async ():Promise<ProdutoEstoqueComRelacoes[]> => {
+export const getEstoques = async ():Promise<ProdutoEstoqueComRelacoes[]> => {
     // const session = await getServerSession();
     //
     // if (!session) return;

@@ -4,7 +4,7 @@ import React from "react";
 import {useFormState} from "react-dom";
 import * as actions from "@/actions";
 import ProdutoForm from "@/components/produtos/ProdutoForm";
-import {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
+import {ProdutoEstoqueComRelacoes} from "@/components/estoque/TabelaEstoque";
 import {Fornecedor} from "@/actions/produto";
 
 interface ProdutoEditFormProps {

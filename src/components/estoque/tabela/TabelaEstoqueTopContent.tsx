@@ -1,32 +1,35 @@
 import React from "react";
-import {Button, Divider, Input} from "@nextui-org/react";
+import {Button, Divider, Input, Tooltip} from "@nextui-org/react";
 import {SearchIcon} from "@nextui-org/shared-icons";
-import {PlusIcon} from "@/components/estoque/plus-icon";
 import {PiPrinterFill} from "react-icons/pi";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
 import {priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
 import Link from "next/link";
 import paths from "@/paths";
 import {FilterCollection} from "@/models/shared/FilterCollection";
+import {MdOutlineSell} from "react-icons/md";
+import {FaCirclePlus} from "react-icons/fa6";
+import {useRouter} from "next/navigation";
+
 interface TabelaTopContentProps {
     categoriesOptions: FilterCollection[]
     statusFilter: string | string[];
-    setStatusFilter: (keys:string | string[]) => void;
+    setStatusFilter: (keys: string | string[]) => void;
     priceFilter: string | string[];
-    setPriceFilter: (keys: string | string[] ) => void;
+    setPriceFilter: (keys: string | string[]) => void;
     stockFilter: string | string[];
-    setStockFilter: (keys:string | string[]) => void;
+    setStockFilter: (keys: string | string[]) => void;
     categoryFilter: string | string[];
-    setCategoryFilter: (keys:string | string[]) => void;
+    setCategoryFilter: (keys: string | string[]) => void;
     hasSearchFilter: boolean;
     filterValue: string;
     itemsLenght: number;
     onSearchChange: (value: string) => void;
     onClear: () => void;
-    selectedItems?: string | string[];
+    selectedItems: string[];
 }
 
-const TabelaTopContent: React.FC<TabelaTopContentProps> = (
+const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
     {
         categoriesOptions,
         categoryFilter,
@@ -41,9 +44,18 @@ const TabelaTopContent: React.FC<TabelaTopContentProps> = (
         onSearchChange,
         onClear,
         itemsLenght,
+        selectedItems
     }
 ) => {
     const size = 'w-1/5';
+    const router = useRouter();
+
+    const handleNewSale = () => {
+        localStorage.removeItem('selectedItems');
+        localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+        console.log('oi')
+        router.push(paths.createVenda());
+    }
 
     return (React.useMemo(() => {
         return (
@@ -62,10 +74,22 @@ const TabelaTopContent: React.FC<TabelaTopContentProps> = (
                         />
                     </div>
                     <div className="flex gap-1 ">
-                        <Button className={'text-white bg-orange-600 w-56'} startContent={<PlusIcon/>}>
-                            <Link href={paths.createProduto()}>Adicionar novo produto</Link>
+                        <Tooltip color={'foreground'}
+                                 content={`${selectedItems.length === 0 ? 'Selecione produtos para criar uma venda' : 'Criar venda com produtos selecionados'}`}>
+                            {
+                                <Button onClick={handleNewSale} variant={'flat'}
+                                        disabled={selectedItems.length === 0} color={'primary'} className={'w-52'}
+                                        startContent={<MdOutlineSell size={20}/>}>
+                                    Criar Venda
+                                </Button>
+                            }
+                        </Tooltip>
+                        <Button className={'w-56'} variant={'flat'} color={'warning'}
+                                startContent={<FaCirclePlus size={20}/>}>
+                            <Link href={paths.createProduto()}>Novo Produto</Link>
                         </Button>
-                        <Button variant={'bordered'} className={'w-52'} startContent={<PiPrinterFill size={20}/>}>
+                        <Button variant={'flat'} color={'default'} className={'w-52'}
+                                startContent={<PiPrinterFill size={20}/>}>
                             Imprimir Estoque
                         </Button>
                     </div>
@@ -102,8 +126,9 @@ const TabelaTopContent: React.FC<TabelaTopContentProps> = (
         setCategoryFilter,
         setPriceFilter,
         setStatusFilter,
-        setStockFilter
+        setStockFilter,
+        selectedItems
     ]))
 }
 
-export default TabelaTopContent;
+export default TabelaEstoquesTopContent;

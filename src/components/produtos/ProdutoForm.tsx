@@ -4,7 +4,7 @@ import {agribusinessCategories, unidadesDeMedida} from "@/db/factories/product";
 import {Textarea} from "@nextui-org/input";
 import {Radio, RadioGroup} from "@nextui-org/radio";
 import {CreatePostFormState, Fornecedor} from "@/actions/produto";
-import {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
+import {ProdutoEstoqueComRelacoes} from "@/components/estoque/TabelaEstoque";
 
 interface ProdutoFormProps {
     formState: CreatePostFormState,

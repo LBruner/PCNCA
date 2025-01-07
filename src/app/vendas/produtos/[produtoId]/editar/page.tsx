@@ -1,7 +1,7 @@
 import React from "react";
 import ProdutoEditForm from "@/components/produtos/ProdutoEditForm";
 import {pegaFornecedor, pegaProduto} from "@/actions/produto";
-import {ProdutoEstoqueComRelacoes} from "@/components/estoque/estoque-filtragem-card";
+import {ProdutoEstoqueComRelacoes} from "@/components/estoque/TabelaEstoque";
 
 interface EditProductPageProps {
     params: {

@@ -17,8 +17,7 @@ import {
 import type {Product, User} from '@prisma/client';
 import {Chip} from "@nextui-org/chip";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
-import TabelaTopContent from "@/components/estoque/tabela/tabela-top-content";
-import TabelaBottomContent from "@/components/estoque/tabela/tabela-bottom-content";
+import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
 import {getFilteredItems, getSortedProduto} from "@/helpers/tabela";
 import Link from "next/link";
@@ -26,9 +25,9 @@ import paths from "@/paths";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
 import {deletarProduto} from "@/actions/produto";
 import {FilterCollection} from "@/models/shared/FilterCollection";
+import TabelaEstoquesTopContent from "@/components/estoque/tabela/TabelaEstoqueTopContent";
 
 const columns = [
-    {name: "ID", uid: "id", sortable: true},
     {name: "NOME", uid: "name", sortable: true},
     {name: "CATEGORIA", uid: "category", sortable: true},
     {name: "TIPO", uid: "tipo", sortable: false},
@@ -50,7 +49,7 @@ export type ProdutoEstoqueComRelacoes = Product & {
     supplier: User;
 };
 
-const EstoqueFiltragemCard: React.FC<{
+const TabelaEstoque: React.FC<{
     products: ProdutoEstoqueComRelacoes[],
     categoriesCollection: FilterCollection[]
 }> = ({products, categoriesCollection}) => {
@@ -68,7 +67,7 @@ const EstoqueFiltragemCard: React.FC<{
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
 
-    const rowsPerPage = 5;
+    const rowsPerPage = 7;
 
     const [currentPage, setCurrentPage] = React.useState(1);
 
@@ -85,8 +84,8 @@ const EstoqueFiltragemCard: React.FC<{
 
         if (categoryFilter !== "all" && Array.from(categoriesCollection).length !== categoryFilter.length) {
             filteredProducts = filteredProducts.filter((product) => {
-                console.log(categoryFilter)
-                console.log(product.category)
+                    console.log(categoryFilter)
+                    console.log(product.category)
                     return Array.from(categoryFilter).includes(product.category)
                 }
             );
@@ -236,7 +235,8 @@ const EstoqueFiltragemCard: React.FC<{
         <div className={'w-11/12'}>
             <ItemDeleteModal itemId={selectedProductId} settings={itemDeleteModalSettings}/>
             <div className={'bg-white rounded-md p-4 mb-4'}>
-                <TabelaTopContent
+                <TabelaEstoquesTopContent
+                    selectedItems={selectedKeys}
                     categoriesOptions={categoriesCollection}
                     setCategoryFilter={setCategoryFilter}
                     categoryFilter={categoryFilter} filterValue={filterValue}
@@ -247,21 +247,22 @@ const EstoqueFiltragemCard: React.FC<{
                     itemsLenght={products.length}/>
             </div>
             <Table
-
                 isHeaderSticky
                 bottomContentPlacement="outside"
-                bottomContent={<TabelaBottomContent
-                    showPagination={true}
-                    currentPage={currentPage} setCurrentPage={setCurrentPage}
-                    filteredItemsLength={filteredItems.length}
-                    totalPagesQuantity={totalPagesQuantity}
-                    hasSearchFilter={hasSearchFilter} selectedKeys={selectedKeys}/>}
-                selectionMode="single"
+                bottomContent={
+                    <TabelaEstoqueBottomContent
+                        showPagination={true}
+                        currentPage={currentPage} setCurrentPage={setCurrentPage}
+                        filteredItemsLength={filteredItems.length}
+                        totalPagesQuantity={totalPagesQuantity}
+                        hasSearchFilter={hasSearchFilter} selectedKeys={selectedKeys}/>
+                }
+                selectionMode="multiple"
                 onSelectionChange={keys => setSelectedKeys([...keys as unknown as string[]])}
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
                 classNames={{
-                    wrapper: "max-h-2/4 min-h-[30rem] h-[30rem]",
+                    wrapper: "max-h-2/4 min-h-[25rem] h-[35rem]",
                 }}
             >
                 <TableHeader columns={columns}>
@@ -275,7 +276,7 @@ const EstoqueFiltragemCard: React.FC<{
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhum produtos encontrado"}
+                <TableBody className={'h-auto'} emptyContent={"Nenhum produto encontrado"}
                            items={sortedItems as ProdutoEstoqueComRelacoes[]}>
                     {(product: ProdutoEstoqueComRelacoes) => (
                         <TableRow key={product.id}>
@@ -293,4 +294,4 @@ const EstoqueFiltragemCard: React.FC<{
     );
 };
 
-export default EstoqueFiltragemCard;
+export default TabelaEstoque;
