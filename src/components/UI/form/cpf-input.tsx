@@ -1,6 +1,7 @@
 import React, {ChangeEvent} from 'react';
 import RegisterFormInput from "@/components/UI/form/register-form-input";
 import {formatCPF} from "@/helpers";
+import {LiaIdCard} from "react-icons/lia";
 
 interface CPFInputProps {
     onChange: (value: string) => void;
@@ -30,6 +31,7 @@ const CPFInput: React.FC<CPFInputProps> = (props) => {
             onChange={handleCPFChange}
             placeholder="CPF (somente números)"
             maxLength={14}
+            endContent={<LiaIdCard size={18}/>}
         />
     );
 };

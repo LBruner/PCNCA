@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Button, Checkbox, Spinner} from "@nextui-org/react";
+import {Button, Checkbox, Spinner, useDisclosure} from "@nextui-org/react";
 import {IoPersonOutline} from "react-icons/io5";
 import {MdOutlineMailOutline, MdPassword, MdWorkOutline} from "react-icons/md";
 import Image from "next/image";
@@ -14,6 +14,7 @@ import FormErrorText from "@/components/UI/form/form-error-text";
 import RegisterFormInput from "@/components/UI/form/register-form-input";
 import Link from "next/link";
 import paths from "@/paths";
+import TermosCondicoesModal from "@/components/auth/cadastro/TermosCondicoesModal";
 
 function CadastroPage() {
     const [name, setFirstName] = useState('');
@@ -22,6 +23,8 @@ function CadastroPage() {
     const [cpf, setCpf] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    const {isOpen, onOpen, onClose} = useDisclosure();
 
     const registerUser = async (formState: CreateUserProps, formData: FormData): Promise<CreateUserProps> => {
         setIsLoading(true);
@@ -59,6 +62,7 @@ function CadastroPage() {
 
     return (
         <div className="flex h-screen">
+            <TermosCondicoesModal isOpen={isOpen} onClose={onClose}/>
             <div className="w-3/5 bg-customGray p-10 flex items-center flex-col relative drop-shadow-2xl">
                 <div className="container drop-shadow-md items-center w-4/5 mt-24">
                     <h1 className="text-5xl font-bold mb-2">Cadastro</h1>
@@ -121,7 +125,7 @@ function CadastroPage() {
                             name="termos"
                         >
                             <span className="text-sm">
-                                Eu li e aceito os Termos de Uso e a Política de Privacidade. Ao continuar, concordo em cumprir esses termos e estou ciente das práticas de coleta, uso e compartilhamento de dados descritas.
+                                Eu li e aceito os <span onClick={onOpen} className={'hover:cursor-pointer text-warning'}>Termos de Uso e a Política de Privacidade</span>. Ao continuar, concordo em cumprir esses termos e estou ciente das práticas de coleta, uso e compartilhamento de dados descritas.
                             </span>
                         </Checkbox>
                         {formState.errors.termos && formState.errors.termos.length > 0 ? (
