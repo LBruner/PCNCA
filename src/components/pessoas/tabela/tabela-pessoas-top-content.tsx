@@ -6,11 +6,15 @@ import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import Link from "next/link";
 import paths from "@/paths";
+import {FaCirclePlus} from "react-icons/fa6";
 
 interface TabelaPessoasTopContentProps {
     categoryColletion: FilterCollection[];
+    tipoPessoaColletion: FilterCollection[];
     categoryFilter: string | string[];
+    tipoPessoaFilter: string | string[];
     setCategoryFilter: (keys: string | string[]) => void;
+    setTipoPessoaFilter: (keys: string | string[]) => void;
     hasSearchFilter: boolean;
     filterValue: string;
     itemsLenght: number;
@@ -23,6 +27,9 @@ const TabelaPessoasTopContent: React.FC<TabelaPessoasTopContentProps> = (
         categoryColletion,
         categoryFilter,
         setCategoryFilter,
+        tipoPessoaColletion,
+        tipoPessoaFilter,
+        setTipoPessoaFilter,
         filterValue,
         onSearchChange,
         onClear,
@@ -33,7 +40,7 @@ const TabelaPessoasTopContent: React.FC<TabelaPessoasTopContentProps> = (
 
     return (React.useMemo(() => {
         return (
-            <div className="flex gap-4 justify-center  items-center ">
+            <div className="flex gap-4 justify-center items-center ">
                 <Input
                     size={'md'}
                     isClearable
@@ -49,9 +56,16 @@ const TabelaPessoasTopContent: React.FC<TabelaPessoasTopContentProps> = (
                     filterStatus={categoryFilter} setFilterStatus={setCategoryFilter}
                     allSelectedLabel={'Todas Categorias'}
                     multipleSelectedLabel={'Várias Categorias'}/>
+                <TopContentDropDown
+                    size={'lg'}
+                    collection={tipoPessoaColletion} label={''} width={size}
+                    filterStatus={tipoPessoaFilter} setFilterStatus={setTipoPessoaFilter}
+                    allSelectedLabel={'Todos Tipos'}
+                    multipleSelectedLabel={'Vários Tipos'}/>
                 <Link href={paths.createPessoa()}>
-                    <Button size={'sm'} className={'text-white py-4 bg-orange-600 w-56'} startContent={<PlusIcon/>}>
-                        Nova Pessoa
+                    <Button size={'md'} className={'w-56'} variant={'flat'} color={'warning'}
+                            startContent={<FaCirclePlus size={20}/>}>
+                        <p className={'text-md font-bold text-warning-500'}>Nova Pessoa</p>
                     </Button>
                 </Link>
             </div>
@@ -59,6 +73,8 @@ const TabelaPessoasTopContent: React.FC<TabelaPessoasTopContentProps> = (
     }, [
         filterValue,
         categoryFilter,
+        tipoPessoaFilter,
+        setTipoPessoaFilter,
         itemsLenght,
         onSearchChange,
         onClear,

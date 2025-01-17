@@ -10,6 +10,10 @@ import {parseDate} from "@internationalized/date";
 import CriarPessoaFormControls from "@/components/pessoas/criar/CriarPessoaFormControls";
 import {Pessoa} from "@prisma/client";
 import {formatPhoneNumber} from "@/helpers";
+import {MdOutlineAlternateEmail, MdOutlineLocalPhone} from "react-icons/md";
+import {BsPerson} from "react-icons/bs";
+import {IoMdImages} from "react-icons/io";
+import {LiaBirthdayCakeSolid} from "react-icons/lia";
 
 
 interface PessoaFormProps {
@@ -19,14 +23,14 @@ interface PessoaFormProps {
     setScreenIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = forwardRef((props) => {
+const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
     const {setScreenIndex, setPessoa,pessoa} = props;
 
     const [nome, setNome] = useState(pessoa?.nome ?? '');
     const [email, setEmail] = useState(pessoa?.email ?? '');
     const [contato, setContato] = useState(pessoa?.contato ?? '');
     const [dataNascimento, setDataNascimento] = useState(pessoa?.dataNascimento.toISOString().slice(0, 10) ?? new Date().toISOString().slice(0, 10));
-    const [categoria, setCategoria] = useState(pessoa?.categoria ?? '');
+    const [categoria, setCategoria] = useState(pessoa?.categoria ?? 'Física');
     const [imagemUrl, setImagemUrl] = useState(pessoa?.imagem ?? '')
 
     const formRef = useRef<HTMLFormElement>(null);
@@ -60,52 +64,6 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = forwardRef((pro
             <div
                 className={'w-full mx-36 border rounded-lg py-10 px-12 flex flex-col gap-8 justify-start items-center'}>
                 <InputWrapper>
-                    <CriarNoticiaInformacoesBasicasInputField
-                        titulo={'Nome *'}
-                        subtitulo={'Nome completo'} value={nome}
-                        onChange={(newValue) => {
-                            setNome(newValue);
-                        }}
-                    />
-                    <CriarNoticiaInformacoesBasicasInputField
-                        titulo={'Email *'}
-                        subtitulo={'Endereço eletrônico'} value={email}
-                        type={'email'}
-                        onChange={(newValue) => {
-                            setEmail(newValue)
-                        }}
-                    />
-                </InputWrapper>
-                <InputWrapper>
-                    <CriarNoticiaInformacoesBasicasInputField
-                        titulo={'Imagem *'}
-                        subtitulo={'Imagem de perfil'} value={imagemUrl}
-                        onChange={(newValue) => {
-                            setImagemUrl(newValue)
-                        }}
-                    />
-                    <CriarNoticiaInformacoesBasicasInputField
-                        titulo={'Contato *'}
-                        subtitulo={'Número de celular'}
-                        value={contato}
-                        type={'tel'}
-                        onChange={handleContatoChange}
-                    />
-                </InputWrapper>
-                <InputWrapper>
-                    <div className={'flex w-full justify-around'}>
-                        <div className={'flex flex-col'}>
-                            <p className={'text-lg w-48 font-semibold'}>{'Data de nascimento'}</p>
-                            <p className={'text-md w-48 text-gray-500'}>{'Data válida'}</p>
-                        </div>
-                        <I18nProvider locale="pt-BR"
-                        >
-                            <DateInput className={'w-full'} isRequired={true} value={parseDate(dataNascimento)}
-                                       errorMessage={'Data inválida'} onChange={(novoStatus) => {
-                                setDataNascimento(novoStatus.toString())
-                            }} size={'lg'}/>
-                        </I18nProvider>
-                    </div>
                     <CriarNoticiaInformacoesBasicasSelectField
                         titulo={'Categoria'} valor={categoria}
                         placeholder={''}
@@ -115,13 +73,65 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = forwardRef((pro
                             setCategoria(prevState => novaCategoria)
                         }}
                     />
+                    <CriarNoticiaInformacoesBasicasInputField
+                        titulo={`${categoria == 'Jurídica' ? 'Registro Social *' : 'Nome *'}`}
+                        subtitulo={`${categoria == 'Jurídica' ? 'Nome da empresa' : 'Nome completo'}`} value={nome}
+                        onChange={(newValue) => {
+                            setNome(newValue);
+                        }}
+                        icon={<BsPerson size={22}/>}
+                    />
+
+                </InputWrapper>
+                <InputWrapper>
+                    <CriarNoticiaInformacoesBasicasInputField
+                        titulo={'Email *'}
+                        subtitulo={'Endereço eletrônico'} value={email}
+                        type={'email'}
+                        onChange={(newValue) => {
+                            setEmail(newValue)
+                        }}
+                        icon={<MdOutlineAlternateEmail/>}
+                    />
+                    <CriarNoticiaInformacoesBasicasInputField
+                        titulo={'Imagem *'}
+                        subtitulo={'URL da imagem'} value={imagemUrl}
+                        onChange={(newValue) => {
+                            setImagemUrl(newValue)
+                        }}
+                        icon={<IoMdImages size={22}/>}
+                    />
+
+                </InputWrapper>
+                <InputWrapper>
+                    <div className={'flex w-full justify-around'}>
+                        <div className={'flex flex-col'}>
+                            <p className={'text-lg w-48 font-semibold'}>{`${categoria == 'Jurídica' ? 'Data de Fundação *' : 'Data de Nascimento *'}`}</p>
+                            <p className={'text-md w-48 text-gray-500'}>{'Data válida'}</p>
+                        </div>
+                        <I18nProvider locale="pt-BR"
+                        >
+                            <DateInput className={'w-full'} isRequired={true} value={parseDate(dataNascimento)}
+                                       errorMessage={'Data inválida'} onChange={(novoStatus) => {
+                                setDataNascimento(novoStatus.toString())
+                            }} size={'lg'} endContent={<LiaBirthdayCakeSolid size={22} color={'black'}/>}/>
+                        </I18nProvider>
+                    </div>
+                    <CriarNoticiaInformacoesBasicasInputField
+                        titulo={'Contato *'}
+                        subtitulo={'Número de celular'}
+                        value={contato}
+                        type={'tel'}
+                        onChange={handleContatoChange}
+                        icon={<MdOutlineLocalPhone/>}
+                    />
                 </InputWrapper>
                 <CriarPessoaFormControls submitForm={submitForm} currentScreenIndex={props.currentScreenIndex} setScreenIndex={setScreenIndex}/>
             </div>
 
         </form>
     )
-})
+};
 
 const InputWrapper: React.FC<{ children: React.ReactNode }> = ({children}) => {
     return <div className={'flex justify-between w-full gap-14'}>

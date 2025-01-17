@@ -40,13 +40,15 @@ const columns = [
 interface PessoasTableProps {
     pessoas: Pessoa[];
     categoryFilterCollection: FilterCollection[];
+    tipoFilterCollection: FilterCollection[];
 }
 
-const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterCollection}) => {
+const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterCollection,tipoFilterCollection}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedPessoa, setSelectedPessoa] = React.useState<Pessoa | null>();
 
     const [categoryFilter, setCategoryFilter] = React.useState<string | string[]>("all");
+    const [tipoFilter, setTipoPessoaFilter] = React.useState<string | string[]>("all");
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
         column: "id",
         direction: "ascending",
@@ -77,8 +79,15 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
             );
         }
 
+        if (tipoFilter !== "all" && Array.from(tipoFilterCollection).length !== tipoFilter.length) {
+            filteredPessoas = filteredPessoas.filter((pessoa) => {
+                    return tipoFilter.includes(pessoa.tipo!);
+                }
+            );
+        }
+
         return filteredPessoas;
-    }, [pessoas, filterValue, categoryFilter, categoryFilterCollection, hasSearchFilter]);
+    }, [pessoas, filterValue, categoryFilter, categoryFilterCollection, tipoFilterCollection, tipoFilter, hasSearchFilter]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -108,7 +117,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
             case "tipo":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small ">{pessoa.tipo}</p>
+                        <p className="text-bold text-small ">{pessoa.tipo == '' ? 'Pessoa Física' : pessoa.tipo}</p>
                     </div>
                 );
             case "categoria":
@@ -196,7 +205,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
     }
 
     return (
-        <div className={'mt-12 w-9/12'}>
+        <div className={'w-11/12'}>
             <PerfilModal user={selectedPessoa! as any} isOpen={addPessoaModal.isOpen} onClose={addPessoaModal.onClose}/>
             <ItemDeleteModal
                 itemId={selectedPessoa?.id ?? 0}
@@ -208,9 +217,12 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                 topContent={<TabelaPessoasTopContent
                     categoryColletion={categoryFilterCollection}
                     setCategoryFilter={setCategoryFilter}
+                    categoryFilter={categoryFilter}
+                    tipoPessoaColletion={tipoFilterCollection}
+                    tipoPessoaFilter={tipoFilter}
+                    setTipoPessoaFilter={setTipoPessoaFilter}
                     filterValue={filterValue} onClear={onClear}
                     onSearchChange={onSearchChange}
-                    categoryFilter={categoryFilter}
                     hasSearchFilter={hasSearchFilter}
                     itemsLenght={pessoas.length}/>}
                 topContentPlacement={'inside'}

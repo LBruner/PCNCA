@@ -47,7 +47,7 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
         selectedItems
     }
 ) => {
-    const size = 'w-1/5';
+    const size = 'w-full';
     const router = useRouter();
 
     const handleNewSale = () => {
@@ -59,7 +59,7 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
     return (React.useMemo(() => {
         return (
             <div className="flex flex-col gap-4">
-                <div className="flex justify-between gap-3">
+                <div className="flex justify-between gap-4">
                     <div className={'flex gap-1 w-10/12'}>
                         <Input
                             size={'md'}
@@ -94,7 +94,7 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
                     </div>
                 </div>
                 <Divider/>
-                <div className="flex justify-center gap-8 items-center">
+                <div className="mx-4 flex justify-around gap-8">
                     <TopContentDropDown collection={categoriesOptions} label={'Categoria'} width={size}
                                         filterStatus={categoryFilter} setFilterStatus={setCategoryFilter}
                                         allSelectedLabel={'Todas Categorias'}

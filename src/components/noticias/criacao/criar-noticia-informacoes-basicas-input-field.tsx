@@ -9,6 +9,7 @@ interface ConfigurarNoticiaFormFieldProps {
     placeholder?: string;
     type?: HTMLInputTypeAttribute,
     required?: boolean,
+    icon?: React.ReactNode
 }
 
 const formatBrazilianPhoneNumber = (value: string): string => {
@@ -38,7 +39,8 @@ const CriarNoticiaInformacoesBasicasInputField: React.FC<ConfigurarNoticiaFormFi
         onChange,
         placeholder,
         type,
-        required
+        required,
+        icon
     }
 ) => {
     return (
@@ -55,6 +57,7 @@ const CriarNoticiaInformacoesBasicasInputField: React.FC<ConfigurarNoticiaFormFi
                 errorMessage={''}
                 onChange={onChange}
                 type={type}
+                endContent={icon}
             />
         </div>
     )

@@ -1,7 +1,7 @@
 'use server';
 
 import {db} from "@/db";
-import {Pessoa} from "@prisma/client";
+import {Pessoa, TipoPessoa} from "@prisma/client";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {redirect} from "next/navigation";
@@ -13,6 +13,10 @@ export async function pegaTodasPessoas(): Promise<Pessoa[]> {
         return []
     }
     return pessoasData;
+}
+
+export async function pegaTodosTiposPessoa(): Promise<TipoPessoa[]> {
+    return db.tipoPessoa.findMany();
 }
 
 export async function pegaUmaPessoa(id: number): Promise<Pessoa | null> {
@@ -34,6 +38,7 @@ export const criarPessoa = async (pessoa: Pessoa) => {
             dataNascimento: pessoa.dataNascimento,
             rg: pessoa.rg || null,
             endereco: pessoa.endereco,
+            tipo: pessoa.tipo,
             cep: pessoa.cep,
             imagem: pessoa.imagem,
             cidade: pessoa.cidade,
@@ -54,18 +59,18 @@ export const criarPessoa = async (pessoa: Pessoa) => {
 export const editarPessoa = async (pessoa: Pessoa) => {
     console.log(pessoa);
     try {
-        console.log(await db.pessoa.update({
+        await db.pessoa.update({
             where: {
                 id: parseInt(pessoa.id.toString())
             },
             data: pessoa,
-        }));
+        });
 
-        revalidatePath(paths.pessoas());
     }
     catch (e) {
         console.log(e)
     }
+    revalidatePath(paths.pessoas());
     redirect(paths.pessoas())
 }
 
