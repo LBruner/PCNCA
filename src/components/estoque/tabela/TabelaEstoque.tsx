@@ -28,7 +28,7 @@ import {FilterCollection} from "@/models/shared/FilterCollection";
 import TabelaEstoquesTopContent from "@/components/estoque/tabela/TabelaEstoqueTopContent";
 
 const columns = [
-    {name: "NOME", uid: "name", sortable: true},
+    {name: "PRODUTO", uid: "name", sortable: true},
     {name: "CATEGORIA", uid: "category", sortable: true},
     {name: "TIPO", uid: "tipo", sortable: false},
     {name: "FORNECEDOR", uid: "fornecedor", sortable: false},
