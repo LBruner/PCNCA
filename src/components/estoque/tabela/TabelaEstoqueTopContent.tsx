@@ -53,7 +53,6 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
     const handleNewSale = () => {
         localStorage.removeItem('selectedItems');
         localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-        console.log('oi')
         router.push(paths.createVenda());
     }
 

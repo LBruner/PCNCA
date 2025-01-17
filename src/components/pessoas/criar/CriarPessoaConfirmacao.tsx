@@ -14,8 +14,7 @@ interface CriarPessoaConfirmacaoProps {
 
 const CriarPessoaConfirmacao: React.FC<CriarPessoaConfirmacaoProps> = ({pessoa,currentScreenIndex, setScreenIndex, shouldCreatePessoa}) => {
     const [isLoading, setIsLoading] = useState(false);
-    console.log(pessoa);
-    console.log(shouldCreatePessoa)
+
     const onCreatePessoa = async () => {
         setIsLoading(true);
 

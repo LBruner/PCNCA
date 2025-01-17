@@ -64,7 +64,6 @@ export const getCategorias = async (): Promise<Category[]> => {
         }
     });
 
-    console.log(categories)
     if (!categories || categories.length == 0) {
         return [];
     }

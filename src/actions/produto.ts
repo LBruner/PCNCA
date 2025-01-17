@@ -6,7 +6,6 @@ import {getServerSession} from "next-auth";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {redirect} from "next/navigation";
-import {ProdutoEstoqueComRelacoes} from "@/components/estoque/TabelaEstoque";
 
 const createProductSchema = z.object({
     nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
@@ -44,7 +43,6 @@ type FormDataValidationResult = {
 };
 
 function validateForm(formData: FormData): FormDataValidationResult {
-    console.log(formData.get('fornecedor'))
     const result = createProductSchema.safeParse({
         nome: formData.get('nome'),
         categoria: formData.get('categoria'),

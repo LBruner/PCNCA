@@ -18,7 +18,6 @@ const loginSchema = z.object({
 });
 
 export async function validarLogin(formState: LoginProps, formData: FormData): Promise<LoginProps> {
-    console.log(formData)
     const result = loginSchema.safeParse({
         email: formData.get('email'), senha: formData.get('senha')
     });
