@@ -1,9 +1,9 @@
 import React from "react";
-import {notFound} from "next/navigation";
 import ShowCulturaPageBody from "@/components/noticias/culturas/show-cultura-page-body";
-import {Article, Category} from "@prisma/client";
-import {getNoticias} from "@/actions/adm";
-import {getCategoryById} from "@/actions/categorias";
+import {Cultura} from "@prisma/client";
+import {pegaCulturaPorId} from "@/actions/culturas";
+import {NoticiaComAutorCultura, pegaNoticiasPorId} from "@/actions/noticias";
+import EmptyState from "@/components/UI/NoData";
 
 interface CulturaShowPageProps {
     params: {
@@ -12,15 +12,15 @@ interface CulturaShowPageProps {
 }
 
 const CulturaShowPage: React.FC<CulturaShowPageProps> = async ({params: {id}}) => {
-    const noticiasFiltradas: Article[] = await getNoticias({categoryId: id})
-    const category: Category | null = await getCategoryById(parseInt(id));
+    const noticiasFiltradas: NoticiaComAutorCultura[] = await pegaNoticiasPorId(parseInt(id));
+    const cultura: Cultura | null = await pegaCulturaPorId(parseInt(id));
 
     if (noticiasFiltradas.length === 0) {
-        return notFound();
+        return <EmptyState description={'Nenhuma notícia dessa categoria encontrada'}/>
     }
 
     return (
-        <ShowCulturaPageBody noticiasFiltradas={noticiasFiltradas} categoria={category ?? undefined}/>
+        <ShowCulturaPageBody noticiasFiltradas={noticiasFiltradas} cultura={cultura ?? undefined}/>
     );
 };
 

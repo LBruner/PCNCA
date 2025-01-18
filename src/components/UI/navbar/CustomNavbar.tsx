@@ -4,7 +4,6 @@ import {getCurrentUser} from "@/actions/usuarios";
 
 const CustomNavbar: React.FC = async() => {
     const user = await getCurrentUser()
-    console.log(user)
     //TODO : fix this
 
     return (

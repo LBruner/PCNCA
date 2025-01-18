@@ -6,10 +6,11 @@ import ShortNoticiaCardDetailedBottom
 import {useSearchParams} from "next/navigation";
 import paths from "@/paths";
 import CustomBreadcumbs from "@/components/custom-breadcumbs";
+import {Noticia} from "@prisma/client";
 
 interface ShowNoticiaPageBodyProps {
     content: string;
-    noticiasRelacionadas: any[];
+    noticiasRelacionadas: Noticia[];
 }
 
 const getBreadcumbs = (fromPage: string) => {
@@ -56,7 +57,7 @@ const ShowNoticiaPageBody: React.FC<ShowNoticiaPageBodyProps> = ({content, notic
                             img: ({node, ...props}) => (
                                 <img {...props} className="mx-auto my-4" alt={props.alt}/>
                             ),
-                        }} className="markdown-body">
+                        }} className="markdown-body text-xl">
                             {content}
                         </ReactMarkdown>
                     </div>
@@ -64,13 +65,13 @@ const ShowNoticiaPageBody: React.FC<ShowNoticiaPageBodyProps> = ({content, notic
                         <p className={'text-2xl font-semibold text-orange-500'}>VEJA TAMBÉM:</p>
                         <div className="mt-12 mb-4 grid grid-cols-4 gap-4">
                             {noticiasRelacionadas.map(noticia => (
-                                <div key={noticia.id} className="">
+                                <div key={noticia.notId} className="">
                                     <ShortNoticiaCardDetailedBottom
                                         showDetails={true}
-                                        title={noticia.thumbnailText}
-                                        shortDescription={noticia.title}
-                                        imageUrl={noticia.imageUrl!}
-                                        id={noticia.id}
+                                        title={noticia.descricao!}
+                                        shortDescription={noticia.titulo}
+                                        imageUrl={noticia.imagemLink!}
+                                        id={noticia.notId}
                                     />
                                 </div>
                             ))}

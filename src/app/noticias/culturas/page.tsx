@@ -1,25 +1,21 @@
 import React from "react";
-import {getAllCategories} from "@/actions/categorias";
-import NoItemsFallback from "@/components/shared/no-items-fallback";
+import {pegaTodasCulturas} from "@/actions/culturas";
 import CulturaPageBody from "@/components/noticias/culturas/cultura-page-body";
-import {noCulturesFallbackData} from "@/constants/messages/noticias/culturas";
-import {Category} from "@prisma/client";
+import {Cultura} from "@prisma/client";
+import EmptyState from "@/components/UI/NoData";
 
 
 const CategoriasPage: React.FC = async _ => {
-    const categorias: Category[] = await getAllCategories();
+    const categorias: Cultura[] = await pegaTodasCulturas();
 
-    let renderingContent;
-
-    if (!categorias || categorias.length == 0) {
-        renderingContent = <NoItemsFallback {...noCulturesFallbackData}/>
-    } else {
-        renderingContent = <CulturaPageBody categorias={categorias}/>;
+    if(categorias.length == 0)
+    {
+        return <EmptyState description={'Nenhuma categoria cadastrada'}/>
     }
 
     return (
         <div className={'mt-36'}>
-            {renderingContent}
+            <CulturaPageBody culturas={categorias}/>
         </div>
     );
 }

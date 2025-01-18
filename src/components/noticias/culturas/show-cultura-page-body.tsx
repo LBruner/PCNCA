@@ -1,17 +1,18 @@
 'use client';
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import CustomBreadcumbs from "@/components/custom-breadcumbs";
 import paths from "@/paths";
 import LargeNoticiaCard from "@/components/noticias/large-noticia-card/large-noticia-card";
 import {Pagination} from "@nextui-org/react";
-import {Article, Category} from "@prisma/client";
+import {Cultura} from "@prisma/client";
+import {NoticiaComAutorCultura} from "@/actions/noticias";
 
 interface ShowCulturaPageBodyProps {
-    noticiasFiltradas: Article[];
-    categoria?: Category;
+    noticiasFiltradas: NoticiaComAutorCultura[];
+    cultura?: Cultura;
 }
 
-const ShowCulturaPageBody: React.FC<ShowCulturaPageBodyProps> = ({noticiasFiltradas, categoria}) => {
+const ShowCulturaPageBody: React.FC<ShowCulturaPageBodyProps> = ({noticiasFiltradas, cultura}) => {
     const itemsPerPage = 10;
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -38,19 +39,19 @@ const ShowCulturaPageBody: React.FC<ShowCulturaPageBodyProps> = ({noticiasFiltra
                     href: paths.culturas()
                 },
                 {
-                    title: categoria?.name ?? 'Cultura Selecionada',
+                    title: cultura?.nome ?? 'Cultura Selecionada',
                 },
             ]}/>
             <div className={'flex flex-col gap-12 my-12'}>
                 {currentNoticias.map((noticia) => (
                     <LargeNoticiaCard
-                        id={noticia.id}
-                        title={noticia.title}
-                        imageUrl={noticia.imageUrl!}
-                        content={noticia.content}
-                        date={new Date(noticia.publishedAt).toString()}
-                        key={noticia.id}
-                        from={`culturas/${categoria?.name ?? 'desconhecido'}/${categoria?.id}`}
+                        id={noticia.notId}
+                        title={noticia.titulo}
+                        imageUrl={noticia.imagemLink!}
+                        content={noticia.corpo}
+                        date={new Date(noticia.dataPubli).toString()}
+                        key={noticia.notId}
+                        from={`culturas/${cultura?.nome ?? 'desconhecido'}/${cultura?.culturaId}`}
                     />
                 ))}
             </div>

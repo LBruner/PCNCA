@@ -1,6 +1,6 @@
 import React from "react";
 import {notFound} from "next/navigation";
-import {getNoticia, getRelatedArticles} from "@/actions/noticias";
+import {pegaUmaNoticia, pegaArtigosRelacionados} from "@/actions/noticias";
 import {generateMarkdown} from "@/helpers/noticia/criacao/criar-noticia";
 import ShowNoticiaPageBody from "@/components/noticias/show-noticia-page-body";
 
@@ -11,13 +11,14 @@ interface NoticiaPageProps {
 }
 
 const NoticiaShowPage: React.FC<NoticiaPageProps> = async ({params}) => {
-    const noticia = await getNoticia(params.id);
-    // const noticia = articles.find((item) => item.id == params.id);
-    const noticiasRelacionadas = await getRelatedArticles(params.id,6);
+    const noticia = await pegaUmaNoticia(params.id);
+
+    console.log(noticia?.idCultura)
+    const noticiasRelacionadas = await pegaArtigosRelacionados(parseInt(params.id), 4, noticia?.idCultura);
 
     if (!noticia) return notFound();
 
-    const content = generateMarkdown(noticia.title, noticia.subtitle, noticia.imageUrl || '', noticia.content);
+    const content = generateMarkdown(noticia.titulo, noticia.subtitulo, noticia.imagemLink || '', noticia.corpo);
 
     return (
         <div className="mt-36">

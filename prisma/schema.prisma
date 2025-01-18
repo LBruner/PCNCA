@@ -34,6 +34,40 @@ model Session {
   user         User     @relation(fields: [userId], references: [id])
 }
 
+model Autor {
+  autorId   Int       @id @map("AUTOR_ID")
+  nomeAutor String    @map("NOME_AUTOR") @db.VarChar(100)
+  noticias  Noticia[]
+
+  @@map("AUTOR")
+}
+
+model Noticia {
+  notId      Int      @id @default(autoincrement()) @map("NOT_ID")
+  titulo     String   @map("TITULO") @db.VarChar(200)
+  subtitulo  String   @map("SUBTITULO") @db.VarChar(1000)
+  corpo      String   @map("CORPO") @db.Text
+  dataPubli  DateTime @map("DATA_PUBLI")
+  descricao  String?  @map("DESCRICAO") @db.VarChar(1000)
+  idAutor    Int      @map("ID_AUTOR")
+  idCultura  Int      @map("ID_CULTURA")
+  imagemLink String?  @map("IMAGEM_LINK") @db.VarChar(300)
+
+  autor   Autor   @relation(fields: [idAutor], references: [autorId])
+  cultura Cultura @relation(fields: [idCultura], references: [culturaId])
+
+  @@map("NOTICIA")
+}
+
+model Cultura {
+  culturaId Int       @id @default(autoincrement()) @map("ID_CULTURA")
+  nome      String    @map("NOME") @db.VarChar(100)
+  descricao String?   @map("DESCRICAO") @db.VarChar(500)
+  noticias  Noticia[]
+  imagemLink String?  @map("IMAGEM_LINK") @db.VarChar(300)
+  @@map("CULTURA")
+}
+
 model User {
   id               String    @id @default(cuid())
   name             String?
