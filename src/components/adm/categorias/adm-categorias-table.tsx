@@ -13,7 +13,7 @@ import {
     Tooltip,
     useDisclosure,
 } from "@nextui-org/react";
-import type {Category} from '@prisma/client';
+import type {Cultura} from '@prisma/client';
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getSortedCategoria} from "@/helpers/tabela";
@@ -22,7 +22,7 @@ import CustomModal from "@/components/UI/CustomModal";
 import CulturaCard from "@/components/noticias/culturas/cultura-card";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
 import AdmCreateCategoryModal, {CreateItemModalSettings} from "@/components/adm/categorias/adm-create-category-modal";
-import {deleteCategoria} from "@/actions/categorias";
+import {deleteCategoria} from "@/actions/culturas";
 
 const columns = [
     {name: "ID", uid: "id", sortable: true},
@@ -34,12 +34,12 @@ const columns = [
 ];
 
 interface AdmCategoriasTable {
-    categorias: Category[]
+    culturas: Cultura[]
 }
 
-const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
+const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
     const [filterValue, setFilterValue] = React.useState("");
-    const [selectedCategory, setSelectedCategory] = React.useState<Category | null>();
+    const [selectedCultura, setSelectedCultura] = React.useState<Cultura | null>();
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
         column: "id",
         direction: "ascending",
@@ -57,15 +57,15 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
     const hasSearchFilter = Boolean(filterValue);
 
     const filteredItems = React.useMemo(() => {
-        let filteredProducts = [...categorias];
+        let filteredProducts = [...culturas];
 
         if (hasSearchFilter) {
-            filteredProducts = filteredProducts.filter((categoria) =>
-                categoria.name.toLowerCase().includes(filterValue.toLowerCase()),
+            filteredProducts = filteredProducts.filter((cultura) =>
+                cultura.nome.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
         return filteredProducts;
-    }, [categorias, filterValue, hasSearchFilter]);
+    }, [culturas, filterValue, hasSearchFilter]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -80,29 +80,29 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
         return getSortedCategoria(items, sortDescriptor)
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((categoria: Category, columnKey: string) => {
+    const renderCell = React.useCallback((categoria: Cultura, columnKey: string) => {
         switch (columnKey) {
             case "id":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small capitalize">{categoria.id}</p>
+                        <p className="text-bold text-small capitalize">{categoria.culturaId}</p>
                     </div>);
             case "titulo":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small ">{categoria.name}</p>
+                        <p className="text-bold text-small ">{categoria.nome}</p>
                     </div>
                 )
             case "description":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small ">{categoria.description}</p>
+                        <p className="text-bold text-small ">{categoria.descricao}</p>
                     </div>
                 )
             case "url":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small ">{categoria.url}</p>
+                        <p className="text-bold text-small ">{categoria.imagemLink}</p>
                     </div>
                 );
             case "imagem":
@@ -111,8 +111,8 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
                         width={200}
                         shadow={'sm'}
                         height={50}
-                        alt={categoria.name}
-                        src={categoria.url!}
+                        alt={categoria.nome}
+                        src={categoria.imagemLink!}
                     />
                 );
             case "actions":
@@ -121,7 +121,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
                         <Tooltip content="Ver Categoria">
                           <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                             <EyeIcon onClick={() => {
-                                setSelectedCategory(categoria);
+                                setSelectedCultura(categoria);
                                 previewModal.onOpen();
                             }}/>
                           </span>
@@ -129,7 +129,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
                         <Tooltip content="Editar Categoria">
                           <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                               <EditIcon onClick={() => {
-                                  setSelectedCategory(categoria);
+                                  setSelectedCultura(categoria);
                                   editModal.onOpen();
                               }}/>
                           </span>
@@ -137,7 +137,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
                         <Tooltip color="danger" content="Excluir Categoria">
                           <span className="text-lg text-danger cursor-pointer active:opacity-50">
                             <DeleteIcon onClick={() => {
-                                setSelectedCategory(categoria);
+                                setSelectedCultura(categoria);
                                 deleteModal.onOpen();
                             }}/>
                           </span>
@@ -166,8 +166,8 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
 
     const itemDeleteModalSettings: DeletingItemModalSettings = {
         title: 'Excluir Categoria',
-        text: `Tem certeza que deseja excluir a categoria: ${selectedCategory?.name}? Essa ação não pode ser desfeita...`,
-        deletingFunction: deleteCategoria.bind(null, selectedCategory?.id ?? 0),
+        text: `Tem certeza que deseja excluir a categoria: ${selectedCultura?.nome}? Essa ação não pode ser desfeita...`,
+        deletingFunction: deleteCategoria.bind(null, selectedCultura?.culturaId ?? 0),
         isOpen: deleteModal.isOpen,
         onClose: deleteModal.onClose,
     }
@@ -181,7 +181,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
     }
 
     const itemEditModalSettings: CreateItemModalSettings = {
-        category: selectedCategory!,
+        cultura: selectedCultura!,
         title: 'Editar Categoria',
         text: `Atualize abaixo os campos da categoria.`,
         actionText: 'Editar',
@@ -196,14 +196,14 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
                 actionText={'Fechar'} isOpen={previewModal.isOpen} onClose={previewModal.onClose}
                 modalDisplayBody={
                     <CulturaCard
-                        title={selectedCategory?.name || ''}
-                        id={selectedCategory?.id || 0}
-                        image={selectedCategory?.url || ''}
+                        title={selectedCultura?.nome || ''}
+                        id={selectedCultura?.culturaId || 0}
+                        image={selectedCultura?.imagemLink || ''}
                     />
                 } actionButtonColor={'primary'}
             />
             <ItemDeleteModal
-                itemId={selectedCategory?.id ?? 0}
+                itemId={selectedCultura?.culturaId ?? 0}
                 settings={itemDeleteModalSettings}
             />
             <AdmCreateCategoryModal settings={itemCreateModalSettings}/>
@@ -215,7 +215,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
                     filterValue={filterValue} onClear={onClear}
                     onSearchChange={onSearchChange}
                     hasSearchFilter={hasSearchFilter}
-                    itemsLenght={categorias.length}/>}
+                    itemsLenght={culturas.length}/>}
                 bottomContentPlacement="inside"
                 topContentPlacement={'inside'}
                 bottomContent={<TabelaEstoqueBottomContent
@@ -243,13 +243,13 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({categorias}) => {
                     )}
                 </TableHeader>
                 <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhuma categoria encontrada"}
-                           items={sortedItems as Category[]}>
-                    {(categoria: Category) => (
-                        <TableRow key={categoria.id}>
+                           items={sortedItems as Cultura[]}>
+                    {(cultura: Cultura) => (
+                        <TableRow key={cultura.culturaId}>
                             {
                                 columns.map((column) => (
                                     <TableCell key={column.uid}>
-                                        {renderCell(categoria, column.uid)}
+                                        {renderCell(cultura, column.uid)}
                                     </TableCell>
                                 ))}
                         </TableRow>

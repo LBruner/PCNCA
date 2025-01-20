@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import CustomModal from "@/components/UI/CustomModal";
 import {Input} from "@nextui-org/react";
-import {createCategory, updateCategory} from "@/actions/categorias";
-import {Category} from "@prisma/client";
+import {createCategory, updateCategory} from "@/actions/culturas";
+import {Cultura} from "@prisma/client";
 
 export type CreateItemModalSettings = {
     title: string
@@ -11,7 +11,7 @@ export type CreateItemModalSettings = {
     closeText?: string
     isOpen: boolean,
     onClose: () => void,
-    category?: Category
+    cultura?: Cultura
 }
 
 interface CustomModalProps {
@@ -22,30 +22,30 @@ interface CustomModalProps {
 const AdmCreateCategoryModal: React.FC<CustomModalProps> = ({settings}) => {
 
     const [isLoading, setIsLoading] = useState(false)
-    const [nomeCategoria, setNomeCategoria] = useState(settings.category?.name ?? 'gds');
-    const [urlCategoria, setUrlCategoria] = useState(settings.category?.url ?? '');
-    const [descricaoCategoria, setDescricaoCategoria] = useState(settings.category?.description ?? '');
+    const [nomeCategoria, setNomeCategoria] = useState(settings.cultura?.nome ?? 'gds');
+    const [urlCategoria, setUrlCategoria] = useState(settings.cultura?.imagemLink ?? '');
+    const [descricaoCategoria, setDescricaoCategoria] = useState(settings.cultura?.descricao ?? '');
 
     useEffect(() => {
-        if (settings.category) {
-            setNomeCategoria(settings.category.name);
-            setUrlCategoria(settings.category!.url!);
-            setDescricaoCategoria(settings.category!.description!);
+        if (settings.cultura) {
+            setNomeCategoria(settings.cultura.nome);
+            setUrlCategoria(settings.cultura!.imagemLink!);
+            setDescricaoCategoria(settings.cultura!.descricao!);
         } else {
             setNomeCategoria('');
             setUrlCategoria('');
             setDescricaoCategoria('');
         }
-    }, [settings.category]);
+    }, [settings.cultura]);
     const onManageCategory = async () => {
         setIsLoading(true);
 
-        if (settings.category) {
+        if (settings.cultura) {
             await updateCategory({
                 name: nomeCategoria,
                 description: descricaoCategoria,
                 url: urlCategoria,
-                id: settings.category.id
+                id: settings.cultura.culturaId
             });
         } else {
             await createCategory(nomeCategoria, descricaoCategoria, urlCategoria);
