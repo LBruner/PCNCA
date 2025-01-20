@@ -1,20 +1,19 @@
 import React from "react";
 import AdmCategoriasTable from "@/components/adm/categorias/adm-categorias-table";
-import {getAllCategories} from "@/actions/categorias";
+import {pegaTodasCulturas} from "@/actions/culturas";
 import NoItemsFallback from "@/components/shared/no-items-fallback";
 import {noCulturesFallbackData} from "@/constants/messages/noticias/culturas";
 
 const AdmCategoriasPage: React.FC = async _ => {
-    const categorias = await getAllCategories();
+    const culturas = await pegaTodasCulturas();
 
     let renderingContent;
 
-    if (!categorias || categorias.length == 0) {
+    if (!culturas || culturas.length == 0) {
         renderingContent = <NoItemsFallback {...noCulturesFallbackData}/>
     } else {
-        renderingContent = <AdmCategoriasTable categorias={categorias}/>
+        renderingContent = <AdmCategoriasTable culturas={culturas}/>
     }
-
 
     return (
         <div className={'flex justify-center'}>

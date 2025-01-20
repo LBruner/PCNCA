@@ -21,7 +21,7 @@ const NoticiaImagemWrapper: React.FC<NoticiaCardProps> = ({title, imageUrl, show
     }, [imageUrl, placeholderUrl]);
 
     return (
-        <div className={`relative flex rounded-md overflow-hidden w-auto h-full ${classes}`}>
+        <div className={`relative  shadow-lg flex rounded-md overflow-hidden w-auto h-full ${classes}`}>
             <Image
                 src={url}
                 alt="Preview"

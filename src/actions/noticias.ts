@@ -11,108 +11,30 @@ export type NoticiaComAutorCultura = Noticia & {
     autor: Autor;
 };
 
-interface CreateNoticiaArgs {
-    id?: string;
-    title: string;
-    subtitle: string;
-    content: string;
-    imageUrl: string;
-    categoryName: string;
-    authorId?: number;
-    categoryId?: number;
-    thumbnailSubtitle?: string,
-    status?: string;
-}
-
-export const createNoticia = async (
-    {
-        title,
-        subtitle,
-        content,
-        imageUrl,
-        categoryName,
-        thumbnailSubtitle,
-        authorId = 2,
-        categoryId = 1,
-        status = 'Publicado'
-    }: CreateNoticiaArgs) => {
-    const novaNoticia = await db.article.create({
-        data: {
-            title: title,
-            subtitle: subtitle,
-            content: content,
-            publishedAt: new Date(),
-            authorId: authorId,
-            categoryId: categoryId,
-            imageUrl: imageUrl,
-            thumbnailText: thumbnailSubtitle || categoryName,
-            status: status,
-        }
-    });
-
-    revalidatePath(paths.noticias());
-    redirect(paths.showNoticia(novaNoticia.id))
-};
+export type NoticiaEdicao = { notId: number; } & NoticiaCriacao;
 
 export type getNoticiasArgs = {
     idCultura?: string;
 }
 
-export const editNoticia = async (
-    {
-        id,
-        title,
-        subtitle,
-        content,
-        imageUrl,
-        categoryName,
-        thumbnailSubtitle,
-        authorId = 2,
-        categoryId = 1,
-        status = 'Publicado'
-    }: CreateNoticiaArgs) => {
-    const noticiaEditada = await db.article.update({
-        where: {id: parseInt(id!)},
+export const editarNoticia = async (noticia: NoticiaEdicao) => {
+    const noticiaEditada = await db.noticia.update({
+        where: {notId: noticia.notId},
         data: {
-            title: title,
-            subtitle: subtitle,
-            content: content,
-            authorId: authorId,
-            categoryId: categoryId,
-            imageUrl: imageUrl,
-            thumbnailText: thumbnailSubtitle || categoryName,
-            status: status,
+            titulo: noticia.titulo,
+            subtitulo: noticia.subtitulo,
+            corpo: noticia.corpo,
+            idAutor: noticia.idAutor,
+            idCultura: noticia.idCultura,
+            imagemLink: noticia.imagemLink,
+            descricao: noticia.descricao,
         }
     });
 
     revalidatePath(paths.noticias());
-    revalidatePath(paths.showNoticia(noticiaEditada.id));
-    redirect(paths.showNoticia(noticiaEditada.id))
+    revalidatePath(paths.showNoticia(noticiaEditada.notId));
+    redirect(paths.showNoticia(noticiaEditada.notId))
 };
-
-export const deleteNoticia = async (noticiaId: number) => {
-    await db.article.delete({
-        where: {
-            id: noticiaId,
-        },
-    })
-
-    revalidatePath(paths.noticias());
-};
-
-
-export const pegaNoticiasPorId = async (noticiaId: number): Promise<NoticiaComAutorCultura[]> => {
-    console.log(noticiaId)
-    return db.noticia.findMany({
-        where: {
-            idCultura: noticiaId,
-        },
-        include: {
-            autor: true,
-            cultura: true,
-        }
-    });
-}
 
 export const pegaTodasNoticias = async ({idCultura}: getNoticiasArgs = {}): Promise<NoticiaComAutorCultura[]> => {
     const where = idCultura ? {
@@ -131,15 +53,31 @@ export const pegaTodasNoticias = async ({idCultura}: getNoticiasArgs = {}): Prom
     });
 }
 
-export const pegaUmaNoticia = async (noticiaId: string): Promise<Noticia | null> => {
+export const pegaUmaNoticia = async (noticiaId: number): Promise<NoticiaComAutorCultura | null> => {
     return db.noticia.findUnique({
+        include:{
+          autor: true,
+          cultura: true,
+        },
         where: {
-            notId: parseInt(noticiaId),
+            notId: noticiaId,
         }
     });
 }
 
-export const pegaArtigosRelacionados = async (noticiaAtualId: number, quantity: number,culturaId?: number): Promise<Noticia[]> => {
+export const pegaNoticiasPorId = async (noticiaId: number): Promise<NoticiaComAutorCultura[]> => {
+    return db.noticia.findMany({
+        where: {
+            idCultura: noticiaId,
+        },
+        include: {
+            autor: true,
+            cultura: true,
+        }
+    });
+}
+
+export const pegaArtigosRelacionados = async (noticiaAtualId: number, quantity: number, culturaId?: number): Promise<Noticia[]> => {
     if (quantity <= 0) {
         throw new Error('Quantity must be greater than 0');
     }
@@ -149,7 +87,7 @@ export const pegaArtigosRelacionados = async (noticiaAtualId: number, quantity: 
     if (count === 0) {
         return [];
     }
-    
+
     return db.noticia.findMany({
         take: 4,
         where: {
@@ -160,3 +98,43 @@ export const pegaArtigosRelacionados = async (noticiaAtualId: number, quantity: 
         },
     });
 }
+
+export interface NoticiaCriacao {
+    titulo: string;
+    subtitulo: string;
+    corpo: string;
+    idAutor: number;
+    idCultura: number;
+    imagemLink: string;
+    descricao: string;
+}
+
+
+export const criarNoticia = async (
+    noticiaCriacao: NoticiaCriacao) => {
+    const novaNoticia = await db.noticia.create({
+        data: {
+            titulo: noticiaCriacao.titulo,
+            subtitulo: noticiaCriacao.subtitulo,
+            corpo: noticiaCriacao.corpo,
+            dataPubli: new Date(),
+            idAutor: noticiaCriacao.idAutor,
+            idCultura: noticiaCriacao.idCultura,
+            imagemLink: noticiaCriacao.imagemLink,
+            descricao: noticiaCriacao.descricao,
+        }
+    });
+
+    revalidatePath(paths.noticias());
+    redirect(paths.showNoticia(novaNoticia.notId))
+};
+
+export const deletarNoticia = async (noticiaId: number) => {
+    await db.noticia.delete({
+        where: {
+            notId: noticiaId,
+        },
+    })
+
+    revalidatePath(paths.noticias());
+};

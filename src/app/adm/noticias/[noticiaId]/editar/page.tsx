@@ -2,8 +2,8 @@ import React from "react";
 import '@mdxeditor/editor/style.css';
 import NoticiaCreateForm from "@/components/noticias/criacao/noticia-create-form";
 import NotFound from "next/dist/client/components/not-found-error";
-import {getCategorias} from "@/actions/categorias";
-import {getNoticiaById} from "@/actions/noticias";
+import {pegaCulturasUnicas} from "@/actions/adm";
+import {pegaUmaNoticia} from "@/actions/noticias";
 
 interface EditNoticiaPageProps {
     params: {
@@ -12,12 +12,11 @@ interface EditNoticiaPageProps {
 }
 
 const EditNoticiaPage: React.FC<EditNoticiaPageProps> = async ({params}) => {
-    const categories = await getCategorias();
-    const noticiaId = params.noticiaId;
-    let createdNoticia;
+    const categories = await pegaCulturasUnicas();
+    const noticiaId = params.noticiaId;    let createdNoticia;
 
     if (noticiaId) {
-        createdNoticia = await getNoticiaById(noticiaId);
+        createdNoticia = await pegaUmaNoticia(parseInt(params.noticiaId));
     }
 
     if (!createdNoticia) {
@@ -26,7 +25,7 @@ const EditNoticiaPage: React.FC<EditNoticiaPageProps> = async ({params}) => {
 
     return (
         <div className={'ml-64 flex justify-center mt-12'}>
-            <NoticiaCreateForm categories={categories} createdNoticia={createdNoticia}/>
+            <NoticiaCreateForm culturas={categories} noticiaCriada={createdNoticia}/>
         </div>
     );
 };

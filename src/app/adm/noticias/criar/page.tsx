@@ -1,14 +1,14 @@
 import React from "react";
 import '@mdxeditor/editor/style.css';
 import NoticiaCreateForm from "@/components/noticias/criacao/noticia-create-form";
-import {getCategorias} from "@/actions/categorias";
+import {pegaCulturasUnicas} from "@/actions/adm";
 
 const CreateNoticiaPage: React.FC = async () => {
-    const categories = await getCategorias();
+    const culturas = await pegaCulturasUnicas();
 
     return (
         <div className={'ml-64 h-full flex justify-center mt-12'}>
-            <NoticiaCreateForm categories={categories}/>
+            <NoticiaCreateForm culturas={culturas}/>
         </div>
     );
 };

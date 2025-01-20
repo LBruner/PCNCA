@@ -1,10 +1,11 @@
 import React from "react";
 import {Select, SelectItem} from "@nextui-org/react";
+import {FilterCollection} from "@/models/shared/FilterCollection";
 
 interface ConfigurarNoticiaFormFieldProps {
     titulo: string;
     subtitulo: string;
-    collection: string[];
+    collection: FilterCollection[];
     valor?: string;
     onChange: (value: string) => void;
     placeholder: string;
@@ -32,8 +33,8 @@ const CriarNoticiaInformacoesBasicasSelectField: React.FC<ConfigurarNoticiaFormF
                 placeholder={placeholder}
             >
                 {collection.map((item) => (
-                    <SelectItem key={item} value={item}>
-                        {item}
+                    <SelectItem key={item.uid} value={item.uid}>
+                        {item.name}
                     </SelectItem>
                 ))}
             </Select>

@@ -16,16 +16,6 @@ export const pegaCulturaPorId = async (id: number): Promise<Cultura | null> => {
     })
 }
 
-export const pegaCulturas = async (): Promise<Cultura[]> => {
-    return db.cultura.findMany({
-        where: {
-            nome: {
-                in: ['Aves', 'Milho', 'Soja', 'Bovinos']
-            }
-        }
-    });
-}
-
 export const createCategory = async (name: string, description: string, url: string) => {
     await db.category.create({
         data: {
@@ -35,7 +25,7 @@ export const createCategory = async (name: string, description: string, url: str
         }
     });
 
-    revalidatePath(paths.admCategorias());
+    revalidatePath(paths.admCulturas());
     revalidatePath(paths.culturas());
 }
 
@@ -51,7 +41,7 @@ export const updateCategory = async (category: Category) => {
         }
     });
 
-    revalidatePath(paths.admCategorias());
+    revalidatePath(paths.admCulturas());
     revalidatePath(paths.culturas());
 }
 
@@ -62,6 +52,6 @@ export const deleteCategoria = async (categoriaId: number) => {
         },
     })
 
-    revalidatePath(paths.admCategorias());
+    revalidatePath(paths.admCulturas());
     revalidatePath(paths.culturas());
 };

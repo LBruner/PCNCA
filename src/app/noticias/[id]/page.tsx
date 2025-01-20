@@ -11,9 +11,8 @@ interface NoticiaPageProps {
 }
 
 const NoticiaShowPage: React.FC<NoticiaPageProps> = async ({params}) => {
-    const noticia = await pegaUmaNoticia(params.id);
+    const noticia = await pegaUmaNoticia(parseInt(params.id));
 
-    console.log(noticia?.idCultura)
     const noticiasRelacionadas = await pegaArtigosRelacionados(parseInt(params.id), 4, noticia?.idCultura);
 
     if (!noticia) return notFound();

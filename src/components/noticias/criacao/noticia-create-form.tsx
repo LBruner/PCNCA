@@ -1,64 +1,74 @@
 'use client';
 
 import React, {useRef, useState} from "react";
-import {createNoticia, editNoticia} from "@/actions/noticias";
+import {criarNoticia, editarNoticia, NoticiaComAutorCultura, NoticiaCriacao, NoticiaEdicao} from "@/actions/noticias";
 import CriarNoticiaVizualizarPublicar from "@/components/noticias/criacao/telas/criar-noticia-vizualizar-publicar";
 import {generateMarkdown} from "@/helpers/noticia/criacao/criar-noticia";
 import RoundedStepsGuide from "@/components/noticias/criacao/rounded-steps-guide";
 import Spacer from "@/components/noticias/criacao/spacer";
 import {Button, Spinner} from "@nextui-org/react";
-import {Category} from "@prisma/client";
+import {Cultura} from "@prisma/client";
 import CriarNoticiaInformacoesBasicas from "@/components/noticias/criacao/telas/criar-noticia-informacoes-basicas";
-import {Artigo} from "@/models/artigo";
 import CriarNoticiaConteudo from "@/components/noticias/criacao/telas/criar-noticia-conteudo";
-import {NoticiasComAutorEstoque} from "@/components/adm/noticias/adm-noticias-table";
+import {NoticiaBasica} from "@/models/noticiaBasica";
 
 interface NoticiaCreateForm {
-    categories: Category[];
-    createdNoticia?: NoticiasComAutorEstoque;
+    culturas: Cultura[];
+    noticiaCriada?: NoticiaComAutorCultura;
 }
 
-const getInitialNoticia = (article: NoticiasComAutorEstoque): Artigo => ({
-    title: article.title,
-    subtitle: article.subtitle,
-    imageUrl: article.imageUrl,
-    categoryNome: article.category.name,
-    categoryId: article.categoryId,
-    thumbnailSubtitle: article.thumbnailText,
-    status: article.status,
+const getInitialNoticia = (article: NoticiaComAutorCultura): NoticiaBasica => ({
+    titulo: article.titulo,
+    subtitulo: article.subtitulo,
+    imagemLink: article.imagemLink,
+    idCultura: article.idCultura,
+    descricao: article.descricao!,
+    idAutor: article.idAutor,
 });
 
-const NoticiaCreateForm: React.FC<NoticiaCreateForm> = ({categories, createdNoticia}) => {
-    const [content, setNoticiaContent] = useState(createdNoticia?.content ?? "# Escreva aqui sua notícia");
+const NoticiaCreateForm: React.FC<NoticiaCreateForm> = ({culturas, noticiaCriada}) => {
+    const [content, setNoticiaContent] = useState(noticiaCriada?.corpo ?? "# Escreva aqui sua notícia");
     const [screenIndex, setScreenIndex] = useState(0);
-    const [article, setArticle] = useState<Artigo | undefined>(createdNoticia ? getInitialNoticia(createdNoticia) : undefined);
+    const [noticia, setNoticia] = useState<NoticiaBasica | undefined>(noticiaCriada ? getInitialNoticia(noticiaCriada) : undefined);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleNoticiaContentChange = (newContent: string) => {
         setNoticiaContent(newContent);
     };
 
-    const createNovaNoticia = async () => {
+    const criarOuEditarNoticia = async (
+        acao: 'criar' | 'editar',
+        noticiaDados: Partial<NoticiaCriacao | NoticiaEdicao>
+    ) => {
         setIsLoading(true);
 
         const data = {
-            title: article?.title!,
-            subtitle: article?.subtitle!,
-            imageUrl: article?.imageUrl!,
-            categoryName: article?.categoryNome!,
-            authorId: 3,
-            categoryId: article?.categoryId!,
-            thumbnailSubtitle: article?.thumbnailSubtitle,
-            status: article?.status,
-            content: content,
-            id: createdNoticia?.id.toString()
+            titulo: noticia?.titulo!,
+            subtitulo: noticia?.subtitulo!,
+            imagemLink: noticia?.imagemLink!,
+            idCultura: noticia?.idCultura!,
+            idAutor: 3,
+            corpo: content,
+            descricao: noticia?.descricao!,
+            ...noticiaDados,
+        };
+
+        if (acao === 'criar') {
+            await criarNoticia(data as NoticiaCriacao);
+        } else if (acao === 'editar') {
+            await editarNoticia(data as NoticiaEdicao);
         }
 
-        console.log(createdNoticia?.id)
-        createdNoticia ? await editNoticia(data) : await createNoticia(data);
-
         setIsLoading(false);
-    }
+    };
+
+    const criarNovaNoticia = async () => {
+        await criarOuEditarNoticia('criar', {});
+    };
+
+    const editarNoticiaCriada = async () => {
+        await criarOuEditarNoticia('editar', {notId: noticiaCriada?.notId!});
+    };
     const childRef = useRef<HTMLFormElement>(null);
 
     const goToNextScreen = async () => {
@@ -73,7 +83,7 @@ const NoticiaCreateForm: React.FC<NoticiaCreateForm> = ({categories, createdNoti
                     setScreenIndex(screenIndex + 1);
                     break;
                 case 2:
-                    await createNovaNoticia();
+                    noticiaCriada != null ? await editarNoticiaCriada() : await criarNovaNoticia();
                     break;
                 default:
                     console.warn(`Unexpected screenIndex: ${screenIndex}`);
@@ -87,20 +97,26 @@ const NoticiaCreateForm: React.FC<NoticiaCreateForm> = ({categories, createdNoti
 
     switch (screenIndex) {
         case 0:
-            currentScreen = <CriarNoticiaInformacoesBasicas
-                // @ts-ignore
-                article={article} setArticle={setArticle} ref={childRef}
-                categories={categories}
-                setScreenIndex={setScreenIndex}
-            />
+            currentScreen =
+                <CriarNoticiaInformacoesBasicas
+                    noticia={noticia} setArticle={setNoticia}
+                    ref={childRef}
+                    culturas={culturas}
+                    setScreenIndex={setScreenIndex}
+                />
             break;
         case 1:
-            currentScreen = <CriarNoticiaConteudo content={content} handleChange={handleNoticiaContentChange}/>;
+            currentScreen =
+                <CriarNoticiaConteudo
+                    content={content}
+                    handleChange={handleNoticiaContentChange}
+                />;
             break;
         case 2:
             currentScreen =
                 <CriarNoticiaVizualizarPublicar
-                    noticiaCompleta={generateMarkdown(article?.title!, article?.subtitle!, article?.imageUrl!, content)}/>
+                    noticiaCompleta={generateMarkdown(noticia?.titulo!, noticia?.subtitulo!, noticia?.imagemLink!, content)}
+                />
             break;
     }
 

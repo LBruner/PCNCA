@@ -1,12 +1,12 @@
 import React from "react";
-import {Button, DateRangePicker, DateValue, Divider, Input, RangeValue} from "@nextui-org/react";
+import {DateRangePicker, DateValue, Divider, Input, RangeValue} from "@nextui-org/react";
 import {SearchIcon} from "@nextui-org/shared-icons";
-import {PlusIcon} from "@/components/estoque/plus-icon";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
-import Link from "next/link";
 import paths from "@/paths";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import {I18nProvider} from "@react-aria/i18n";
+import {FaCirclePlus} from "react-icons/fa6";
+import NovoItemButton from "@/components/UI/NovoItemButton";
 
 interface TabelaTopContentProps {
     authorFilterCollection: FilterCollection[];
@@ -42,13 +42,13 @@ const AdmNoticiasTableTopContent: React.FC<TabelaTopContentProps> = (
         setDatesRange
     }
 ) => {
-    const size = 'w-1/5';
+    const size = 'w-full';
 
     console.log(authorFilterCollection)
     return (React.useMemo(() => {
         return (
             <div className="flex flex-col gap-4">
-                <div className="flex justify-between gap-3">
+                <div className="flex justify-center gap-4 w-full">
                     <div className={'flex gap-1 w-10/12'}>
                         <Input
                             size={'md'}
@@ -61,10 +61,9 @@ const AdmNoticiasTableTopContent: React.FC<TabelaTopContentProps> = (
                             onValueChange={onSearchChange}
                         />
                     </div>
-                    <div className="flex gap-1 ">
-                        <Button className={'text-white bg-orange-600 w-44'} startContent={<PlusIcon/>}>
-                            <Link href={paths.criarNoticia()}>Adicionar notícia</Link>
-                        </Button>
+                    <div className="flex gap-1">
+                        <NovoItemButton label={'Adicionar Notícia'} href={paths.criarNoticia()}
+                                        icon={<FaCirclePlus size={20}/>}/>
                     </div>
                 </div>
                 <Divider/>

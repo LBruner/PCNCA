@@ -1,9 +1,8 @@
-import type {Category, Product, Sale} from "@prisma/client";
+import type {Cultura, Product, Sale} from "@prisma/client";
 import {SortDescriptor} from "@nextui-org/react";
 import {IFilterable} from "@/models/estoque/filters";
-import {NoticiasComAutorEstoque} from "@/components/adm/noticias/adm-noticias-table";
 import {VendasComProdutos} from "@/models/vendas";
-import {PessoasComCategoria} from "@/components/pessoas/tabela/tabela-pessoas";
+import {NoticiaComAutorCultura} from "@/actions/noticias";
 
 type FilterableItem = string | string[];
 
@@ -46,10 +45,10 @@ export const getSortedProduto = (items: Product[], sortDescriptor: SortDescripto
     });
 }
 
-export const getSortedCategoria = (items: Category[], sortDescriptor: SortDescriptor) => {
-    return [...items].sort((a: Category, b: Category) => {
-        const first = a.name;
-        const second = b.name;
+export const getSortedCategoria = (items: Cultura[], sortDescriptor: SortDescriptor) => {
+    return [...items].sort((a: Cultura, b: Cultura) => {
+        const first = a.nome;
+        const second = b.nome;
 
         const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
 
@@ -67,11 +66,11 @@ export const getSortedPessoas = (items: PessoasComCategoria[], sortDescriptor: S
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
 }
-export const getSortedNoticia = (items: NoticiasComAutorEstoque[], sortDescriptor: SortDescriptor) => {
+export const getSortedNoticia = (items: NoticiaComAutorCultura[], sortDescriptor: SortDescriptor) => {
     if (sortDescriptor.column == 'author') {
-        return [...items].sort((a: NoticiasComAutorEstoque, b: NoticiasComAutorEstoque) => {
-            const first = a.author.name;
-            const second = b.author.name;
+        return [...items].sort((a: NoticiaComAutorCultura, b: NoticiaComAutorCultura) => {
+            const first = a.autor.nomeAutor;
+            const second = b.autor.nomeAutor;
 
             const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
 
@@ -79,9 +78,9 @@ export const getSortedNoticia = (items: NoticiasComAutorEstoque[], sortDescripto
         });
     }
 
-    return [...items].sort((a: NoticiasComAutorEstoque, b: NoticiasComAutorEstoque) => {
-        const first = a[sortDescriptor.column as keyof NoticiasComAutorEstoque];
-        const second = b[sortDescriptor.column as keyof NoticiasComAutorEstoque];
+    return [...items].sort((a: NoticiaComAutorCultura, b: NoticiaComAutorCultura) => {
+        const first = a[sortDescriptor.column as keyof NoticiaComAutorCultura];
+        const second = b[sortDescriptor.column as keyof NoticiaComAutorCultura];
 
         const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
 

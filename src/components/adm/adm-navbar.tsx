@@ -46,9 +46,9 @@ const AdmNavbar: React.FC = () => {
                                         Notícias
                                     </Button>
                                 </Link>
-                                <Link href={paths.admCategorias()}>
+                                <Link href={paths.admCulturas()}>
                                     <Button className="text-right w-full justify-start"
-                                            color={pathname === paths.admCategorias() ? "primary" : "default"}
+                                            color={pathname === paths.admCulturas() ? "primary" : "default"}
                                             startContent={<BiCategory/>}>
                                         Categorias
                                     </Button>

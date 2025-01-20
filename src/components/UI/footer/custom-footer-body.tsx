@@ -5,13 +5,13 @@ import {usePathname} from "next/navigation";
 import {FaEnvelope, FaFacebook, FaInstagram, FaLinkedin, FaTwitter, FaYoutube} from "react-icons/fa";
 import Link from "next/link";
 import paths from "@/paths";
-import {Category} from "@prisma/client";
+import {Cultura} from "@prisma/client";
 import {shouldHideFooterPaths} from "@/constants";
 
 interface CustomFooterProps{
-    categories: Category[],
+    culturas: Cultura[],
 }
-const CustomFooterBody: React.FC<CustomFooterProps> = ({categories,}) => {
+const CustomFooterBody: React.FC<CustomFooterProps> = ({culturas,}) => {
     const pathname = usePathname();
     const [mounted, setMounted] = useState(false);
 
@@ -46,8 +46,8 @@ const CustomFooterBody: React.FC<CustomFooterProps> = ({categories,}) => {
                     </div>
                     <div className="text-sm space-y-2">
                         <div>
-                            <a href="#terms" className="hover:underline">Termos de uso</a> |
-                            <a href="#privacy" className="hover:underline"> Privacidade</a>
+                            <a href="#" className="hover:underline">Termos de uso</a> |
+                            <a href="#" className="hover:underline"> Privacidade</a>
                         </div>
                         <p>2024, Todos os direitos reservados</p>
                     </div>
@@ -56,9 +56,9 @@ const CustomFooterBody: React.FC<CustomFooterProps> = ({categories,}) => {
                 <div className="space-y-4">
                     <h2 className="text-xl font-semibold">Culturas</h2>
                     <ul className="space-y-2">
-                        {categories.map((category) => (
-                            <li key={category.id}>
-                                <Link href={paths.getCultura(category.id)}>{category.name}</Link>
+                        {culturas.map((cultura) => (
+                            <li key={cultura.culturaId}>
+                                <Link href={paths.getCultura(cultura.culturaId)}>{cultura.nome}</Link>
                             </li>
                         ))}
                     </ul>

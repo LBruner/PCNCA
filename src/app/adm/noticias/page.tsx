@@ -1,13 +1,13 @@
 import React from "react";
 import AdmNoticiasTable from "@/components/adm/noticias/adm-noticias-table";
-import {getAutoresFilterColletion, getCategoriasFilterColletion, getNoticias} from "@/actions/adm";
+import {getAutoresFilterColletion, getCategoriasFilterColletion} from "@/actions/adm";
+import {pegaTodasNoticias} from "@/actions/noticias";
 
 const AdmNoticiasPage: React.FC = async _ => {
-    const noticias = await getNoticias();
+    const noticias = await pegaTodasNoticias();
     const autoresUnicos = await getAutoresFilterColletion();
     const categoriasUnicas = await getCategoriasFilterColletion();
 
-    console.log(autoresUnicos)
     return (
         <div className={'flex justify-center'}>
             <AdmNoticiasTable categoryFilterCollection={categoriasUnicas} authorFilterCollection={autoresUnicos} noticias={noticias}/>

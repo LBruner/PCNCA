@@ -5,14 +5,14 @@ import paths from "@/paths";
 import ShortNoticiaCardDetailedRight from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-right";
 import ShortNoticiaCardDetailedBottom
     from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-bottom";
-import {pegaCulturas} from "@/actions/culturas";
 import {Cultura, Noticia} from "@prisma/client";
 import {pegaTodasNoticias} from "@/actions/noticias";
 import NoData from "@/components/UI/NoData";
+import {pegaCulturasUnicas} from "@/actions/adm";
 
 const NoticiasPage: React.FC = async _ => {
     const noticias = await pegaTodasNoticias();
-    const culturas: Cultura[] = await pegaCulturas();
+    const culturas: Cultura[] = await pegaCulturasUnicas();
 
     if (!noticias || noticias.length == 0) {
         return <NoData description={'Nenhuma notícia encontrada'}/>

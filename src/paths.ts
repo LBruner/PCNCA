@@ -8,8 +8,8 @@ const paths = {
     admNoticias(){
         return `/adm/noticias`;
     },
-    admCategorias(){
-        return `/adm/categorias`;
+    admCulturas(){
+        return `/adm/culturas`;
     },
     login() {
         return `/auth/login`;

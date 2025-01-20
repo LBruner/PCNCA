@@ -59,7 +59,6 @@ function CadastroPage() {
         errors: {},
     })
 
-
     return (
         <div className="flex h-screen">
             <TermosCondicoesModal isOpen={isOpen} onClose={onClose}/>
