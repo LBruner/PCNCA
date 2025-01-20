@@ -1,21 +1,21 @@
 import React from "react";
-import { Select, SelectItem } from "@nextui-org/react";
-import { Currency } from "@/helpers/moedas";
+import {Select, SelectItem} from "@nextui-org/react";
 import ReactCountryFlag from "react-country-flag";
+import {Moed} from "@prisma/client";
 
 interface CurrencySelectProps {
-    value: Currency;
-    collection: Currency[];
-    onChange: (value: Currency) => void;
+    value: Moed;
+    collection: Moed[];
+    onChange: (value: Moed) => void;
     label: string;
 }
 
 
-const CurrencySelect: React.FC<CurrencySelectProps> = ({ value, onChange, label, collection }) => {
+const CurrencySelect: React.FC<CurrencySelectProps> = ({value, onChange, label, collection}) => {
     return (
         <div className={'w-2/5'}>
-            <CustomSelect onChange={onChange} code={value.flagCode} name={'categoria'} label={label}
-                collection={collection} />
+            <CustomSelect onChange={onChange} code={value.codigoBandeira} name={'categoria'} label={label}
+                          collection={collection}/>
         </div>
     );
 };
@@ -23,7 +23,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ value, onChange, label,
 interface CustomInput {
     name: string,
     label: string,
-    onChange: (value: Currency) => void,
+    onChange: (value: Moed) => void,
     errorMessage?: string,
     type?: string,
     code: string,
@@ -31,7 +31,7 @@ interface CustomInput {
     endContent?: React.ReactNode
 }
 
-const CustomSelect: React.FC<CustomInput & { collection: Currency[] }> = (
+const CustomSelect: React.FC<CustomInput & { collection: Moed[] }> = (
     {
         name,
         label,
@@ -48,14 +48,14 @@ const CustomSelect: React.FC<CustomInput & { collection: Currency[] }> = (
             <ReactCountryFlag
                 countryCode={code}
                 svg
-                style={{ fontSize: '2em', lineHeight: '2em' }}
+                style={{fontSize: '2em', lineHeight: '2em'}}
             />
         </div>}
         classNames={{
             label: "font-medium font-lg",
         }}
         onSelectionChange={(e: any) => {
-            onChange(collection.find((item) => item.flagCode === e.currentKey) as Currency);
+            onChange(collection.find((item) => item.codigoBandeira === e.currentKey) as Moed);
         }}
         size={'lg'}
         labelPlacement={'outside'}
@@ -65,13 +65,13 @@ const CustomSelect: React.FC<CustomInput & { collection: Currency[] }> = (
             <SelectItem startContent={
                 <div className="flex items-center">
                     <ReactCountryFlag
-                        countryCode={item.flagCode}
+                        countryCode={item.codigoBandeira}
                         svg
-                        style={{ fontSize: '2em', lineHeight: '2em' }}
+                        style={{fontSize: '2em', lineHeight: '2em'}}
                     />
                 </div>
-            } key={item.flagCode} value={item.flagCode}>
-                {item.label}
+            } key={item.codigoBandeira} value={item.codigoBandeira}>
+                {item.nome}
             </SelectItem>
         ))}
     </Select>

@@ -115,6 +115,14 @@ model Product {
 //   products Product[]
 // }
 
+model Moed {
+  sigla String @id @map("SIGLA") @db.VarChar(10)
+  nome  String @map("NOME") @db.VarChar(40)
+  codigoBandeira  String @map("CODIGO_BANDEIRA") @db.VarChar(40)
+
+  @@map("MOED")
+}
+
 model Sale {
   id              Int        @id @default(autoincrement())
   date            DateTime   @default(now())
