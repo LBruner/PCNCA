@@ -1,11 +1,11 @@
 import React from "react";
 import {Avatar} from "@nextui-org/avatar";
-import {Pessoa} from "@prisma/client";
 import {fallbackImgUrl} from "@/constants/messages/images";
 import {formatarData, formatCEP, formatCNPJ, formatCPF, formatPhoneNumber} from "@/helpers";
+import {PessoaCriacao} from "@/actions/pessoas";
 
 interface ProfileSettingsBodyProps {
-    user: Pessoa;
+    user: PessoaCriacao;
 }
 
 export const InformationDisplay: React.FC<{ title: string, value?: string }> = ({title, value}) => {
@@ -20,17 +20,19 @@ export const InformationDisplay: React.FC<{ title: string, value?: string }> = (
 }
 
 const ProfileSettingsBody: React.FC<ProfileSettingsBodyProps> = ({user}) => {
+    const usuarioPessoaFisica = user.cnpj == null;
+
     return (
         <div className={'w-full'}>
             <div className={'my-2 border rounded-lg p-6 flex flex-col gap-4 justify-start items-start'}>
                 <p className={'text-2xl font-semibold'}>Perfil</p>
                 <div className={'flex gap-8 items-center'}>
                     <Avatar
-                        src={user.imagem ?? fallbackImgUrl}
+                        src={user.imagemLink ?? fallbackImgUrl}
                         className="w-24 h-24 text-large"/>
                     <div className={'flex flex-col gap-1'}>
-                        <p className={'font-semibold text-2xl'}>{user.nome ?? 'Maria Clara'}</p>
-                        <p className={'text-gray-600 text-lg'}>{formatarData(user.dataNascimento) ?? 'Sem data de nascimento'}</p>
+                        <p className={'font-semibold text-2xl'}>{user?.nome ?? 'Maria Clara'}</p>
+                        <p className={'text-gray-600 text-lg'}>{user.email}</p>
                         <p className={'text-gray-600'}>{user.cidade != null ? `${user.cidade}, Brasil` : 'São Paulo, Brasil'}</p>
                     </div>
                 </div>
@@ -43,29 +45,29 @@ const ProfileSettingsBody: React.FC<ProfileSettingsBodyProps> = ({user}) => {
                         </div>
                         <div className={' flex flex-col gap-2'}>
                             <div className={'flex gap-12'}>
-                                <InformationDisplay title={'Email'} value={user.email ?? undefined}/>
-                                <InformationDisplay title={'Celular'} value={formatPhoneNumber(user.contato) ?? 'Sem celular'}/>
+                                <InformationDisplay title={'Data nascimento'} value={usuarioPessoaFisica ? formatarData(new Date(user?.dataNascimento!)) : 'Sem data de nascimento' }/>
+                                <InformationDisplay title={'Celular'} value={formatPhoneNumber(user?.telefone!.toString()!) ?? 'Sem celular'}/>
                             </div>
                             <div className={'flex gap-12 items-start'}>
-                                {user.categoria == 'Jurídica' && user.razaoSocial &&
+                                {!usuarioPessoaFisica && user?.razaoSocial &&
                                     <InformationDisplay title={'Razão Social'}
-                                                        value={user.razaoSocial ?? 'Sem Razão Social'}/>}
-                                {user.categoria == 'Jurídica' && user.inscricaoEstadual &&
+                                                        value={user?.razaoSocial ?? 'Sem Razão Social'}/>}
+                                {!usuarioPessoaFisica && user?.inscricaoEstadual &&
                                     <InformationDisplay title={'Inscrição Estadual'}
-                                                        value={user.inscricaoEstadual ?? 'Sem Inscrição Estadual'}/>}
+                                                        value={user?.inscricaoEstadual.toString() ?? 'Sem Inscrição Estadual'}/>}
                             </div>
                             <div className={'flex gap-12'}>
-                                {user.categoria == 'Jurídica' && user.nomeFantasia &&
+                                {usuarioPessoaFisica && user?.nomeFantasia &&
                                     <InformationDisplay title={'Nome Fantasia'}
-                                                        value={user.cnpj ?? 'Sem Nome Fantasia'}/>}
-                                {user.categoria == 'Jurídica' && user.cnpj &&
-                                    <InformationDisplay title={'CNPJ'} value={formatCNPJ(user.cnpj) ?? 'Sem CNPJ'}/>}
+                                                        value={user?.cnpj!.toString() ?? 'Sem Nome Fantasia'}/>}
+                                {usuarioPessoaFisica && user?.cnpj &&
+                                    <InformationDisplay title={'CNPJ'} value={formatCNPJ(user?.cnpj.toString()) ?? 'Sem CNPJ'}/>}
                             </div>
                             <div className={'flex gap-12'}>
-                                {user.categoria == 'Física' && user.cpf &&
-                                    <InformationDisplay title={'CPF'} value={formatCPF(user.cpf) ?? 'Sem CPF'}/>}
-                                {user.categoria == 'Física' && user.rg &&
-                                    <InformationDisplay title={'RG'} value={user.rg ?? 'Sem RG'}/>}
+                                {usuarioPessoaFisica && user?.cpf &&
+                                    <InformationDisplay title={'CPF'} value={formatCPF(user?.cpf.toString()) ?? 'Sem CPF'}/>}
+                                {usuarioPessoaFisica && user?.rg &&
+                                    <InformationDisplay title={'RG'} value={user?.rg.toString() ?? 'Sem RG'}/>}
                             </div>
                         </div>
                     </div>
@@ -75,8 +77,8 @@ const ProfileSettingsBody: React.FC<ProfileSettingsBodyProps> = ({user}) => {
                         </div>
                         <div className={' flex flex-col gap-12'}>
                             <div className={'flex gap-12'}>
-                                <InformationDisplay title={'Endereço'} value={user.endereco ?? 'Sem endereço'}/>
-                                <InformationDisplay title={'CEP'} value={formatCEP(user.cep) ?? 'Sem CEP'}/>
+                                <InformationDisplay title={'Endereço'} value={user.cidade ?? 'Sem endereço'}/>
+                                <InformationDisplay title={'CEP'} value={formatCEP(user.cep!.toString()!) ?? 'Sem CEP'}/>
                             </div>
                             <div className={'flex gap-12'}>
                                 <InformationDisplay title={'Estado'} value={user.estado ?? 'Sem estado'}/>

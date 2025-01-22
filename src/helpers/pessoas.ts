@@ -1,11 +1,11 @@
 import {PessoaCriacao, PessoaFisJurEnd} from "@/actions/pessoas";
 
-export const getDefaultPerson = (pessoaCriada?: PessoaFisJurEnd): PessoaCriacao => {
-    console.log(pessoaCriada)
+export const getFlatPessoa = (pessoaCriada?: PessoaFisJurEnd): PessoaCriacao => {
     if(pessoaCriada){
         return{
             id: pessoaCriada?.pessoaFisica?.id.toString()!,
-            nome: pessoaCriada?.pessoaFisica?.nome!,
+            nome: pessoaCriada?.pessoaFisica?.nome! ?? pessoaCriada?.pessoaJuridica?.razaoSocial,
+            categoria: pessoaCriada?.pessoaFisica != null ? 'Física' : 'Jurídica',
             dataNascimento: pessoaCriada?.pessoaFisica?.dataNascimento.toISOString().slice(0, 10),
             rg: pessoaCriada?.pessoaFisica?.rg!.toString()!,
             cpf: pessoaCriada?.pessoaFisica?.cpf!.toString()!,
@@ -24,7 +24,6 @@ export const getDefaultPerson = (pessoaCriada?: PessoaFisJurEnd): PessoaCriacao 
             razaoSocial: pessoaCriada?.pessoaJuridica?.razaoSocial.toString()!,
             nomeFantasia: pessoaCriada?.pessoaJuridica?.nomeFantasia!,
             telefone: pessoaCriada?.telefones[0]?.numero.toString()!,
-
         };
     }
     return {

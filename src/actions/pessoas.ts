@@ -7,10 +7,11 @@ import paths from "@/paths";
 import {redirect} from "next/navigation";
 
 export type PessoaFisJurEnd = Pessoa & {
-    pessoaFisica?: PessoaFisica;
-    pessoaJuridica?: PessoaJuridica;
+    pessoaFisica: PessoaFisica | null;
+    pessoaJuridica: PessoaJuridica | null;
     enderecos: Endereco[];
     telefones: Telefone[];
+    categoria: CategoriaPessoa;
 }
 
 export interface PessoaCriacao {
@@ -40,22 +41,18 @@ export interface PessoaCriacao {
     contato?: string;
 }
 
-export async function pegaTodasPessoas(): Promise<Pessoa[]> {
-    const pessoasData = await db.pessoa.findMany(
+export async function pegaTodasPessoas(): Promise<PessoaFisJurEnd[]> {
+    return await db.pessoa.findMany(
         {
             include: {
                 enderecos: true,
                 pessoaFisica: true,
                 pessoaJuridica: true,
                 telefones: true,
+                categoria: true
             }
         }
     );
-
-    if (pessoasData.length === 0) {
-        return []
-    }
-    return pessoasData;
 }
 
 export async function pegaTodasCategoriasPessoas(): Promise<CategoriaPessoa[]> {
@@ -63,19 +60,18 @@ export async function pegaTodasCategoriasPessoas(): Promise<CategoriaPessoa[]> {
 }
 
 export async function pegaUmaPessoa(id: number): Promise<PessoaFisJurEnd | null> {
-    const pessoa = await db.pessoa.findFirst({
+    return db.pessoa.findFirst({
         where: {
             id: parseInt(id.toString())
         },
-        include:{
+        include: {
             enderecos: true,
             pessoaJuridica: true,
             pessoaFisica: true,
             telefones: true,
+            categoria: true
         }
     });
-
-    return pessoa;
 }
 
 export const criarPessoa = async (pessoa: PessoaCriacao) => {
@@ -124,12 +120,12 @@ export const criarPessoa = async (pessoa: PessoaCriacao) => {
         telefones: criarTelefones,
         enderecos: criarEnderecos,
         ...(pessoa.categoria === 'Física'
-            ? { pessoaFisica: criarPessoaFisica() }
-            : { pessoaJuridica: criarPessoaJuridica() }),
+            ? {pessoaFisica: criarPessoaFisica()}
+            : {pessoaJuridica: criarPessoaJuridica()}),
     };
 
     try {
-        await db.pessoa.create({ data });
+        await db.pessoa.create({data});
     } catch (err) {
         console.log(err);
     }
@@ -140,9 +136,8 @@ export const criarPessoa = async (pessoa: PessoaCriacao) => {
 
 
 export const editarPessoa = async (pessoa: PessoaCriacao) => {
-    // Precisamos primeiro buscar os IDs das entidades relacionadas
     const pessoaExistente = await db.pessoa.findUnique({
-        where: { id: parseInt(pessoa.id!) },
+        where: {id: parseInt(pessoa.id!)},
         include: {
             telefones: true,
             enderecos: true,
@@ -153,7 +148,7 @@ export const editarPessoa = async (pessoa: PessoaCriacao) => {
 
     if (!pessoaExistente) throw new Error('Pessoa não encontrada');
 
-    const atualizarTelefones =  {
+    const atualizarTelefones = {
         update: {
             where: {
                 id: pessoaExistente.telefones[0].id
@@ -245,8 +240,8 @@ export const editarPessoa = async (pessoa: PessoaCriacao) => {
         telefones: atualizarTelefones,
         enderecos: atualizarEnderecos,
         ...(pessoa.categoria === 'Física'
-                ? { pessoaFisica: atualizarPessoaFisica() }
-                : { pessoaJuridica: atualizarPessoaJuridica() }
+                ? {pessoaFisica: atualizarPessoaFisica()}
+                : {pessoaJuridica: atualizarPessoaJuridica()}
         ),
     };
 
@@ -266,11 +261,43 @@ export const editarPessoa = async (pessoa: PessoaCriacao) => {
 };
 
 export const deletePessoa = async (pessoaId: number) => {
-    await db.pessoa.delete({
-        where: {
-            id: pessoaId,
-        },
-    })
+    try {
+        await db.endereco.deleteMany({
+            where: {
+                pessoaId: pessoaId,
+            },
+        });
 
-    revalidatePath(paths.pessoas());
+        await db.telefone.deleteMany({
+            where: {
+                pessoaId: pessoaId,
+            },
+        });
+
+        await db.pessoaFisica.deleteMany({
+            where: {
+                pessoa: {
+                    id: pessoaId
+                },
+            },
+        });
+
+        await db.pessoaJuridica.deleteMany({
+            where: {
+                pessoa: {
+                    id: pessoaId
+                },
+            },
+        });
+
+        await db.pessoa.delete({
+            where: {
+                id: pessoaId,
+            },
+        });
+
+        revalidatePath(paths.pessoas());
+    } catch (e) {
+        console.error("Erro ao excluir pessoa:", e);
+    }
 };

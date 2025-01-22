@@ -12,7 +12,7 @@ interface PerfilModal {
     action?: () => void;
 }
 
-const PerfilModal: React.FC<PerfilModal> = ({user,isLoading, onClose, isOpen, }) => {
+const PerfilModal: React.FC<PerfilModal> = ({user, onClose, isOpen, }) => {
     return (
         <Modal
             isOpen={isOpen}

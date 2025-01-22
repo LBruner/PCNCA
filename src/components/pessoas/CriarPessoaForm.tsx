@@ -5,13 +5,10 @@ import CriarPessoaInputWrapper from "@/components/pessoas/criar/CriarPessoaInput
 import {CategoriaPessoa} from "@prisma/client";
 import CriarPessoaDetalhes from "@/components/pessoas/criar/CriarPessoaDetalhes";
 import CriarPessoaConfirmacao from "@/components/pessoas/criar/CriarPessoaConfirmacao";
-import {Button} from "@nextui-org/react";
-import {IoMdArrowBack} from "react-icons/io";
-import Link from "next/link";
-import paths from "@/paths";
 import {PessoaCriacao, PessoaFisJurEnd} from "@/actions/pessoas";
-import {getDefaultPerson} from "@/helpers/pessoas";
+import {getFlatPessoa} from "@/helpers/pessoas";
 import {FilterCollection} from "@/models/shared/FilterCollection";
+import VoltarBtn from "@/components/UI/VoltarBtn";
 
 export interface CriarPessoaFormProps {
     pessoaCriada?: PessoaFisJurEnd;
@@ -20,7 +17,7 @@ export interface CriarPessoaFormProps {
 
 const CriarPessoaForm: React.FC<CriarPessoaFormProps> = ({pessoaCriada, tiposPessoas}) => {
     const [screenIndex, setScreenIndex] = useState(0);
-    const [pessoaPraCriar, setPessoaPraCriar] = useState<PessoaCriacao>(pessoaCriada != null ? getDefaultPerson(pessoaCriada) : getDefaultPerson());
+    const [pessoaPraCriar, setPessoaPraCriar] = useState<PessoaCriacao>(pessoaCriada != null ? getFlatPessoa(pessoaCriada) : getFlatPessoa());
     console.log(pessoaPraCriar)
     let currentScreen;
 
@@ -58,11 +55,11 @@ const CriarPessoaForm: React.FC<CriarPessoaFormProps> = ({pessoaCriada, tiposPes
     }
 
     const header = <div className={'flex flex-col px-4 items-center justify-between'}>
-        <div className={'flex justify-start items-start w-full'}>
-            <Link href={paths.pessoas()}><Button className={'bg-gray-100 ml-32'}><IoMdArrowBack size={24}/></Button></Link>
+        <div className={'flex px-12 justify-start w-full'}>
+            <VoltarBtn className={'border-2 border-blue-500 text-blue-500 hover:bg-blue-50'}/>
         </div>
         <div className={'flex flex-col items-center gap-4 justify-center'}>
-            <p className={'text-4xl font-semibold'}>Cadastro de Nova Pessoa</p>
+            <p className={'text-4xl font-semibold'}>{pessoaCriada ? 'Edição de Pessoa' : 'Criação de Pessoa'}</p>
             <p className={'text-lg text-gray-600'}>{screenIndex != 2 ? 'Preencha as informações abaixo' : 'Revise o perfil e conclua a criação'}</p>
         </div>
     </div>

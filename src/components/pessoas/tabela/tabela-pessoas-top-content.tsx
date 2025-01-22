@@ -1,12 +1,11 @@
 import React from "react";
-import {Button, Input} from "@nextui-org/react";
+import {Input} from "@nextui-org/react";
 import {SearchIcon} from "@nextui-org/shared-icons";
-import {PlusIcon} from "@/components/estoque/plus-icon";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
 import {FilterCollection} from "@/models/shared/FilterCollection";
-import Link from "next/link";
 import paths from "@/paths";
 import {FaCirclePlus} from "react-icons/fa6";
+import NovoItemButton from "@/components/UI/NovoItemButton";
 
 interface TabelaPessoasTopContentProps {
     categoryColletion: FilterCollection[];
@@ -62,12 +61,7 @@ const TabelaPessoasTopContent: React.FC<TabelaPessoasTopContentProps> = (
                     filterStatus={tipoPessoaFilter} setFilterStatus={setTipoPessoaFilter}
                     allSelectedLabel={'Todos Tipos'}
                     multipleSelectedLabel={'Vários Tipos'}/>
-                <Link href={paths.createPessoa()}>
-                    <Button size={'md'} className={'w-56'} variant={'flat'} color={'warning'}
-                            startContent={<FaCirclePlus size={20}/>}>
-                        <p className={'text-md font-bold text-warning-500'}>Nova Pessoa</p>
-                    </Button>
-                </Link>
+                <NovoItemButton label={'Nova Pessoa'} href={paths.createPessoa()} icon={<FaCirclePlus size={20}/>}/>
             </div>
         );
     }, [

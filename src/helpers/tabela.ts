@@ -3,6 +3,7 @@ import {SortDescriptor} from "@nextui-org/react";
 import {IFilterable} from "@/models/estoque/filters";
 import {VendasComProdutos} from "@/models/vendas";
 import {NoticiaComAutorCultura} from "@/actions/noticias";
+import {PessoaFisJurEnd} from "@/actions/pessoas";
 
 type FilterableItem = string | string[];
 
@@ -56,16 +57,18 @@ export const getSortedCategoria = (items: Cultura[], sortDescriptor: SortDescrip
     });
 }
 
-export const getSortedPessoas = (items: PessoasComCategoria[], sortDescriptor: SortDescriptor) => {
-    return [...items].sort((a: PessoasComCategoria, b: PessoasComCategoria) => {
-        const first = a[sortDescriptor.column as keyof PessoasComCategoria];
-        const second = b[sortDescriptor.column as keyof PessoasComCategoria];
+export const getSortedPessoas = (items: PessoaFisJurEnd[], sortDescriptor: SortDescriptor) => {
+    console.log(sortDescriptor);
+    return [...items].sort((a: PessoaFisJurEnd, b: PessoaFisJurEnd) => {
+        const first = a.pessoaFisica?.nome ?? a.pessoaJuridica?.razaoSocial;
+        const second = b.pessoaFisica?.nome ?? b.pessoaJuridica?.razaoSocial;
 
         const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
 
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
-}
+};
+
 export const getSortedNoticia = (items: NoticiaComAutorCultura[], sortDescriptor: SortDescriptor) => {
     if (sortDescriptor.column == 'author') {
         return [...items].sort((a: NoticiaComAutorCultura, b: NoticiaComAutorCultura) => {

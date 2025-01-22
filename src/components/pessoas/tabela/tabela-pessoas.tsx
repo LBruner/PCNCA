@@ -12,7 +12,6 @@ import {
     Tooltip,
     useDisclosure,
 } from "@nextui-org/react";
-import type {Pessoa} from '@prisma/client';
 import {Chip} from "@nextui-org/chip";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
@@ -20,32 +19,33 @@ import {getSortedPessoas} from "@/helpers/tabela";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import TabelaPessoasTopContent from "@/components/pessoas/tabela/tabela-pessoas-top-content";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
-import {deletePessoa} from "@/actions/pessoas";
+import {deletePessoa, PessoaFisJurEnd} from "@/actions/pessoas";
 import {User} from "@nextui-org/user";
 import PerfilModal from "@/components/configuracoes/perfil-modal";
 import Link from "next/link";
 import paths from "@/paths";
 import {formatPhoneNumber} from "@/helpers";
+import {getFlatPessoa} from "@/helpers/pessoas";
 
 const columns = [
     {name: "PESSOA", uid: "pessoa", sortable: true},
     {name: "TIPO", uid: "tipo", sortable: false},
     {name: "CATEGORIA", uid: "categoria", sortable: false},
     {name: "CONTATO", uid: "contato", sortable: false},
-    {name: "ENDEREÇO", uid: "endereco", sortable: false},
     {name: "LOCALIZAÇÃO", uid: "localizacao", sortable: false},
+    {name: "PAIS", uid: "pais", sortable: false},
     {name: "AÇÕES", uid: "actions"},
 ];
 
 interface PessoasTableProps {
-    pessoas: Pessoa[];
+    pessoas: PessoaFisJurEnd[];
     categoryFilterCollection: FilterCollection[];
     tipoFilterCollection: FilterCollection[];
 }
 
-const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterCollection,tipoFilterCollection}) => {
+const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterCollection, tipoFilterCollection}) => {
     const [filterValue, setFilterValue] = React.useState("");
-    const [selectedPessoa, setSelectedPessoa] = React.useState<Pessoa | null>();
+    const [selectedPessoa, setSelectedPessoa] = React.useState<PessoaFisJurEnd | null>();
 
     const [categoryFilter, setCategoryFilter] = React.useState<string | string[]>("all");
     const [tipoFilter, setTipoPessoaFilter] = React.useState<string | string[]>("all");
@@ -68,20 +68,26 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
 
         if (hasSearchFilter) {
             filteredPessoas = filteredPessoas.filter((pessoa) =>
-                pessoa.nome.toLowerCase().includes(filterValue.toLowerCase()),
+                pessoa.pessoaFisica != null ? pessoa.pessoaFisica.nome.toLowerCase().includes(filterValue.toLowerCase()) : pessoa.pessoaJuridica!.razaoSocial.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
 
         if (categoryFilter !== "all" && Array.from(categoryFilterCollection).length !== categoryFilter.length) {
             filteredPessoas = filteredPessoas.filter((pessoa) => {
-                    return categoryFilter.includes(pessoa.categoria.toString());
+                    if (categoryFilter == 'Física') {
+                        return pessoa.pessoaFisica != null
+                    }
+                    if (categoryFilter == 'Jurídica') {
+                        return pessoa.pessoaJuridica != null
+                    }
+                    return pessoa;
                 }
             );
         }
 
         if (tipoFilter !== "all" && Array.from(tipoFilterCollection).length !== tipoFilter.length) {
             filteredPessoas = filteredPessoas.filter((pessoa) => {
-                    return tipoFilter.includes(pessoa.tipo!);
+                    return tipoFilter.includes(pessoa.categoria.descricao);
                 }
             );
         }
@@ -102,14 +108,14 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
         return getSortedPessoas(items, sortDescriptor)
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((pessoa: Pessoa, columnKey: string) => {
+    const renderCell = React.useCallback((pessoa: PessoaFisJurEnd, columnKey: string) => {
         switch (columnKey) {
             case "pessoa":
                 return (
                     <User
-                        avatarProps={{radius: "sm", size: 'lg', src: pessoa.imagem}}
+                        avatarProps={{radius: "sm", size: 'lg', src: pessoa.imagemLink!}}
                         description={pessoa.email}
-                        name={pessoa.nome}
+                        name={pessoa.pessoaFisica?.nome ?? pessoa.pessoaJuridica?.razaoSocial}
                     >
                         {pessoa.email}
                     </User>
@@ -117,33 +123,33 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
             case "tipo":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small ">{pessoa.tipo == '' ? 'Pessoa Física' : pessoa.tipo}</p>
+                        <p className="text-bold text-small ">{pessoa.categoria.descricao}</p>
                     </div>
                 );
             case "categoria":
                 return (
-                    <Chip className="capitalize" color={`${pessoa.categoria == 'Física' ? 'success' : 'warning'}`}
+                    <Chip className="capitalize" color={`${pessoa.pessoaJuridica != null ? 'success' : 'warning'}`}
                           size="sm" variant="flat">
-                        {pessoa.categoria}
+                        {pessoa.pessoaJuridica != null ? 'Jurídica' : 'Física'}
                     </Chip>
                 );
             case "contato":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small ">{formatPhoneNumber(pessoa.contato)}</p>
+                        <p className="text-bold text-small ">{formatPhoneNumber(pessoa.telefones[0].numero)}</p>
                     </div>
                 );
             case "localizacao":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-sm capitalize">{pessoa.cidade}</p>
-                        <p className="text-bold text-sm capitalize text-default-400">{pessoa.estado}</p>
+                        <p className="text-bold text-sm capitalize">{pessoa.enderecos[0].cidade}</p>
+                        <p className="text-bold text-sm capitalize text-default-400">{pessoa.enderecos[0].estado}</p>
                     </div>
                 );
-            case "endereco":
+            case "pais":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small ">{pessoa.endereco}</p>
+                        <p className="text-bold text-small ">{pessoa.enderecos[0].pais}</p>
                     </div>
                 );
             case "actions":
@@ -206,7 +212,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
 
     return (
         <div className={'w-11/12'}>
-            <PerfilModal user={selectedPessoa! as any} isOpen={addPessoaModal.isOpen} onClose={addPessoaModal.onClose}/>
+            <PerfilModal user={getFlatPessoa(selectedPessoa!)} isOpen={addPessoaModal.isOpen} onClose={addPessoaModal.onClose}/>
             <ItemDeleteModal
                 itemId={selectedPessoa?.id ?? 0}
                 settings={itemDeleteModalSettings}
@@ -248,13 +254,13 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                     )}
                 </TableHeader>
                 <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhuma pessoa encontrada"}
-                           items={sortedItems as Pessoa[]}>
-                    {(noticia: Pessoa) => (
-                        <TableRow key={noticia.id}>
+                           items={sortedItems}>
+                    {(pessoa: PessoaFisJurEnd) => (
+                        <TableRow key={pessoa.id}>
                             {
                                 columns.map((column) => (
                                     <TableCell key={column.uid}>
-                                        {renderCell(noticia, column.uid)}
+                                        {renderCell(pessoa, column.uid)}
                                     </TableCell>
                                 ))}
                         </TableRow>
