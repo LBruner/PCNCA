@@ -19,7 +19,7 @@ const NoticiasPage: React.FC = async _ => {
     }
 
     return (
-            <div className={'mt-32 flex justify-center items-center'}>
+            <div className={'flex justify-center items-center'}>
                 <div className={' w-3/4'}>
                     <div className={'flex items-center justify-between'}>
                         <p className={'text-2xl font-bold my-6'}>MAIS RECENTES</p>

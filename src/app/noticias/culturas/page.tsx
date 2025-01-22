@@ -14,7 +14,7 @@ const CategoriasPage: React.FC = async _ => {
     }
 
     return (
-        <div className={'mt-36'}>
+        <div>
             <CulturaPageBody culturas={categorias}/>
         </div>
     );

@@ -218,8 +218,9 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
 
     return (
         <div className={'ml-64 mt-12 w-9/12'}>
-            <ItemDeleteModal itemId={selectedProductId}
-                             settings={itemDeleteModalSettings}/>
+            <ItemDeleteModal
+                itemId={selectedProductId}
+                settings={itemDeleteModalSettings}/>
             <Table
                 isHeaderSticky={false}
                 topContent={<

@@ -20,7 +20,7 @@ const NoticiaShowPage: React.FC<NoticiaPageProps> = async ({params}) => {
     const content = generateMarkdown(noticia.titulo, noticia.subtitulo, noticia.imagemLink || '', noticia.corpo);
 
     return (
-        <div className="mt-36">
+        <div>
             <ShowNoticiaPageBody content={content} noticiasRelacionadas={noticiasRelacionadas}/>
         </div>
     );

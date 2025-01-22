@@ -6,7 +6,7 @@ const VerMaisNoticiasPage: React.FC = async () => {
     const noticias = await pegaTodasNoticias();
 
     return (
-        <div className={'mt-32'}>
+        <div>
             <MaisNoticiasList noticias={noticias}/>
         </div>
     );

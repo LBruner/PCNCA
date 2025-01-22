@@ -28,7 +28,7 @@ const ShowCulturaPageBody: React.FC<ShowCulturaPageBodyProps> = ({noticiasFiltra
     }, [currentPage]);
 
     return (
-        <div className={'mt-36'}>
+        <div>
             <CustomBreadcumbs breadcumbs={[
                 {
                     title: 'Todas Notícias',
