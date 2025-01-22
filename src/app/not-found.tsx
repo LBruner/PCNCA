@@ -4,8 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import {HiHome} from "react-icons/hi";
 import {FaTractor} from "react-icons/fa";
-import {BsArrowLeft} from "react-icons/bs";
 import paths from "@/paths";
+import VoltarBtn from "@/components/UI/VoltarBtn";
 
 const NotFound = () => {
     return (
@@ -13,8 +13,9 @@ const NotFound = () => {
             <div className="text-center max-w-2xl mx-auto">
                 <div className="mb-8 flex justify-center mt-24">
                     <div className="relative">
-                        <FaTractor size={120} className="text-green-700" />
-                        <div className="absolute -top-4 -right-4 bg-yellow-400 rounded-full w-12 h-12 flex items-center justify-center">
+                        <FaTractor size={120} className="text-green-700"/>
+                        <div
+                            className="absolute -top-4 -right-4 bg-yellow-400 rounded-full w-12 h-12 flex items-center justify-center">
                             <span className="text-2xl font-bold">?</span>
                         </div>
                     </div>
@@ -30,19 +31,14 @@ const NotFound = () => {
 
                 <div className="space-y-4 md:space-y-0 md:space-x-4 flex flex-col md:flex-row justify-center">
                     <Link href={paths.landingPage()}>
-                        <button className="inline-flex items-center px-6 py-3 bg-green-700 hover:bg-green-800 text-white font-semibold rounded-lg transition-colors w-full md:w-auto justify-center">
-                            <HiHome size={20} className="mr-2" />
+                        <button
+                            className="inline-flex items-center px-6 py-3 bg-green-700 hover:bg-green-800 text-white font-semibold rounded-lg transition-colors w-full md:w-auto justify-center">
+                            <HiHome size={20} className="mr-2"/>
                             Voltar ao Início
                         </button>
                     </Link>
 
-                    <button
-                        onClick={() => window.history.back()}
-                        className="inline-flex items-center px-6 py-3 border-2 border-green-700 text-green-700 hover:bg-green-50 font-semibold rounded-lg transition-colors w-full md:w-auto justify-center"
-                    >
-                        <BsArrowLeft size={20} className="mr-2" />
-                        Voltar
-                    </button>
+                    <VoltarBtn/>
                 </div>
 
                 <div className="mt-12 p-6 bg-green-50 rounded-lg">
