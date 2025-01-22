@@ -1,5 +1,5 @@
 import React from "react";
-import {pegaTodosTiposPessoa, pegaUmaPessoa} from "@/actions/pessoas";
+import {pegaTodasCategoriasPessoas, pegaUmaPessoa} from "@/actions/pessoas";
 import {notFound} from "next/navigation";
 import CriarPessoaForm from "@/components/pessoas/CriarPessoaForm";
 
@@ -11,7 +11,7 @@ interface EditPessoaPageProps {
 
 const EditarPessoaPage: React.FC<EditPessoaPageProps> = async ({params}) => {
     const pessoa = await pegaUmaPessoa(params.pessoaId);
-    const tiposPessoa = await pegaTodosTiposPessoa();
+    const tiposPessoa = await pegaTodasCategoriasPessoas();
 
     if(!pessoa) return notFound();
 

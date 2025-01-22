@@ -1,5 +1,5 @@
 'use client';
-import React, {forwardRef, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import CriarNoticiaInformacoesBasicasInputField
     from "@/components/noticias/criacao/criar-noticia-informacoes-basicas-input-field";
 import CriarNoticiaInformacoesBasicasSelectField
@@ -8,54 +8,56 @@ import {DateInput} from "@nextui-org/react";
 import {I18nProvider} from "@react-aria/i18n";
 import {parseDate} from "@internationalized/date";
 import CriarPessoaFormControls from "@/components/pessoas/criar/CriarPessoaFormControls";
-import {Pessoa} from "@prisma/client";
 import {formatPhoneNumber} from "@/helpers";
 import {MdOutlineAlternateEmail, MdOutlineLocalPhone} from "react-icons/md";
 import {BsPerson} from "react-icons/bs";
 import {IoMdImages} from "react-icons/io";
 import {LiaBirthdayCakeSolid} from "react-icons/lia";
-
+import {PessoaCriacao} from "@/actions/pessoas";
 
 interface PessoaFormProps {
-    pessoa: Pessoa | null;
-    setPessoa: React.Dispatch<React.SetStateAction<Pessoa | null>>;
+    pessoa: PessoaCriacao;
+    setPessoa: React.Dispatch<React.SetStateAction<PessoaCriacao>>;
     currentScreenIndex: number;
     setScreenIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
-    const {setScreenIndex, setPessoa,pessoa} = props;
+    const {setScreenIndex, setPessoa, pessoa} = props;
 
     const [nome, setNome] = useState(pessoa?.nome ?? '');
     const [email, setEmail] = useState(pessoa?.email ?? '');
-    const [contato, setContato] = useState(pessoa?.contato ?? '');
-    const [dataNascimento, setDataNascimento] = useState(pessoa?.dataNascimento.toISOString().slice(0, 10) ?? new Date().toISOString().slice(0, 10));
-    const [categoria, setCategoria] = useState(pessoa?.categoria ?? 'Física');
-    const [imagemUrl, setImagemUrl] = useState(pessoa?.imagem ?? '')
+    const [telefone, setTelefone] = useState(pessoa?.telefone ?? '');
+    const [dataNascimento, setDataNascimento] = useState(pessoa?.dataNascimento ?? new Date().toISOString().slice(0, 10));
+    const [categoria, setCategoria] = useState(pessoa.categoria ?? 'Física');
+    const [imagemUrl, setImagemUrl] = useState(pessoa?.imagemLink ?? '')
 
     const formRef = useRef<HTMLFormElement>(null);
 
     const submitForm = () => {
 
-        if(!formRef.current!.reportValidity()){
+        if (!formRef.current!.reportValidity()) {
             formRef.current!.reportValidity();
             return;
         }
 
-        setPessoa({
+        setPessoa(prevState => ({
+            ...prevState,
             nome: nome,
+            razaoSocial: nome,
             email: email,
-            contato: contato,
-            dataNascimento: new Date(dataNascimento),
-            categoria: categoria,
-            imagem: imagemUrl,
-        } as any);
+            telefone: telefone,
+            dataNascimento: dataNascimento,
+            imagemLink: imagemUrl,
+            categoria,
+        }));
+
         setScreenIndex(prevState => prevState + 1);
     }
 
     const handleContatoChange = (newValue: string) => {
         const formattedNumber = formatPhoneNumber(newValue);
-        setContato(formattedNumber);
+        setTelefone(formattedNumber);
     };
 
     return (
@@ -68,13 +70,13 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                         titulo={'Categoria'} valor={categoria}
                         placeholder={''}
                         subtitulo={`Tipo de pessoa`}
-                        collection={['Física', 'Jurídica']}
+                        collection={[{name: 'Física', uid: 'Física',}, {uid: 'Jurídica', name: 'Jurídica',}]}
                         onChange={(novaCategoria) => {
-                            setCategoria(prevState => novaCategoria)
+                            setCategoria(novaCategoria)
                         }}
                     />
                     <CriarNoticiaInformacoesBasicasInputField
-                        titulo={`${categoria == 'Jurídica' ? 'Registro Social *' : 'Nome *'}`}
+                        titulo={`${categoria == 'Jurídica' ? 'Razão Social *' : 'Nome *'}`}
                         subtitulo={`${categoria == 'Jurídica' ? 'Nome da empresa' : 'Nome completo'}`} value={nome}
                         onChange={(newValue) => {
                             setNome(newValue);
@@ -112,21 +114,22 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                         <I18nProvider locale="pt-BR"
                         >
                             <DateInput className={'w-full'} isRequired={true} value={parseDate(dataNascimento)}
-                                       errorMessage={'Data inválida'} onChange={(novoStatus) => {
-                                setDataNascimento(novoStatus.toString())
+                                       errorMessage={'Data inválida'} onChange={(novaData) => {
+                                setDataNascimento(novaData.toString())
                             }} size={'lg'} endContent={<LiaBirthdayCakeSolid size={22} color={'black'}/>}/>
                         </I18nProvider>
                     </div>
                     <CriarNoticiaInformacoesBasicasInputField
                         titulo={'Contato *'}
                         subtitulo={'Número de celular'}
-                        value={contato}
+                        value={telefone.toString()}
                         type={'tel'}
                         onChange={handleContatoChange}
                         icon={<MdOutlineLocalPhone/>}
                     />
                 </InputWrapper>
-                <CriarPessoaFormControls submitForm={submitForm} currentScreenIndex={props.currentScreenIndex} setScreenIndex={setScreenIndex}/>
+                <CriarPessoaFormControls submitForm={submitForm} currentScreenIndex={props.currentScreenIndex}
+                                         setScreenIndex={setScreenIndex}/>
             </div>
 
         </form>

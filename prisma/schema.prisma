@@ -53,18 +53,20 @@ model Noticia {
   idCultura  Int      @map("ID_CULTURA")
   imagemLink String?  @map("IMAGEM_LINK") @db.VarChar(300)
 
-  autor   Autor   @relation(fields: [idAutor], references: [autorId])
-  cultura Cultura @relation(fields: [idCultura], references: [culturaId])
+  autor                        Autor                          @relation(fields: [idAutor], references: [autorId])
+  cultura                      Cultura                        @relation(fields: [idCultura], references: [culturaId])
+  ComercioInternacionalNoticia ComercioInternacionalNoticia[]
 
   @@map("NOTICIA")
 }
 
 model Cultura {
-  culturaId Int       @id @default(autoincrement()) @map("ID_CULTURA")
-  nome      String    @map("NOME") @db.VarChar(100)
-  descricao String?   @map("DESCRICAO") @db.VarChar(500)
-  noticias  Noticia[]
-  imagemLink String?  @map("IMAGEM_LINK") @db.VarChar(300)
+  culturaId  Int       @id @default(autoincrement()) @map("ID_CULTURA")
+  nome       String    @map("NOME") @db.VarChar(100)
+  descricao  String?   @map("DESCRICAO") @db.VarChar(500)
+  noticias   Noticia[]
+  imagemLink String?   @map("IMAGEM_LINK") @db.VarChar(300)
+
   @@map("CULTURA")
 }
 
@@ -116,9 +118,9 @@ model Product {
 // }
 
 model Moed {
-  sigla String @id @map("SIGLA") @db.VarChar(10)
-  nome  String @map("NOME") @db.VarChar(40)
-  codigoBandeira  String @map("CODIGO_BANDEIRA") @db.VarChar(40)
+  sigla          String @id @map("SIGLA") @db.VarChar(10)
+  nome           String @map("NOME") @db.VarChar(40)
+  codigoBandeira String @map("CODIGO_BANDEIRA") @db.VarChar(40)
 
   @@map("MOED")
 }
@@ -206,33 +208,296 @@ model Media {
   articleId Int
 }
 
-// schema.prisma
-model Pessoa {
-  id                Int      @id @default(autoincrement())
-  nome              String
-  email             String   @unique
-  cpf               String?  @unique
-  dataNascimento    DateTime
-  rg                String? // Opcional
-  endereco          String
-  cep               String
-  imagem            String
-  cidade            String
-  estado            String
-  contato           String
-  categoria         String
-  razaoSocial       String?
-  cnpj              String?  @unique
-  inscricaoEstadual String?
-  nomeFantasia      String?
-  tipo              String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  @@map("pessoa")
-}
+// // schema.prisma
+// model Pessoa {
+//   id                Int      @id @default(autoincrement())
+//   nome              String
+//   email             String   @unique
+//   cpf               String?  @unique
+//   dataNascimento    DateTime
+//   rg                String? // Opcional
+//   endereco          String
+//   cep               String
+//   imagem            String
+//   cidade            String
+//   estado            String
+//   contato           String
+//   categoria         String
+//   razaoSocial       String?
+//   cnpj              String?  @unique
+//   inscricaoEstadual String?
+//   nomeFantasia      String?
+//   tipo              String?
+//   createdAt         DateTime @default(now())
+//   updatedAt         DateTime @updatedAt
+//
+//   @@map("pessoa")
+// }
 
 model TipoPessoa {
   id   Int    @id @default(autoincrement())
   nome String
+}
+
+model CategoriaPessoa {
+  id        Int      @id @default(autoincrement()) @map("categ_pessoa_id")
+  codigo    Int      @map("codigo")
+  descricao String   @map("descricao") @db.VarChar(50)
+  pessoas   Pessoa[]
+
+  @@map("categ_pess")
+}
+
+model ComercioInternacionalNoticia {
+  id            Int                   @id @map("cint_id")
+  comercioInt   ComercioInternacional @relation(fields: [comercioIntId], references: [id])
+  comercioIntId Int                   @unique @map("com_int_com_int_id")
+  noticia       Noticia               @relation(fields: [noticiaId], references: [notId])
+  noticiaId     Int                   @map("not_not_id")
+
+  @@map("cint")
+}
+
+model ComercioInternacionalProduto {
+  id            Int                   @id @map("cipi_id")
+  produtoInac   ProdutoInac           @relation(fields: [produtoInacId], references: [id])
+  produtoInacId Int                   @map("prd_inac_prd_inac_id")
+  comercioInt   ComercioInternacional @relation(fields: [comercioIntId], references: [id])
+  comercioIntId Int                   @map("com_int_com_int_id")
+
+  @@unique([comercioIntId, produtoInacId])
+  @@map("cipi")
+}
+
+model ComercioInternacional {
+  id               Int                            @id @map("com_int_id")
+  nome             String?                        @db.VarChar(50)
+  valor            Decimal?                       @db.Decimal(10, 2)
+  dataValor        DateTime?                      @map("dt_valor")
+  categoria        String?                        @db.VarChar(1)
+  descricao        String?                        @map("descrição") @db.VarChar(300)
+  linkCom          String?                        @map("link_com") @db.VarChar(300)
+  historicoValores HistoricoValores[]
+  produtosInac     ComercioInternacionalProduto[]
+  noticias         ComercioInternacionalNoticia[]
+
+  @@map("com_int")
+}
+
+model Empresa {
+  id       Int       @id @default(autoincrement()) @map("empresa_id")
+  nome     String    @db.VarChar(100)
+  serial   BigInt
+  usuarios Usuario[]
+
+  @@map("empresa")
+}
+
+model Endereco {
+  id          Int     @id @default(autoincrement()) @map("endereco_id")
+  logradouro  String  @db.VarChar(100)
+  numero      Int
+  bairro      String  @db.VarChar(100)
+  complemento String  @db.VarChar(100)
+  cidade      String  @db.VarChar(100)
+  estado      String? @db.VarChar(2)
+  cep         Int?    @db.Integer
+  pais        String  @db.VarChar(100)
+  pessoa      Pessoa  @relation(fields: [pessoaId], references: [id])
+  pessoaId    Int     @map("pessoa_pess_pessoa_id")
+
+  @@map("endereco")
+}
+
+model Estoque {
+  id            Int                @id @map("estoque_id")
+  produto       String             @db.VarChar(50)
+  categoria     String             @db.VarChar(1)
+  descricao     String             @db.VarChar(2000)
+  quantidade    Decimal            @map("qtd") @db.Decimal(15, 3)
+  preco         Decimal            @db.Decimal(15, 2)
+  unidadeMedida String             @map("unidade_medida") @db.VarChar(5)
+  historicos    HistoricoEstoque[]
+  vendas        VendaEstoque[]
+
+  @@map("estoque")
+}
+
+model FormaPagamento {
+  id     Int                   @id @map("form_pag_id")
+  codigo Int
+  tipo   String                @db.VarChar(30)
+  vendas VendaFormaPagamento[]
+
+  @@map("forma_pagamento")
+}
+
+model HistoricoEstoque {
+  id         Int      @id @map("hist_estq_id")
+  dataAlter  DateTime @map("dt_alter")
+  horaAlter  String   @map("hora_alter") @db.VarChar(5)
+  valorAlter Decimal  @map("valor_alter") @db.Decimal(15, 3)
+  estoque    Estoque  @relation(fields: [estoqueId], references: [id])
+  estoqueId  Int      @map("estoque_estoque_id")
+  venda      Venda    @relation(fields: [vendaId], references: [id])
+  vendaId    Int      @map("venda_venda_id")
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId  String   @map("usuario_usuario_id")
+
+  @@map("historico_estoque")
+}
+
+model HistoricoValores {
+  id            Int                   @id @map("hist_valores_id")
+  valor         Decimal               @db.Decimal(15, 2)
+  dataValorHist DateTime              @map("dt_valor_hist")
+  comercioInt   ComercioInternacional @relation(fields: [comercioIntId], references: [id])
+  comercioIntId Int                   @map("com_int_com_int_id")
+
+  @@map("hist_valores")
+}
+
+model Imagem {
+  id     Int    @id @map("imagem_id")
+  imagem String @db.VarChar(200)
+
+  @@map("imag")
+}
+
+model Mensagem {
+  id        Int    @id @map("mensagem_id")
+  descricao String @db.VarChar(100)
+
+  @@map("mens")
+}
+
+model Moeda {
+  sigla String @id @db.VarChar(10)
+  nome  String @db.VarChar(40)
+
+  @@map("moed")
+}
+
+model Pessoa {
+  id             Int             @id @default(autoincrement()) @map("pess_pessoa_id")
+  email          String          @map("pess_email") @db.VarChar(50)
+  imagemLink     String?         @map("imagem_link") @db.VarChar(300)
+  categoria      CategoriaPessoa @relation(fields: [categoriaId], references: [id])
+  categoriaId    Int             @map("categ_pess_categ_pessoa_id")
+  pessoaFisica   PessoaFisica?
+  pessoaJuridica PessoaJuridica?
+  enderecos      Endereco[]
+  telefones      Telefone[]
+  vendas         VendaPessoa[]
+
+  @@map("pessoa")
+}
+
+model PessoaFisica {
+  id             Int      @id @default(autoincrement()) @map("pess_pessoa_id")
+  nome           String   @map("pepf_nome") @db.VarChar(100)
+  cpf            BigInt   @map("pepf_cpf")
+  dataNascimento DateTime @map("pepf_dt_nascimento")
+  rg             BigInt?  @map("pepf_rg")
+  pessoa         Pessoa   @relation(fields: [id], references: [id])
+
+  @@map("pessoa_fisica")
+}
+
+model PessoaJuridica {
+  id                Int     @id @default(autoincrement()) @map("pess_pessoa_id")
+  razaoSocial       String  @map("psjr_razao_social") @db.VarChar(100)
+  cnpj              BigInt  @map("psjr_cnpj")
+  inscricaoEstadual BigInt  @map("psjr_insc_esta")
+  nomeFantasia      String? @map("psjr_nome_fant") @db.VarChar(100)
+  pessoa            Pessoa  @relation(fields: [id], references: [id])
+
+  @@map("pessoa_juridica")
+}
+
+model ProdutoInac {
+  id              Int                            @id @map("prd_inac_id")
+  pais            String                         @db.VarChar(30)
+  peso            Decimal                        @db.Decimal(15, 3)
+  valor           Decimal                        @db.Decimal(15, 2)
+  totalExpValPais Decimal?                       @map("total_exp_val_pais") @db.Decimal(15, 2)
+  comerciosInt    ComercioInternacionalProduto[]
+
+  @@map("prd_inac")
+}
+
+model Telefone {
+  id       Int    @id @default(autoincrement()) @map("telefone_id")
+  tipo     String @db.VarChar(30)
+  numero   String @db.VarChar(30)
+  pessoa   Pessoa @relation(fields: [pessoaId], references: [id])
+  pessoaId Int    @map("pessoa_pess_pessoa_id")
+
+  @@map("telefone")
+}
+
+model Usuario {
+  id         String             @id @map("usuario_id")
+  nome       String             @db.VarChar(100)
+  cpf        String             @db.VarChar(11)
+  senha      String             @db.VarChar(14)
+  email      String?            @db.VarChar(300)
+  esp1       String?            @db.VarChar(20)
+  esp2       String?            @db.VarChar(20)
+  empresa    Empresa            @relation(fields: [empresaId], references: [id])
+  empresaId  Int                @map("empresa_empresa_id")
+  admin      Usuario?           @relation("AdminToUsuario", fields: [adminId], references: [id])
+  adminId    String?            @map("admi_id")
+  usuarios   Usuario[]          @relation("AdminToUsuario")
+  historicos HistoricoEstoque[]
+
+  @@map("usuario")
+}
+
+model Venda {
+  id              Int                   @id @map("venda_id")
+  dataVenda       DateTime              @map("dt_venda")
+  valorVenda      Decimal               @map("valor_venda") @db.Decimal(15, 2)
+  quantidadeVenda Decimal               @map("qtd_venda") @db.Decimal(15, 3)
+  desconto        Decimal?              @db.Decimal(5, 2)
+  historicos      HistoricoEstoque[]
+  estoques        VendaEstoque[]
+  formasPagamento VendaFormaPagamento[]
+  pessoas         VendaPessoa[]
+
+  @@map("venda")
+}
+
+model VendaEstoque {
+  id        Int     @id @map("vest_id")
+  precoProp Decimal @map("prc_prop") @db.Decimal(15, 2)
+  estoque   Estoque @relation(fields: [estoqueId], references: [id])
+  estoqueId Int     @map("estoque_estoque_id")
+  venda     Venda   @relation(fields: [vendaId], references: [id])
+  vendaId   Int     @map("venda_venda_id")
+
+  @@unique([vendaId, estoqueId])
+  @@map("vest")
+}
+
+model VendaFormaPagamento {
+  id               Int            @id @map("vfpag_id")
+  venda            Venda          @relation(fields: [vendaId], references: [id])
+  vendaId          Int            @map("venda_venda_id")
+  formaPagamento   FormaPagamento @relation(fields: [formaPagamentoId], references: [id])
+  formaPagamentoId Int            @map("forma_pagamento_form_pag_id")
+
+  @@unique([formaPagamentoId, vendaId])
+  @@map("vfpag")
+}
+
+model VendaPessoa {
+  id       Int    @id @map("vpes_id")
+  venda    Venda  @relation(fields: [vendaId], references: [id])
+  vendaId  Int    @map("venda_venda_id")
+  pessoa   Pessoa @relation(fields: [pessoaId], references: [id])
+  pessoaId Int    @map("pessoa_pess_pessoa_id")
+
+  @@unique([vendaId, pessoaId])
+  @@map("vpes")
 }

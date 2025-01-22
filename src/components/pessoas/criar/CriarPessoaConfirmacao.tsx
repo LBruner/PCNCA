@@ -1,12 +1,11 @@
 import React, {useState} from "react";
-import {Pessoa} from "@prisma/client";
 import ProfileSettingsBody from "@/components/configuracoes/meu-perfil/ProfileSettingsBody";
 import CriarPessoaFormControls from "@/components/pessoas/criar/CriarPessoaFormControls";
-import {criarPessoa, editarPessoa} from "@/actions/pessoas";
+import {criarPessoa, editarPessoa, PessoaCriacao} from "@/actions/pessoas";
 import {Spinner} from "@nextui-org/react";
 
 interface CriarPessoaConfirmacaoProps {
-    pessoa: Pessoa;
+    pessoa: PessoaCriacao;
     currentScreenIndex: number;
     setScreenIndex: (index: number) => void;
     shouldCreatePessoa: boolean;
@@ -22,6 +21,7 @@ const CriarPessoaConfirmacao: React.FC<CriarPessoaConfirmacaoProps> = ({pessoa,c
 
         setIsLoading(false);
     }
+    console.log(pessoa)
 
     return (
 

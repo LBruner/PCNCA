@@ -2,54 +2,56 @@
 import React, {useState} from "react";
 import CriarPessoaInformacoesBasicas from "@/components/pessoas/criar/CriarPessoaInformacoesBasicas";
 import CriarPessoaInputWrapper from "@/components/pessoas/criar/CriarPessoaInputWrapper";
-import {Pessoa, TipoPessoa} from "@prisma/client";
+import {CategoriaPessoa} from "@prisma/client";
 import CriarPessoaDetalhes from "@/components/pessoas/criar/CriarPessoaDetalhes";
 import CriarPessoaConfirmacao from "@/components/pessoas/criar/CriarPessoaConfirmacao";
 import {Button} from "@nextui-org/react";
 import {IoMdArrowBack} from "react-icons/io";
 import Link from "next/link";
 import paths from "@/paths";
+import {PessoaCriacao, PessoaFisJurEnd} from "@/actions/pessoas";
+import {getDefaultPerson} from "@/helpers/pessoas";
+import {FilterCollection} from "@/models/shared/FilterCollection";
 
 export interface CriarPessoaFormProps {
-    pessoaCriada?: Pessoa;
-    tiposPessoas: TipoPessoa[];
+    pessoaCriada?: PessoaFisJurEnd;
+    tiposPessoas: CategoriaPessoa[];
 }
 
 const CriarPessoaForm: React.FC<CriarPessoaFormProps> = ({pessoaCriada, tiposPessoas}) => {
     const [screenIndex, setScreenIndex] = useState(0);
-    const [pessoaCompleta, setPessoaPessoaCompleta] = useState<Pessoa | null>(pessoaCriada ?? null);
-    const [pessoaBasica, setPessoaBasica] = useState<Pessoa | null>(pessoaCriada ?? null);
-
+    const [pessoaPraCriar, setPessoaPraCriar] = useState<PessoaCriacao>(pessoaCriada != null ? getDefaultPerson(pessoaCriada) : getDefaultPerson());
+    console.log(pessoaPraCriar)
     let currentScreen;
+
+    const tiposPessoaColletion: FilterCollection[] = tiposPessoas.map((tipo: CategoriaPessoa) => ({
+        name: tipo.descricao,
+        uid: tipo.id.toString()
+    }));
 
     switch (screenIndex) {
         case 0:
             currentScreen =
                 <CriarPessoaInformacoesBasicas
-                    pessoa={pessoaBasica}
-                    setPessoa={setPessoaBasica}
+                    pessoa={pessoaPraCriar}
+                    setPessoa={setPessoaPraCriar}
                     currentScreenIndex={screenIndex}
                     setScreenIndex={setScreenIndex}
                 />
             break;
         case 1:
             currentScreen = <CriarPessoaDetalhes
-                pessoaBasica={pessoaBasica!}
-                pessoaCompleta={pessoaCompleta}
-                setPessoaPessoaCompleta={setPessoaPessoaCompleta}
+                pessoa={pessoaPraCriar!}
+                setPessoaPessoaCompleta={setPessoaPraCriar}
                 currentScreenIndex={screenIndex}
                 setScreenIndex={setScreenIndex}
-                tiposPessoa={tiposPessoas}
+                tiposPessoa={tiposPessoaColletion}
             />
             break;
         case 2:
             currentScreen =
-                // @ts-ignore
                 <CriarPessoaConfirmacao
-                    shouldCreatePessoa={!pessoaCriada} pessoa={pessoaCriada ? {
-                    ...pessoaCompleta,
-                    id: pessoaCriada.id
-                } : pessoaCompleta} currentScreenIndex={screenIndex}
+                    shouldCreatePessoa={!pessoaCriada} pessoa={pessoaPraCriar} currentScreenIndex={screenIndex}
                     setScreenIndex={setScreenIndex}
                 />
             break;
