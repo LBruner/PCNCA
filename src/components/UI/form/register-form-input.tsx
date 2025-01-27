@@ -1,31 +1,9 @@
-import React, {ChangeEventHandler, HTMLInputTypeAttribute} from "react";
-import {Input} from "@nextui-org/react";
+import React from "react";
+import {Input, InputProps} from "@nextui-org/react";
 
-interface FormInputProps {
-    name: string;
-    errorMessage?: string;
-    isInvalid?: boolean;
-    title: string;
-    value: string;
-    label?: string;
-    onChange: ChangeEventHandler<HTMLInputElement>
-    placeholder?: string;
-    required?: boolean;
-    isClearable?: boolean;
-    size?: "sm" | "md" | "lg";
-    radius?: "none" | "sm" | "md" | "lg";
-    inputMode?: "text" | "none" | "tel" | "url" | "email" | "numeric" | "decimal" | "search";
-    fullWidth?: boolean;
-    variant?: "bordered" | "faded" | "underlined" | "flat";
-    endContent?: React.ReactNode;
-    type?: HTMLInputTypeAttribute;
-    maxLength?: number;
-    minLength?: number;
-}
-
-const RegisterFormInput: React.FC<FormInputProps> = (props) => {
+const RegisterFormInput: React.FC<InputProps> = (props) => {
     return (
-        <div className={' h-full w-full'}>
+        <div className={'h-full w-full'}>
             <Input
                 name={props.name}
                 variant={'underlined'}

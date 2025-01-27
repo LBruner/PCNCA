@@ -1,11 +1,16 @@
 import {db} from "@/db";
 import {getServerSession} from "next-auth";
-import {User} from "@prisma/client";
+import {Empresa, Usuario} from "@prisma/client";
 
-export const getCurrentUser = async ():Promise<User | null> =>{
+export type UsuarioComEmpresa = Usuario & { empresa: Empresa }
+
+export const pegaUsuario = async (): Promise<UsuarioComEmpresa | null> => {
     const session = await getServerSession()
 
-    if(!session?.user?.email) return null;
+    if (!session?.user?.email) return null;
 
-    return db.user.findUnique({where: {email: session.user.email}});
+    return db.usuario.findFirst({
+        where: {email: session.user.email},
+        include: {empresa: true}
+    });
 }

@@ -18,7 +18,7 @@ model Account {
   accessTokenExpires DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
-  user               User      @relation(fields: [userId], references: [id])
+  user               Usuario   @relation(fields: [userId], references: [id])
 
   @@unique([providerId, providerAccountId])
 }
@@ -31,86 +31,86 @@ model Session {
   accessToken  String   @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id])
+  user         Usuario  @relation(fields: [userId], references: [id])
 }
 
 model Autor {
-  autorId   Int       @id @map("AUTOR_ID")
-  nomeAutor String    @map("NOME_AUTOR") @db.VarChar(100)
+  autorId   Int       @id @map("autor_id")
+  nomeAutor String    @map("nome_autor") @db.VarChar(100)
   noticias  Noticia[]
 
-  @@map("AUTOR")
+  @@map("Autor")
 }
 
 model Noticia {
-  notId      Int      @id @default(autoincrement()) @map("NOT_ID")
-  titulo     String   @map("TITULO") @db.VarChar(200)
-  subtitulo  String   @map("SUBTITULO") @db.VarChar(1000)
-  corpo      String   @map("CORPO") @db.Text
-  dataPubli  DateTime @map("DATA_PUBLI")
-  descricao  String?  @map("DESCRICAO") @db.VarChar(1000)
-  idAutor    Int      @map("ID_AUTOR")
-  idCultura  Int      @map("ID_CULTURA")
-  imagemLink String?  @map("IMAGEM_LINK") @db.VarChar(300)
+  notId      Int      @id @default(autoincrement())
+  titulo     String   @map("titulo") @db.VarChar(200)
+  subtitulo  String   @map("subtitulo") @db.VarChar(1000)
+  corpo      String   @map("corpo") @db.Text
+  dataPubli  DateTime @map("data_publicacao")
+  descricao  String?  @map("descricao") @db.VarChar(1000)
+  idAutor    Int      @map("id_autor")
+  idCultura  Int      @map("id_cultura")
+  imagemLink String   @map("imagem_link") @db.VarChar(300)
 
   autor                        Autor                          @relation(fields: [idAutor], references: [autorId])
   cultura                      Cultura                        @relation(fields: [idCultura], references: [culturaId])
   ComercioInternacionalNoticia ComercioInternacionalNoticia[]
 
-  @@map("NOTICIA")
+  @@map("Noticia")
 }
 
 model Cultura {
-  culturaId  Int       @id @default(autoincrement()) @map("ID_CULTURA")
-  nome       String    @map("NOME") @db.VarChar(100)
-  descricao  String?   @map("DESCRICAO") @db.VarChar(500)
+  culturaId  Int       @id @default(autoincrement()) @map("id_cultura")
+  nome       String    @map("nome") @db.VarChar(100)
+  descricao  String?   @map("descricao") @db.VarChar(500)
   noticias   Noticia[]
-  imagemLink String?   @map("IMAGEM_LINK") @db.VarChar(300)
+  imagemLink String?   @map("imagem_link") @db.VarChar(300)
   Estoque    Estoque[]
 
-  @@map("CULTURA")
+  @@map("Cultura")
 }
 
-model User {
-  id               String    @id @default(cuid())
-  name             String?
-  cpf              String    @unique
-  email            String?   @unique
-  password         String
-  emailVerified    DateTime?
-  image            String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  accounts         Account[]
-  sessions         Session[]
-  products         Product[]
-  suppliedProducts Product[] @relation("SupplierRelation")
-  sales            Sale[]
-}
+// model User {
+//   id               String    @id @default(cuid())
+//   name             String?
+//   cpf              String    @unique
+//   email            String?   @unique
+//   password         String
+//   emailVerified    DateTime?
+//   image            String?
+//   createdAt        DateTime  @default(now())
+//   updatedAt        DateTime  @updatedAt
+//   accounts         Account[]
+//   sessions         Session[]
+//   products         Product[]
+//   suppliedProducts Product[] @relation("SupplierRelation")
+//   sales            Sale[]
+// }
 
-model Product {
-  id             Int        @id @default(autoincrement())
-  name           String
-  description    String?
-  category       String
-  stock          Float
-  status         String
-  unity          String
-  price          Float
-  tipoCommoditie String     @default("Agrícola")
-  // commodityTypeId Int @default(1)
-  // commodity_type  CommodityType @relation(fields: [commodityTypeId], references: [id])
-  imageUrl       String?
-  weight         Float?
-  dimensions     String?
-  userId         String
-  user           User       @relation(fields: [userId], references: [id]) // Dono do produto
-  supplierId     String     @default("clydofcr8000oh3tdxqhk1rqb")
-  supplier       User       @relation("SupplierRelation", fields: [supplierId], references: [id]) // Relação com User como fornecedor
-  createdAt      DateTime   @default(now()) // Data de criação do produto
-  dateAdded      DateTime   @default(now())
-  saleItems      SaleItem[]
-}
+// model Product {
+//   id             Int        @id @default(autoincrement())
+//   name           String
+//   description    String?
+//   category       String
+//   stock          Float
+//   status         String
+//   unity          String
+//   price          Float
+//   tipoCommoditie String     @default("Agrícola")
+//   // commodityTypeId Int @default(1)
+//   // commodity_type  CommodityType @relation(fields: [commodityTypeId], references: [id])
+//   imageUrl       String?
+//   weight         Float?
+//   dimensions     String?
+//   userId         String
+//   user           User       @relation(fields: [userId], references: [id]) // Dono do produto
+//   supplierId     String     @default("clydofcr8000oh3tdxqhk1rqb")
+//   supplier       User       @relation("SupplierRelation", fields: [supplierId], references: [id]) // Relação com User como fornecedor
+//   createdAt      DateTime   @default(now()) // Data de criação do produto
+//   dateAdded      DateTime   @default(now())
+//   saleItems      SaleItem[]
+// }
 
 // model CommodityType {
 //   id       Int       @id @default(autoincrement())
@@ -126,30 +126,30 @@ model Moed {
   @@map("MOED")
 }
 
-model Sale {
-  id              Int        @id @default(autoincrement())
-  date            DateTime   @default(now())
-  totalPrice      Float
-  discount        Float?
-  paymentMethod   String
-  status          String
-  customerName    String
-  deliveryAddress String?
-  sellerId        String
-  seller          User       @relation(fields: [sellerId], references: [id])
-  saleItems       SaleItem[]
-}
+// model Sale {
+//   id              Int        @id @default(autoincrement())
+//   date            DateTime   @default(now())
+//   totalPrice      Float
+//   discount        Float?
+//   paymentMethod   String
+//   status          String
+//   customerName    String
+//   deliveryAddress String?
+//   sellerId        String
+//   seller          User       @relation(fields: [sellerId], references: [id])
+//   saleItems       SaleItem[]
+// }
 
-model SaleItem {
-  id         Int     @id @default(autoincrement())
-  productId  Int
-  product    Product @relation(fields: [productId], references: [id])
-  saleId     Int
-  sale       Sale    @relation(fields: [saleId], references: [id])
-  quantity   Float
-  unitPrice  Float
-  totalPrice Float
-}
+// model SaleItem {
+//   id         Int     @id @default(autoincrement())
+//   productId  Int
+//   product    Product @relation(fields: [productId], references: [id])
+//   saleId     Int
+//   sale       Sale    @relation(fields: [saleId], references: [id])
+//   quantity   Float
+//   unitPrice  Float
+//   totalPrice Float
+// }
 
 model VerificationRequest {
   id         String   @id @default(cuid())
@@ -441,10 +441,11 @@ model Telefone {
 }
 
 model Usuario {
-  id         String             @id @map("usuario_id")
+  id         String             @id @default(cuid())
   nome       String             @db.VarChar(100)
-  cpf        String             @db.VarChar(11)
+  cpf        String             @db.VarChar(14)
   senha      String             @db.VarChar(14)
+  imagemLink String?            @map("imagem_link") @db.VarChar(300)
   email      String?            @db.VarChar(300)
   esp1       String?            @db.VarChar(20)
   esp2       String?            @db.VarChar(20)
@@ -454,6 +455,8 @@ model Usuario {
   adminId    String?            @map("admi_id")
   usuarios   Usuario[]          @relation("AdminToUsuario")
   historicos HistoricoEstoque[]
+  Account    Account[]
+  Session    Session[]
 
   @@map("usuario")
 }

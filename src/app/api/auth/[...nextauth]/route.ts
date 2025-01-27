@@ -21,8 +21,8 @@ export const authOptions: NextAuthOptions = {
 
                 //TODO: Hash das senhas antes de conferir
 
-                const user = await prisma.user.findUnique({
-                    where: {email: credentials.email, password: credentials.password}
+                const user = await prisma.usuario.findFirst({
+                    where: {email: credentials.email, senha: credentials.password}
                 });
                 if (user) {
                     return user;

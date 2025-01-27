@@ -2,7 +2,7 @@
 
 import {z} from "zod";
 import {db} from "@/db";
-import {Prisma} from "@prisma/client";
+import {Empresa, Prisma} from "@prisma/client";
 
 export interface CreateUserProps {
     errors: {
@@ -16,20 +16,26 @@ export interface CreateUserProps {
     }
 }
 
+export const pegaTodasEmpresas = async (): Promise<Empresa[]> => {
+    return db.empresa.findMany();
+}
+
+
 const registerSchema = z.object({
     nome: z.string().min(3, {message: 'O nome deve ter pelo menos 1 caractere'}),
     cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}\-\d{2}$/, {message: 'CPF inválido'}),
-    empresa: z.string().min(1, {message: 'O nome da empresa deve ter pelo menos 1 caractere'}),
+    empresa: z.number(),
     email: z.string().email({message: 'E-mail inválido'}),
     senha: z.string().min(6, {message: 'A senha deve ter pelo menos 6 caracteres'}),
     termos: z.string({message: 'Você deve aceitar os termos'})
 });
 
 export async function validarCadastro(_: CreateUserProps, formData: FormData): Promise<CreateUserProps> {
+    console.log(formData)
     const result = registerSchema.safeParse({
         nome: formData.get('nome'),
         cpf: formData.get('cpf'),
-        empresa: formData.get('empresa'),
+        empresa: parseInt(formData.get('empresa') as string),
         email: formData.get('email'),
         senha: formData.get('senha'),
         termos: formData.get('termos'),
@@ -43,15 +49,13 @@ export async function validarCadastro(_: CreateUserProps, formData: FormData): P
     }
 
     try {
-        await db.user.create({
+        await db.usuario.create({
             data: {
-                name: result.data.nome,
+                nome: result.data.nome,
                 cpf: result.data.cpf,
-                //TODO: Add empresa
-                // empresa: result.data.empresa,
+                empresaId: result.data.empresa,
                 email: result.data.email,
-                password: result.data.senha,
-
+                senha: result.data.senha,
             }
         });
 
@@ -67,7 +71,6 @@ export async function validarCadastro(_: CreateUserProps, formData: FormData): P
                     }
                 }
             } else {
-
                 return {
                     errors: {
                         _form: [err.message]

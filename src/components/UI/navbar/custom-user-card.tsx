@@ -1,10 +1,10 @@
 'use client';
 import React from "react";
-import {User} from "@prisma/client";
 import CustomUserCardBody from "@/components/UI/navbar/custom-user-card-body";
+import {UsuarioComEmpresa} from "@/actions/usuarios";
 
 interface CustomUserCardProps {
-    user?: User;
+    user?: UsuarioComEmpresa;
 }
 
 const CustomUserCard: React.FC<CustomUserCardProps> = ({user}) => {

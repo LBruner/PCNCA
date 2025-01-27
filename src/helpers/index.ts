@@ -1,3 +1,9 @@
+export function capitalizeFirstLetter(str: string) {
+    const lowerCaseStr = str.toLowerCase();
+
+    return lowerCaseStr.charAt(0).toUpperCase() + lowerCaseStr.slice(1);
+}
+
 export const formatToBrazilianCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
         style: 'currency',

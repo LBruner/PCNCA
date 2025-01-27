@@ -4,7 +4,8 @@ import {
     Dropdown,
     DropdownItem,
     DropdownMenu,
-    DropdownTrigger, Link,
+    DropdownTrigger,
+    Link,
     NavbarContent,
     NavbarItem,
     useDisclosure
@@ -13,16 +14,17 @@ import PerfilModal from "@/components/configuracoes/perfil-modal";
 import {Avatar} from "@nextui-org/avatar";
 import paths from "@/paths";
 import {signOut} from "next-auth/react";
-import {User} from "@prisma/client";
 import {fallbackImgUrl} from "@/constants/messages/images";
+import {UsuarioComEmpresa} from "@/actions/usuarios";
+import {SlCamera} from "react-icons/sl";
 
 interface CustomUserCardBodyProps {
-    user?: User;
+    user?: UsuarioComEmpresa;
 }
 const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
     let authContent: React.ReactNode;
 
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const {isOpen, onClose} = useDisclosure();
 
     if (user) {
         authContent = <>
@@ -31,23 +33,22 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                 <Dropdown size="lg" disableAnimation={false} placement="bottom-end">
                     <DropdownTrigger>
                         <Avatar
+                            showFallback={true}
+                            fallback={<SlCamera  size={20}/>}
                             isBordered
+                            name={user.nome}
                             as="button"
                             className="transition-transform"
-                            color="default"
+                            color="warning"
                             size="md"
-                            src={user.image ?? fallbackImgUrl}
+                            src={user.imagemLink ?? fallbackImgUrl}
                         />
                     </DropdownTrigger>
                     <DropdownMenu aria-label="Profile Actions" variant="flat">
                         <DropdownItem key="perfil" className="h-14 gap-2">
-                            <p className="font-semibold">Logado como</p>
+                            <p className="font-medium">Logado como</p>
                             <p className="font-semibold">{user.email}</p>
                         </DropdownItem>
-                        <DropdownItem onClick={onOpen}>
-                            Meu Perfil
-                        </DropdownItem>
-                         {/*<DropdownItem >Configurações </DropdownItem>*/}
                         <DropdownItem color={'warning'} href={paths.admNoticias()}>
                             ADM
                         </DropdownItem>
@@ -58,9 +59,9 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                         </DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
-                <div className={'w-20'}>
-                    <p className={'text-md text-orange-400 font-semibold'}>AgroTech Corp</p>
-                    <p className={'text-md font-medium'}>{user.name}</p>
+                <div className={'w-20 flex flex-col'}>
+                    <p className={'text-md font-medium text-lg'}>{user.nome}</p>
+                    <p className={'text-md text-orange-400 font-semibold'}>{user.empresa.nome}</p>
                 </div>
             </NavbarContent>
         </>

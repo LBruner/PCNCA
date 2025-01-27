@@ -8,10 +8,10 @@ import MoedasCard from "@/components/cotacoes/dolar-card/moedas-card";
 import Link from "next/link";
 import NavLink from "@/components/UI/navbar/NavLink";
 import CustomUserCard from "@/components/UI/navbar/custom-user-card";
-import {User} from "@prisma/client";
+import {UsuarioComEmpresa} from "@/actions/usuarios";
 
 interface CustomNavbarBodyProps {
-    user?: User;
+    user?: UsuarioComEmpresa;
 }
 
 const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {

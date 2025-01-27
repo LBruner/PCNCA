@@ -144,6 +144,8 @@ interface CustomInput {
     value?: string,
     defaultValue?: string,
     name: string,
+    variant?: "flat" | "faded" | "bordered" | "underlined",
+    color?:  "default" | "primary" | "secondary" | "success" | "warning" | "danger",
     label: string,
     placeholder: string,
     isInvalid: boolean,
@@ -175,7 +177,7 @@ const CustomInputButton: React.FC<CustomInput> = (
 };
 
 
-const CustomSelect: React.FC<CustomInput & { collection: FilterCollection[] } & { onChange: any }> = (
+export const CustomSelect: React.FC<CustomInput & { collection: FilterCollection[] } & { onChange: any }> = (
     {
         value,
         onChange,
@@ -183,9 +185,13 @@ const CustomSelect: React.FC<CustomInput & { collection: FilterCollection[] } & 
         label,
         placeholder,
         collection,
+        color,
+        variant,
     }
 ) => {
     return <Select
+        color={color}
+        variant={variant}
         selectedKeys={value ? [value] : undefined}
         multiple={false}
         onChange={event => onChange(event.target.value)}
