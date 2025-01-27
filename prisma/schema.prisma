@@ -66,6 +66,7 @@ model Cultura {
   descricao  String?   @map("DESCRICAO") @db.VarChar(500)
   noticias   Noticia[]
   imagemLink String?   @map("IMAGEM_LINK") @db.VarChar(300)
+  Estoque    Estoque[]
 
   @@map("CULTURA")
 }
@@ -272,7 +273,7 @@ model ComercioInternacionalProduto {
 model ComercioInternacional {
   id               Int                            @id @map("com_int_id")
   nome             String?                        @db.VarChar(50)
-  valor            Decimal?                       @db.Decimal(10, 2)
+  valor            Float?
   dataValor        DateTime?                      @map("dt_valor")
   categoria        String?                        @db.VarChar(1)
   descricao        String?                        @map("descrição") @db.VarChar(300)
@@ -310,15 +311,18 @@ model Endereco {
 }
 
 model Estoque {
-  id            Int                @id @map("estoque_id")
-  produto       String             @db.VarChar(50)
-  categoria     String             @db.VarChar(1)
-  descricao     String             @db.VarChar(2000)
-  quantidade    Decimal            @map("qtd") @db.Decimal(15, 3)
-  preco         Decimal            @db.Decimal(15, 2)
-  unidadeMedida String             @map("unidade_medida") @db.VarChar(5)
-  historicos    HistoricoEstoque[]
-  vendas        VendaEstoque[]
+  id                 Int                @id @default(autoincrement()) @map("estoque_id")
+  produto            String             @db.VarChar(50)
+  categoriaId        Cultura?           @relation(fields: [categoriaculturaId], references: [culturaId])
+  categoriaculturaId Int?
+  tipo               String             @db.VarChar(1)
+  descricao          String             @db.VarChar(2000)
+  quantidade         Float              @map("qtd")
+  preco              Float
+  unidadeMedida      String             @map("unidade_medida") @db.VarChar(5)
+  imagemLink         String?            @map("imagem_link") @db.VarChar(300)
+  historicos         HistoricoEstoque[]
+  vendas             VendaEstoque[]
 
   @@map("estoque")
 }
@@ -333,10 +337,10 @@ model FormaPagamento {
 }
 
 model HistoricoEstoque {
-  id         Int      @id @map("hist_estq_id")
+  id         Int      @id @default(autoincrement()) @map("hist_estq_id")
   dataAlter  DateTime @map("dt_alter")
   horaAlter  String   @map("hora_alter") @db.VarChar(5)
-  valorAlter Decimal  @map("valor_alter") @db.Decimal(15, 3)
+  valorAlter Float    @map("valor_alter")
   estoque    Estoque  @relation(fields: [estoqueId], references: [id])
   estoqueId  Int      @map("estoque_estoque_id")
   venda      Venda    @relation(fields: [vendaId], references: [id])
@@ -349,7 +353,7 @@ model HistoricoEstoque {
 
 model HistoricoValores {
   id            Int                   @id @map("hist_valores_id")
-  valor         Decimal               @db.Decimal(15, 2)
+  valor         Float
   dataValorHist DateTime              @map("dt_valor_hist")
   comercioInt   ComercioInternacional @relation(fields: [comercioIntId], references: [id])
   comercioIntId Int                   @map("com_int_com_int_id")
@@ -418,9 +422,9 @@ model PessoaJuridica {
 model ProdutoInac {
   id              Int                            @id @map("prd_inac_id")
   pais            String                         @db.VarChar(30)
-  peso            Decimal                        @db.Decimal(15, 3)
-  valor           Decimal                        @db.Decimal(15, 2)
-  totalExpValPais Decimal?                       @map("total_exp_val_pais") @db.Decimal(15, 2)
+  peso            Float
+  valor           Float
+  totalExpValPais Float?                         @map("total_exp_val_pais")
   comerciosInt    ComercioInternacionalProduto[]
 
   @@map("prd_inac")
@@ -455,11 +459,11 @@ model Usuario {
 }
 
 model Venda {
-  id              Int                   @id @map("venda_id")
+  id              Int                   @id @default(autoincrement()) @map("venda_id")
   dataVenda       DateTime              @map("dt_venda")
-  valorVenda      Decimal               @map("valor_venda") @db.Decimal(15, 2)
-  quantidadeVenda Decimal               @map("qtd_venda") @db.Decimal(15, 3)
-  desconto        Decimal?              @db.Decimal(5, 2)
+  valorVenda      Float                 @map("valor_venda")
+  quantidadeVenda Float                 @map("qtd_venda")
+  desconto        Float?
   historicos      HistoricoEstoque[]
   estoques        VendaEstoque[]
   formasPagamento VendaFormaPagamento[]
@@ -469,35 +473,33 @@ model Venda {
 }
 
 model VendaEstoque {
-  id        Int     @id @map("vest_id")
-  precoProp Decimal @map("prc_prop") @db.Decimal(15, 2)
+  id        Int     @id @default(autoincrement()) @map("vest_id")
+  precoProp Float   @map("prc_prop")
   estoque   Estoque @relation(fields: [estoqueId], references: [id])
   estoqueId Int     @map("estoque_estoque_id")
   venda     Venda   @relation(fields: [vendaId], references: [id])
   vendaId   Int     @map("venda_venda_id")
 
   @@unique([vendaId, estoqueId])
-  @@map("vest")
 }
 
 model VendaFormaPagamento {
-  id               Int            @id @map("vfpag_id")
+  id               Int            @id @default(autoincrement()) @map("vfpag_id")
   venda            Venda          @relation(fields: [vendaId], references: [id])
   vendaId          Int            @map("venda_venda_id")
   formaPagamento   FormaPagamento @relation(fields: [formaPagamentoId], references: [id])
   formaPagamentoId Int            @map("forma_pagamento_form_pag_id")
 
   @@unique([formaPagamentoId, vendaId])
-  @@map("vfpag")
 }
 
 model VendaPessoa {
-  id       Int    @id @map("vpes_id")
-  venda    Venda  @relation(fields: [vendaId], references: [id])
-  vendaId  Int    @map("venda_venda_id")
-  pessoa   Pessoa @relation(fields: [pessoaId], references: [id])
-  pessoaId Int    @map("pessoa_pess_pessoa_id")
+  id         Int    @id @default(autoincrement()) @map("vpes_id")
+  venda      Venda  @relation(fields: [vendaId], references: [id])
+  vendaId    Int    @map("venda_venda_id")
+  pessoa     Pessoa @relation(fields: [pessoaId], references: [id])
+  pessoaId   Int    @map("pessoa_pess_pessoa_id")
+  tipoPessoa String @map("tipo_pessoa") @db.VarChar(15) // Ex: "Comprador", "Vendedor"
 
   @@unique([vendaId, pessoaId])
-  @@map("vpes")
 }

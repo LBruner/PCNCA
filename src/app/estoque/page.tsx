@@ -1,11 +1,11 @@
 import React from "react";
-import {getEstoques} from "@/actions/estoques";
+import {pegaTodosEstoquesUsuario} from "@/actions/estoques";
 import {getCategoriasFilterColletion} from "@/actions/adm";
 import {notFound} from "next/navigation";
 import TabelaEstoque from "@/components/estoque/tabela/TabelaEstoque";
 
 const EstoquePage: React.FC = async _ => {
-    const produtosEstoque = await getEstoques();
+    const produtosEstoque = await pegaTodosEstoquesUsuario();
     const categorias = await getCategoriasFilterColletion();
 
     if(!produtosEstoque){
@@ -14,7 +14,7 @@ const EstoquePage: React.FC = async _ => {
 
     return (
         <div>
-            <div className={'flex flex-col justify-center items-center mt-40'}>
+            <div className={'flex flex-col justify-center items-center'}>
                 <TabelaEstoque products={produtosEstoque} categoriesCollection={categorias}/>
             </div>
         </div>

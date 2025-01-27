@@ -6,11 +6,13 @@ import {getServerSession} from "next-auth";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {redirect} from "next/navigation";
+import {CategoriaPessoa, Pessoa, PessoaJuridica} from "@prisma/client";
+import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
 
 const createProductSchema = z.object({
     nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
     fornecedor: z.string({message: 'Você deve escolher um fornecedor'}),
-    categoria: z.string().min(3),
+    categoria: z.string(),
     preco: z.number().min(0, 'O preço deve ser maior que 0'),
     estoque: z.number().min(0, 'O valor em estoque deve ser maior que 0'),
     imagem: z.string().url({message: 'URL inválida'}),
@@ -136,15 +138,35 @@ async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOr
     redirect(paths.estoque());
 }
 
-export async function pegaProduto(produtoId: string): Promise<ProdutoEstoqueComRelacoes | null> {
-    return db.product.findUnique({
-        where: {
-            id: parseInt(produtoId),
-        }, include: {
-            supplier: true,
-            // commodity_type: true,
-        },
-    }) as Promise<ProdutoEstoqueComRelacoes | null>;
+export async function pegaProduto(produtoId: number): Promise<ProdutoEstoqueComRelacoes | null> {
+    return db.historicoEstoque.findUnique({
+            where: {
+                id: produtoId
+            },
+            include: {
+                venda: {
+                    include: {
+                        estoques: true,
+                        pessoas: {
+                            include: {
+                                pessoa: {
+                                    include: {
+                                        pessoaJuridica: true,
+                                    }
+                                },
+                            },
+                        }
+                    }
+                },
+                estoque: {
+                    include: {
+                        categoriaId: true,
+                        historicos: true,
+                    },
+                },
+            }
+        }
+    );
 }
 
 export type Fornecedor = {
@@ -154,74 +176,135 @@ export type Fornecedor = {
     image: string | null
 }
 
-export async function pegaFornecedor(): Promise<Fornecedor[]> {
-    const fornecedores = await db.user.findMany({
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true,
-        },
-    })
-    if (!fornecedores) return [];
-    return fornecedores;
+export type FornecedorComRelacoes = Pessoa & {
+    categoria: CategoriaPessoa;
+    pessoaJuridica: PessoaJuridica | null;
 }
 
-    export async function
-    criarProduto(_: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
-        return handleFormSubmission(formData, async (data, userId) => {
-            await db.product.create({
-                data: {
-                    name: data.nome,
-                    category: data.categoria,
-                    description: data.descricao,
-                    price: data.preco,
-                    tipoCommoditie: data.tipoComodity,
-                    stock: data.estoque,
-                    imageUrl: data.imagem,
-                    userId: userId,
-                    unity: data.unidade,
-                    status: data.status,
-                    supplierId: data.fornecedor,
-                }
-            });
-        });
-    }
+export async function pegaFornecedores(): Promise<FornecedorComRelacoes[]> {
+    return db.pessoa.findMany({
+        where: {
+            categoria: {
+                descricao: 'Fornecedor',
+            }
+        },
+        include: {
+            categoria: true,
+            pessoaJuridica: true,
+        }
+    });
+}
 
-    export async function editarProduto(productId: string, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
-
-        return handleFormSubmission(formData, async (data, userId) => {
-            await db.product.update({
-                where: {
-                    id: parseInt(productId),
-                },
-                data: {
-                    name: data.nome,
-                    category: data.categoria,
-                    description: data.descricao,
-                    price: data.preco,
-                    stock: data.estoque,
-                    imageUrl: data.imagem,
-                    userId: userId,
-                    unity: data.unidade,
-                    status: data.status,
-                    supplierId: data.fornecedor,
-                }
-            });
-        });
-    }
-
-    export async function deletarProduto(productId: number) {
-        await db.product.delete({
-            where: {
-                id: productId,
+export async function criarProduto(_: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
+    return handleFormSubmission(formData, async (data, userId) => {
+        const estoque = await db.estoque.create({
+            data: {
+                produto: data.nome,
+                descricao: data.descricao,
+                preco: data.preco,
+                tipo: data.tipoComodity,
+                quantidade: data.estoque,
+                imagemLink: data.imagem,
+                unidadeMedida: data.unidade,
+                categoriaculturaId: parseInt(data.categoria),
             },
         });
-        revalidatePath(paths.estoque());
-    }
 
-//
-// export async function pegaTipoCommodities(): Promise<CommodityType | null>{
-//     console.log(`aqui ${db.commodityType.findMany()}`)
-//     return db.commodityType.findMany() as Promise<CommodityType | null>;
-// }
+        const venda = await db.venda.create({
+            data: {
+                dataVenda: new Date(),
+                valorVenda: (data.preco) * data.estoque,
+                quantidadeVenda: data.estoque,
+                desconto: 0,
+            }
+        });
+
+        await db.vendaPessoa.create({
+            data: {
+                venda: {
+                    connect: {
+                        id: venda.id
+                    }
+                },
+                pessoa: {
+                    connect: {
+                        id: parseInt(data.fornecedor)
+                    }
+                },
+                tipoPessoa: "Fornecedor"
+            }
+        });
+
+        await db.historicoEstoque.create({
+            data: {
+                venda: {
+                    connect: {
+                        id: venda.id
+                    }
+                },
+                dataAlter: new Date(),
+                horaAlter: new Date().toISOString().slice(11, 16),
+                valorAlter: data.estoque,
+                usuario: {
+                    connect: {
+                        id: userId,
+                    },
+                },
+                estoque: {
+                    connect: {
+                        id: estoque.id,
+                    },
+                },
+            },
+        });
+
+        await db.vendaEstoque.create({
+            data: {
+                precoProp: data.preco,
+                estoqueId: estoque.id,
+                vendaId: venda.id,
+            },
+        });
+    });
+}
+
+
+export async function editarProduto(vendaId: number, pessoaId: number, estoqueId: number, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
+    return handleFormSubmission(formData, async (data, userId) => {
+        await db.vendaPessoa.update({
+            where: {
+                vendaId_pessoaId: {
+                    vendaId: vendaId,
+                    pessoaId: pessoaId
+                }
+            },
+            data: {
+               pessoaId: parseInt(data.fornecedor)
+            }
+        })
+        await db.estoque.update({
+            where: {
+                id: estoqueId,
+            },
+            data: {
+                produto: data.nome,
+                descricao: data.descricao,
+                preco: data.preco,
+                tipo: data.tipoComodity,
+                quantidade: data.estoque,
+                imagemLink: data.imagem,
+                unidadeMedida: data.unidade,
+                categoriaculturaId: parseInt(data.categoria),
+            }
+        });
+    });
+}
+
+export async function deletarProduto(productId: number) {
+    await db.product.delete({
+        where: {
+            id: productId,
+        },
+    });
+    revalidatePath(paths.estoque());
+}

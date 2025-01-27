@@ -3,9 +3,10 @@ import {PessoaCriacao, PessoaFisJurEnd} from "@/actions/pessoas";
 export const getFlatPessoa = (pessoaCriada?: PessoaFisJurEnd): PessoaCriacao => {
     if(pessoaCriada){
         return{
-            id: pessoaCriada?.pessoaFisica?.id.toString()!,
+            id: pessoaCriada?.id!,
             nome: pessoaCriada?.pessoaFisica?.nome! ?? pessoaCriada?.pessoaJuridica?.razaoSocial,
             categoria: pessoaCriada?.pessoaFisica != null ? 'Física' : 'Jurídica',
+            tipo: pessoaCriada?.categoriaId,
             dataNascimento: pessoaCriada?.pessoaFisica?.dataNascimento.toISOString().slice(0, 10),
             rg: pessoaCriada?.pessoaFisica?.rg!.toString()!,
             cpf: pessoaCriada?.pessoaFisica?.cpf!.toString()!,

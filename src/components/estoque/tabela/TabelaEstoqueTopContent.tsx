@@ -26,7 +26,7 @@ interface TabelaTopContentProps {
     itemsLenght: number;
     onSearchChange: (value: string) => void;
     onClear: () => void;
-    selectedItems: string[];
+    selectedItems: string | string[];
 }
 
 const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
@@ -85,7 +85,7 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
                         </Tooltip>
                         <Button className={'w-56'} variant={'flat'} color={'warning'}
                                 startContent={<FaCirclePlus size={20}/>}>
-                            <Link href={paths.createProduto()}>Novo Produto</Link>
+                            <Link href={paths.createProduto()}>Adicionar Estoque</Link>
                         </Button>
                         <Button variant={'flat'} color={'default'} className={'w-52'}
                                 startContent={<PiPrinterFill size={20}/>}>

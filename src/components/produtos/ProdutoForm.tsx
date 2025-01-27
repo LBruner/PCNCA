@@ -1,27 +1,38 @@
 import React, {useState} from "react";
-import {Autocomplete, AutocompleteItem, Button, Input, Select, SelectItem, Switch} from "@nextui-org/react";
-import {agribusinessCategories, unidadesDeMedida} from "@/db/factories/product";
+import {Autocomplete, AutocompleteItem, Button, Input, Select, SelectItem} from "@nextui-org/react";
 import {Textarea} from "@nextui-org/input";
 import {Radio, RadioGroup} from "@nextui-org/radio";
-import {CreatePostFormState, Fornecedor} from "@/actions/produto";
-import {ProdutoEstoqueComRelacoes} from "@/components/estoque/TabelaEstoque";
+import {CreatePostFormState, FornecedorComRelacoes} from "@/actions/produto";
+import {Cultura} from "@prisma/client";
+import {FilterCollection} from "@/models/shared/FilterCollection";
+import {unidadesMedidaCollection} from "@/constants/UnidadesMedida";
+import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
 
 interface ProdutoFormProps {
     formState: CreatePostFormState,
     action: (payload: FormData) => void,
     produto?: ProdutoEstoqueComRelacoes;
-    fornecedores?: Fornecedor[];
+    fornecedores?: FornecedorComRelacoes[];
+    culturas: Cultura[];
 }
 
-const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fornecedores}) => {
-    const [hideProduct, setHideProduct] = React.useState<boolean>(!!(produto?.status && produto.status === 'Ativo'));
-    const [selectedChaveFornecedor, setSelectedChaveFornecedor] = useState(produto?.supplier.id ?? '');
+const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fornecedores, culturas}) => {
+    const [selectedChaveFornecedor, setSelectedChaveFornecedor] = useState(produto?.venda?.pessoas[0].pessoa.id.toString() ?? '');
+    const [selectedChaveCategoria, setselectedChaveCategoria] = useState(produto?.estoque.categoriaId?.culturaId.toString() ?? '');
+    const [unidadeMedidaChave, setUnidadeMedidaChave] = useState(produto?.estoque.unidadeMedida.toString() ?? '');
+
+    const culturaCollection: FilterCollection[] = culturas.map((cultura) => {
+        return {
+            uid: cultura.culturaId.toString(),
+            name: cultura.nome,
+        }
+    })
 
     return (
         <form action={formData => {
-            formData.append('chave_fornecedor',selectedChaveFornecedor);
+            formData.append('chave_fornecedor', selectedChaveFornecedor);
             action(formData);
-        }} className={'flex flex-col justify-center items-center mt-40'}>
+        }} className={'flex flex-col justify-center items-center'}>
             <div className={'w-5/6 flex justify-between mb-4 items-center'}>
                 <p className={'text-2xl font-semibold'}>Criar Produto</p>
                 <Button type={'submit'}>{produto ? 'Editar' : 'Criar'} Produto</Button>
@@ -30,27 +41,34 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
                 <div className={'flex flex-col gap-4 w-full px-8 py-6'}>
                     <p className={'text-xl font-bold'}>Informações Gerais</p>
                     <div className={'flex flex-col gap-7'}>
-                        <CustomInputButton defaultValue={produto?.name ?? undefined} name={'nome'} label={'Nome'}
+                        <CustomInputButton defaultValue={produto?.estoque.produto ?? undefined} name={'nome'}
+                                           label={'Nome'}
                                            placeholder={'Digite um nome...'}
                                            isInvalid={!!formState.errors.nome}
                                            errorMessage={formState.errors.nome?.join(', ')}/>
-                        <CustomInputButton defaultValue={produto?.price.toString() ?? undefined} name={'preco'}
-                                           type={'number'} label={'Preço'}
-                                           placeholder={'0'} isInvalid={!!formState.errors.preco}
-                                           errorMessage={formState.errors.preco?.join(', ')}
-                                           startContent={<p className={'font-normal'}>R$</p>}/>
-                        <CustomSelect defaultValue={produto?.category ?? undefined} name={'categoria'}
-                                      label={'Categoria'} placeholder={'Seleciona a categoria'}
-                                      collection={agribusinessCategories} isInvalid={!!formState.errors.categoria}
-                                      errorMessage={formState.errors.categoria?.join(', ')}/>
-                        <Textarea defaultValue={produto?.description ?? undefined} name={'descricao'} size={'lg'}
+                        <CustomInputButton
+                            defaultValue={produto?.estoque.preco.toString() ?? undefined} name={'preco'}
+                            type={'number'} label={'Preço'}
+                            placeholder={'0'} isInvalid={!!formState.errors.preco}
+                            errorMessage={formState.errors.preco?.join(', ')}
+                            startContent={<p className={'font-normal'}>R$</p>}
+                        />
+                        <CustomSelect
+                            value={selectedChaveCategoria ?? undefined}
+                            onChange={setselectedChaveCategoria}
+                            name={'categoria'}
+                            label={'Categoria'} placeholder={'Seleciona a categoria'}
+                            collection={culturaCollection} isInvalid={!!formState.errors.categoria}
+                            errorMessage={formState.errors.categoria?.join(', ')}
+                        />
+                        <Textarea defaultValue={produto?.estoque.descricao ?? undefined} name={'descricao'} size={'lg'}
                                   minRows={1}
                                   className={'font-semibold'}
                                   labelPlacement={'outside'} label={'Descrição'}
                                   placeholder={'Descreva seu produto em detalhes...'}
                                   isInvalid={!!formState.errors.descricao}
                                   errorMessage={formState.errors.descricao?.join(', ')}/>
-                        <CustomInputButton defaultValue={produto?.imageUrl ?? undefined} name={'imagem'}
+                        <CustomInputButton defaultValue={produto?.estoque.imagemLink ?? undefined} name={'imagem'}
                                            label={'Imagem principal'}
                                            placeholder={'Digite a url da imagem...'}
                                            isInvalid={!!formState.errors.imagem}
@@ -71,27 +89,31 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
                             className="w-full font-semibold"
                             onSelectionChange={key => {
                                 setSelectedChaveFornecedor(key!.toString());
-                                console.log(`${selectedChaveFornecedor}`)
+                                console.log(`${unidadeMedidaChave}`)
                             }}
                         >
                             {fornecedores!.map((fornecedor) => (
-                                <AutocompleteItem  value={fornecedor.id} key={fornecedor.id} >
-                                    {fornecedor.name}
+                                <AutocompleteItem value={fornecedor.id} key={fornecedor.id}>
+                                    {fornecedor.pessoaJuridica?.razaoSocial}
                                 </AutocompleteItem>
                             ))}
                         </Autocomplete>
-                        <CustomInputButton defaultValue={produto?.stock.toString() ?? undefined} name={'estoque'}
+                        <CustomInputButton defaultValue={produto?.estoque.quantidade.toString() ?? undefined}
+                                           name={'estoque'}
                                            type={'number'} label={'Estoque'}
                                            placeholder={'0 Unidades'}
                                            isInvalid={!!formState.errors.estoque}
                                            errorMessage={formState.errors.estoque?.join(', ')}/>
-                        <CustomSelect defaultValue={produto?.unity ?? undefined} name={'unidade'}
-                                      label={'Unidade de medida'}
-                                      placeholder={'Seleciona a unidade de medida'}
-                                      collection={unidadesDeMedida} isInvalid={!!formState.errors.unidade}
-                                      errorMessage={formState.errors.unidade?.join(', ')}/>
+                        <CustomSelect
+                            value={unidadeMedidaChave ?? undefined} name={'unidade'}
+                            onChange={setUnidadeMedidaChave}
+                            label={'Unidade de medida'}
+                            placeholder={'Seleciona a unidade de medida'}
+                            collection={unidadesMedidaCollection} isInvalid={!!formState.errors.unidade}
+                            errorMessage={formState.errors.unidade?.join(', ')}
+                        />
                         <RadioGroup
-                            defaultValue={'agricola'}
+                            defaultValue={produto?.estoque?.tipo ?? 'A'}
                             name={'tipoComodity'}
                             isRequired={true}
                             classNames={{
@@ -103,17 +125,10 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
                             isInvalid={!!formState.errors.tipoComodity}
                             errorMessage={formState.errors.tipoComodity?.join(', ')}
                         >
-                            <Radio className={'font-normal'} value="agricola">Agrícola</Radio>
+                            <Radio className={'font-normal'} value="A">Agrícola</Radio>
                             <Radio className={'desativado'}
-                                   value="pecuaria">Pecuária</Radio>
+                                   value="P">Pecuária</Radio>
                         </RadioGroup>
-                        <div className={'mt-1'}>
-                            <p className={'mb-2'}>Visibilidade</p>
-                            <Switch isSelected={hideProduct} onValueChange={setHideProduct}
-                                    value={hideProduct ? 'Ativado' : 'Desativado'} name={'status'}>
-                                Mostrar produto
-                            </Switch>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -126,6 +141,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
 }
 
 interface CustomInput {
+    value?: string,
     defaultValue?: string,
     name: string,
     label: string,
@@ -159,18 +175,20 @@ const CustomInputButton: React.FC<CustomInput> = (
 };
 
 
-const CustomSelect: React.FC<CustomInput & { collection: any[] }> = (
+const CustomSelect: React.FC<CustomInput & { collection: FilterCollection[] } & { onChange: any }> = (
     {
-        defaultValue,
+        value,
+        onChange,
         name,
         label,
         placeholder,
-        collection
+        collection,
     }
 ) => {
     return <Select
-        selectedKeys={defaultValue ? [defaultValue] : undefined}
+        selectedKeys={value ? [value] : undefined}
         multiple={false}
+        onChange={event => onChange(event.target.value)}
         name={name}
         isRequired={true}
         classNames={{
@@ -182,8 +200,8 @@ const CustomSelect: React.FC<CustomInput & { collection: any[] }> = (
         placeholder={placeholder}
     >
         {collection.map((item) => (
-            <SelectItem key={item} value={item}>
-                {item}
+            <SelectItem key={item.uid} value={item.uid}>
+                {item.name}
             </SelectItem>
         ))}
     </Select>

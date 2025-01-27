@@ -1,9 +1,10 @@
-import type {Cultura, Product, Sale} from "@prisma/client";
+import type {Cultura, Sale} from "@prisma/client";
 import {SortDescriptor} from "@nextui-org/react";
 import {IFilterable} from "@/models/estoque/filters";
 import {VendasComProdutos} from "@/models/vendas";
 import {NoticiaComAutorCultura} from "@/actions/noticias";
 import {PessoaFisJurEnd} from "@/actions/pessoas";
+import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
 
 type FilterableItem = string | string[];
 
@@ -35,10 +36,10 @@ export const getFilteredItems = (productField: number, stockFilter: FilterableIt
     return stockMatch;
 }
 
-export const getSortedProduto = (items: Product[], sortDescriptor: SortDescriptor) => {
-    return [...items].sort((a: Product, b: Product) => {
-        const first = a[sortDescriptor.column as keyof Product];
-        const second = b[sortDescriptor.column as keyof Product];
+export const getSortedProduto = (items: ProdutoEstoqueComRelacoes[], sortDescriptor: SortDescriptor) => {
+    return [...items].sort((a: ProdutoEstoqueComRelacoes, b: ProdutoEstoqueComRelacoes) => {
+        const first = a.estoque.produto;
+        const second = b.estoque.produto;
 
         const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
 

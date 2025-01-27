@@ -30,7 +30,6 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
         tiposPessoa,
     } = props;
 
-    console.log(pessoa);
     const [cep, setCep] = useState(pessoa?.cep ?? '');
     const [cidade, idade] = useState(pessoa?.cidade ?? '');
     const [estado, setEstado] = useState(pessoa?.estado ?? '');
@@ -248,7 +247,6 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
             />
         </InputWrapper>
     </>
-
     return (
         <form
             ref={formRef}

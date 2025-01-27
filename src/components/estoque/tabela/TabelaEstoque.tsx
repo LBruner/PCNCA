@@ -2,7 +2,6 @@
 
 import React, {useState} from "react";
 import {
-    ChipProps,
     SortDescriptor,
     Table,
     TableBody,
@@ -14,11 +13,9 @@ import {
     useDisclosure,
     User as Usuario
 } from "@nextui-org/react";
-import type {Product, User} from '@prisma/client';
 import {Chip} from "@nextui-org/chip";
 import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
-import {priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
 import {getFilteredItems, getSortedProduto} from "@/helpers/tabela";
 import Link from "next/link";
 import paths from "@/paths";
@@ -26,33 +23,27 @@ import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/
 import {deletarProduto} from "@/actions/produto";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import TabelaEstoquesTopContent from "@/components/estoque/tabela/TabelaEstoqueTopContent";
+import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import {priceOptions, stockOptions} from "@/models/estoque/filters";
+import {formatToBrazilianCurrency} from "@/helpers";
 
 const columns = [
-    {name: "PRODUTO", uid: "name", sortable: true},
-    {name: "CATEGORIA", uid: "category", sortable: true},
+    {name: "PRODUTO", uid: "nome", sortable: true},
+    {name: "CATEGORIA", uid: "categoria", sortable: false},
     {name: "TIPO", uid: "tipo", sortable: false},
     {name: "FORNECEDOR", uid: "fornecedor", sortable: false},
-    {name: "DATA DE ADIÇÃO", uid: "data", sortable: true},
-    {name: "PREÇO", uid: "price", sortable: true},
-    {name: "STATUS", uid: "status", sortable: true},
-    {name: "ESTOQUE", uid: "stock", sortable: true},
+    {name: "DATA DE ADIÇÃO", uid: "data", sortable: false},
+    {name: "PREÇO", uid: "preco", sortable: false},
+    {name: "ESTOQUE", uid: "quantidade", sortable: false},
     {name: "AÇÕES", uid: "actions", sortable: true},
 ];
 
-const statusColorMap: Record<Product['status'], ChipProps['color']> = {
-    'Ativo': "success",
-    'Em espera': "warning",
-    'Desativado': "danger",
-};
-
-export type ProdutoEstoqueComRelacoes = Product & {
-    supplier: User;
-};
-
-const TabelaEstoque: React.FC<{
+interface TabelaEstoqueProps {
     products: ProdutoEstoqueComRelacoes[],
     categoriesCollection: FilterCollection[]
-}> = ({products, categoriesCollection}) => {
+}
+
+const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollection}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<string | string[]>([]);
     const [statusFilter, setStatusFilter] = React.useState<string | string[]>("all");
@@ -77,33 +68,26 @@ const TabelaEstoque: React.FC<{
         let filteredProducts = [...products];
 
         if (hasSearchFilter) {
-            filteredProducts = filteredProducts.filter((user) =>
-                user.name.toLowerCase().includes(filterValue.toLowerCase()),
+            filteredProducts = filteredProducts.filter((estoque) =>
+                estoque.estoque.produto.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
 
         if (categoryFilter !== "all" && Array.from(categoriesCollection).length !== categoryFilter.length) {
             filteredProducts = filteredProducts.filter((product) => {
-                    console.log(categoryFilter)
-                    console.log(product.category)
-                    return Array.from(categoryFilter).includes(product.category)
+                    return Array.from(categoryFilter).includes(product.estoque.categoriaId?.nome!);
                 }
             );
         }
 
-        if (statusFilter !== "all" && Array.from(statusOptions).length !== statusFilter.length) {
-            filteredProducts = filteredProducts.filter((product) =>
-                Array.from(statusFilter).includes(product.status),
-            );
-        }
-
         if (stockFilter !== "all" && Array.from(stockOptions).length !== stockFilter.length) {
-            filteredProducts = filteredProducts.filter((product) => getFilteredItems(product.stock, stockFilter, stockOptions, ' unidades'));
+            filteredProducts = filteredProducts.filter((product) => getFilteredItems(product.estoque.quantidade, stockFilter, stockOptions, ' unidades'));
         }
 
         if (priceFilter !== "all" && Array.from(priceOptions).length !== priceFilter.length) {
-            filteredProducts = filteredProducts.filter((product) => getFilteredItems(product.price, priceFilter, priceOptions, 'R$'));
+            filteredProducts = filteredProducts.filter((product) => getFilteredItems(product.estoque.preco, priceFilter, priceOptions, 'R$'));
         }
+
         return filteredProducts;
     }, [products, filterValue, statusFilter, categoryFilter, priceFilter, stockFilter, hasSearchFilter]);
 
@@ -122,63 +106,53 @@ const TabelaEstoque: React.FC<{
 
     const renderCell = React.useCallback((product: ProdutoEstoqueComRelacoes, columnKey: string) => {
         switch (columnKey) {
-            case "id":
-                return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-small capitalize">{product.id}</p>
-                    </div>);
-            case "name":
+            case "nome":
                 return (
                     <Usuario
-                        avatarProps={{radius: "lg", size: 'lg', src: product.imageUrl!}}
-                        name={product.name}
+                        avatarProps={{radius: "lg", size: 'lg', src: product.estoque.imagemLink!}}
+                        name={product.estoque.produto}
                     >
-                        {product.name}
+                        {product.estoque.produto}
                     </Usuario>
                 );
-            case "status":
-                return (
-                    <Chip className="capitalize" color={statusColorMap[product.status]} size="sm" variant="flat">
-                        {product.status}
-                    </Chip>
-                );
-            case "category":
+            case "categoria":
                 return (
                     <Chip className="capitalize" size="sm" variant="flat">
-                        {product.category}
+                        {product.estoque.categoriaId?.nome}
                     </Chip>
                 );
             case "fornecedor":
                 return (
                     <p>
-                        {product.supplier.name}
+                        {product.venda.pessoas[0].pessoa.pessoaJuridica?.razaoSocial}
                     </p>
                 );
             case "tipo":
                 return (
-                    <Chip className="capitalize" size="sm" variant="flat">
-                        {product.tipoCommoditie}
+                    <Chip className="capitalize" color={product.estoque.tipo == 'A' ? 'success' : 'warning'} size="sm"
+                          variant="flat">
+                        {product.estoque.tipo == 'A' ? 'Agrícola' : 'Pecuária'}
                     </Chip>
                 );
             case "data":
                 return (
-                    <Chip className="capitalize" size="sm" variant="flat">
-                        {new Date(product.createdAt).toLocaleDateString('pt-BR', {
+                    <p>
+                        {new Date(product.dataAlter).toLocaleDateString('pt-BR', {
                             day: '2-digit',
                             month: '2-digit',
                             year: 'numeric',
                         })}
-                    </Chip>
+                    </p>
                 );
-            case "price":
+            case "preco":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small capitalize">{`R\$ ${product.price}`}</p>
+                        <p className="text-bold text-small capitalize">{formatToBrazilianCurrency(product.estoque.preco)}</p>
                     </div>);
-            case "stock":
+            case "quantidade":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small capitalize">{`${product.stock} UN`}</p>
+                        <p className="text-bold text-small capitalize">{`${product.estoque.quantidade} ${product.estoque.unidadeMedida}`}</p>
                     </div>);
             case "actions":
                 return (
@@ -244,7 +218,8 @@ const TabelaEstoque: React.FC<{
                     onSearchChange={onSearchChange} statusFilter={statusFilter} priceFilter={priceFilter}
                     setPriceFilter={setPriceFilter} stockFilter={stockFilter}
                     setStockFilter={setStockFilter} hasSearchFilter={hasSearchFilter}
-                    itemsLenght={products.length}/>
+                    itemsLenght={products.length}
+                />
             </div>
             <Table
                 isHeaderSticky
@@ -276,7 +251,7 @@ const TabelaEstoque: React.FC<{
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody className={'h-auto'} emptyContent={"Nenhum produto encontrado"}
+                <TableBody className={'h-auto'} emptyContent={"Nenhum estoque disponível"}
                            items={sortedItems as ProdutoEstoqueComRelacoes[]}>
                     {(product: ProdutoEstoqueComRelacoes) => (
                         <TableRow key={product.id}>

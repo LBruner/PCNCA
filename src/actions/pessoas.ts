@@ -15,7 +15,7 @@ export type PessoaFisJurEnd = Pessoa & {
 }
 
 export interface PessoaCriacao {
-    id?: string;
+    id?: number;
     nome?: string;
     tipo?: number;
     email?: string;
@@ -137,7 +137,7 @@ export const criarPessoa = async (pessoa: PessoaCriacao) => {
 
 export const editarPessoa = async (pessoa: PessoaCriacao) => {
     const pessoaExistente = await db.pessoa.findUnique({
-        where: {id: parseInt(pessoa.id!)},
+        where: {id: pessoa.id!},
         include: {
             telefones: true,
             enderecos: true,
@@ -248,7 +248,7 @@ export const editarPessoa = async (pessoa: PessoaCriacao) => {
     try {
         await db.pessoa.update({
             where: {
-                id: parseInt(pessoa.id!)
+                id: pessoa.id!
             },
             data
         });
