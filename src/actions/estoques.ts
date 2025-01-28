@@ -25,7 +25,7 @@ export const pegaTodosEstoquesUsuario = async (): Promise<ProdutoEstoqueComRelac
 
     return db.historicoEstoque.findMany({
             where: {
-                usuarioId: session?.user.id
+                usuarioId: session?.user.id,
             },
             include: {
                 venda: {
