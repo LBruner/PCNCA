@@ -245,8 +245,6 @@ model CategoriaPessoa {
   codigo    Int      @map("codigo")
   descricao String   @map("descricao") @db.VarChar(50)
   pessoas   Pessoa[]
-
-  @@map("categ_pess")
 }
 
 model ComercioInternacionalNoticia {
@@ -255,8 +253,6 @@ model ComercioInternacionalNoticia {
   comercioIntId Int                   @unique @map("com_int_com_int_id")
   noticia       Noticia               @relation(fields: [noticiaId], references: [notId])
   noticiaId     Int                   @map("not_not_id")
-
-  @@map("cint")
 }
 
 model ComercioInternacionalProduto {
@@ -267,7 +263,6 @@ model ComercioInternacionalProduto {
   comercioIntId Int                   @map("com_int_com_int_id")
 
   @@unique([comercioIntId, produtoInacId])
-  @@map("cipi")
 }
 
 model ComercioInternacional {
@@ -281,8 +276,6 @@ model ComercioInternacional {
   historicoValores HistoricoValores[]
   produtosInac     ComercioInternacionalProduto[]
   noticias         ComercioInternacionalNoticia[]
-
-  @@map("com_int")
 }
 
 model Empresa {
@@ -290,8 +283,6 @@ model Empresa {
   nome     String    @db.VarChar(100)
   serial   BigInt
   usuarios Usuario[]
-
-  @@map("empresa")
 }
 
 model Endereco {
@@ -306,8 +297,6 @@ model Endereco {
   pais        String  @db.VarChar(100)
   pessoa      Pessoa  @relation(fields: [pessoaId], references: [id])
   pessoaId    Int     @map("pessoa_pess_pessoa_id")
-
-  @@map("endereco")
 }
 
 model Estoque {
@@ -323,8 +312,6 @@ model Estoque {
   imagemLink         String?            @map("imagem_link") @db.VarChar(300)
   historicos         HistoricoEstoque[]
   vendas             VendaEstoque[]
-
-  @@map("estoque")
 }
 
 model FormaPagamento {
@@ -332,8 +319,6 @@ model FormaPagamento {
   codigo Int
   tipo   String                @db.VarChar(30)
   vendas VendaFormaPagamento[]
-
-  @@map("forma_pagamento")
 }
 
 model HistoricoEstoque {
@@ -347,8 +332,6 @@ model HistoricoEstoque {
   vendaId    Int      @map("venda_venda_id")
   usuario    Usuario  @relation(fields: [usuarioId], references: [id])
   usuarioId  String   @map("usuario_usuario_id")
-
-  @@map("historico_estoque")
 }
 
 model HistoricoValores {
@@ -357,29 +340,21 @@ model HistoricoValores {
   dataValorHist DateTime              @map("dt_valor_hist")
   comercioInt   ComercioInternacional @relation(fields: [comercioIntId], references: [id])
   comercioIntId Int                   @map("com_int_com_int_id")
-
-  @@map("hist_valores")
 }
 
 model Imagem {
   id     Int    @id @map("imagem_id")
   imagem String @db.VarChar(200)
-
-  @@map("imag")
 }
 
 model Mensagem {
   id        Int    @id @map("mensagem_id")
   descricao String @db.VarChar(100)
-
-  @@map("mens")
 }
 
 model Moeda {
   sigla String @id @db.VarChar(10)
   nome  String @db.VarChar(40)
-
-  @@map("moed")
 }
 
 model Pessoa {
@@ -393,8 +368,6 @@ model Pessoa {
   enderecos      Endereco[]
   telefones      Telefone[]
   vendas         VendaPessoa[]
-
-  @@map("pessoa")
 }
 
 model PessoaFisica {
@@ -404,8 +377,6 @@ model PessoaFisica {
   dataNascimento DateTime @map("pepf_dt_nascimento")
   rg             BigInt?  @map("pepf_rg")
   pessoa         Pessoa   @relation(fields: [id], references: [id])
-
-  @@map("pessoa_fisica")
 }
 
 model PessoaJuridica {
@@ -415,8 +386,6 @@ model PessoaJuridica {
   inscricaoEstadual BigInt  @map("psjr_insc_esta")
   nomeFantasia      String? @map("psjr_nome_fant") @db.VarChar(100)
   pessoa            Pessoa  @relation(fields: [id], references: [id])
-
-  @@map("pessoa_juridica")
 }
 
 model ProdutoInac {
@@ -426,8 +395,6 @@ model ProdutoInac {
   valor           Float
   totalExpValPais Float?                         @map("total_exp_val_pais")
   comerciosInt    ComercioInternacionalProduto[]
-
-  @@map("prd_inac")
 }
 
 model Telefone {
@@ -436,8 +403,6 @@ model Telefone {
   numero   String @db.VarChar(30)
   pessoa   Pessoa @relation(fields: [pessoaId], references: [id])
   pessoaId Int    @map("pessoa_pess_pessoa_id")
-
-  @@map("telefone")
 }
 
 model Usuario {
@@ -457,8 +422,6 @@ model Usuario {
   historicos HistoricoEstoque[]
   Account    Account[]
   Session    Session[]
-
-  @@map("usuario")
 }
 
 model Venda {
@@ -471,8 +434,6 @@ model Venda {
   estoques        VendaEstoque[]
   formasPagamento VendaFormaPagamento[]
   pessoas         VendaPessoa[]
-
-  @@map("venda")
 }
 
 model VendaEstoque {

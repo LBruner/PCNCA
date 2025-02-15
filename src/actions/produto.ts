@@ -8,6 +8,7 @@ import paths from "@/paths";
 import {redirect} from "next/navigation";
 import {CategoriaPessoa, Pessoa, PessoaJuridica} from "@prisma/client";
 import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 const createProductSchema = z.object({
     nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
@@ -77,7 +78,7 @@ async function getSessionAndValidateForm(formData: FormData): Promise<{
     result?: FormDataValidationResult,
     errors?: CreatePostFormState['errors']
 }> {
-    const session: Session | null = await getServerSession();
+    const session: Session | null = await getServerSession(authOptions);
 
     if (!session || !session.user) {
         return {
@@ -99,9 +100,9 @@ async function getSessionAndValidateForm(formData: FormData): Promise<{
 }
 
 async function getUserId(email: string): Promise<string> {
-    const user = await db.user.findUnique({
+    const user = await db.usuario.findUnique({
         where: {
-            email: email
+            id: email
         }
     });
 
@@ -123,7 +124,7 @@ async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOr
     }
 
     try {
-        const userId = await getUserId(session!.user.email);
+        const userId = await getUserId(session!.user.id!);
         await createOrUpdate(result?.data!, userId);
 
     } catch (error) {

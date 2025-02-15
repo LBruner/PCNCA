@@ -5,7 +5,7 @@ import {Accordion, AccordionItem, Button, Navbar, NavbarContent, NavbarItem} fro
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import paths from "@/paths";
-import {BiCategory, BiNews} from "react-icons/bi";
+import {BiCategory, BiNews, BiUser} from "react-icons/bi";
 
 const AdmNavbar: React.FC = () => {
     const pathname = usePathname();
@@ -51,6 +51,21 @@ const AdmNavbar: React.FC = () => {
                                             color={pathname === paths.admCulturas() ? "primary" : "default"}
                                             startContent={<BiCategory/>}>
                                         Categorias
+                                    </Button>
+                                </Link>
+                            </div>
+                        </AccordionItem>
+                        <AccordionItem
+                            key="2"
+                            title="Cadastro"
+                            className="flex flex-col"
+                        >
+                            <div className="flex flex-col w-36 gap-2">
+                                <Link href={paths.admUsuarios()}>
+                                    <Button className="text-right w-full justify-start"
+                                            color={pathname === paths.admNoticias() ? "primary" : "default"}
+                                            startContent={<BiUser/>}>
+                                        Usuários
                                     </Button>
                                 </Link>
                             </div>

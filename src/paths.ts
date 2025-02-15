@@ -5,6 +5,9 @@ const paths = {
     adm(){
         return `/adm`;
     },
+    admUsuarios(){
+        return `/adm/usuarios`;
+    },
     admNoticias(){
         return `/adm/noticias`;
     },

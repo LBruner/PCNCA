@@ -237,7 +237,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
                 classNames={{
-                    wrapper: "max-h-2/4 min-h-[25rem] h-[35rem]",
+                    wrapper: "max-h-2/4 min-h-[25rem] h-[33rem]",
                 }}
             >
                 <TableHeader columns={columns}>

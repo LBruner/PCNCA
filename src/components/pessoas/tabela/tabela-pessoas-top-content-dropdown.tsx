@@ -28,7 +28,7 @@ const TabelaPessoasTopContentDropdown: React.FC<TopContentDropDownProps> = (
         <div className={`flex flex-col ${width}`}>
             <p className={'text-sm mb-2'}>{label}</p>
             <Dropdown size={'sm'}>
-                <DropdownTrigger className="hidden justify-between sm:flex font-semibold h-9">
+                <DropdownTrigger className="hidden sm:flex font-semibold h-9">
                     <Button endContent={<ChevronDownIcon className="text-small"/>} variant="flat">
                         {filterStatus.length === 1 ? Array.from(filterStatus)[0] : filterStatus.length === collection.length || filterStatus === 'all' ? allSelectedLabel : Array.from(filterStatus)[0] === 'Desativado' ? 'Desativado' :multipleSelectedLabel}
                     </Button>
