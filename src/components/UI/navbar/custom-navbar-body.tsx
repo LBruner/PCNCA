@@ -17,6 +17,9 @@ interface CustomNavbarBodyProps {
 const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
     const pathName = usePathname();
 
+    // Apaga estado do accordion selecionado na tela de adm
+    localStorage.removeItem('activePath');
+
     if (pathName == paths.login() || pathName == '/' || pathName == paths.cadastro() || pathName.startsWith('/adm') || pathName.startsWith('/configuracoes')) {
         return null;
     }
