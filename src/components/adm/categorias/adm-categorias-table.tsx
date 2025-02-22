@@ -167,7 +167,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
     const itemDeleteModalSettings: DeletingItemModalSettings = {
         title: 'Excluir Categoria',
         text: `Tem certeza que deseja excluir a categoria: ${selectedCultura?.nome}? Essa ação não pode ser desfeita...`,
-        deletingFunction: deleteCategoria.bind(null, selectedCultura?.culturaId ?? 0),
+        actionFn: deleteCategoria.bind(null, selectedCultura?.culturaId ?? 0),
         isOpen: deleteModal.isOpen,
         onClose: deleteModal.onClose,
     }

@@ -406,22 +406,22 @@ model Telefone {
 }
 
 model Usuario {
-  id         String             @id @default(cuid())
-  nome       String             @db.VarChar(100)
-  cpf        String             @db.VarChar(14)
-  senha      String             @db.VarChar(14)
-  imagemLink String?            @map("imagem_link") @db.VarChar(300)
-  email      String?            @db.VarChar(300)
-  esp1       String?            @db.VarChar(20)
-  esp2       String?            @db.VarChar(20)
-  empresa    Empresa            @relation(fields: [empresaId], references: [id])
-  empresaId  Int                @map("empresa_empresa_id")
-  admin      Usuario?           @relation("AdminToUsuario", fields: [adminId], references: [id])
-  adminId    String?            @map("admi_id")
-  usuarios   Usuario[]          @relation("AdminToUsuario")
-  historicos HistoricoEstoque[]
-  Account    Account[]
-  Session    Session[]
+  id           String             @id @default(cuid())
+  nome         String             @db.VarChar(100)
+  cpf          String             @db.VarChar(14)
+  senha        String             @db.VarChar(14)
+  admin        Boolean            @default(false)
+  alterarSenha Boolean            @default(false)
+  imagemLink   String?            @map("imagem_link") @db.VarChar(300)
+  inativado    Boolean            @default(false)
+  email        String?            @db.VarChar(300)
+  esp1         String?            @db.VarChar(20)
+  esp2         String?            @db.VarChar(20)
+  empresa      Empresa            @relation(fields: [empresaId], references: [id])
+  empresaId    Int                @map("empresa_empresa_id")
+  historicos   HistoricoEstoque[]
+  Account      Account[]
+  Session      Session[]
 }
 
 model Venda {

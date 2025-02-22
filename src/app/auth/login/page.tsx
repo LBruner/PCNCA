@@ -52,11 +52,9 @@ function LoginPage() {
         }
     }
 
-
     const [formState, action] = useFormState(loginUser, {
         errors: {}
     });
-
 
     return (
         <div className="flex h-screen">

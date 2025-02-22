@@ -6,13 +6,13 @@ export type DeletingItemModalSettings = {
     text: string
     actionText?: string
     closeText?: string
-    deletingFunction: (id: number) => Promise<void>
+    actionFn: (id: any) => Promise<void>
     isOpen: boolean,
     onClose: () => void,
 }
 
 interface CustomModalProps {
-    itemId: number | null,
+    itemId: number | string | null,
     settings: DeletingItemModalSettings
 }
 
@@ -24,7 +24,7 @@ const ItemDeleteModal: React.FC<CustomModalProps> = ({itemId, settings}) => {
         return null;
     const onDeleteProduct = async () => {
         setIsLoading(true);
-        await settings.deletingFunction(itemId);
+        await settings.actionFn(itemId);
         setIsLoading(false);
         settings.onClose();
     }
@@ -34,7 +34,7 @@ const ItemDeleteModal: React.FC<CustomModalProps> = ({itemId, settings}) => {
             title={settings.title}
             text={settings.text}
             size={'lg'}
-            actionText={settings.actionText ?? 'Excluir'}
+            actionText={settings.actionText ?? 'Confirmar'}
             closeText={settings.closeText ?? 'Cancelar'}
             action={onDeleteProduct}
             isOpen={settings.isOpen}

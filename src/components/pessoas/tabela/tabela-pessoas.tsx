@@ -205,7 +205,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
     const itemDeleteModalSettings: DeletingItemModalSettings = {
         title: 'Excluir Pessoa',
         text: 'Tem certeza que deseja excluir esta pessoa? Essa ação não pode ser desfeita...',
-        deletingFunction: deletePessoa,
+        actionFn: deletePessoa,
         isOpen: deleteModal.isOpen,
         onClose: deleteModal.onClose,
     }
@@ -231,7 +231,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                     onSearchChange={onSearchChange}
                     hasSearchFilter={hasSearchFilter}
                     itemsLenght={pessoas.length}/>}
-                topContentPlacement={'inside'}
+                topContentPlacement={'outside'}
                 bottomContentPlacement="outside"
                 bottomContent={<TabelaEstoqueBottomContent
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
@@ -240,6 +240,9 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                     hasSearchFilter={hasSearchFilter} selectedKeys={[]}/>}
                 selectionMode="none"
                 sortDescriptor={sortDescriptor}
+                classNames={{
+                    wrapper: "max-h-2/4 min-h-[25rem] h-[35rem]",
+                }}
                 onSortChange={setSortDescriptor}
             >
                 <TableHeader columns={columns}>
@@ -253,7 +256,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhuma pessoa encontrada"}
+                <TableBody className={'h-auto'} emptyContent={"Nenhuma pessoa encontrada"}
                            items={sortedItems}>
                     {(pessoa: PessoaFisJurEnd) => (
                         <TableRow key={pessoa.id}>

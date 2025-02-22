@@ -2,14 +2,20 @@ const paths = {
     landingPage() {
         return '/';
     },
-    adm(){
+    adm() {
         return `/adm`;
     },
-    admNoticias(){
+    admUsuarios() {
+        return `/adm/usuarios`;
+    },
+    admNoticias() {
         return `/adm/noticias`;
     },
-    admCulturas(){
+    admCulturas() {
         return `/adm/culturas`;
+    },
+    alterarSenha() {
+        return `/auth/alterar-senha`;
     },
     login() {
         return `/auth/login`;
@@ -68,7 +74,7 @@ const paths = {
     editProduto(produtoId: string) {
         return `vendas/produtos/${produtoId}/editar`;
     },
-    pessoas(){
+    pessoas() {
         return `/pessoas`;
     },
     createPessoa() {
@@ -83,13 +89,13 @@ const paths = {
     configuracoes() {
         return `/configuracoes`;
     },
-    cotacoesMoedas(){
+    cotacoesMoedas() {
         return '/cotacoes/moedas'
     },
-    cotacoesCommodities(){
+    cotacoesCommodities() {
         return '/cotacoes/commodities'
     },
-    prodInternacional(){
+    prodInternacional() {
         return '/producao-internacional'
     }
 }

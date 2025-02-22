@@ -1,10 +1,10 @@
-import type {Cultura, Sale} from "@prisma/client";
+import type {Cultura} from "@prisma/client";
 import {SortDescriptor} from "@nextui-org/react";
 import {IFilterable} from "@/models/estoque/filters";
-import {VendasComProdutos} from "@/models/vendas";
 import {NoticiaComAutorCultura} from "@/actions/noticias";
 import {PessoaFisJurEnd} from "@/actions/pessoas";
 import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import {UsuarioComEmpresa} from "@/actions/usuarios";
 
 type FilterableItem = string | string[];
 
@@ -34,6 +34,17 @@ export const getFilteredItems = (productField: number, stockFilter: FilterableIt
         }
     });
     return stockMatch;
+}
+
+export const getSortedUsuario = (items: UsuarioComEmpresa[], sortDescriptor: SortDescriptor) => {
+    return [...items].sort((a: UsuarioComEmpresa, b: UsuarioComEmpresa) => {
+        const first = a.nome;
+        const second = b.nome;
+
+        const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
+
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+    });
 }
 
 export const getSortedProduto = (items: ProdutoEstoqueComRelacoes[], sortDescriptor: SortDescriptor) => {
@@ -91,39 +102,3 @@ export const getSortedNoticia = (items: NoticiaComAutorCultura[], sortDescriptor
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
 }
-
-
-type SortableFields = keyof Pick<Sale, 'id' | 'customerName' | 'date' | 'status' | 'totalPrice'>;
-
-
-//TODO: quem sabe usar uma interface aqui
-export const getSortedVenda = (items: VendasComProdutos[], sortDescriptor: SortDescriptor): VendasComProdutos[] => {
-    return [...items].sort((a: VendasComProdutos, b: VendasComProdutos) => {
-        const column = sortDescriptor.column as SortableFields;
-        let first = a[column];
-        let second = b[column];
-
-        if (first == null) return sortDescriptor.direction === "descending" ? 1 : -1;
-        if (second == null) return sortDescriptor.direction === "descending" ? -1 : 1;
-
-        if (typeof first === 'string' && typeof second === 'string') {
-            first = first.toLowerCase();
-            second = second.toLowerCase();
-        } else if (first instanceof Date && second instanceof Date) {
-            return sortDescriptor.direction === "descending"
-                ? second.getTime() - first.getTime()
-                : first.getTime() - second.getTime();
-        } else if (typeof first === 'number' && typeof second === 'number') {
-            return sortDescriptor.direction === "descending"
-                ? second - first
-                : first - second;
-        } else {
-            first = String(first);
-            second = String(second);
-        }
-
-        return sortDescriptor.direction === "descending"
-            ? second.localeCompare(first)
-            : first.localeCompare(second);
-    });
-};

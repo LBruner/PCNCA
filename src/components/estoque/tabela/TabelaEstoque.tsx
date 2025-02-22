@@ -200,7 +200,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
     const itemDeleteModalSettings: DeletingItemModalSettings = {
         title: 'Excluir Produto',
         text: 'Tem certeza que deseja excluir este produto?',
-        deletingFunction: deletarProduto,
+        actionFn: deletarProduto,
         isOpen: isOpen,
         onClose: onClose,
     }
@@ -210,6 +210,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
             <ItemDeleteModal itemId={selectedProductId} settings={itemDeleteModalSettings}/>
             <div className={'bg-white rounded-md p-4 mb-4 shadow-md'}>
                 <TabelaEstoquesTopContent
+                    products={products}
                     selectedItems={selectedKeys}
                     categoriesOptions={categoriesCollection}
                     setCategoryFilter={setCategoryFilter}
@@ -237,7 +238,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
                 classNames={{
-                    wrapper: "max-h-2/4 min-h-[25rem] h-[35rem]",
+                    wrapper: "max-h-2/4 min-h-[25rem] h-[33rem]",
                 }}
             >
                 <TableHeader columns={columns}>

@@ -211,7 +211,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
     const itemDeleteModalSettings: DeletingItemModalSettings = {
         title: 'Excluir Notícia',
         text: 'Tem certeza que deseja excluir esta notícia? Essa ação não pode ser desfeita...',
-        deletingFunction: deletarNoticia,
+        actionFn: deletarNoticia,
         isOpen: isOpen,
         onClose: onClose,
     }
