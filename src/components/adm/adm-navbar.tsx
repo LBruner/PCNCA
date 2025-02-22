@@ -53,7 +53,6 @@ const AdmNavbar: React.FC = () => {
     if (!pathname.startsWith('/adm')) {
         return null;
     }
-    console.log(expandedKeys)
     return (
         <Navbar className="h-screen fixed w-64 flex-col items-start justify-start p-4 bg-gray-100" position="static">
             <NavbarContent className="flex-col items-start gap-4">
@@ -64,7 +63,7 @@ const AdmNavbar: React.FC = () => {
                 </NavbarItem>
                 <NavbarItem>
                     <Accordion
-                        defaultExpandedKeys={expandedKeys}
+                        defaultExpandedKeys={['1','2']}
                         onExpandedChange={(keys) => setExpandedKeys(Array.from(keys) as string[])}
                         className="w-full"
                     >
