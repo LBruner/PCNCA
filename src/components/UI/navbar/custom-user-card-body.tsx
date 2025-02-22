@@ -49,11 +49,13 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                             <p className="font-medium">Logado como</p>
                             <p className="font-semibold">{user.email}</p>
                         </DropdownItem>
-                        <DropdownItem color={'warning'} href={paths.admNoticias()}>
-                            ADM
-                        </DropdownItem>
+                        {user.admin ? (
+                            <DropdownItem color={'warning'} href={paths.admNoticias()}>
+                                ADM
+                            </DropdownItem>
+                        ) : null as any}
                         <DropdownItem onClick={() => {
-                            signOut()
+                            signOut().then(_ => console.log())
                         }} key="logout" color="danger">
                             <p className={'text-medium'}>Sair</p>
                         </DropdownItem>
@@ -69,10 +71,10 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
         authContent =
             <NavbarContent justify="end">
                 <NavbarItem className="hidden lg:flex">
-                    <Link href={paths.login()}>Login</Link>
+                    <Link href={paths.login()}><p className={'text-warning'}>Login</p></Link>
                 </NavbarItem>
                 <NavbarItem>
-                    <Button as={Link} color="primary" href={paths.cadastro()} variant="flat">
+                    <Button as={Link} color="warning" href={paths.cadastro()} variant="flat">
                         Cadastro
                     </Button>
                 </NavbarItem>
