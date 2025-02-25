@@ -76,7 +76,7 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes, formasPagament
         await criarVenda(
             {
                 vendas: selectedProducts,
-                clienteId: 2,
+                clienteId: parseInt(selectedClienteId as unknown as string),
                 formaPagamento: 1,
             }
         );
