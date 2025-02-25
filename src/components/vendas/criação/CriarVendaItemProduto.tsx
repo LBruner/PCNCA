@@ -2,10 +2,10 @@ import React from "react";
 import {Image, Input} from "@nextui-org/react";
 import {formatToBrazilianCurrency} from "@/helpers";
 import {LuTrash2} from "react-icons/lu";
-import {ProductSale} from "@/app/vendas/criar/page";
+import {ProdutosSelecionados} from "@/app/vendas/criar/page";
 
 interface CriarVendaItemProduto {
-    produto: ProductSale;
+    produto: ProdutosSelecionados;
     changeProductQuantity: (productId: number, newQuantity: number) => void;
     removeProduct: (productId: number) => void;
 }
@@ -16,12 +16,12 @@ const CriarVendaItemProduto: React.FC<CriarVendaItemProduto> = (props) => {
         <div key={produto.id} className={'flex justify-between items-center'}>
             <div className={'flex gap-4'}>
                 <div className={'h-auto w-24'}>
-                    <Image isZoomed={true} src={produto.imageUrl!} alt={produto.name}/>
+                    <Image isZoomed={true} src={produto.estoque.imagemLink!} alt={produto.estoque.produto}/>
                 </div>
                 <div>
-                    <p className={'text-sm  text-gray-700 font-light'}>{produto.category}</p>
-                    <p className={'text-xl font-semibold'}>{produto.name}</p>
-                    <p className={'text-sm text-gray-700 font-light'}>Commodity {produto.tipoCommoditie}</p>
+                    <p className={'text-md  text-gray-700 font-light'}>{produto.estoque.categoriaId?.nome ?? "Sem categoria"}</p>
+                    <p className={'text-2xl font-semibold'}>{produto.estoque.produto}</p>
+                    <p className={'text-sm text-gray-700 font-light'}>Disponíveis: {produto.estoque.quantidade}</p>
                 </div>
             </div>
             <div className={'flex gap-8 items-center'}>
@@ -31,18 +31,18 @@ const CriarVendaItemProduto: React.FC<CriarVendaItemProduto> = (props) => {
                         variant={'flat'}
                         type="number"
                         onChange={event => {
-                            console.log(event.target.value)
                             changeProductQuantity(produto.id, parseInt(event.target.value));
                         }}
                         value={produto.quantity.toString()}
                         className="w-16"
                         min="1"
+                        max={produto.estoque.quantidade}
                     />
                     <p>x</p>
-                    <span className=""> {formatToBrazilianCurrency(produto.price)}</span>
+                    <span className=""> {formatToBrazilianCurrency(produto.estoque.preco)}</span>
                 </div>
                 <div className={'w-20'}>
-                    <p>{formatToBrazilianCurrency(produto.price * produto.quantity)}</p>
+                    <p>{!produto.quantity ? 'R$ 0' : formatToBrazilianCurrency(produto.estoque.preco * produto.quantity)}</p>
                 </div>
                 <div>
                     <LuTrash2 onClick={() => removeProduct(produto.id)} className={`cursor-pointer hover:text-red-500`} size={22}/>

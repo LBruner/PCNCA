@@ -5,7 +5,7 @@ import {Cultura, Estoque, HistoricoEstoque, Pessoa, PessoaJuridica, Venda, Venda
 import {getServerSession, Session} from "next-auth";
 import {redirect} from "next/navigation";
 import paths from "@/paths";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {authOptions} from "@/app/AuthOptions";
 
 export type ProdutoEstoqueComRelacoes = HistoricoEstoque & {
     venda: Venda & {
@@ -26,6 +26,7 @@ export const pegaTodosEstoquesUsuario = async (): Promise<ProdutoEstoqueComRelac
     return db.historicoEstoque.findMany({
             where: {
                 usuarioId: session?.user.id,
+                comprador: true
             },
             include: {
                 venda: {

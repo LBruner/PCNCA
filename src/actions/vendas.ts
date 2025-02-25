@@ -2,21 +2,132 @@
 
 import {sales} from "@/dummy_data/sales";
 import {db} from "@/db";
-import {VendasComProdutos} from "@/models/vendas";
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/app/AuthOptions";
+import {getUserId} from "@/actions/produto";
+import {VendaComDados} from "@/components/vendas/criação/CriarVendaForm";
+import {HistoricoEstoque, Pessoa, PessoaJuridica, Venda} from "@prisma/client";
 
-//TODO: Resolver
+export type VendasAgrupadas = HistoricoEstoque & {
+    venda: Venda & {
+        pessoas: (Pessoa & { pessoa: Pessoa &  { pessoaJuridica?: PessoaJuridica | null } } )[],
+    }
+}
 
-export const buscarVendas = async (): Promise<any[]> => {
-    return db.sale.findMany({
+export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.email) return [];
+
+    // Busca todas as vendas no banco de dados
+    const vendas = await db.historicoEstoque.findMany({
+        where: {
+            usuarioId: session.user.id,
+            comprador: false,
+        },
         include: {
-            saleItems: {
+            venda: {
                 include: {
-                    product: true,
+                    pessoas: {
+                        include: {
+                            pessoa: {
+                                include: {
+                                    pessoaJuridica: true,
+                                },
+                            },
+                        },
+                    },
+                }
+            },
+        }
+    });
+
+    const vendasAgrupadas = vendas.reduce((acc, venda) => {
+        const vendaId = venda.vendaId;
+
+        if (!acc[vendaId]) {
+            acc[vendaId] = [];
+        }
+
+        acc[vendaId].push(venda);
+        return acc;
+    }, {} as { [key: string]: any[] });
+
+    return Object.values(vendasAgrupadas);
+}
+
+export async function criarVenda(vendas: VendaComDados): Promise<void> {
+    const session = await getServerSession(authOptions)
+
+    const userId = await getUserId(session!.user.id!);
+
+    let subtotal = 0;
+    let quantidadeVendida = 0;
+
+    vendas.vendas.forEach((item) => {
+            subtotal = subtotal + (item.quantity * item.estoque.preco);
+            quantidadeVendida = quantidadeVendida + item.quantity
+        }
+    );
+
+    const novaVenda = await db.venda.create({
+        data: {
+            dataVenda: new Date(),
+            valorVenda: subtotal,
+            quantidadeVenda: quantidadeVendida,
+            desconto: 0,
+        }
+    });
+
+    await db.vendaPessoa.create({
+        data: {
+            venda: {
+                connect: {
+                    id: novaVenda.id
+                }
+            },
+            pessoa: {
+                connect: {
+                    id: vendas.clienteId
+                }
+            },
+            tipoPessoa: "Fornecedor"
+        }
+    });
+
+    for (const vendaAtual of vendas.vendas) {
+        await db.historicoEstoque.create({
+            data: {
+                venda: {
+                    connect: {
+                        id: novaVenda.id
+                    }
+                },
+                comprador: false,
+                dataAlter: new Date(),
+                horaAlter: new Date().toISOString().slice(11, 16),
+                valorAlter: vendaAtual.quantity,
+                usuario: {
+                    connect: {
+                        id: userId,
+                    },
+                },
+                estoque: {
+                    connect: {
+                        id: vendaAtual.estoque.id,
+                    },
                 },
             },
-            seller: true,
-        },
-    });
+        });
+
+        await db.vendaEstoque.create({
+            data: {
+                precoProp: vendaAtual.estoque.preco,
+                estoqueId: vendaAtual.estoque.id,
+                vendaId: novaVenda.id,
+            },
+        });
+    }
 }
 
 export const buscarNomeClientes = async () => {
@@ -61,43 +172,43 @@ export async function getDadosGraficoPie() {
     // return salesWithProductNames
 
     return [
-        { productName: 'Café', totalRevenue: 785 },
-        { productName: 'Laranja', totalRevenue: 2585 },
-        { productName: 'Soja', totalRevenue: 450 },
-        { productName: 'Açúcar', totalRevenue: 1580 }
+        {productName: 'Café', totalRevenue: 785},
+        {productName: 'Laranja', totalRevenue: 2585},
+        {productName: 'Soja', totalRevenue: 450},
+        {productName: 'Açúcar', totalRevenue: 1580}
     ];
 }
 
 export async function getMonthlySales() {
-  //   const monthlySales = await db.$queryRaw`
-  //   SELECT
-  //     EXTRACT(MONTH FROM date) as month,
-  //     SUM(CAST("totalPrice" AS FLOAT)) as total
-  //   FROM "Sale"
-  //   WHERE date >= CURRENT_DATE - INTERVAL '1 year'
-  //   GROUP BY EXTRACT(MONTH FROM date)
-  //   ORDER BY EXTRACT(MONTH FROM date)
-  // `;
-  //
-  //   // Mapeamento de número do mês para abreviação
-  //   const monthAbbreviations = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-  //
-  //   // Inicializar arrays com zeros
-  //   const uData = Array(12).fill(0);
-  //   const xLabels = monthAbbreviations.slice();
-  //
-  //   // Preencher uData com os valores reais
-  //   monthlySales.forEach((sale: { month: number; total: number }) => {
-  //       uData[Number(sale.month) - 1] = Number(sale.total.toFixed(2));
-  //   });
-  //
-  //   return { uData, xLabels };
+    //   const monthlySales = await db.$queryRaw`
+    //   SELECT
+    //     EXTRACT(MONTH FROM date) as month,
+    //     SUM(CAST("totalPrice" AS FLOAT)) as total
+    //   FROM "Sale"
+    //   WHERE date >= CURRENT_DATE - INTERVAL '1 year'
+    //   GROUP BY EXTRACT(MONTH FROM date)
+    //   ORDER BY EXTRACT(MONTH FROM date)
+    // `;
+    //
+    //   // Mapeamento de número do mês para abreviação
+    //   const monthAbbreviations = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    //
+    //   // Inicializar arrays com zeros
+    //   const uData = Array(12).fill(0);
+    //   const xLabels = monthAbbreviations.slice();
+    //
+    //   // Preencher uData com os valores reais
+    //   monthlySales.forEach((sale: { month: number; total: number }) => {
+    //       uData[Number(sale.month) - 1] = Number(sale.total.toFixed(2));
+    //   });
+    //
+    //   return { uData, xLabels };
 
     return {
         uData: [
-            350,  420, 430,  410,
+            350, 420, 430, 410,
             780, 1120, 790, 1260,
-            700,    0,   0,    0
+            700, 0, 0, 0
         ],
         xLabels: [
             'Jan', 'Fev', 'Mar',
@@ -207,27 +318,35 @@ export async function getTopProductsMonthlySales() {
 
     return {
         xLabels: [
-            'Janeiro',  'Fevereiro',
-            'Março',    'Abril',
-            'Maio',     'Junho',
-            'Julho',    'Agosto',
+            'Janeiro', 'Fevereiro',
+            'Março', 'Abril',
+            'Maio', 'Junho',
+            'Julho', 'Agosto',
             'Setembro', 'Outubro',
             'Novembro', 'Dezembro'
         ],
         datasets: [
-            { label: 'Leite', data: [ 0, 30, 0, 0, 0,
-                    0,  0, 0, 0, 0,
-                    0,  0
-                ] },
-            { label: 'Soja', data: [50,  90, 90, 135, 0,
-                    200, 200, 90,   0, 0,
-                    0,   0] },
-            { label: 'Açúcar', data: [ 160,   0, 160, 220, 90,
-                    310, 180, 340, 120,  0,
-                    0,   0] },
-            { label: 'Arroz', data: [100, 340, 180, 340, 470,
-                    200, 225, 350, 380,   0,
-                    0,   0] }
+            {
+                label: 'Leite', data: [0, 30, 0, 0, 0,
+                    0, 0, 0, 0, 0,
+                    0, 0
+                ]
+            },
+            {
+                label: 'Soja', data: [50, 90, 90, 135, 0,
+                    200, 200, 90, 0, 0,
+                    0, 0]
+            },
+            {
+                label: 'Açúcar', data: [160, 0, 160, 220, 90,
+                    310, 180, 340, 120, 0,
+                    0, 0]
+            },
+            {
+                label: 'Arroz', data: [100, 340, 180, 340, 470,
+                    200, 225, 350, 380, 0,
+                    0, 0]
+            }
         ]
     }
 }

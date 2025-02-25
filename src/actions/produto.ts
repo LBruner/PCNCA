@@ -8,6 +8,7 @@ import paths from "@/paths";
 import {redirect} from "next/navigation";
 import {CategoriaPessoa, Pessoa, PessoaJuridica} from "@prisma/client";
 import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import {authOptions} from "@/app/AuthOptions";
 
 const createProductSchema = z.object({
     nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
@@ -72,12 +73,12 @@ interface Session {
     };
 }
 
-async function getSessionAndValidateForm(formData: FormData): Promise<{
+export async function getSessionAndValidateForm(formData: FormData): Promise<{
     session?: Session,
     result?: FormDataValidationResult,
     errors?: CreatePostFormState['errors']
 }> {
-    const session: Session | null = await getServerSession();
+    const session: Session | null = await getServerSession(authOptions);
 
     if (!session || !session.user) {
         return {
@@ -98,10 +99,10 @@ async function getSessionAndValidateForm(formData: FormData): Promise<{
     return {session, result};
 }
 
-async function getUserId(email: string): Promise<string> {
-    const user = await db.user.findUnique({
+export async function getUserId(email: string): Promise<string> {
+    const user = await db.usuario.findUnique({
         where: {
-            email: email
+            id: email
         }
     });
 
@@ -123,7 +124,8 @@ async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOr
     }
 
     try {
-        const userId = await getUserId(session!.user.email);
+        // @ts-ignore
+        const userId = await getUserId(session!.user.id!);
         await createOrUpdate(result?.data!, userId);
 
     } catch (error) {
@@ -242,6 +244,7 @@ export async function criarProduto(_: CreatePostFormState, formData: FormData): 
                         id: venda.id
                     }
                 },
+                comprador: true,
                 dataAlter: new Date(),
                 horaAlter: new Date().toISOString().slice(11, 16),
                 valorAlter: data.estoque,
@@ -301,10 +304,10 @@ export async function editarProduto(vendaId: number, pessoaId: number, estoqueId
 }
 
 export async function deletarProduto(productId: number) {
-    await db.product.delete({
-        where: {
-            id: productId,
-        },
-    });
+    // await db.product.delete({
+    //     where: {
+    //         id: productId,
+    //     },
+    // });
     revalidatePath(paths.estoque());
 }

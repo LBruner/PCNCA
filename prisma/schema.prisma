@@ -326,6 +326,7 @@ model HistoricoEstoque {
   dataAlter  DateTime @map("dt_alter")
   horaAlter  String   @map("hora_alter") @db.VarChar(5)
   valorAlter Float    @map("valor_alter")
+  comprador  Boolean  @default(false)
   estoque    Estoque  @relation(fields: [estoqueId], references: [id])
   estoqueId  Int      @map("estoque_estoque_id")
   venda      Venda    @relation(fields: [vendaId], references: [id])
