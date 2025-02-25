@@ -7,6 +7,8 @@ import {authOptions} from "@/app/AuthOptions";
 import {getUserId} from "@/actions/produto";
 import {VendaComDados} from "@/components/vendas/criação/CriarVendaForm";
 import {HistoricoEstoque, Pessoa, PessoaJuridica, Venda} from "@prisma/client";
+import {revalidatePath} from "next/cache";
+import paths from "@/paths";
 
 export type VendasAgrupadas = HistoricoEstoque & {
     venda: Venda & {
@@ -19,7 +21,6 @@ export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
 
     if (!session?.user?.email) return [];
 
-    // Busca todas as vendas no banco de dados
     const vendas = await db.historicoEstoque.findMany({
         where: {
             usuarioId: session.user.id,
@@ -127,7 +128,18 @@ export async function criarVenda(vendas: VendaComDados): Promise<void> {
                 vendaId: novaVenda.id,
             },
         });
+
+        await db.estoque.update({
+            where: {
+                id: vendaAtual.estoque.id
+            },
+            data:{
+                quantidade: vendaAtual.estoque.quantidade - vendaAtual.quantity
+            },
+        })
     }
+
+    revalidatePath(paths.estoque());
 }
 
 export const buscarNomeClientes = async () => {
