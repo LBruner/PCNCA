@@ -22,8 +22,8 @@ const CriarVendaCheckout: React.FC<CriarVendaCheckoutFormProps> = (
         <div className={'mx-2 mt-6 flex flex-col gap-6'}>
             <p className={'text-xl font-normal'}>Selecione o cliente para entrega</p>
             <Autocomplete onSelectionChange={(key) => setSelectedClienteId(key as any)} size={'sm'} label={'Cliente'}>
-                {clientes.map((cliente) => <AutocompleteItem
-                    key={cliente.pessoas[0].pessoaJuridica!.id}>{cliente.pessoas[0].pessoaJuridica!.razaoSocial}</AutocompleteItem>)}
+                {clientes[0].pessoas.map((cliente) => <AutocompleteItem
+                    key={cliente.pessoaJuridica!.id}>{cliente.pessoaJuridica!.razaoSocial}</AutocompleteItem>)}
             </Autocomplete>
             <div className={'flex flex-col gap-4'}>
                 <p className={'text-xl font-normal'}>Selecione o método de pagamento</p>

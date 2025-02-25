@@ -12,7 +12,8 @@ import paths from "@/paths";
 
 export type VendasAgrupadas = HistoricoEstoque & {
     venda: Venda & {
-        pessoas: (Pessoa & { pessoa: Pessoa &  { pessoaJuridica?: PessoaJuridica | null } } )[],
+        pessoas: (Pessoa & { pessoa: Pessoa & { pessoaJuridica?: PessoaJuridica | null } })[],
+        estoques: (Estoque & { estoque: Estoque })[],
     }
 }
 

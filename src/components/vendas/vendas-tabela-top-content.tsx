@@ -4,49 +4,40 @@ import React from "react";
 import {Button, DateRangePicker, DateValue, Input, ModalContent, RangeValue, useDisclosure} from "@nextui-org/react";
 import {SearchIcon} from "@nextui-org/shared-icons";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
-import VendasTopContentDropDown from "@/components/vendas/vendas-top-content-dropdown";
 import {I18nProvider} from "@react-aria/i18n";
 import {DownloadIcon} from "@radix-ui/react-icons";
 import {Modal, ModalBody, ModalFooter, ModalHeader} from "@nextui-org/modal";
 import {GoFilter} from "react-icons/go";
+import {FilterCollection} from "@/models/shared/FilterCollection";
 
-export type SelectItem = {
-    name: string;
-    uid: string;
-};
 
 interface TabelaTopContentProps {
-    statusFilter: string | string[];
-    setStatusFilter: (keys: string | string[]) => void;
-    priceFilter: string | string[];
-    setPriceFilter: (keys: string | string[]) => void;
-    stockFilter: string | string[];
-    setStockFilter: (keys: string | string[]) => void;
-    categoryFilter: string | string[];
-    setCategoryFilter: (keys: string | string[]) => void;
+    clientesFilter: string | string[];
+    setClientesFilter: (keys: string | string[]) => void;
+    produtosFilter: string | string[];
+    setProdutosFilter: (keys: string | string[]) => void;
+    produtosFilterCollection: FilterCollection[]
+    clientesFilterCollection: FilterCollection[]
     filterValue: string;
     itemsLenght: number;
     hasSearchFilter: boolean;
     onSearchChange: (value: string) => void;
     onClear: () => void;
-    clientesOptions: SelectItem[]
-    statusOptions: SelectItem[],
     datesRange: RangeValue<DateValue>,
     setDatesRange: (range: RangeValue<DateValue>) => void;
 }
 
 const VendasTabelaTopContent: React.FC<TabelaTopContentProps> = (
     {
-        categoryFilter,
-        setCategoryFilter,
-        setStatusFilter,
-        statusFilter,
+        clientesFilter,
+        setClientesFilter,
+        clientesFilterCollection,
         filterValue,
-        stockFilter,
+        produtosFilter,
+        setProdutosFilter,
+        produtosFilterCollection,
         onSearchChange,
         onClear,
-        clientesOptions,
-        statusOptions,
         setDatesRange,
     }
 ) => {
@@ -88,19 +79,22 @@ const VendasTabelaTopContent: React.FC<TabelaTopContentProps> = (
                                 <ModalHeader className="flex flex-col gap-1">Filtrar conteúdo</ModalHeader>
                                 <ModalBody>
                                     <div className="flex flex-col justify-center gap-8 items-center">
-                                        <VendasTopContentDropDown collection={clientesOptions}
-                                                                  label={'Cliente'} width={size}
-                                                                  filterStatus={categoryFilter}
-                                                                  setFilterStatus={setCategoryFilter}
+                                        <TopContentDropDown collection={clientesFilterCollection}
+                                                                  label={'Clientes'} width={size}
+                                                                  filterStatus={clientesFilter}
+                                                                  setFilterStatus={setClientesFilter}
                                                                   allSelectedLabel={'Todos Clientes'}
                                                                   multipleSelectedLabel={'Vários Clientes'}/>
-                                        <TopContentDropDown
-                                            collection={statusOptions} label={'Status'}
-                                            width={size}
-                                            filterStatus={statusFilter} setFilterStatus={setStatusFilter}
-                                            multipleSelectedLabel={'Vários Status'} allSelectedLabel={'Todos Status'}/>
-                                        <I18nProvider locale="pt-BR">
+                                        <TopContentDropDown collection={produtosFilterCollection}
+                                                                  label={'Produtos'} width={size}
+                                                                  filterStatus={produtosFilter}
+                                                                  setFilterStatus={setProdutosFilter}
+                                                                  allSelectedLabel={'Todos Produtos'}
+                                                                  multipleSelectedLabel={'Vários Produtos'}/>
+                                     <I18nProvider locale="pt-BR">
                                             <DateRangePicker
+                                                radius={'md'}
+                                                fullWidth={true}
                                                 label={'Data de início e fim'}
                                                 labelPlacement={'outside'}
                                                 className="max-w-xs"
@@ -122,17 +116,12 @@ const VendasTabelaTopContent: React.FC<TabelaTopContentProps> = (
         );
     }, [
         filterValue,
-        statusFilter,
-        stockFilter,
-        categoryFilter,
-        clientesOptions,
+        clientesFilter,
+        produtosFilter,
+        clientesFilterCollection,
         isOpen,
-        onOpen,
-        setCategoryFilter,
-        setDatesRange,
-        setStatusFilter,
+        setClientesFilter,
         onClear,
-        statusOptions,
         onSearchChange,
         onOpenChange
     ]))

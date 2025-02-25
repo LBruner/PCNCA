@@ -25,6 +25,6 @@ export const getPublicacaoData = (mostrarHorario?: boolean,data?: string, ) => {
     const horas = String(dataAtual.getHours()).padStart(2, '0');
     const minutos = String(dataAtual.getMinutes()).padStart(2, '0');
 
-    return `${dia}/${mes}/${ano} ${mostrarHorario ? `às ${horas}:${minutos}h.` : ''}`;
+    return `${dia}/${mes}/${ano} ${mostrarHorario ? ` ${horas}:${minutos}` : ''}`;
 };
 
