@@ -8,27 +8,28 @@ import {Spinner} from "@nextui-org/react";
 
 interface VendasGraficoLineProps {
     produtosFilter: string | string[];
+    clientesFilter: string | string[];
 }
 
-const VendasGraficoLine: React.FC<VendasGraficoLineProps> = ({produtosFilter}) => {
+const VendasGraficoLine: React.FC<VendasGraficoLineProps> = ({produtosFilter, clientesFilter}) => {
     const [chartData, setChartData] = useState<LineChartData>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const containerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() =>{
-        fetchChartData(produtosFilter);
-    }, [produtosFilter]);
+    useEffect(() => {
+        fetchChartData(produtosFilter, clientesFilter).then();
+    }, [produtosFilter, clientesFilter]);
 
-    const fetchChartData = async (filter: string | string[]) => {
+    const fetchChartData = async (produtoFilter: string | string[], clientesFilter: string | string[]) => {
         setIsLoading(true);
 
         let newChartData;
-        if (filter === 'all') {
-            newChartData = await getDadosGraficoLine([]);
-        } else {
-            newChartData = await getDadosGraficoLine(produtosFilter as string[]);
-        }
+
+        const produtosArray = produtoFilter === 'all' ? [] : Array.isArray(produtoFilter) ? produtoFilter : [produtoFilter];
+        const clientesArray = clientesFilter === 'all' ? [] : Array.isArray(clientesFilter) ? clientesFilter : [clientesFilter];
+
+        newChartData = await getDadosGraficoLine(produtosArray, clientesArray);
 
         setChartData(newChartData);
         setIsLoading(false);

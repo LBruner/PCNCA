@@ -9,6 +9,7 @@ import {Spinner} from '@nextui-org/react';
 
 interface VendasGraficoPieProps {
     produtosFilter: string | string[];
+    clientesFilter: string | string[];
 }
 
 const StyleSubtitle = styled('text')(({theme}) => ({
@@ -46,24 +47,23 @@ const PieCenterLabel = ({valorTotal}: { valorTotal: string }) => {
     );
 };
 
-const VendasGraficoPie: React.FC<VendasGraficoPieProps> = ({produtosFilter}) => {
+const VendasGraficoPie: React.FC<VendasGraficoPieProps> = ({produtosFilter, clientesFilter}) => {
     const [chartData, setChartData] = useState<PieChartData>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        fetchChartData(produtosFilter);
-    }, [produtosFilter]);
+        fetchChartData(produtosFilter,clientesFilter);
+    }, [produtosFilter, clientesFilter]);
 
-    const fetchChartData = async (filter: string | string[]) => {
-        console.log(produtosFilter)
+    const fetchChartData = async (produtoFilter: string | string[], clientesFilter: string | string[]) => {
         setIsLoading(true);
 
         let newChartData;
-        if (filter === 'all') {
-            newChartData = await getDadosGraficoPie([]);
-        } else {
-            newChartData = await getDadosGraficoPie(filter as string[]);
-        }
+
+        const produtosArray = produtoFilter === 'all' ? [] : Array.isArray(produtoFilter) ? produtoFilter : [produtoFilter];
+        const clientesArray = clientesFilter === 'all' ? [] : Array.isArray(clientesFilter) ? clientesFilter : [clientesFilter];
+
+        newChartData = await getDadosGraficoPie(produtosArray, clientesArray);
 
         setChartData(newChartData);
         setIsLoading(false);

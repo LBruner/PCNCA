@@ -8,6 +8,7 @@ import {Estoque} from "@prisma/client";
 import VendasGraficoLine from "@/components/vendas/graficos/vendas-grafico-line";
 import VendasGraficoPie from "@/components/vendas/graficos/vendas-grafico-pie";
 import TabelaVendas from "@/components/vendas/tabela/TabelaVendas";
+import VendasGraficoBar from "@/components/vendas/graficos/vendas-grafico-bar";
 
 interface VendasPageBodyProps {
     clientes: CategoriaPessoaComEmpresa[];
@@ -17,6 +18,7 @@ interface VendasPageBodyProps {
 
 const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produtos}) => {
     const [produtosFilter, setProdutosFilter] = React.useState<string | string[]>("all");
+    const [clientesFilter, setClientesFilter] = React.useState<string | string[]>("all");
 
     const clientesFilterCollection: FilterCollection[] = clientes[0].pessoas.map((cliente) => ({
         name: cliente.pessoaJuridica?.razaoSocial!,
@@ -29,22 +31,23 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
     }));
 
     return (
-        <div className={'flex flex-col justify-center items-center'}>
-            <div className={'w-9/12 justify-center items-center grid grid-cols-2 grid-rows-2 gap-4 mt-32'}>
+        <div className={'flex flex-col items-center gap-6'}>
+            <div className={'w-9/12 justify-center items-center grid grid-cols-2 grid-rows-2 gap-4'}>
                 <div className={'h-64 border rounded p-4 col-start-1 row-start-1'}>
-                    <VendasGraficoPie produtosFilter={produtosFilter}/>
+                    <VendasGraficoPie clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
                 </div>
-                {/*    <div className={'h-64 border rounded p-4 col-start-2 row-start-1'}>*/}
-                {/*        <p className={'font-bold text-lg'}>Atividade de Todos Produtos</p>*/}
-                {/*        <VendasGraficoBar chartData={barChartData}/>*/}
-                {/*    </div>*/}
+                    <div className={'h-64 border rounded p-4 col-start-2 row-start-1'}>
+                        <VendasGraficoBar clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
+                    </div>
                 <div className={'border rounded px-4 col-span-2 row-start-2'}>
-                    <VendasGraficoLine produtosFilter={produtosFilter}/>
+                    <VendasGraficoLine clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
                 </div>
             </div>
             <TabelaVendas
                 produtosFilter={produtosFilter}
                 setProdutosFilter={setProdutosFilter}
+                clientesFilter={clientesFilter}
+                setClientesFilter={setClientesFilter}
                 produtosFilterCollection={produtosFilterCollection}
                 clientesFilterCollection={clientesFilterCollection}
                 vendas={vendas}/>

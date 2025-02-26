@@ -8,7 +8,7 @@ import {VendaComDados} from "@/components/vendas/criação/CriarVendaForm";
 import {Estoque, HistoricoEstoque, Pessoa, PessoaJuridica, Venda} from "@prisma/client";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
-import {LineChartData, PieChartData} from "@/models/graficos/charts";
+import {BarChartData, LineChartData, PieChartData} from "@/models/graficos/charts";
 
 export type VendasAgrupadas = HistoricoEstoque & {
     venda: Venda & {
@@ -149,56 +149,95 @@ export async function criarVenda(vendas: VendaComDados): Promise<void> {
 }
 
 
-export async function getDadosGraficoPie(filter: string[]): Promise<PieChartData> {
+export async function getDadosGraficoPie(
+    produtosFilter: string[],
+    clientesFilter: string[]
+): Promise<PieChartData> {
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) return [];
 
     let vendas: any[];
 
-    if (filter.length > 0) {
-        vendas = await db.historicoEstoque.findMany({
-            where: {
-                comprador: false,
-                usuarioId: session.user.id,
-                estoque: {
-                    produto: {
-                        in: filter
-                    }
-                }
-            },
-            include: {
-                estoque: true,
-            }
-        });
-    } else {
-        vendas = await db.historicoEstoque.findMany({
-            where: {
-                comprador: false,
-                usuarioId: session.user.id,
-            },
-            include: {
-                estoque: true,
-            }
-        });
-    }
+    // Base filter for the user and non-buyer transactions
+    const baseFilter = {
+        comprador: false,
+        usuarioId: session.user.id,
+    };
 
-    // Step 1: Group by product and sum valorAlter
-    const groupedData = vendas.reduce((acc, item) => {
+    // Filter for produtos
+    const produtoFilter = produtosFilter.length > 0 ? {
+        estoque: {
+            produto: {
+                in: produtosFilter,
+            },
+        },
+    } : {};
+
+    // Filter for clientes
+    const clienteFilter = clientesFilter.length > 0 ? {
+        venda: {
+            pessoas: {
+                some: {
+                    pessoa: {
+                        pessoaJuridica: {
+                            razaoSocial: {
+                                in: clientesFilter,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    } : {};
+
+    // Combine all filters
+    const whereClause = {
+        ...baseFilter,
+        ...produtoFilter,
+        ...clienteFilter,
+    };
+
+    // Fetch vendas with the combined filters
+    vendas = await db.historicoEstoque.findMany({
+        where: whereClause,
+        include: {
+            estoque: true,
+            venda: {
+                include: {
+                    pessoas: {
+                        include: {
+                            pessoa: {
+                                include: {
+                                    pessoaJuridica: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    // Group data by product and sum valorAlter
+    const productDataMap = vendas.reduce<Record<string, number>>((acc, item) => {
         const product = item.estoque.produto;
         if (!acc[product]) {
-            acc[product] = 0; // Initialize if the product doesn't exist
+            acc[product] = 0;
         }
-        acc[product] += item.valorAlter; // Sum valorAlter for the product
+        acc[product] += item.valorAlter;
         return acc;
     }, {});
 
-// Step 2: Transform into PieChartData format
-    return Object.entries(groupedData).map(([product, total]) => ({
-        id: product, // Use product name as id
-        label: product, // Use product name as label
-        value: total // Total units sold
-    })) as unknown as Promise<PieChartData>;
+    // Transform into PieChartData format
+    const data = Object.entries(productDataMap).map(([product, total]) => ({
+        id: product,
+        label: product,
+        value: total,
+    }));
+
+    console.log(data);
+    return data;
 }
 
 // Helper function to get the month name from a Date object
@@ -211,39 +250,84 @@ const getMonthName = (date: Date): string => {
     return monthNames[date.getMonth()];
 };
 
-export async function getDadosGraficoLine(filter: string[]): Promise<LineChartData> {
+const getShortMonthName = (date: Date): string => {
+    const monthNames = [
+        'Jan', 'Fev', 'Mar', 'Abr',
+        'Mai', 'Jun', 'Jul', 'Ago',
+        'Set', 'Out', 'Nov', 'Dez'
+    ];
+    return monthNames[date.getMonth()];
+};
+
+export async function getDadosGraficoLine(
+    produtosFilter: string[],
+    clientesFilter: string[]
+): Promise<LineChartData> {
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) throw new Error();
 
     let vendas: any[];
 
-    if (filter.length > 0) {
-        vendas = await db.historicoEstoque.findMany({
-            where: {
-                comprador: false,
-                usuarioId: session.user.id,
-                estoque: {
-                    produto: {
-                        in: filter,
+    // Base filter for the user and non-buyer transactions
+    const baseFilter = {
+        comprador: false,
+        usuarioId: session.user.id,
+    };
+
+    // Filter for produtos
+    const produtoFilter = produtosFilter.length > 0 ? {
+        estoque: {
+            produto: {
+                in: produtosFilter,
+            },
+        },
+    } : {};
+
+    // Filter for clientes
+    const clienteFilter = clientesFilter.length > 0 ? {
+        venda: {
+            pessoas: {
+                some: {
+                    pessoa: {
+                        pessoaJuridica: {
+                            razaoSocial: {
+                                in: clientesFilter,
+                            },
+                        },
                     },
                 },
             },
-            include: {
-                estoque: true,
+        },
+    } : {};
+
+    // Combine all filters
+    const whereClause = {
+        ...baseFilter,
+        ...produtoFilter,
+        ...clienteFilter,
+    };
+
+    // Fetch vendas with the combined filters
+    vendas = await db.historicoEstoque.findMany({
+        where: whereClause,
+        include: {
+            estoque: true,
+            venda: {
+                include: {
+                    pessoas: {
+                        include: {
+                            pessoa: {
+                                include: {
+                                    pessoaJuridica: true,
+                                },
+                            },
+                        },
+                    },
+                },
             },
-        });
-    } else {
-        vendas = await db.historicoEstoque.findMany({
-            where: {
-                comprador: false,
-                usuarioId: session.user.id,
-            },
-            include: {
-                estoque: true,
-            },
-        });
-    }
+        },
+    });
 
     // Define all months
     const monthNames = [
