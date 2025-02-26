@@ -1,14 +1,14 @@
 'use server';
 
-import {sales} from "@/dummy_data/sales";
 import {db} from "@/db";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/app/AuthOptions";
 import {getUserId} from "@/actions/produto";
 import {VendaComDados} from "@/components/vendas/criação/CriarVendaForm";
-import {HistoricoEstoque, Pessoa, PessoaJuridica, Venda} from "@prisma/client";
+import {Estoque, HistoricoEstoque, Pessoa, PessoaJuridica, Venda} from "@prisma/client";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
+import {LineChartData, PieChartData} from "@/models/graficos/charts";
 
 export type VendasAgrupadas = HistoricoEstoque & {
     venda: Venda & {
@@ -30,6 +30,11 @@ export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
         include: {
             venda: {
                 include: {
+                    estoques: {
+                        include: {
+                            estoque: true
+                        }
+                    },
                     pessoas: {
                         include: {
                             pessoa: {
@@ -134,7 +139,7 @@ export async function criarVenda(vendas: VendaComDados): Promise<void> {
             where: {
                 id: vendaAtual.estoque.id
             },
-            data:{
+            data: {
                 quantidade: vendaAtual.estoque.quantidade - vendaAtual.quantity
             },
         })
@@ -143,53 +148,141 @@ export async function criarVenda(vendas: VendaComDados): Promise<void> {
     revalidatePath(paths.estoque());
 }
 
-export const buscarNomeClientes = async () => {
-    // const session = await getServerSession();
-    //
-    // if (!session) return;
-    //
-    // const sellerId = session.user.id;
-    //
-    // const sales = await db.sale.findMany({
-    //     where: {
-    //         sellerId: sellerId,  // Filtra por vendedor específico
-    //     },
-    // });
 
+export async function getDadosGraficoPie(filter: string[]): Promise<PieChartData> {
+    const session = await getServerSession(authOptions);
 
-    return Array.from(new Set(sales.map(sale => sale.customerName)));
+    if (!session?.user?.email) return [];
+
+    let vendas: any[];
+
+    if (filter.length > 0) {
+        vendas = await db.historicoEstoque.findMany({
+            where: {
+                comprador: false,
+                usuarioId: session.user.id,
+                estoque: {
+                    produto: {
+                        in: filter
+                    }
+                }
+            },
+            include: {
+                estoque: true,
+            }
+        });
+    } else {
+        vendas = await db.historicoEstoque.findMany({
+            where: {
+                comprador: false,
+                usuarioId: session.user.id,
+            },
+            include: {
+                estoque: true,
+            }
+        });
+    }
+
+    // Step 1: Group by product and sum valorAlter
+    const groupedData = vendas.reduce((acc, item) => {
+        const product = item.estoque.produto;
+        if (!acc[product]) {
+            acc[product] = 0; // Initialize if the product doesn't exist
+        }
+        acc[product] += item.valorAlter; // Sum valorAlter for the product
+        return acc;
+    }, {});
+
+// Step 2: Transform into PieChartData format
+    return Object.entries(groupedData).map(([product, total]) => ({
+        id: product, // Use product name as id
+        label: product, // Use product name as label
+        value: total // Total units sold
+    })) as unknown as Promise<PieChartData>;
 }
 
-export async function getDadosGraficoPie() {
-    // const salesData = await db.saleItem.groupBy({
-    //     by: ['productId'],
-    //     _sum: {
-    //         quantity: true,
-    //         totalPrice: true,
-    //     },
-    // })
-    //
-    // const salesWithProductNames = await Promise.all(
-    //     salesData.map(async (item) => {
-    //         const product = await db.product.findUnique({
-    //             where: { id: item.productId },
-    //             select: { name: true },
-    //         })
-    //         return {
-    //             productName: product?.name,
-    //             totalRevenue: item._sum.totalPrice,
-    //         }
-    //     })
-    // )
-    //
-    // return salesWithProductNames
-
-    return [
-        {productName: 'Café', totalRevenue: 785},
-        {productName: 'Laranja', totalRevenue: 2585},
-        {productName: 'Soja', totalRevenue: 450},
-        {productName: 'Açúcar', totalRevenue: 1580}
+// Helper function to get the month name from a Date object
+const getMonthName = (date: Date): string => {
+    const monthNames = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril',
+        'Maio', 'Junho', 'Julho', 'Agosto',
+        'Setembro', 'Outubro', 'Novembro', 'Dezembro'
     ];
+    return monthNames[date.getMonth()];
+};
+
+export async function getDadosGraficoLine(filter: string[]): Promise<LineChartData> {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.email) throw new Error();
+
+    let vendas: any[];
+
+    if (filter.length > 0) {
+        vendas = await db.historicoEstoque.findMany({
+            where: {
+                comprador: false,
+                usuarioId: session.user.id,
+                estoque: {
+                    produto: {
+                        in: filter,
+                    },
+                },
+            },
+            include: {
+                estoque: true,
+            },
+        });
+    } else {
+        vendas = await db.historicoEstoque.findMany({
+            where: {
+                comprador: false,
+                usuarioId: session.user.id,
+            },
+            include: {
+                estoque: true,
+            },
+        });
+    }
+
+    // Define all months
+    const monthNames = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril',
+        'Maio', 'Junho', 'Julho', 'Agosto',
+        'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+
+    // Initialize a map to store summed values for each product by month
+    const productDataMap: Record<string, Record<string, number>> = {};
+
+    // Iterate over the vendas data
+    vendas.forEach((item) => {
+        const date = new Date(item.dataAlter); // Convert dataAlter to a Date object
+        const month = getMonthName(date); // Get the month name
+        const product = item.estoque.produto; // Get the product name
+
+        // Initialize the product in the map if it doesn't exist
+        if (!productDataMap[product]) {
+            productDataMap[product] = {};
+            monthNames.forEach((monthName) => {
+                productDataMap[product][monthName] = 0; // Initialize all months to 0
+            });
+        }
+
+        // Add the valorAlter to the corresponding month
+        productDataMap[product][month] += item.valorAlter;
+    });
+
+    // Transform the map into LineChartData format
+    const datasets = Object.entries(productDataMap).map(([product, monthlyData]) => ({
+        label: product,
+        data: monthNames.map((month) => monthlyData[month]), // Ensure data is in the correct order
+    }));
+
+    return {
+        xLabels: monthNames,
+        datasets,
+    };
 }
 
 export async function getMonthlySales() {
@@ -228,138 +321,6 @@ export async function getMonthlySales() {
             'Abr', 'Mai', 'Jun',
             'Jul', 'Ago', 'Set',
             'Out', 'Nov', 'Dez'
-        ]
-    }
-}
-
-
-export async function getTopProductsMonthlySales() {
-    // Primeiro, encontramos os 4 produtos mais vendidos
-    // const topProducts = await db.saleItem.groupBy({
-    //     by: ['productId'],
-    //     _sum: {
-    //         quantity: true,
-    //     },
-    //     orderBy: {
-    //         _sum: {
-    //             quantity: 'desc',
-    //         },
-    //     },
-    //     take: 4,  // Limitamos aos 4 produtos mais vendidos
-    // });
-    //
-    // const topProductIds = topProducts.map(p => p.productId);
-    //
-    // // Agora, buscamos as vendas mensais para esses produtos
-    // const monthlySales = await db.saleItem.groupBy({
-    //     by: ['productId', 'saleId'],
-    //     _sum: {
-    //         quantity: true,
-    //         unitPrice: true,
-    //     },
-    //     where: {
-    //         productId: {
-    //             in: topProductIds,
-    //         },
-    //         sale: {
-    //             date: {
-    //                 gte: new Date(new Date().getFullYear(), 0, 1), // Filtra a partir do começo do ano
-    //             },
-    //         },
-    //     },
-    //     orderBy: [
-    //         { productId: 'asc' },
-    //         // { sale: { date: 'asc' } },
-    //     ],
-    // });
-    //
-    // // Processamento dos dados para organizar as vendas mensais
-    // const productSales = {};
-    //
-    // for (const sale of monthlySales) {
-    //     const productId = sale.productId;
-    //
-    //     // Obtém o nome do produto
-    //     const product = await db.product.findUnique({
-    //         where: {
-    //             id: productId,
-    //         },
-    //         select: {
-    //             name: true,
-    //         },
-    //     });
-    //
-    //     // Extraí o mês da data da venda
-    //     const saleDate = await db.sale.findUnique({
-    //         where: {
-    //             id: sale.saleId,
-    //         },
-    //         select: {
-    //             date: true,
-    //         },
-    //     });
-    //
-    //     const month = new Date(saleDate.date).getMonth(); // Extrai o mês da venda
-    //
-    //     // Inicializa o array de vendas mensais para o produto, se necessário
-    //     if (!productSales[productId]) {
-    //         productSales[productId] = {
-    //             name: product?.name || `Produto ${productId}`,
-    //             sales: Array(12).fill(0),
-    //         };
-    //     }
-    //
-    //     // Calcula o total de vendas (quantidade * preço unitário)
-    //     const totalSales = sale._sum.quantity * sale._sum.unitPrice;
-    //
-    //     // Adiciona as vendas ao mês correto (lembrando que o mês começa em 0)
-    //     productSales[productId].sales[month] += Number(totalSales.toFixed(2));
-    // }
-    //
-    // // Configuração do gráfico
-    // const xLabels = [
-    //     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    //     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-    // ];
-    //
-    // const datasets = Object.entries(productSales).map(([productId, { name, sales }], index) => ({
-    //     label: name,  // Nome do produto no rótulo
-    //     data: sales,
-    // }));
-    //
-    // return { xLabels, datasets };
-
-    return {
-        xLabels: [
-            'Janeiro', 'Fevereiro',
-            'Março', 'Abril',
-            'Maio', 'Junho',
-            'Julho', 'Agosto',
-            'Setembro', 'Outubro',
-            'Novembro', 'Dezembro'
-        ],
-        datasets: [
-            {
-                label: 'Leite', data: [0, 30, 0, 0, 0,
-                    0, 0, 0, 0, 0,
-                    0, 0
-                ]
-            },
-            {
-                label: 'Soja', data: [50, 90, 90, 135, 0,
-                    200, 200, 90, 0, 0,
-                    0, 0]
-            },
-            {
-                label: 'Açúcar', data: [160, 0, 160, 220, 90,
-                    310, 180, 340, 120, 0,
-                    0, 0]
-            },
-            {
-                label: 'Arroz', data: [100, 340, 180, 340, 470,
-                    200, 225, 350, 380, 0,
-                    0, 0]
-            }
         ]
     }
 }
