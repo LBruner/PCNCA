@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import {CategoriaPessoaComEmpresa} from "@/actions/clientes";
 import {VendasAgrupadas} from "@/actions/vendas";
@@ -9,6 +9,22 @@ import VendasGraficoLine from "@/components/vendas/graficos/vendas-grafico-line"
 import VendasGraficoPie from "@/components/vendas/graficos/vendas-grafico-pie";
 import TabelaVendas from "@/components/vendas/tabela/TabelaVendas";
 import VendasGraficoBar from "@/components/vendas/graficos/vendas-grafico-bar";
+import {
+    Button,
+    DateRangePicker,
+    DateValue,
+    ModalContent,
+    RangeValue, Spinner,
+    Tab,
+    Tabs,
+    useDisclosure
+} from "@nextui-org/react";
+import {CiViewTable} from "react-icons/ci";
+import {CgMenuGridO} from "react-icons/cg";
+import {GoFilter} from "react-icons/go";
+import {Modal, ModalBody, ModalFooter, ModalHeader} from "@nextui-org/modal";
+import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
+import {I18nProvider} from "@react-aria/i18n";
 
 interface VendasPageBodyProps {
     clientes: CategoriaPessoaComEmpresa[];
@@ -16,9 +32,25 @@ interface VendasPageBodyProps {
     produtos: Estoque[];
 }
 
+const size = 'w-[80%]';
+
 const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produtos}) => {
     const [produtosFilter, setProdutosFilter] = React.useState<string | string[]>("all");
     const [clientesFilter, setClientesFilter] = React.useState<string | string[]>("all");
+    const [selectedTab, setSelectedTab] = React.useState("geral");
+    const [datesRange, setDatesRange] = useState<RangeValue<DateValue>>();
+
+
+    console.log(produtosFilter)
+    const [isLoadingCharts, setIsLoadingCharts] = React.useState(true);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsLoadingCharts(false)
+        }, 1000)
+    }, [])
+
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     const clientesFilterCollection: FilterCollection[] = clientes[0].pessoas.map((cliente) => ({
         name: cliente.pessoaJuridica?.razaoSocial!,
@@ -27,30 +59,120 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
 
     const produtosFilterCollection: FilterCollection[] = produtos.map((produto) => ({
         name: produto.produto,
-        uid: produto.id.toString()
+        uid: produto.id.toString(),
     }));
 
     return (
-        <div className={'flex flex-col items-center gap-6'}>
-            <div className={'w-9/12 justify-center items-center grid grid-cols-2 grid-rows-2 gap-4'}>
-                <div className={'h-64 border rounded p-4 col-start-1 row-start-1'}>
-                    <VendasGraficoPie clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
+        <div className={'flex flex-col w-full gap-8 min-h-[800px]'}>
+            <div className={'flex justify-between items-center'}>
+                <div className={'flex flex-col w-full gap-4 justify-start pl-24'}>
+                    <p className={'text-3xl font-bold'}>Dashboard de Vendas</p>
+                    <Tabs color={'primary'} size={'lg'} selectedKey={selectedTab}
+                          onSelectionChange={(key) => setSelectedTab(key as string)}> aria-label="Options"
+                        color="primary"
+                        <Tab
+                            key="geral"
+                            title={
+                                <div className="flex items-center space-x-2">
+                                    <CgMenuGridO/>
+                                    <span>Visão Geral</span>
+                                </div>
+                            }
+                        >
+                        </Tab>
+                        <Tab
+                            key="detalhes"
+                            title={
+                                <div className="flex items-center space-x-2">
+                                    <CiViewTable/>
+                                    <span>Detalhes</span>
+                                </div>
+                            }
+                        >
+                        </Tab>
+                    </Tabs>
                 </div>
-                    <div className={'h-64 border rounded p-4 col-start-2 row-start-1'}>
-                        <VendasGraficoBar clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
-                    </div>
-                <div className={'border rounded px-4 col-span-2 row-start-2'}>
-                    <VendasGraficoLine clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
+                <div className={'pr-48'}>
+                    <Button variant={'bordered'} startContent={<GoFilter size={20}/>} onPress={onOpen}
+                            className="p-5 font-bold">Filtrar</Button>
                 </div>
             </div>
-            <TabelaVendas
-                produtosFilter={produtosFilter}
-                setProdutosFilter={setProdutosFilter}
-                clientesFilter={clientesFilter}
-                setClientesFilter={setClientesFilter}
-                produtosFilterCollection={produtosFilterCollection}
-                clientesFilterCollection={clientesFilterCollection}
-                vendas={vendas}/>
+
+            <div className={'w-full flex justify-center'}>
+                {selectedTab == 'geral' &&
+                    <div className={' justify-center items-center grid grid-cols-2 grid-rows-2 gap-8'}>
+                        {isLoadingCharts ? <div
+                            className="fixed inset-0 flex items-center justify-center">
+                            <Spinner color={'warning'}/>
+                        </div> : <>
+                            <div className={'h-64 border rounded p-4 col-start-1 row-start-1'}>
+                                <VendasGraficoPie clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
+                            </div>
+                            <div className={'h-64 border rounded p-4 col-start-2 row-start-1'}>
+                                <VendasGraficoBar clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
+                            </div>
+                            <div className={'border rounded px-4 col-span-2 row-start-2'}>
+                                <VendasGraficoLine clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
+                            </div>
+                        </>}
+                    </div>}
+                {selectedTab == 'detalhes' && <TabelaVendas
+                    dateRange={datesRange!}
+                    setDatesRange={setDatesRange}
+                    produtosFilter={produtosFilter}
+                    setProdutosFilter={setProdutosFilter}
+                    clientesFilter={clientesFilter}
+                    setClientesFilter={setClientesFilter}
+                    produtosFilterCollection={produtosFilterCollection}
+                    clientesFilterCollection={clientesFilterCollection}
+                    vendas={vendas}/>}
+            </div>
+            <Modal
+                draggable={true}
+                isOpen={isOpen}
+                placement={'auto'}
+                onOpenChange={onOpenChange}
+                backdrop={'opaque'}
+            >
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Filtrar conteúdo</ModalHeader>
+                            <ModalBody>
+                                <div className="flex flex-col justify-center gap-8 items-center">
+                                    <TopContentDropDown collection={clientesFilterCollection}
+                                                        label={'Clientes'} width={size}
+                                                        filterStatus={clientesFilter}
+                                                        setFilterStatus={setClientesFilter}
+                                                        allSelectedLabel={'Todos Clientes'}
+                                                        multipleSelectedLabel={'Vários Clientes'}/>
+                                    <TopContentDropDown collection={produtosFilterCollection}
+                                                        label={'Produtos'} width={size}
+                                                        filterStatus={produtosFilter}
+                                                        setFilterStatus={setProdutosFilter}
+                                                        allSelectedLabel={'Todos Produtos'}
+                                                        multipleSelectedLabel={'Vários Produtos'}/>
+                                    {selectedTab == 'detalhes' && <I18nProvider locale="pt-BR">
+                                        <DateRangePicker
+                                            radius={'md'}
+                                            fullWidth={true}
+                                            label={'Data de início e fim'}
+                                            labelPlacement={'outside'}
+                                            className="max-w-xs"
+                                            onChange={setDatesRange}
+                                            disableAnimation={false} size={'md'} variant={'flat'}/>
+                                    </I18nProvider>}
+                                </div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="success" onPress={onClose}>
+                                    Filtrar
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
         </div>
     )
 }

@@ -4,7 +4,6 @@ import React, {useEffect, useRef, useState} from "react";
 import {LineChart} from "@mui/x-charts";
 import {LineChartData} from "@/models/graficos/charts";
 import {getDadosGraficoLine} from "@/actions/vendas";
-import {Spinner} from "@nextui-org/react";
 
 interface VendasGraficoLineProps {
     produtosFilter: string | string[];
@@ -37,7 +36,6 @@ const VendasGraficoLine: React.FC<VendasGraficoLineProps> = ({produtosFilter, cl
 
     if (isLoading || !chartData) {
         return <div className={'w-full h-full flex justify-center items-center'}>
-            <Spinner/>
         </div>;
     }
 
@@ -46,7 +44,7 @@ const VendasGraficoLine: React.FC<VendasGraficoLineProps> = ({produtosFilter, cl
             <LineChart
                 colors={['#FBE38E', '#EA6E1B', 'red', 'blue']}
                 grid={{vertical: true, horizontal: true}}
-                width={1400}
+                width={1500}
                 height={270}
                 slotProps={{
                     legend: {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, {Dispatch, SetStateAction, useState} from "react";
+import React, {Dispatch, SetStateAction} from "react";
 import {
     DateValue,
     RangeValue,
@@ -15,7 +15,6 @@ import {
 import {Chip} from "@nextui-org/chip";
 import VendasTabelaBottomContent from "@/components/vendas/vendas-tabela-bottom-content";
 import {getPublicacaoData} from "@/helpers/noticia/criacao/criar-noticia";
-import VendasTabelaTopContent from "@/components/vendas/vendas-tabela-top-content";
 import {VendasAgrupadas} from "@/actions/vendas";
 import {User} from "@nextui-org/user";
 import {formatToBrazilianCurrency} from "@/helpers";
@@ -35,8 +34,12 @@ interface TabelaVendasProps {
     vendas: VendasAgrupadas[][],
     clientesFilterCollection: FilterCollection[];
     produtosFilterCollection: FilterCollection[];
+    clientesFilter: string | string[];
+    setClientesFilter: Dispatch<SetStateAction<string | string[]>>;
     produtosFilter: string | string[];
     setProdutosFilter: Dispatch<SetStateAction<string | string[]>>;
+    dateRange: RangeValue<DateValue>;
+    setDatesRange: (range: RangeValue<DateValue>) => void;
 }
 
 const TabelaVendas: React.FC<TabelaVendasProps> = (
@@ -44,31 +47,21 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
         vendas,
         clientesFilterCollection,
         produtosFilterCollection,
-        setProdutosFilter,
         produtosFilter,
+        clientesFilter,
     }) => {
-    const [filterValue, setFilterValue] = React.useState("");
-    const [clientesFilter, setClientesFilter] = React.useState<string | string[]>("all");
-    const [dateRange, setDateRange] = useState<RangeValue<DateValue>>();
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
         column: "id",
         direction: "ascending",
     });
 
-    const hasSearchFilter = Boolean(filterValue);
-
     const rowsPerPage = 5;
 
     const [currentPage, setCurrentPage] = React.useState(1);
 
+    console.log(produtosFilter)
     const filteredItems = React.useMemo(() => {
         let filteredVendas = [...vendas];
-
-        if (hasSearchFilter) {
-            filteredVendas = vendas.filter(sale => sale[0].venda.estoques.some(item => {
-                return item.estoque.produto.toLowerCase().includes(filterValue.toLowerCase());
-            }));
-        }
 
         if (clientesFilter !== "all" && Array.from(clientesFilterCollection).length !== clientesFilter.length) {
             let newFilteredVendas = [];
@@ -94,10 +87,18 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
             for (let venda of filteredVendas) {
                 let nestedFilteredVendas = [];
                 for (let nestedVenda of venda) {
-                    for (let produtos of nestedVenda.venda.estoques) {
-                        if (produtos.estoque.produto == produtosFilter) {
-                            nestedFilteredVendas.push(nestedVenda);
-                        }
+                    console.log("nestedVenda.venda.estoques:", nestedVenda.venda.estoques); // Debugging
+
+                    // Check if any of the produtos in nestedVenda match any item in produtosFilter
+                    const hasMatchingProduto = nestedVenda.venda.estoques.some((produto) =>
+                    // @ts-ignore
+                        produtosFilter.map((p: any) => p.toLowerCase().trim()).includes(
+                            produto.estoque.produto.toLowerCase().trim()
+                        )
+                    );
+
+                    if (hasMatchingProduto) {
+                        nestedFilteredVendas.push(nestedVenda);
                     }
                 }
                 if (nestedFilteredVendas.length > 0) {
@@ -108,17 +109,10 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
             filteredVendas = newFilteredVendas;
         }
 
-        if (dateRange) {
-            filteredVendas = filteredVendas.filter((venda) => {
-                const productDate = new Date(venda[0].venda.dataVenda).toISOString().split('T')[0];
-                const filteredInitialDate = new Date(dateRange.start.year, dateRange.start.month - 1, dateRange.start.day).toISOString().split('T')[0];
-                const filteredEndingDate = new Date(dateRange.end.year, dateRange.end.month - 1, dateRange.end.day).toISOString().split('T')[0];
-                return productDate >= filteredInitialDate && productDate <= filteredEndingDate;
-            });
-        }
-
         return filteredVendas;
-    }, [vendas, filterValue, produtosFilter,clientesFilter, dateRange, hasSearchFilter]);
+    }, [vendas, produtosFilter, clientesFilter]);
+
+    console.log(filteredItems)
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -179,46 +173,15 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
         }
     }, []);
 
-    const onSearchChange = React.useCallback((value: string | null) => {
-        if (value) {
-            setFilterValue(value);
-            setCurrentPage(1);
-        } else {
-            setFilterValue("");
-        }
-    }, []);
-
-    const onClear = React.useCallback(() => {
-        setFilterValue("")
-        setCurrentPage(1)
-    }, [])
-
     return (
-        <div className={'w-11/12'}>
-            <div className={'bg-white rounded-md p-4 mb-4 shadow-md'}>
-                <VendasTabelaTopContent
-                    clientesFilter={clientesFilter}
-                    setClientesFilter={setClientesFilter}
-                    clientesFilterCollection={clientesFilterCollection}
-                    datesRange={dateRange!}
-                    setDatesRange={setDateRange}
-                    hasSearchFilter={hasSearchFilter}
-                    filterValue={filterValue}
-                    onClear={onClear}
-                    onSearchChange={onSearchChange}
-                    itemsLenght={vendas.length}
-                produtosFilter={produtosFilter}
-                    setProdutosFilter={setProdutosFilter}
-                    produtosFilterCollection={produtosFilterCollection}
-                />
-            </div>
+        <div className={'w-5/6'}>
             <Table
                 isStriped={true}
                 isHeaderSticky
                 key={`${sortDescriptor.column}-${sortDescriptor.direction}`}
+                topContentPlacement={'outside'}
                 bottomContentPlacement="outside"
                 bottomContent={<VendasTabelaBottomContent
-                    hasSearchFilter={hasSearchFilter}
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
                     filteredItemsLength={filteredItems.length}
                     totalPagesQuantity={totalPagesQuantity}

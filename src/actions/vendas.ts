@@ -301,11 +301,24 @@ export async function getDadosGraficoLine(
         },
     } : {};
 
+    const currentDate = new Date();
+    const startDate = new Date(currentDate);
+    startDate.setMonth(currentDate.getMonth() - 11); // Go back 11 months to include the current month
+    startDate.setDate(1); // Set to the first day of the month
+    startDate.setHours(0, 0, 0, 0); // Set time to start of the day
+
+    const endDate = new Date(currentDate);
+    endDate.setHours(23, 59, 59, 999); // Set time to end of the day
+
     // Combine all filters
     const whereClause = {
         ...baseFilter,
         ...produtoFilter,
         ...clienteFilter,
+        dataAlter: {
+            gte: startDate, // Greater than or equal to the start of the last 12 months
+            lte: endDate, // Less than or equal to the current date
+        },
     };
 
     // Fetch vendas with the combined filters
@@ -329,12 +342,12 @@ export async function getDadosGraficoLine(
         },
     });
 
-    // Define all months
-    const monthNames = [
-        'Janeiro', 'Fevereiro', 'Março', 'Abril',
-        'Maio', 'Junho', 'Julho', 'Agosto',
-        'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-    ];
+    // Define all months in reverse order (oldest to newest)
+    const monthNames = Array.from({ length: 12 }, (_, i) => {
+        const date = new Date(currentDate);
+        date.setMonth(currentDate.getMonth() - 11 + i); // Calculate the month
+        return getMonthName(date); // Get the month name
+    });
 
     // Initialize a map to store summed values for each product by month
     const productDataMap: Record<string, Record<string, number>> = {};
@@ -364,7 +377,7 @@ export async function getDadosGraficoLine(
     }));
 
     return {
-        xLabels: monthNames,
+        xLabels: monthNames, // Ordered from oldest to newest
         datasets,
     };
 }
@@ -411,11 +424,25 @@ export async function getDadosGraficoBar(
         },
     } : {};
 
+    // Calculate the date range for the last 12 months
+    const currentDate = new Date();
+    const startDate = new Date(currentDate);
+    startDate.setMonth(currentDate.getMonth() - 11); // Go back 11 months to include the current month
+    startDate.setDate(1); // Set to the first day of the month
+    startDate.setHours(0, 0, 0, 0); // Set time to start of the day
+
+    const endDate = new Date(currentDate);
+    endDate.setHours(23, 59, 59, 999); // Set time to end of the day
+
     // Combine all filters
     const whereClause = {
         ...baseFilter,
         ...produtoFilter,
         ...clienteFilter,
+        dataAlter: {
+            gte: startDate, // Greater than or equal to the start of the last 12 months
+            lte: endDate, // Less than or equal to the current date
+        },
     };
 
     // Fetch vendas with the combined filters
@@ -439,12 +466,12 @@ export async function getDadosGraficoBar(
         },
     });
 
-    // Define all months
-    const monthNames = [
-        'Jan', 'Fev', 'Mar', 'Abr',
-        'Mai', 'Jun', 'Jul', 'Ago',
-        'Set', 'Out', 'Nov', 'Dez'
-    ];
+    // Define all months in reverse order (oldest to newest)
+    const monthNames = Array.from({ length: 12 }, (_, i) => {
+        const date = new Date(currentDate);
+        date.setMonth(currentDate.getMonth() - 11 + i); // Calculate the month
+        return getShortMonthName(date); // Get the month name
+    });
 
     // Initialize an array to store summed values for each month
     const uData: number[] = new Array(monthNames.length).fill(0);
@@ -463,53 +490,11 @@ export async function getDadosGraficoBar(
 
     const data: BarChartData = {
         chartData: {
-            xLabels: monthNames,
-            uData,
+            xLabels: monthNames, // Ordered from oldest to newest
+            uData, // Ordered from oldest to newest
         },
     };
 
     console.log(data);
     return data;
 }
-
-export async function getMonthlySales() {
-    //   const monthlySales = await db.$queryRaw`
-    //   SELECT
-    //     EXTRACT(MONTH FROM date) as month,
-    //     SUM(CAST("totalPrice" AS FLOAT)) as total
-    //   FROM "Sale"
-    //   WHERE date >= CURRENT_DATE - INTERVAL '1 year'
-    //   GROUP BY EXTRACT(MONTH FROM date)
-    //   ORDER BY EXTRACT(MONTH FROM date)
-    // `;
-    //
-    //   // Mapeamento de número do mês para abreviação
-    //   const monthAbbreviations = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    //
-    //   // Inicializar arrays com zeros
-    //   const uData = Array(12).fill(0);
-    //   const xLabels = monthAbbreviations.slice();
-    //
-    //   // Preencher uData com os valores reais
-    //   monthlySales.forEach((sale: { month: number; total: number }) => {
-    //       uData[Number(sale.month) - 1] = Number(sale.total.toFixed(2));
-    //   });
-    //
-    //   return { uData, xLabels };
-
-    return {
-        uData: [
-            350, 420, 430, 410,
-            780, 1120, 790, 1260,
-            700, 0, 0, 0
-        ],
-        xLabels: [
-            'Jan', 'Fev', 'Mar',
-            'Abr', 'Mai', 'Jun',
-            'Jul', 'Ago', 'Set',
-            'Out', 'Nov', 'Dez'
-        ]
-    }
-}
-
-

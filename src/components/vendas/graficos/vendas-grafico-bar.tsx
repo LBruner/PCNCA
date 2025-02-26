@@ -5,7 +5,6 @@ import {BarChart} from '@mui/x-charts/BarChart';
 import {getFullMonthName} from '@/helpers/graficos';
 import {BarChartData} from '@/models/graficos/charts';
 import {getDadosGraficoBar} from '@/actions/vendas';
-import {Spinner} from '@nextui-org/react';
 
 interface VendasGraficoBarProps {
     produtosFilter: string | string[];
@@ -37,9 +36,7 @@ const VendasGraficoBar: React.FC<VendasGraficoBarProps> = ({produtosFilter, clie
 
     if (isLoading || !chartData) {
         return (
-            <div className={'w-full h-full flex justify-center items-center'}>
-                <Spinner/>
-            </div>
+            <div></div>
         );
     }
 

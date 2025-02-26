@@ -7,7 +7,6 @@ interface TabelaBottomContentProps {
     totalPagesQuantity: number;
     selectedKeys: string | string[];
     filteredItemsLength: number;
-    hasSearchFilter: boolean;
 }
 
 const VendasTabelaBottomContent: React.FC<TabelaBottomContentProps> = (

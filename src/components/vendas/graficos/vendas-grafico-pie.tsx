@@ -5,7 +5,6 @@ import {PieChart, useDrawingArea} from '@mui/x-charts';
 import {PieChartData} from '@/models/graficos/charts';
 import {styled} from '@mui/material/styles';
 import {getDadosGraficoPie} from '@/actions/vendas';
-import {Spinner} from '@nextui-org/react';
 
 interface VendasGraficoPieProps {
     produtosFilter: string | string[];
@@ -71,7 +70,6 @@ const VendasGraficoPie: React.FC<VendasGraficoPieProps> = ({produtosFilter, clie
 
     if (isLoading || !chartData) {
         return <div className={'w-full h-full flex justify-center items-center'}>
-            <Spinner/>
         </div>;
     }
 
@@ -81,7 +79,7 @@ const VendasGraficoPie: React.FC<VendasGraficoPieProps> = ({produtosFilter, clie
         <div>
             <p className={'font-bold text-lg'}>Vendas por Produtos Selecionados</p>
             <PieChart
-                className={'w-[450px] flex h-[200px]'}
+                className={'w-[400px] flex h-[200px]'}
                 colors={chartColors}
                 slotProps={{
                     legend: {
