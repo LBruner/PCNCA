@@ -12,7 +12,7 @@ const ClimaPage: React.FC = _ => {
             <ProductionProductPicker selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct}/>
             <div className={'h-[800px] w-full relative overflow-hidden  mb-[-105px]'}>
                 <iframe
-                    className="w-full h-[calc(100%+155px)] relative  -top-[155px] overflow-hidden pointer-events-none"
+                    className="w-full h-[calc(100%+155px)] relative -top-[155px] overflow-hidden "
                     src={`https://ourworldindata.org/explorers/global-food?Food=${selectedProduct.name}&Metric=Production&Per+Capita=false&country=USA~DEU~FRA~GBR~BRA~ZAF&hideControls=true&tab=map`}
                     loading="lazy"
                     allow="web-share; clipboard-write"
