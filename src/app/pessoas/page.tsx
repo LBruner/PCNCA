@@ -10,12 +10,12 @@ const PessoasPage: React.FC = async _ => {
     const tiposPessoas = await pegaTodasCategoriasPessoas();
 
     if (pessoas.length == 0) {
-        return <NoData children={
-            <CustomButton
-                title={'Criar Pessoa'}
-                url={paths.createPessoa()} className={'border-transparent bg-warning-500 hover:bg-warning-600 text-white'}/>}
-                       description={'Nenhuma pessoa cadastrada'}
-        />
+        return <NoData
+            description={'Nenhuma pessoa cadastrada'}
+        ><CustomButton
+            title={'Criar Pessoa'}
+            url={paths.createPessoa()} className={'border-transparent bg-warning-500 hover:bg-warning-600 text-white'}/>
+        </NoData>
     }
 
     const tiposPessoasMap = tiposPessoas.map(tipo => {
