@@ -285,6 +285,109 @@ export async function getDadosGraficoLine(filter: string[]): Promise<LineChartDa
     };
 }
 
+export async function getDadosGraficoBar(
+    produtosFilter: string[],
+    clientesFilter: string[]
+): Promise<BarChartData> {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.email) throw new Error();
+
+    let vendas: any[] = [];
+
+    // Base filter for the user and non-buyer transactions
+    const baseFilter = {
+        comprador: false,
+        usuarioId: session.user.id,
+    };
+
+    // Filter for produtos
+    const produtoFilter = produtosFilter.length > 0 ? {
+        estoque: {
+            produto: {
+                in: produtosFilter,
+            },
+        },
+    } : {};
+
+    // Filter for clientes
+    const clienteFilter = clientesFilter.length > 0 ? {
+        venda: {
+            pessoas: {
+                some: {
+                    pessoa: {
+                        pessoaJuridica: {
+                            razaoSocial: {
+                                in: clientesFilter,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    } : {};
+
+    // Combine all filters
+    const whereClause = {
+        ...baseFilter,
+        ...produtoFilter,
+        ...clienteFilter,
+    };
+
+    // Fetch vendas with the combined filters
+    vendas = await db.historicoEstoque.findMany({
+        where: whereClause,
+        include: {
+            estoque: true,
+            venda: {
+                include: {
+                    pessoas: {
+                        include: {
+                            pessoa: {
+                                include: {
+                                    pessoaJuridica: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    // Define all months
+    const monthNames = [
+        'Jan', 'Fev', 'Mar', 'Abr',
+        'Mai', 'Jun', 'Jul', 'Ago',
+        'Set', 'Out', 'Nov', 'Dez'
+    ];
+
+    // Initialize an array to store summed values for each month
+    const uData: number[] = new Array(monthNames.length).fill(0);
+
+    // Iterate over the vendas data
+    vendas.forEach((item) => {
+        const date = new Date(item.dataAlter); // Convert dataAlter to a Date object
+        const month = getShortMonthName(date); // Get the month name
+        const monthIndex = monthNames.indexOf(month); // Get the index of the month
+
+        // Add the valorAlter to the corresponding month
+        if (monthIndex !== -1) {
+            uData[monthIndex] += item.valorAlter;
+        }
+    });
+
+    const data: BarChartData = {
+        chartData: {
+            xLabels: monthNames,
+            uData,
+        },
+    };
+
+    console.log(data);
+    return data;
+}
+
 export async function getMonthlySales() {
     //   const monthlySales = await db.$queryRaw`
     //   SELECT

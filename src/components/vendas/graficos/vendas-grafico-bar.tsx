@@ -1,57 +1,83 @@
 'use client';
 import * as React from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {BarChart} from '@mui/x-charts/BarChart';
-import {getFullMonthName} from "@/helpers/graficos";
-import {BarChartData} from "@/models/graficos/charts";
-import {useEffect, useRef, useState} from "react";
+import {getFullMonthName} from '@/helpers/graficos';
+import {BarChartData} from '@/models/graficos/charts';
+import {getDadosGraficoBar} from '@/actions/vendas';
+import {Spinner} from '@nextui-org/react';
 
-const VendasGraficoBar: React.FC<BarChartData> = ({chartData}) => {
+interface VendasGraficoBarProps {
+    produtosFilter: string | string[];
+    clientesFilter: string | string[];
+}
+
+const VendasGraficoBar: React.FC<VendasGraficoBarProps> = ({produtosFilter, clientesFilter}) => {
     const containerRef = useRef<HTMLDivElement>(null);
-
-    const [containerWidth, setContainerWidth] = useState(0);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [chartData, setChartData] = useState<BarChartData>();
 
     useEffect(() => {
-        if (containerRef.current) {
-            setContainerWidth(containerRef.current.offsetWidth);
-        }
+        fetchChartData(produtosFilter, clientesFilter).then();
+    }, [produtosFilter, clientesFilter]);
 
-        const handleResize = () => {
-            if (containerRef.current) {
-                setContainerWidth(containerRef.current.offsetWidth);
-            }
-        };
+    const fetchChartData = async (produtoFilter: string | string[], clientesFilter: string | string[]) => {
+        setIsLoading(true);
 
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+        let newChartData;
+
+        const produtosArray = produtoFilter === 'all' ? [] : Array.isArray(produtoFilter) ? produtoFilter : [produtoFilter];
+        const clientesArray = clientesFilter === 'all' ? [] : Array.isArray(clientesFilter) ? clientesFilter : [clientesFilter];
+
+        newChartData = await getDadosGraficoBar(produtosArray, clientesArray);
+
+        setChartData(newChartData);
+        setIsLoading(false);
+    };
+
+    if (isLoading || !chartData) {
+        return (
+            <div className={'w-full h-full flex justify-center items-center'}>
+                <Spinner/>
+            </div>
+        );
+    }
 
     return (
-        <div ref={containerRef} style={{width: '105%'}}>
-            <BarChart
-                borderRadius={12}
-                width={containerWidth}
-                height={220}
-                series={[
-                    {data: chartData.uData, label: 'Vendas', id: 'uvId', valueFormatter: (value) => `${value}`},
-                ]}
-                grid={{horizontal: true}}
-                xAxis={[{
-                    valueFormatter: (code, context) =>
-                        context.location === 'tick'
-                            ? code
-                            : `Mês: ${getFullMonthName(code)}`,
-                    tickSize: 10,
-                    disableTicks: false,
-                    tickLabelStyle: {fontSize: 16},
-                    data: chartData.xLabels,
-                    scaleType: 'band',
-                    labelStyle: {fontSize: 30},
-                }]}
-            />
-        </div>
+        <>
+            <p className={'font-bold text-lg'}>Atividade de Todos Produtos</p>
+            <div ref={containerRef} style={{width: '105%'}}>
+                <BarChart
+                    borderRadius={12}
+                    width={700}
+                    height={220}
+                    series={[
+                        {
+                            data: chartData.chartData.uData,
+                            label: 'Vendas',
+                            id: 'uvId',
+                            valueFormatter: (value) => `${value}`,
+                        },
+                    ]}
+                    grid={{horizontal: true}}
+                    xAxis={[
+                        {
+                            valueFormatter: (code, context) =>
+                                context.location === 'tick'
+                                    ? code
+                                    : `Mês: ${getFullMonthName(code)}`,
+                            tickSize: 10,
+                            disableTicks: false,
+                            tickLabelStyle: {fontSize: 16},
+                            data: chartData.chartData.xLabels, // Corrected access to xLabels
+                            scaleType: 'band',
+                            labelStyle: {fontSize: 30},
+                        },
+                    ]}
+                />
+            </div>
+        </>
     );
-}
+};
 
 export default VendasGraficoBar;
