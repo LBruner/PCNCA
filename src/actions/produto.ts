@@ -6,7 +6,7 @@ import {getServerSession} from "next-auth";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {redirect} from "next/navigation";
-import {CategoriaPessoa, Pessoa, PessoaJuridica} from "@prisma/client";
+import {CategoriaPessoa, Estoque, Pessoa, PessoaJuridica} from "@prisma/client";
 import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
 import {authOptions} from "@/app/AuthOptions";
 
@@ -138,6 +138,10 @@ async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOr
     }
     revalidatePath(paths.estoque());
     redirect(paths.estoque());
+}
+
+export const pegaTodosProdutos = async (): Promise<Estoque[]> => {
+    return db.estoque.findMany();
 }
 
 export async function pegaProduto(produtoId: number): Promise<ProdutoEstoqueComRelacoes | null> {
@@ -282,7 +286,7 @@ export async function editarProduto(vendaId: number, pessoaId: number, estoqueId
                 }
             },
             data: {
-               pessoaId: parseInt(data.fornecedor)
+                pessoaId: parseInt(data.fornecedor)
             }
         })
         await db.estoque.update({
