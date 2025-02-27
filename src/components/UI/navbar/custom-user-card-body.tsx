@@ -46,13 +46,13 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                             <p className="font-semibold">{user.email}</p>
                         </DropdownItem>
                         {user.admin ? (
-                            <DropdownItem key={user.id} color={'warning'} href={paths.admNoticias()}>
+                            <DropdownItem key={user.id} color={'default'} href={paths.admNoticias()}>
                                 ADM
                             </DropdownItem>
                         ) : null as any}
                         <DropdownItem onPress={() => {
                             console.log()
-                        }} key="logout" color="primary">
+                        }} key="logout" color="default">
                             <p className={'text-medium'}>Configurações</p>
                         </DropdownItem>
                         <DropdownItem onPress={() => {
