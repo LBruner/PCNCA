@@ -205,7 +205,7 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                                 className="w-full bg-customDarkBrown rounded-lg text-white text-md bold mt-4"
                                 disabled={isLoading}
                             >
-                                {isLoading ? <Spinner /> : 'Cadastrar'}
+                                {isLoading ? <Spinner color={'default'}/> : 'Cadastrar'}
                             </Button>
                         </div>
                     </form>

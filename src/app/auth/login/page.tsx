@@ -115,7 +115,7 @@ function LoginPage() {
                                 className="w-full bg-customDarkBrown rounded-lg text-white text-md bold mt-4"
                                 disabled={isLoading}
                             >
-                                {isLoading ? <Spinner /> : 'Logar'}
+                                {isLoading ? <Spinner color={'default'} /> : 'Logar'}
                             </Button>
                         </div>
                     </form>
