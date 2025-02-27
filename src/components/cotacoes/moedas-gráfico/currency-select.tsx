@@ -1,12 +1,12 @@
 import React from "react";
 import {Select, SelectItem} from "@heroui/react";
 import ReactCountryFlag from "react-country-flag";
-import {Moed} from "@prisma/client";
+import {Moeda} from "@prisma/client";
 
 interface CurrencySelectProps {
-    value: Moed;
-    collection: Moed[];
-    onChange: (value: Moed) => void;
+    value: Moeda;
+    collection: Moeda[];
+    onChange: (value: Moeda) => void;
     label: string;
 }
 
@@ -14,8 +14,11 @@ interface CurrencySelectProps {
 const CurrencySelect: React.FC<CurrencySelectProps> = ({value, onChange, label, collection}) => {
     return (
         <div className={'w-2/5'}>
-            <CustomSelect onChange={onChange} code={value.codigoBandeira} name={'categoria'} label={label}
-                          collection={collection}/>
+            <CustomSelect
+                onChange={onChange}
+                code={value.codigoBandeira}
+                name={'categoria'} label={label}
+                collection={collection}/>
         </div>
     );
 };
@@ -23,7 +26,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({value, onChange, label, 
 interface CustomInput {
     name: string,
     label: string,
-    onChange: (value: Moed) => void,
+    onChange: (value: Moeda) => void,
     errorMessage?: string,
     type?: string,
     code: string,
@@ -31,7 +34,7 @@ interface CustomInput {
     endContent?: React.ReactNode
 }
 
-const CustomSelect: React.FC<CustomInput & { collection: Moed[] }> = (
+const CustomSelect: React.FC<CustomInput & { collection: Moeda[] }> = (
     {
         name,
         label,
@@ -55,7 +58,7 @@ const CustomSelect: React.FC<CustomInput & { collection: Moed[] }> = (
             label: "font-medium font-lg",
         }}
         onSelectionChange={(e: any) => {
-            onChange(collection.find((item) => item.codigoBandeira === e.currentKey) as Moed);
+            onChange(collection.find((item) => item.codigoBandeira === e.currentKey) as Moeda);
         }}
         size={'lg'}
         labelPlacement={'outside'}
@@ -70,7 +73,7 @@ const CustomSelect: React.FC<CustomInput & { collection: Moed[] }> = (
                         style={{fontSize: '2em', lineHeight: '2em'}}
                     />
                 </div>
-            } key={item.codigoBandeira} >
+            } key={item.codigoBandeira}>
                 {item.nome}
             </SelectItem>
         ))}

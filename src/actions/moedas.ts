@@ -1,6 +1,6 @@
 import {db} from "@/db";
-import {Moed} from "@prisma/client";
+import {Moeda} from "@prisma/client";
 
-export const pegaTodasMoedas = async (): Promise<Moed[]> => {
-    return db.moed.findMany();
+export const pegaTodasMoedas = async (): Promise<Moeda[]> => {
+    return db.moeda.findMany();
 }

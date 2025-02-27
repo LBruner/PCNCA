@@ -38,8 +38,6 @@ model Autor {
   autorId   Int       @id @map("autor_id")
   nomeAutor String    @map("nome_autor") @db.VarChar(100)
   noticias  Noticia[]
-
-  @@map("Autor")
 }
 
 model Noticia {
@@ -56,8 +54,6 @@ model Noticia {
   autor                        Autor                          @relation(fields: [idAutor], references: [autorId])
   cultura                      Cultura                        @relation(fields: [idCultura], references: [culturaId])
   ComercioInternacionalNoticia ComercioInternacionalNoticia[]
-
-  @@map("Noticia")
 }
 
 model Cultura {
@@ -67,18 +63,7 @@ model Cultura {
   noticias   Noticia[]
   imagemLink String?   @map("imagem_link") @db.VarChar(300)
   Estoque    Estoque[]
-
-  @@map("Cultura")
 }
-
-model Moed {
-  sigla          String @id @map("SIGLA") @db.VarChar(10)
-  nome           String @map("NOME") @db.VarChar(40)
-  codigoBandeira String @map("CODIGO_BANDEIRA") @db.VarChar(40)
-
-  @@map("MOED")
-}
-
 model VerificationRequest {
   id         String   @id @default(cuid())
   identifier String
@@ -209,8 +194,9 @@ model Mensagem {
 }
 
 model Moeda {
-  sigla String @id @db.VarChar(10)
-  nome  String @db.VarChar(40)
+  sigla          String @id @map("sigla") @db.VarChar(10)
+  nome           String @map("nome") @db.VarChar(40)
+  codigoBandeira String @map("codigo_bandeira") @db.VarChar(40)
 }
 
 model Pessoa {

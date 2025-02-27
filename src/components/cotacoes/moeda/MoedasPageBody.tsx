@@ -7,27 +7,27 @@ import {MdOutlineCurrencyExchange} from "react-icons/md";
 import TradingViewChartIntervalPicker from "@/components/cotacoes/moedas-gráfico/chart-interval-list";
 import TradingViewChart from "@/components/cotacoes/moedas-gráfico/trading-view-advanced-chart";
 import Link from "next/link";
-import {Moed} from "@prisma/client";
+import {Moeda} from "@prisma/client";
 
 interface MoedasPageBodyProps {
-    moedas: Moed[]
+    moedas: Moeda[]
 }
 
 const MoedasPageBody: React.FC<MoedasPageBodyProps> = ({moedas}) => {
-    const [moedaOrigem, setMoedaOrigem] = useState<Moed>(
+    const [moedaOrigem, setMoedaOrigem] = useState<Moeda>(
         moedas.find(item => item.sigla === 'USD') || moedas[0]
     );
-    const [moedaDestino, setMoedaDestino] = useState<Moed>(moedas.find(item => item.sigla === 'BRL') || moedas[0]);
+    const [moedaDestino, setMoedaDestino] = useState<Moeda>(moedas.find(item => item.sigla === 'BRL') || moedas[0]);
 
     const [selectedInterval, setSetselectedInterval] = useState<ChartInterval>(intervals[1]);
 
     return (
-        <div className={'mt-36 flex flex-col items-center'}>
+        <div className={'flex flex-col items-center'}>
             <div className={'mb-8 flex flex-col items-center justify-start'}>
                 <p className={'text-3xl font-bold'}>Cotações de moedas</p>
                 <p className={'text-lg text-gray-500'}>Compare o valor das moedas estrangeiras</p>
             </div>
-            <div className="w-4/5 border rounded-lg p-4 pb-16 bg-white flex flex-col gap">
+            <div className="w-4/5 border rounded-lg p-8 pb-24 bg-white flex flex-col gap">
                 <div className={'mt-2 flex justify-around items-center'}>
                     <CurrencySelect collection={moedas.filter((item) => item != moedaDestino)} label="De:"
                                     value={moedaOrigem} onChange={setMoedaOrigem}/>
