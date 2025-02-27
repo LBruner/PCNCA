@@ -1,7 +1,7 @@
 'use client';
 
 import React, {Key, useMemo, useState} from "react";
-import {Button, Tab, Tabs} from "@nextui-org/react";
+import {Button, Tab, Tabs} from "@heroui/react";
 import {Cultura, Noticia} from "@prisma/client";
 import ShortNoticiaCardDetailedBottom
     from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-bottom";

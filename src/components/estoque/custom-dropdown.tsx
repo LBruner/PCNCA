@@ -1,6 +1,6 @@
 'use client';
 import React from "react";
-import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
+import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@heroui/react";
 
 export default function CustomDropdown() {
     const [selectedKeys, setSelectedKeys] = React.useState(new Set(["Mostrar: Todos"]));

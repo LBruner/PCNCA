@@ -1,6 +1,6 @@
 import React from "react";
-import {Button, Input} from "@nextui-org/react";
-import {SearchIcon} from "@nextui-org/shared-icons";
+import {Button, Input} from "@heroui/react";
+import {SearchIcon} from "@heroui/shared-icons";
 import {PlusIcon} from "@/components/estoque/plus-icon";
 
 interface TabelaTopContentProps {
@@ -36,7 +36,7 @@ const AdmCategoriasTableTopContent: React.FC<TabelaTopContentProps> = (
                     />
                 </div>
                 <div className="flex gap-1 ">
-                    <Button onClick={openCreateCategoryModal} className={'text-white bg-orange-600 w-44'} startContent={<PlusIcon/>}>
+                    <Button onPress={openCreateCategoryModal} className={'text-white bg-orange-600 w-44'} startContent={<PlusIcon/>}>
                         Adicionar Cultura
                     </Button>
                 </div>

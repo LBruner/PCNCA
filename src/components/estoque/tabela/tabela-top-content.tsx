@@ -1,6 +1,6 @@
 import React from "react";
-import {Button, Divider, Input} from "@nextui-org/react";
-import {SearchIcon} from "@nextui-org/shared-icons";
+import {Button, Divider, Input} from "@heroui/react";
+import {SearchIcon} from "@heroui/shared-icons";
 import {PlusIcon} from "@/components/estoque/plus-icon";
 import {PiPrinterFill} from "react-icons/pi";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";

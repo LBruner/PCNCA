@@ -1,7 +1,7 @@
 'use client';
 import React from "react";
 import {ProductionProduct} from "@/models/producao-internacional/produtos";
-import {Button, useDisclosure} from "@nextui-org/react";
+import {Button, useDisclosure} from "@heroui/react";
 import ProductionProductPickerModal from "@/components/producao-internacional/product-picker-modal";
 
 interface Props {

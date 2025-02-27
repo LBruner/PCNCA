@@ -2,7 +2,7 @@
 import {db} from "@/db";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
-import {Category, Cultura} from "@prisma/client";
+import {Cultura} from "@prisma/client";
 
 export const pegaTodasCulturas = async (): Promise<Cultura[]> => {
     return db.cultura.findMany();

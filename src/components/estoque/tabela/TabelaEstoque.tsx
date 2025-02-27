@@ -12,9 +12,9 @@ import {
     Tooltip,
     useDisclosure,
     User as Usuario
-} from "@nextui-org/react";
-import {Chip} from "@nextui-org/chip";
-import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
+} from "@heroui/react";
+import {Chip} from "@heroui/chip";
+import {DeleteIcon, EditIcon, EyeIcon} from "@heroui/shared-icons";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getFilteredItems, getSortedProduto} from "@/helpers/tabela";
 import Link from "next/link";

@@ -11,12 +11,12 @@ import {
     TableColumn,
     TableHeader,
     TableRow
-} from "@nextui-org/react";
-import {Chip} from "@nextui-org/chip";
+} from "@heroui/react";
+import {Chip} from "@heroui/chip";
 import VendasTabelaBottomContent from "@/components/vendas/vendas-tabela-bottom-content";
 import {getPublicacaoData} from "@/helpers/noticia/criacao/criar-noticia";
 import {VendasAgrupadas} from "@/actions/vendas";
-import {User} from "@nextui-org/user";
+import {User} from "@heroui/user";
 import {formatToBrazilianCurrency} from "@/helpers";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 

@@ -1,6 +1,6 @@
 import React from "react";
-import {Button, Divider, Input, Tooltip} from "@nextui-org/react";
-import {SearchIcon} from "@nextui-org/shared-icons";
+import {Button, Divider, Input, Tooltip} from "@heroui/react";
+import {SearchIcon} from "@heroui/shared-icons";
 import {PiPrinterFill} from "react-icons/pi";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
 import {priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
@@ -10,6 +10,7 @@ import {FilterCollection} from "@/models/shared/FilterCollection";
 import {MdOutlineSell} from "react-icons/md";
 import {FaCirclePlus} from "react-icons/fa6";
 import {useRouter} from "next/navigation";
+import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
 
 interface TabelaTopContentProps {
     categoriesOptions: FilterCollection[]
@@ -27,6 +28,7 @@ interface TabelaTopContentProps {
     onSearchChange: (value: string) => void;
     onClear: () => void;
     selectedItems: string | string[];
+    products: ProdutoEstoqueComRelacoes[],
 }
 
 const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
@@ -44,7 +46,8 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
         onSearchChange,
         onClear,
         itemsLenght,
-        selectedItems
+        selectedItems,
+        products
     }
 ) => {
     const size = 'w-full';
@@ -54,6 +57,10 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
         localStorage.removeItem('selectedItems');
         localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
         router.push(paths.createVenda());
+    }
+
+    const imprimirExcel = () => {
+
     }
 
     return (React.useMemo(() => {
@@ -87,7 +94,7 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
                                 startContent={<FaCirclePlus size={20}/>}>
                             <Link href={paths.createProduto()}>Adicionar Estoque</Link>
                         </Button>
-                        <Button variant={'flat'} color={'default'} className={'w-52'}
+                        <Button onClick={imprimirExcel} variant={'flat'} color={'default'} className={'w-52'}
                                 startContent={<PiPrinterFill size={20}/>}>
                             Imprimir Estoque
                         </Button>
@@ -115,6 +122,8 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
         );
     }, [
         filterValue,
+        categoriesOptions,
+        handleNewSale,
         statusFilter,
         stockFilter,
         priceFilter,

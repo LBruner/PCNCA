@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import {NavbarItem} from "@nextui-org/react";
+import {NavbarItem} from "@heroui/react";
 import {usePathname} from "next/navigation";
 
 interface NavLinkProps {

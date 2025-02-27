@@ -1,5 +1,5 @@
 import React from "react";
-import {SelectProps, Select, SelectItem} from "@nextui-org/react";
+import {SelectProps, Select, SelectItem} from "@heroui/react";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 
 interface RegisterFormSelectProps {
@@ -33,7 +33,7 @@ const RegisterFormSelect: React.FC<{selectProps: SelectProps & RegisterFormSelec
                 isInvalid={props.selectProps?.isInvalid}
             >
                 {props.selectProps.collection.map((item) => (
-                    <SelectItem key={item.uid} value={item.uid}>
+                    <SelectItem key={item.uid}>
                         {item.name}
                     </SelectItem>
                 ))}

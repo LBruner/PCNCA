@@ -12,9 +12,9 @@ import {
     TableRow,
     Tooltip,
     useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import type {Cultura} from '@prisma/client';
-import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
+import {DeleteIcon, EditIcon, EyeIcon} from "@heroui/shared-icons";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getSortedCategoria} from "@/helpers/tabela";
 import AdmCategoriasTableTopContent from "@/components/adm/categorias/adm-categorias-table-top-content";

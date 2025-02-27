@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import CustomModal from "@/components/UI/CustomModal";
-import {Input} from "@nextui-org/react";
+import {Input} from "@heroui/react";
 import {criarCultura, editarCultura} from "@/actions/culturas";
 import {Cultura} from "@prisma/client";
 

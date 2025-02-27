@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import { Accordion, AccordionItem, Button, Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
+import { Accordion, AccordionItem, Button, Navbar, NavbarContent, NavbarItem } from "@heroui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import paths from "@/paths";

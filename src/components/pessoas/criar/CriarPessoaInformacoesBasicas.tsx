@@ -4,9 +4,8 @@ import CriarNoticiaInformacoesBasicasInputField
     from "@/components/noticias/criacao/criar-noticia-informacoes-basicas-input-field";
 import CriarNoticiaInformacoesBasicasSelectField
     from "@/components/noticias/criacao/criar-noticia-informacoes-basicas-select-field";
-import {DateInput} from "@nextui-org/react";
+import {DateInput} from "@heroui/react";
 import {I18nProvider} from "@react-aria/i18n";
-import {parseDate} from "@internationalized/date";
 import CriarPessoaFormControls from "@/components/pessoas/criar/CriarPessoaFormControls";
 import {formatPhoneNumber} from "@/helpers";
 import {MdOutlineAlternateEmail, MdOutlineLocalPhone} from "react-icons/md";
@@ -113,9 +112,9 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                         </div>
                         <I18nProvider locale="pt-BR"
                         >
-                            <DateInput className={'w-full'} isRequired={true} value={parseDate(dataNascimento)}
+                            <DateInput className={'w-full'} isRequired={true}
                                        errorMessage={'Data inválida'} onChange={(novaData) => {
-                                setDataNascimento(novaData.toString())
+                                setDataNascimento(novaData!.toString())
                             }} size={'lg'} endContent={<LiaBirthdayCakeSolid size={22} color={'black'}/>}/>
                         </I18nProvider>
                     </div>

@@ -6,7 +6,7 @@ import CriarNoticiaVizualizarPublicar from "@/components/noticias/criacao/telas/
 import {generateMarkdown} from "@/helpers/noticia/criacao/criar-noticia";
 import RoundedStepsGuide from "@/components/noticias/criacao/rounded-steps-guide";
 import Spacer from "@/components/noticias/criacao/spacer";
-import {Button, Spinner} from "@nextui-org/react";
+import {Button, Spinner} from "@heroui/react";
 import {Cultura} from "@prisma/client";
 import CriarNoticiaInformacoesBasicas from "@/components/noticias/criacao/telas/criar-noticia-informacoes-basicas";
 import CriarNoticiaConteudo from "@/components/noticias/criacao/telas/criar-noticia-conteudo";

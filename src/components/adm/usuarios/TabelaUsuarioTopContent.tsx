@@ -1,6 +1,6 @@
 import React from "react";
-import {Divider, Input} from "@nextui-org/react";
-import {SearchIcon} from "@nextui-org/shared-icons";
+import {Divider, Input} from "@heroui/react";
+import {SearchIcon} from "@heroui/shared-icons";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import {UsuarioComEmpresa} from "@/actions/usuarios";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";

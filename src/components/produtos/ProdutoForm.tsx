@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import {Autocomplete, AutocompleteItem, Button, Input, Select, SelectItem} from "@nextui-org/react";
-import {Textarea} from "@nextui-org/input";
-import {Radio, RadioGroup} from "@nextui-org/radio";
+import {Autocomplete, AutocompleteItem, Button, Input, Select, SelectItem} from "@heroui/react";
+import {Textarea} from "@heroui/input";
+import {Radio, RadioGroup} from "@heroui/radio";
 import {CreatePostFormState, FornecedorComRelacoes} from "@/actions/produto";
 import {Cultura} from "@prisma/client";
 import {FilterCollection} from "@/models/shared/FilterCollection";
@@ -93,7 +93,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
                             }}
                         >
                             {fornecedores!.map((fornecedor) => (
-                                <AutocompleteItem value={fornecedor.id} key={fornecedor.id}>
+                                <AutocompleteItem key={fornecedor.id}>
                                     {fornecedor.pessoaJuridica?.razaoSocial}
                                 </AutocompleteItem>
                             ))}
@@ -206,7 +206,7 @@ export const CustomSelect: React.FC<CustomInput & { collection: FilterCollection
         placeholder={placeholder}
     >
         {collection.map((item) => (
-            <SelectItem key={item.uid} value={item.uid}>
+            <SelectItem key={item.uid}>
                 {item.name}
             </SelectItem>
         ))}

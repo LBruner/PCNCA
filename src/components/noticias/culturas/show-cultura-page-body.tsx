@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import CustomBreadcumbs from "@/components/custom-breadcumbs";
 import paths from "@/paths";
 import LargeNoticiaCard from "@/components/noticias/large-noticia-card/large-noticia-card";
-import {Pagination} from "@nextui-org/react";
+import {Pagination} from "@heroui/react";
 import {Cultura} from "@prisma/client";
 import {NoticiaComAutorCultura} from "@/actions/noticias";
 

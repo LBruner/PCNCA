@@ -9,9 +9,9 @@ import {
     NavbarContent,
     NavbarItem,
     useDisclosure
-} from "@nextui-org/react";
+} from "@heroui/react";
 import PerfilModal from "@/components/configuracoes/perfil-modal";
-import {Avatar} from "@nextui-org/avatar";
+import {Avatar} from "@heroui/react";
 import paths from "@/paths";
 import {signOut} from "next-auth/react";
 import {fallbackImgUrl} from "@/constants/messages/images";
@@ -50,7 +50,7 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                             <p className="font-semibold">{user.email}</p>
                         </DropdownItem>
                         {user.admin ? (
-                            <DropdownItem color={'warning'} href={paths.admNoticias()}>
+                            <DropdownItem key={user.id} color={'warning'} href={paths.admNoticias()}>
                                 ADM
                             </DropdownItem>
                         ) : null as any}

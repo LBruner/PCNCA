@@ -1,6 +1,6 @@
 import React, {ReactNode} from "react";
-import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@nextui-org/modal";
-import {Button, Spinner} from "@nextui-org/react";
+import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@heroui/modal";
+import {Button, Spinner} from "@heroui/react";
 
 export interface CustomModalProps {
     title: string,

@@ -1,6 +1,6 @@
 'use client';
 import React from "react";
-import {BreadcrumbItem, Breadcrumbs} from "@nextui-org/react";
+import {BreadcrumbItem, Breadcrumbs} from "@heroui/react";
 import Link from "next/link";
 
 interface  CustomBreadcumbProps {

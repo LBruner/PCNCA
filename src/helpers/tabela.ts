@@ -1,5 +1,5 @@
 import type {Cultura} from "@prisma/client";
-import {SortDescriptor} from "@nextui-org/react";
+import {SortDescriptor} from "@heroui/react";
 import {IFilterable} from "@/models/estoque/filters";
 import {NoticiaComAutorCultura} from "@/actions/noticias";
 import {PessoaFisJurEnd} from "@/actions/pessoas";

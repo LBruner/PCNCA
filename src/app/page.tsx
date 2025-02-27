@@ -1,5 +1,5 @@
 import React, {ReactElement} from "react";
-import {Button} from "@nextui-org/react";
+import {Button} from "@heroui/react";
 import Image from "next/image";
 import {IoAnalyticsOutline, IoCalendarOutline, IoNewspaperOutline} from "react-icons/io5";
 import {MdOutlineAnalytics} from "react-icons/md";

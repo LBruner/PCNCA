@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import ProfileSettingsBody from "@/components/configuracoes/meu-perfil/ProfileSettingsBody";
 import CriarPessoaFormControls from "@/components/pessoas/criar/CriarPessoaFormControls";
 import {criarPessoa, editarPessoa, PessoaCriacao} from "@/actions/pessoas";
-import {Spinner} from "@nextui-org/react";
+import {Spinner} from "@heroui/react";
 
 interface CriarPessoaConfirmacaoProps {
     pessoa: PessoaCriacao;

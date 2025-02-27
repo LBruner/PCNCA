@@ -1,5 +1,5 @@
 import React from "react";
-import {Avatar} from "@nextui-org/avatar";
+import {Avatar} from "@heroui/avatar";
 import {fallbackImgUrl} from "@/constants/messages/images";
 import {formatarData, formatCEP, formatCNPJ, formatCPF, formatPhoneNumber} from "@/helpers";
 import {PessoaCriacao} from "@/actions/pessoas";

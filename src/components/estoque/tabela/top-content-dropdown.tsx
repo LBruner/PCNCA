@@ -1,6 +1,6 @@
 import React from "react";
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@nextui-org/react";
-import {ChevronDownIcon} from "@nextui-org/shared-icons";
+import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@heroui/react";
+import {ChevronDownIcon} from "@heroui/shared-icons";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 
 interface TopContentDropDownProps {

@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import {Modal, ModalBody, ModalContent} from "@nextui-org/modal";
+import {Modal, ModalBody, ModalContent} from "@heroui/modal";
 import ProfileSettingsBody from "@/components/configuracoes/meu-perfil/ProfileSettingsBody";
 
 interface PerfilModal {

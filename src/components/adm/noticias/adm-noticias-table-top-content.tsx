@@ -1,6 +1,6 @@
 import React from "react";
-import {DateRangePicker, DateValue, Divider, Input, RangeValue} from "@nextui-org/react";
-import {SearchIcon} from "@nextui-org/shared-icons";
+import {DateRangePicker, DateValue, Divider, Input, RangeValue} from "@heroui/react";
+import {SearchIcon} from "@heroui/shared-icons";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
 import paths from "@/paths";
 import {FilterCollection} from "@/models/shared/FilterCollection";
@@ -86,6 +86,7 @@ const AdmNoticiasTableTopContent: React.FC<TabelaTopContentProps> = (
                             label={'Datas'}
                             labelPlacement={'outside'}
                             className="max-w-xs"
+                            // @ts-ignore
                             onChange={setDatesRange}
                             disableAnimation={false} size={'md'} variant={'flat'} color={'default'} isDisabled={false}
                             radius={'lg'}/>

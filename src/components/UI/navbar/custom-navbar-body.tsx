@@ -3,7 +3,7 @@
 import React from "react";
 import {usePathname} from "next/navigation";
 import paths from "@/paths";
-import {Navbar, NavbarContent, NavbarItem} from "@nextui-org/react";
+import {Navbar, NavbarContent, NavbarItem} from "@heroui/react";
 import MoedasCard from "@/components/cotacoes/dolar-card/moedas-card";
 import Link from "next/link";
 import NavLink from "@/components/UI/navbar/NavLink";

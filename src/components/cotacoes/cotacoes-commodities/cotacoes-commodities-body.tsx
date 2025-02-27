@@ -1,6 +1,6 @@
 'use client';
 import React, {useState} from "react";
-import {Select, SelectItem} from "@nextui-org/react";
+import {Select, SelectItem} from "@heroui/react";
 import CotacaoCommodityList from "@/components/cotacoes/cotacoes-commodities/cotacao-commodity-list";
 import TradingViewSymbolChart from "@/components/cotacoes/cotacoes-commodities/trading-view-symbol-chart";
 import Link from "next/link";
@@ -35,7 +35,7 @@ const CotacoesCommoditiesBody: React.FC<CotacoesCommoditiesProps> = ({cotacoes})
                     selectedKeys={new Set([selectedCotacao.id.toString()])}
                 >
                     {cotacoes.map((cotacao) => (
-                        <SelectItem key={cotacao.id.toString()} value={cotacao.id.toString()}>
+                        <SelectItem key={cotacao.id.toString()}>
                             {cotacao.nome}
                         </SelectItem>
                     ))}

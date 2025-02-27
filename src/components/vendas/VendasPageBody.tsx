@@ -18,11 +18,11 @@ import {
     Tab,
     Tabs,
     useDisclosure
-} from "@nextui-org/react";
+} from "@heroui/react";
 import {CiViewTable} from "react-icons/ci";
 import {CgMenuGridO} from "react-icons/cg";
 import {GoFilter} from "react-icons/go";
-import {Modal, ModalBody, ModalFooter, ModalHeader} from "@nextui-org/modal";
+import {Modal, ModalBody, ModalFooter, ModalHeader} from "@heroui/modal";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
 import {I18nProvider} from "@react-aria/i18n";
 
@@ -159,6 +159,7 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
                                             label={'Data de início e fim'}
                                             labelPlacement={'outside'}
                                             className="max-w-xs"
+                                            // @ts-ignore
                                             onChange={setDatesRange}
                                             disableAnimation={false} size={'md'} variant={'flat'}/>
                                     </I18nProvider>}

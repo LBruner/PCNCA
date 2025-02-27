@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import {pegaProduto} from "@/actions/produto";
-import {Accordion, AccordionItem, Divider, Spinner} from "@nextui-org/react";
+import {Accordion, AccordionItem, Divider, Spinner} from "@heroui/react";
 import CriarVendaSeletorProdutos from "@/components/vendas/criação/CriarVendaSeletorProdutos";
 import {ProdutosSelecionados} from "@/app/vendas/criar/page";
 import {CategoriaPessoaComEmpresa} from "@/actions/clientes";

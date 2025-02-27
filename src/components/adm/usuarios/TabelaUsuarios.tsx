@@ -12,8 +12,8 @@ import {
     Tooltip,
     useDisclosure,
     User as Usuario
-} from "@nextui-org/react";
-import {Chip} from "@nextui-org/chip";
+} from "@heroui/react";
+import {Chip} from "@heroui/chip";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getSortedUsuario} from "@/helpers/tabela";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";

@@ -3,7 +3,7 @@ import React from "react";
 import CriarVendaListaProdutos from "@/components/vendas/criação/CriarVendaListaProdutos";
 import {ProdutosSelecionados} from "@/app/vendas/criar/page";
 import {formatToBrazilianCurrency} from "@/helpers";
-import {Button} from "@nextui-org/react";
+import {Button} from "@heroui/react";
 
 interface CriarVendaSeletorProdutosProps {
     produtos: ProdutosSelecionados[];

@@ -11,16 +11,16 @@ import {
     TableRow,
     Tooltip,
     useDisclosure,
-} from "@nextui-org/react";
-import {Chip} from "@nextui-org/chip";
-import {DeleteIcon, EditIcon, EyeIcon} from "@nextui-org/shared-icons";
+} from "@heroui/react";
+import {Chip} from "@heroui/chip";
+import {DeleteIcon, EditIcon, EyeIcon} from "@heroui/shared-icons";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getSortedPessoas} from "@/helpers/tabela";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import TabelaPessoasTopContent from "@/components/pessoas/tabela/tabela-pessoas-top-content";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
 import {deletePessoa, PessoaFisJurEnd} from "@/actions/pessoas";
-import {User} from "@nextui-org/user";
+import {User} from "@heroui/user";
 import PerfilModal from "@/components/configuracoes/perfil-modal";
 import Link from "next/link";
 import paths from "@/paths";

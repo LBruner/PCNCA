@@ -1,11 +1,9 @@
 'use client';
 
-import React, {useState} from "react";
-import {Button, Checkbox, Spinner, useDisclosure} from "@nextui-org/react";
-import {CreateUserProps} from "@/actions/cadastro";
+import React, {useRef, useState} from "react";
+import {Button, Checkbox, Spinner, useDisclosure} from "@heroui/react";
 import * as actions from "@/actions";
 import {signIn} from "next-auth/react";
-import {useFormState} from "react-dom";
 import TermosCondicoesModal from "@/components/auth/cadastro/TermosCondicoesModal";
 import RegisterFormInput from "@/components/UI/form/register-form-input";
 import {IoPersonOutline} from "react-icons/io5";

@@ -42,7 +42,7 @@ export interface PessoaCriacao {
 }
 
 export async function pegaTodasPessoas(): Promise<PessoaFisJurEnd[]> {
-    return await db.pessoa.findMany(
+    return db.pessoa.findMany(
         {
             include: {
                 enderecos: true,
@@ -114,7 +114,7 @@ export const criarPessoa = async (pessoa: PessoaCriacao) => {
     });
 
     const data = {
-        categoriaId: pessoa.categoria === 'Física' ? 5 : pessoa.tipo!,
+        categoriaId: pessoa.categoria === 'Física' ? 1 : pessoa.tipo!,
         email: pessoa.email!,
         imagemLink: pessoa.imagemLink!,
         telefones: criarTelefones,

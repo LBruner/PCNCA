@@ -1,5 +1,5 @@
 import React, {HTMLInputTypeAttribute} from "react";
-import {Input} from "@nextui-org/react";
+import {Input} from "@heroui/react";
 
 interface ConfigurarNoticiaFormFieldProps {
     titulo: string;
@@ -51,7 +51,7 @@ const CriarNoticiaInformacoesBasicasInputField: React.FC<ConfigurarNoticiaFormFi
             </div>
             <CustomInputButton
                 required={required}
-                value={value} defaultValue={'' ?? undefined} name={'nome'} label={''}
+                value={value} defaultValue={undefined} name={'nome'} label={''}
                 placeholder={placeholder || ''}
                 isInvalid={false}
                 errorMessage={''}

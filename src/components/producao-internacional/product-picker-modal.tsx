@@ -1,7 +1,7 @@
 'use client';
 import React, {useState} from "react";
-import {Button, Select, SelectItem, Spinner} from "@nextui-org/react";
-import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@nextui-org/modal";
+import {Button, Select, SelectItem, Spinner} from "@heroui/react";
+import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@heroui/modal";
 import {ProductionProduct, productionProducts} from "@/models/producao-internacional/produtos";
 
 interface Props {
@@ -34,7 +34,7 @@ const ProductionProductPickerModal: React.FC<Props> = ({onOpenChange, isOpen,set
                             </p>
                             <Select onSelectionChange={(e:any) => setValue(e)} label="Commoditie" multiple={false}>
                                 {productionProducts.map((product) => (
-                                    <SelectItem key={product.name} value={product.name}>
+                                    <SelectItem key={product.name}>
                                         {product.translationName}
                                     </SelectItem>
                                 ))}

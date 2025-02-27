@@ -1,8 +1,8 @@
 import React from "react";
-import {Autocomplete, AutocompleteItem, Button, Checkbox} from "@nextui-org/react";
+import {Autocomplete, AutocompleteItem, Button, Checkbox} from "@heroui/react";
 import {CategoriaPessoaComEmpresa} from "@/actions/clientes";
 import {FormaPagamento} from "@prisma/client";
-import {CheckboxGroup} from "@nextui-org/checkbox";
+import {CheckboxGroup} from "@heroui/checkbox";
 
 interface CriarVendaCheckoutFormProps {
     clientes: CategoriaPessoaComEmpresa[];

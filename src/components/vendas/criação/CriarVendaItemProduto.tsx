@@ -1,5 +1,5 @@
 import React from "react";
-import {Image, Input} from "@nextui-org/react";
+import {Image, Input} from "@heroui/react";
 import {formatToBrazilianCurrency} from "@/helpers";
 import {LuTrash2} from "react-icons/lu";
 import {ProdutosSelecionados} from "@/app/vendas/criar/page";

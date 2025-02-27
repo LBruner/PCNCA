@@ -1,5 +1,5 @@
-import React from "react";
-import {Input, InputProps} from "@nextui-org/react";
+import React from 'react';
+import { Input, InputProps } from '@heroui/react';
 
 const RegisterFormInput: React.FC<InputProps> = (props) => {
     return (
@@ -22,10 +22,10 @@ const RegisterFormInput: React.FC<InputProps> = (props) => {
                 minLength={props.minLength}
                 onChange={props.onChange}
                 errorMessage={props.errorMessage}
-                isInvalid={props.isInvalid}
+                isInvalid={props.isInvalid && !!props.errorMessage} // Ensure isInvalid is only true when there's an error message
             />
         </div>
-    )
-}
+    );
+};
 
 export default RegisterFormInput;

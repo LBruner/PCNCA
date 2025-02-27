@@ -1,6 +1,6 @@
 import React from 'react';
 import {CardContent} from "@mui/material";
-import {Button, Card} from "@nextui-org/react";
+import {Button, Card} from "@heroui/react";
 import {BiFolder} from "react-icons/bi";
 
 interface NoItemsProps {

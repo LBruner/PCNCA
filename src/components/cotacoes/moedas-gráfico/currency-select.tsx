@@ -1,5 +1,5 @@
 import React from "react";
-import {Select, SelectItem} from "@nextui-org/react";
+import {Select, SelectItem} from "@heroui/react";
 import ReactCountryFlag from "react-country-flag";
 import {Moed} from "@prisma/client";
 
@@ -70,7 +70,7 @@ const CustomSelect: React.FC<CustomInput & { collection: Moed[] }> = (
                         style={{fontSize: '2em', lineHeight: '2em'}}
                     />
                 </div>
-            } key={item.codigoBandeira} value={item.codigoBandeira}>
+            } key={item.codigoBandeira} >
                 {item.nome}
             </SelectItem>
         ))}

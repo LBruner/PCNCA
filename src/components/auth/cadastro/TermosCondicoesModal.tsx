@@ -1,6 +1,6 @@
 import React from "react";
-import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@nextui-org/modal";
-import {Button} from "@nextui-org/react";
+import {Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from "@heroui/modal";
+import {Button} from "@heroui/react";
 
 interface TermosCondicoesModalProps {
     isOpen: boolean;
