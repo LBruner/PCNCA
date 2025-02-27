@@ -40,7 +40,7 @@ const CulturasTabs: React.FC<CulturasListProps> = ({noticias, culturas}) => {
                 </Link>
             </div>
             <Tabs defaultSelectedKey={selectedCultura.toString()} onSelectionChange={handleCulturaChange} aria-label="Options">
-                {culturas.slice(0, 4).map((categoria) => (
+                {culturas.map((categoria) => (
                     <Tab title={categoria.nome} key={categoria.culturaId} className="mb-2">
                         {noticiasAmostradas.length === 0 ?
                             <p className={'text-lg font-semibold'}>Nenhuma notícia dessa categoria encontrada</p> :

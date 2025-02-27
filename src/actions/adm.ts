@@ -15,14 +15,7 @@ export const pegaAutoresUnicos = async (): Promise<Autor[]> => {
 }
 
 export const pegaCulturasUnicas = async (): Promise<Cultura[]> => {
-    return db.cultura.findMany({
-        where: {
-            noticias: {
-                some: {}
-            }
-        },
-        distinct: ['culturaId']
-    });
+    return db.cultura.findMany();
 }
 
 export const getAutoresFilterColletion = async (): Promise<FilterCollection[]> => {
