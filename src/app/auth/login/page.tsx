@@ -4,8 +4,7 @@ import React, {useState, useRef} from 'react';
 import {Button, Spinner} from "@heroui/react";
 import {MdOutlineMailOutline, MdPassword} from "react-icons/md";
 import Image from "next/image";
-import {useFormState} from "react-dom";
-import {LoginProps, validarLogin} from "@/actions/login";
+import {validarLogin} from "@/actions/login";
 import {signIn} from "next-auth/react";
 import FormErrorText from "@/components/UI/form/form-error-text";
 import RegisterFormInput from "@/components/UI/form/register-form-input";
@@ -16,61 +15,79 @@ function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [errors, setErrors] = useState<{[key: string]: string[]}>({});
 
-    const loginUser = async (formState: LoginProps, formData: FormData): Promise<LoginProps> => {
+    const formRef = useRef<HTMLFormElement>(null);
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         setIsLoading(true);
 
-        const validatedForm = await validarLogin(formState, formData);
-        const hasErrors = Object.values(validatedForm.errors).some(value => value && value.length > 0)
+        // Create FormData from the form
+        const formData = new FormData(event.currentTarget);
 
-        if(hasErrors){
+        try {
+            // Validate form data
+            const validatedForm = await validarLogin({ errors: {} }, formData);
+            const hasErrors = Object.values(validatedForm.errors).some(value => value && value.length > 0);
+
+            if (hasErrors) {
+                setErrors(validatedForm.errors);
+                setIsLoading(false);
+                return;
+            }
+
+            // Attempt sign in
+            const loginResponse = await signIn('credentials', {
+                redirect: false,
+                email: formData.get('email'),
+                password: formData.get('senha'),
+            });
+
+            if (loginResponse && loginResponse.ok) {
+                // Redirect on success
+                window.location.href = '/noticias';
+            } else {
+                setErrors({
+                    _form: ['Usuário ou senha incorretos']
+                });
+                setIsLoading(false);
+            }
+        } catch (error) {
+            setErrors({
+                _form: ['Ocorreu um erro durante o login']
+            });
             setIsLoading(false);
-            return {
-                errors: validatedForm.errors
-            }
         }
+    };
 
-        const loginResponse = await signIn('credentials', {
-            redirect: false,
-            email: formData.get('email'),
-            password: formData.get('senha'),
-        });
-
-        if (loginResponse && loginResponse.ok) {
-            window.location.href = '/noticias';
-
-            return {
-                errors: {}
-            }
-        } else {
-            setIsLoading(false)
-            return {
-                errors: {
-                    _form: ['Usuário incorreto']
-                }
-            };
+    // Clear specific field error when the field value changes
+    const clearFieldError = (fieldName: string) => {
+        if (errors[fieldName]) {
+            const newErrors = {...errors};
+            delete newErrors[fieldName];
+            setErrors(newErrors);
         }
-    }
-
-    const [formState, action] = useFormState(loginUser, {
-        errors: {}
-    });
+    };
 
     return (
         <div className="flex h-screen">
             <div className="w-3/5 bg-customGray p-10 flex items-center flex-col relative drop-shadow-2xl">
                 <div className="container drop-shadow-md items-center w-4/5 mt-24">
                     <h1 className="text-5xl font-bold mb-2">Login</h1>
-                    <form action={action} className="space-y-4">
+                    <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
                         <div className="flex flex-col gap-4">
                             <RegisterFormInput
                                 name={'email'}
                                 title={'Email'}
                                 value={email}
-                                errorMessage={formState.errors.email?.join(', ')}
-                                isInvalid={!!formState.errors.email}
+                                errorMessage={errors.email?.join(', ')}
+                                isInvalid={!!errors.email}
                                 required={true}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    clearFieldError('email');
+                                }}
                                 endContent={<MdOutlineMailOutline size={18}/>}
                             />
                             <RegisterFormInput
@@ -79,25 +96,28 @@ function LoginPage() {
                                 type={'password'}
                                 value={password}
                                 required={true}
-                                errorMessage={formState.errors.senha?.join(', ')}
-                                isInvalid={!!formState.errors.senha}
-                                onChange={(e) => setPassword(e.target.value)}
+                                errorMessage={errors.senha?.join(', ')}
+                                isInvalid={!!errors.senha}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    clearFieldError('senha');
+                                }}
                                 endContent={<MdPassword size={18}/>}
                             />
                         </div>
-                        {formState.errors._form && formState.errors._form.length > 0 ? (
-                            <FormErrorText errors={formState.errors._form}/>
+                        {errors._form && errors._form.length > 0 ? (
+                            <FormErrorText errors={errors._form}/>
                         ) : null}
-                        {isLoading ? <Spinner/> : <div className="w-1/3">
+                        <div className="w-1/3">
                             <Button
                                 color={'warning'}
                                 type="submit"
                                 className="w-full bg-customDarkBrown rounded-lg text-white text-md bold mt-4"
+                                disabled={isLoading}
                             >
-                                Logar
+                                {isLoading ? <Spinner /> : 'Logar'}
                             </Button>
-                        </div>}
-
+                        </div>
                     </form>
                 </div>
                 <div>
@@ -109,7 +129,6 @@ function LoginPage() {
                     <Image src={'/images/login_background.jpg'} objectFit="cover" fill={true} alt={'field plantation'}/>
                 </div>
             </div>
-
         </div>
     );
 }

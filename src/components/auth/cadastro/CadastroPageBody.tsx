@@ -28,41 +28,68 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
     const [cpf, setCpf] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState<{[key: string]: string[]}>({});
 
+    const formRef = useRef<HTMLFormElement>(null);
     const {isOpen, onOpen, onClose} = useDisclosure();
 
-    const cadastrarUsuario = async (formState: CreateUserProps, formData: FormData): Promise<CreateUserProps> => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         setIsLoading(true);
 
-        const validatedForm = await actions.validarCadastro(formState, formData);
-        const hasErrors = Object.values(validatedForm.errors).some(value => value && value.length > 0)
+        // Create FormData from the form
+        const formData = new FormData(event.currentTarget);
 
-        if (hasErrors) {
-            setIsLoading(false);
-            return validatedForm;
-        } else {
-            try {
-                await signIn('credentials', {email, password, redirect: false});
-            } catch (err: unknown) {
-                if (err instanceof Error) {
+        try {
+            const result = await actions.validarCadastro({ errors: {} }, formData);
 
-                    return {
-                        ...validatedForm,
-                        errors: {
-                            _form: [err.message],
-                        }
-                    }
-                }
+            // Check if there are any validation errors
+            const hasErrors = Object.keys(result.errors).length > 0;
+
+            if (hasErrors) {
+                setErrors(result.errors);
+                setIsLoading(false);
+                return;
             }
+
+            // If validation passes, try to sign in
+            try {
+                await signIn('credentials', {
+                    email,
+                    password,
+                    redirect: false
+                });
+
+                // Redirect on success
+                window.location.href = '/noticias';
+            } catch (error) {
+                if (error instanceof Error) {
+                    setErrors({
+                        _form: [error.message]
+                    });
+                } else {
+                    setErrors({
+                        _form: ['Ocorreu um erro durante o login']
+                    });
+                }
+                setIsLoading(false);
+            }
+        } catch (error) {
+            setErrors({
+                _form: ['Ocorreu um erro durante o cadastro']
+            });
+            setIsLoading(false);
         }
-        window.location.href = '/noticias';
+    };
 
-        return {errors: {}}
-    }
-
-    const [formState, action] = useFormState(cadastrarUsuario, {
-        errors: {},
-    })
+    // Clear specific field error when the field value changes
+    const clearFieldError = (fieldName: string) => {
+        if (errors[fieldName]) {
+            const newErrors = {...errors};
+            delete newErrors[fieldName];
+            setErrors(newErrors);
+        }
+    };
 
     return (
         <div className="flex h-screen">
@@ -74,22 +101,31 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                         Junte-se a nós e tenha acesso a uma plataforma completa para a compra e venda de commodities
                         agrícolas de alta qualidade.
                     </p>
-                    <form action={action} className="space-y-4">
+                    <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
                         <div className="flex space-x-4">
                             <RegisterFormInput
                                 name={'nome'}
                                 title={'Nome Completo'}
                                 value={name}
                                 required={true}
-                                errorMessage={formState.errors.nome?.join(', ')}
-                                isInvalid={!!formState.errors.nome}
-                                onChange={(e) => setFirstName(e.target.value)}
+                                errorMessage={errors.nome?.join(', ')}
+                                isInvalid={!!errors.nome}
+                                onChange={(e) => {
+                                    setFirstName(e.target.value);
+                                    clearFieldError('nome');
+                                }}
                                 endContent={<IoPersonOutline size={18}/>}
                             />
-                            <CpfInput cpf={cpf} setCPF={setCpf} hasError={!!formState.errors.cpf}
-                                      errorMessage={formState.errors.cpf?.join(', ')}
-                                      onChange={() => {
-                                      }}/>
+                            <CpfInput
+                                cpf={cpf}
+                                setCPF={(value) => {
+                                    setCpf(value);
+                                    clearFieldError('cpf');
+                                }}
+                                hasError={!!errors.cpf}
+                                errorMessage={errors.cpf?.join(', ')}
+                                onChange={() => clearFieldError('cpf')}
+                            />
                         </div>
                         <RegisterFormSelect
                             selectProps={
@@ -108,11 +144,12 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                                     value: company.toString(),
                                     onChange: (value: any) => {
                                         setCompany(parseInt(value.target.value));
+                                        clearFieldError('empresa');
                                     },
                                     placeholder: 'Selecione uma empresa',
                                     label: 'Empresa',
-                                    errorMessage: formState.errors.empresa?.join(', '),
-                                    isInvalid: !!formState.errors.empresa,
+                                    errorMessage: errors.empresa?.join(', '),
+                                    isInvalid: !!errors.empresa,
                                 }
                             }
                         />
@@ -121,10 +158,13 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                                 name={'email'}
                                 title={'Email'}
                                 value={email}
-                                errorMessage={formState.errors.email?.join(', ')}
-                                isInvalid={!!formState.errors.email}
+                                errorMessage={errors.email?.join(', ')}
+                                isInvalid={!!errors.email}
                                 required={true}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    clearFieldError('email');
+                                }}
                                 endContent={<MdOutlineMailOutline size={18}/>}
                             />
                             <RegisterFormInput
@@ -133,35 +173,40 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                                 type={'password'}
                                 value={password}
                                 required={true}
-                                errorMessage={formState.errors.senha?.join(', ')}
-                                isInvalid={!!formState.errors.senha}
-                                onChange={(e) => setPassword(e.target.value)}
+                                errorMessage={errors.senha?.join(', ')}
+                                isInvalid={!!errors.senha}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    clearFieldError('senha');
+                                }}
                                 endContent={<MdPassword size={18}/>}
                             />
                         </div>
 
                         <Checkbox
                             name="termos"
+                            onChange={() => clearFieldError('termos')}
                         >
                             <span className="text-sm">
                                 Eu li e aceito os <span onClick={onOpen}
                                                         className={'hover:cursor-pointer text-warning'}>Termos de Uso e a Política de Privacidade</span>. Ao continuar, concordo em cumprir esses termos e estou ciente das práticas de coleta, uso e compartilhamento de dados descritas.
                             </span>
                         </Checkbox>
-                        {formState.errors.termos && formState.errors.termos.length > 0 ? (
-                            <FormErrorText errors={formState.errors.termos}/>
+                        {errors.termos && errors.termos.length > 0 ? (
+                            <FormErrorText errors={errors.termos}/>
                         ) : null}
-                        {formState.errors._form && formState.errors._form.length > 0 ? (
-                            <FormErrorText errors={formState.errors._form}/>
+                        {errors._form && errors._form.length > 0 ? (
+                            <FormErrorText errors={errors._form}/>
                         ) : null}
                         <div className="w-1/3">
-                            {isLoading ? <Spinner/> : <Button
+                            <Button
                                 color={'warning'}
                                 type="submit"
                                 className="w-full bg-customDarkBrown rounded-lg text-white text-md bold mt-4"
+                                disabled={isLoading}
                             >
-                                Cadastrar
-                            </Button>}
+                                {isLoading ? <Spinner /> : 'Cadastrar'}
+                            </Button>
                         </div>
                     </form>
                 </div>
