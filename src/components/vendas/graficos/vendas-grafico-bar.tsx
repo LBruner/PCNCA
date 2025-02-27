@@ -42,7 +42,7 @@ const VendasGraficoBar: React.FC<VendasGraficoBarProps> = ({produtosFilter, clie
 
     return (
         <>
-            <p className={'font-bold text-lg'}>Atividade de Todos Produtos</p>
+            <p style={{width: '105%'}} className={'font-semibold text-xl mb-2'}>Venda de Todos os Produtos nos Últimos 12 Meses</p>
             <div ref={containerRef} style={{width: '105%'}}>
                 <BarChart
                     borderRadius={12}
@@ -66,7 +66,7 @@ const VendasGraficoBar: React.FC<VendasGraficoBarProps> = ({produtosFilter, clie
                             tickSize: 10,
                             disableTicks: false,
                             tickLabelStyle: {fontSize: 16},
-                            data: chartData.chartData.xLabels, // Corrected access to xLabels
+                            data: chartData.chartData.xLabels,
                             scaleType: 'band',
                             labelStyle: {fontSize: 30},
                         },

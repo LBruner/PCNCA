@@ -30,16 +30,37 @@ const formatNumber = (number: number) => {
     return new Intl.NumberFormat('de-DE').format(number);
 };
 
-export const chartColors = ['#FFD700', '#4CAF50', '#8B4513', '#FF6347', '#F4A460'];
+export const chartColors = [
+    '#FFD700', // Gold (Grains)
+    '#4CAF50', // Green (Vegetables)
+    '#8B4513', // SaddleBrown (Livestock)
+    '#FF6347', // Tomato (Fruits)
+    '#F4A460', // SandyBrown (Nuts)
+    '#6A5ACD', // SlateBlue (Dairy)
+    '#20B2AA', // LightSeaGreen (Aquaculture)
+    '#FF4500', // OrangeRed (Spices)
+    '#8A2BE2', // BlueViolet (Herbs)
+    '#00CED1', // DarkTurquoise (Fisheries)
+    '#FF8C00', // DarkOrange (Tubers)
+    '#7CFC00', // LawnGreen (Leafy Greens)
+    '#8B008B', // DarkMagenta (Flowers)
+    '#00BFFF', // DeepSkyBlue (Poultry)
+    '#FF69B4', // HotPink (Berries)
+    '#4682B4', // SteelBlue (Oilseeds)
+    '#32CD32', // LimeGreen (Pulses)
+    '#D2691E', // Chocolate (Coffee/Tea)
+    '#00FA9A', // MediumSpringGreen (Sugar Crops)
+    '#9932CC', // DarkOrchid (Medicinal Plants)
+];
 
 const PieCenterLabel = ({valorTotal}: { valorTotal: string }) => {
     const {height} = useDrawingArea();
     return (
         <>
-            <StyleSubtitle fontSize={'20px'} x={310 / 2} y={height / 2.3}>
+            <StyleSubtitle fontSize={'20px'} x={505 / 2} y={height / 2.3}>
                 Total
             </StyleSubtitle>
-            <StyledValue fontWeight={600} x={310 / 2} y={height / 1.8}>
+            <StyledValue fontWeight={600} x={505 / 2} y={height / 1.8}>
                 {formatNumber(parseFloat(valorTotal))}
             </StyledValue>
         </>
@@ -51,7 +72,7 @@ const VendasGraficoPie: React.FC<VendasGraficoPieProps> = ({produtosFilter, clie
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        fetchChartData(produtosFilter,clientesFilter);
+        fetchChartData(produtosFilter, clientesFilter);
     }, [produtosFilter, clientesFilter]);
 
     const fetchChartData = async (produtoFilter: string | string[], clientesFilter: string | string[]) => {
@@ -77,13 +98,15 @@ const VendasGraficoPie: React.FC<VendasGraficoPieProps> = ({produtosFilter, clie
 
     return (
         <div>
-            <p className={'font-bold text-lg'}>Vendas por Produtos Selecionados</p>
+            <p className={'font-semibold text-xl mb-4'}>Venda Geral por Produto</p>
             <PieChart
-                className={'w-[400px] flex h-[200px]'}
+                className={'w-[800px] flex h-[400px]'} // Increased height
                 colors={chartColors}
                 slotProps={{
                     legend: {
                         direction: 'column',
+                        position: { vertical: 'middle', horizontal: 'right' }, // Adjust legend position
+                        padding: { top: 20 }, // Add padding to the top of the legend
                     },
                 }}
                 series={[
@@ -96,8 +119,8 @@ const VendasGraficoPie: React.FC<VendasGraficoPieProps> = ({produtosFilter, clie
                         data: chartData,
                     },
                 ]}
-                width={400}
-                height={200}
+                width={600}
+                height={200} // Increased height
             >
                 <PieCenterLabel valorTotal={`${totalVendas}`}/>
             </PieChart>
