@@ -1,5 +1,6 @@
 import React from "react";
 import {
+    Avatar,
     Button,
     Dropdown,
     DropdownItem,
@@ -7,11 +8,8 @@ import {
     DropdownTrigger,
     Link,
     NavbarContent,
-    NavbarItem,
-    useDisclosure
+    NavbarItem
 } from "@heroui/react";
-import PerfilModal from "@/components/configuracoes/perfil-modal";
-import {Avatar} from "@heroui/react";
 import paths from "@/paths";
 import {signOut} from "next-auth/react";
 import {fallbackImgUrl} from "@/constants/messages/images";
@@ -21,20 +19,18 @@ import {SlCamera} from "react-icons/sl";
 interface CustomUserCardBodyProps {
     user?: UsuarioComEmpresa;
 }
+
 const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
     let authContent: React.ReactNode;
 
-    const {isOpen, onClose} = useDisclosure();
-
     if (user) {
         authContent = <>
-            <PerfilModal user={user} onClose={onClose} isOpen={isOpen}/>
-            <NavbarContent className={'w-auto pr-7 pb-1'}>
-                <Dropdown size="lg" disableAnimation={false} placement="bottom-end">
+            <NavbarContent className={'h-36 pr-7 pb-1 flex items-center'}>
+                <Dropdown className={'h-auto'} size="lg" disableAnimation={false} placement="bottom-end">
                     <DropdownTrigger>
                         <Avatar
                             showFallback={true}
-                            fallback={<SlCamera  size={20}/>}
+                            fallback={<SlCamera size={20}/>}
                             isBordered
                             name={user.nome}
                             as="button"
@@ -55,7 +51,7 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                             </DropdownItem>
                         ) : null as any}
                         <DropdownItem onPress={() => {
-                             console.log()
+                            console.log()
                         }} key="logout" color="primary">
                             <p className={'text-medium'}>Configurações</p>
                         </DropdownItem>
@@ -66,9 +62,13 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                         </DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
-                <div className={'w-20 flex flex-col'}>
-                    <p className={'text-md font-medium text-lg'}>{user.nome}</p>
-                    <p className={'text-md text-orange-400 font-semibold'}>{user.empresa.nome}</p>
+                <div className={'flex flex-col ml-2 max-w-[200px]'}>
+                    <p className={'text-md font-medium text-lg whitespace-nowrap overflow-hidden text-ellipsis'}>
+                        {user.nome}
+                    </p>
+                    <p className={'text-md text-orange-400 font-semibold whitespace-nowrap overflow-hidden text-ellipsis'}>
+                        {user.empresa.nome}
+                    </p>
                 </div>
             </NavbarContent>
         </>
