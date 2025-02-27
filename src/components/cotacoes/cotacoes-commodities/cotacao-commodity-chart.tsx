@@ -29,12 +29,12 @@ const CotacaoCommodityChart: React.FC<CotacaoCommodityChartProps> = ({chartData}
     }, []);
 
     return (
-        <div className="h-[480px] my-12" ref={containerRef} style={{width: "100%"}}>
+        <div className="h-[400px] my-12" ref={containerRef} style={{width: "100%"}}>
             <LineChart
                 colors={["#4a946f"]}
                 grid={{vertical: true, horizontal: true}}
                 width={containerWidth}
-                height={480}
+                height={400}
                 slotProps={{
                     legend: {
                         hidden: true,
