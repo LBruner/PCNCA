@@ -96,7 +96,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
         }
 
         return filteredProducts;
-    }, [noticias, filterValue, statusFilter, authorFilter, categoryFilter, dateRange, authorFilterCollection, categoryFilterCollection, hasSearchFilter]);
+    }, [noticias, filterValue, authorFilter, categoryFilter, dateRange, authorFilterCollection, categoryFilterCollection, hasSearchFilter]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 

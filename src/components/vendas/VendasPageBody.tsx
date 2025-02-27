@@ -63,15 +63,13 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
     }));
 
     return (
-        <div className={'flex flex-col w-full gap-8 min-h-[800px]'}>
+        <div className={'flex flex-col w-full gap-1 min-h-[800px]'}>
             <div className={'flex justify-between items-center'}>
                 <div className={'flex flex-col w-full gap-4 justify-start pl-24'}>
                     <p className={'text-3xl font-bold'}>Dashboard de Vendas</p>
                     <Tabs color={'primary'} size={'lg'} selectedKey={selectedTab}
-                          onSelectionChange={(key) => setSelectedTab(key as string)}> aria-label="Options"
-                        color="primary"
-                        <Tab
-                            key="geral"
+                          onSelectionChange={(key) => setSelectedTab(key as string)}><Tab
+                            key={'geral'}
                             title={
                                 <div className="flex items-center space-x-2">
                                     <CgMenuGridO/>
@@ -81,7 +79,7 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
                         >
                         </Tab>
                         <Tab
-                            key="detalhes"
+                            key={'detalhes'}
                             title={
                                 <div className="flex items-center space-x-2">
                                     <CiViewTable/>
@@ -100,18 +98,20 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
 
             <div className={'w-full flex justify-center'}>
                 {selectedTab == 'geral' &&
-                    <div className={' justify-center items-center grid grid-cols-2 grid-rows-2 gap-8'}>
+                    <div className={' justify-center items-center gap-4'}>
                         {isLoadingCharts ? <div
                             className="fixed inset-0 flex items-center justify-center">
                             <Spinner color={'warning'}/>
                         </div> : <>
-                            <div className={'h-64 border rounded p-4 col-start-1 row-start-1'}>
-                                <VendasGraficoPie clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
+                            <div className={'flex gap-4 mt-4'}>
+                                <div className={'h-72 w-1/2 shadow border rounded-lg p-6 col-start-1 row-start-1'}>
+                                    <VendasGraficoPie clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
+                                </div>
+                                <div className={'h-72 w-1/2 shadow border rounded p-5 col-start-2 row-start-1'}>
+                                    <VendasGraficoBar clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
+                                </div>
                             </div>
-                            <div className={'h-64 border rounded p-4 col-start-2 row-start-1'}>
-                                <VendasGraficoBar clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
-                            </div>
-                            <div className={'border rounded px-4 col-span-2 row-start-2'}>
+                            <div className={'border mt-4 h-96 shadow rounded p-6 col-span-2 row-start-2'}>
                                 <VendasGraficoLine clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
                             </div>
                         </>}

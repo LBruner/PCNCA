@@ -89,7 +89,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
         }
 
         return filteredProducts;
-    }, [products, filterValue, statusFilter, categoryFilter, priceFilter, stockFilter, hasSearchFilter]);
+    }, [products, filterValue, statusFilter, categoryFilter, priceFilter, stockFilter, hasSearchFilter, categoriesCollection]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 

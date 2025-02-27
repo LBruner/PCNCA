@@ -62,6 +62,7 @@ const TabelaUsuarioTopContent: React.FC<TabelaUsuarioTopContentProps> = (
             </div>
         );
     }, [
+        empresasFilterCollection,
         filterValue,
         empresaFilter,
         itemsLenght,

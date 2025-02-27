@@ -63,7 +63,7 @@ const TabelaEstoqueBottomContent: React.FC<TabelaBottomContentProps> = (
 
             </div>
         );
-    }, [selectedKeys, filteredItemsLength, currentPage, totalPagesQuantity, setCurrentPage, onNextPage, onPreviousPage]);
+    }, [selectedKeys, showPagination, filteredItemsLength, currentPage, totalPagesQuantity, setCurrentPage, onNextPage, onPreviousPage]);
 }
 
 

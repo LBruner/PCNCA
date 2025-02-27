@@ -38,7 +38,7 @@ interface TabelaUsuariosProps {
     empresasFilterCollection: FilterCollection[],
 }
 
-const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios,empresasFilterCollection}) => {
+const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilterCollection}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<string | string[]>([]);
     const [empresaFilter, setEmpresaFilter] = React.useState<string | string[]>("all");
@@ -75,7 +75,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios,empresasFilterC
         }
 
         return filteredProducts;
-    }, [usuarios, filterValue, empresaFilter, hasSearchFilter]);
+    }, [usuarios, filterValue, empresaFilter, hasSearchFilter, empresasFilterCollection]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -158,7 +158,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios,empresasFilterC
             default:
                 return <h1>Implementar</h1>;
         }
-    }, []);
+    }, [deleteUserModal, resetPasswordModal]);
 
 
     const onSearchChange = React.useCallback((value: string | null) => {
@@ -186,7 +186,9 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios,empresasFilterC
     const itemDesativarUsuarioModalSettings: DeletingItemModalSettings = {
         title: 'Excluir Usuário',
         text: 'Ele estará incapacitado de fazer login através de seu usuário',
-        actionFn: async () => {await deletarUsuario(selectedUsuario!)},
+        actionFn: async () => {
+            await deletarUsuario(selectedUsuario!)
+        },
         isOpen: deleteUserModal.isOpen,
         onClose: deleteUserModal.onClose,
     }

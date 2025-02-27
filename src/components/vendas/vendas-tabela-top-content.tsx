@@ -23,11 +23,7 @@ interface TabelaTopContentProps {
 
 const VendasTabelaTopContent: React.FC<TabelaTopContentProps> = (
     {
-        clientesFilter,
-        setClientesFilter,
-        clientesFilterCollection,
         filterValue,
-        produtosFilter,
         onSearchChange,
         onClear,
     }
@@ -58,10 +54,6 @@ const VendasTabelaTopContent: React.FC<TabelaTopContentProps> = (
         );
     }, [
         filterValue,
-        clientesFilter,
-        produtosFilter,
-        clientesFilterCollection,
-        setClientesFilter,
         onClear,
         onSearchChange,
     ]))

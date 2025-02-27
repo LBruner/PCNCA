@@ -69,6 +69,8 @@ const TabelaPessoasTopContent: React.FC<TabelaPessoasTopContentProps> = (
         categoryFilter,
         tipoPessoaFilter,
         setTipoPessoaFilter,
+        categoryColletion,
+        tipoPessoaColletion,
         itemsLenght,
         onSearchChange,
         onClear,

@@ -29,7 +29,7 @@ const CriarVendaCheckout: React.FC<CriarVendaCheckoutFormProps> = (
                 <p className={'text-xl font-normal'}>Selecione o método de pagamento</p>
                 <div className={'px-3 py-3 text-gray-400 border border-gray-200 rounded-xl'}>
                     <CheckboxGroup>
-                        {formasPagamento.map((forma) => <Checkbox checked={true} radius={'full'} defaultChecked={true}>
+                        {formasPagamento.map((forma) => <Checkbox key={forma.id} checked={true} radius={'full'} defaultChecked={true}>
                             <p className={'font-light text-lg'}>
                                 {forma.tipo}
                             </p></Checkbox>)}

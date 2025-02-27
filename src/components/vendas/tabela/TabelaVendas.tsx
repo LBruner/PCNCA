@@ -87,8 +87,6 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
             for (let venda of filteredVendas) {
                 let nestedFilteredVendas = [];
                 for (let nestedVenda of venda) {
-                    console.log("nestedVenda.venda.estoques:", nestedVenda.venda.estoques); // Debugging
-
                     // Check if any of the produtos in nestedVenda match any item in produtosFilter
                     const hasMatchingProduto = nestedVenda.venda.estoques.some((produto) =>
                     // @ts-ignore
@@ -110,7 +108,7 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
         }
 
         return filteredVendas;
-    }, [vendas, produtosFilter, clientesFilter]);
+    }, [vendas, produtosFilter, clientesFilter, clientesFilterCollection, produtosFilterCollection]);
 
     console.log(filteredItems)
 
@@ -148,20 +146,20 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
                 return (
                     <div className="flex gap-4 flex-col">
                         {venda[0].venda.estoques.map((estoque) => (
-                            <p>{`${estoque.estoque.produto}`}</p>
+                            <p key={estoque.id}>{`${estoque.estoque.produto}`}</p>
                         ))}
                     </div>);
             case "vrUnitario":
                 return (
                     <div className="flex gap-4 flex-col">
                         {venda[0].venda.estoques.map((estoque) => (
-                            <p>{`${formatToBrazilianCurrency(estoque.estoque.preco)}`}</p>
+                            <p key={estoque.id}>{`${formatToBrazilianCurrency(estoque.estoque.preco)}`}</p>
                         ))}
                     </div>);
             case "quantidadeUnitaria":
                 return (
                     <div className="flex gap-4 flex-col">
-                        {venda.map((venda) => <p>{venda.valorAlter} unidade(s)</p>)}
+                        {venda.map((venda) => <p key={venda.id}>{venda.valorAlter} unidade(s)</p>)}
                     </div>);
             case "quantidadeGeral":
                 return (
@@ -174,7 +172,7 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
     }, []);
 
     return (
-        <div className={'w-5/6'}>
+        <div className={'w-5/6 mt-8'}>
             <Table
                 isStriped={true}
                 isHeaderSticky

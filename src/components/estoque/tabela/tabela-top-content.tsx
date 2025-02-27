@@ -92,6 +92,7 @@ const TabelaTopContent: React.FC<TabelaTopContentProps> = (
         );
     }, [
         filterValue,
+        categoriesOptions,
         statusFilter,
         stockFilter,
         priceFilter,
