@@ -110,7 +110,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
                     <Image
                         width={200}
                         shadow={'sm'}
-                        height={50}
+                        height={100}
                         alt={categoria.nome}
                         src={categoria.imagemLink!}
                     />
