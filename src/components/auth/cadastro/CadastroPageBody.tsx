@@ -130,7 +130,7 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                         <RegisterFormSelect
                             selectProps={
                                 {
-                                    classNames:{
+                                    classNames: {
                                         label: 'text-gray-500',
                                         value: 'text-black',
                                     },
@@ -140,7 +140,7 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                                         name: capitalizeFirstLetter(empresa.nome)
                                     })),
                                     name: 'empresa',
-                                    children:[],
+                                    children: [],
                                     value: company.toString(),
                                     onChange: (value: any) => {
                                         setCompany(parseInt(value.target.value));
@@ -184,14 +184,15 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                         </div>
 
                         <Checkbox
+                            color={'primary'}
                             name="termos"
                             onChange={() => clearFieldError('termos')}
                         >
-                            <span className="text-sm">
+                        </Checkbox>
+                        <span className="text-md font-light">
                                 Eu li e aceito os <span onClick={onOpen}
                                                         className={'hover:cursor-pointer text-warning'}>Termos de Uso e a Política de Privacidade</span>. Ao continuar, concordo em cumprir esses termos e estou ciente das práticas de coleta, uso e compartilhamento de dados descritas.
                             </span>
-                        </Checkbox>
                         {errors.termos && errors.termos.length > 0 ? (
                             <FormErrorText errors={errors.termos}/>
                         ) : null}
