@@ -26,7 +26,6 @@ const TabelaUsuarioTopContent: React.FC<TabelaUsuarioTopContentProps> = (
         filterValue,
         onSearchChange,
         onClear,
-        itemsLenght,
     }
 ) => {
     const size = 'w-full';

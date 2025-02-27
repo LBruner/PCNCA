@@ -32,7 +32,6 @@ const TabelaPessoasTopContent: React.FC<TabelaPessoasTopContentProps> = (
         filterValue,
         onSearchChange,
         onClear,
-        itemsLenght,
     }
 ) => {
     const size = 'w-1/5';

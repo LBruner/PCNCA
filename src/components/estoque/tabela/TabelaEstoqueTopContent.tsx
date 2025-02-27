@@ -45,7 +45,6 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
         setPriceFilter,
         onSearchChange,
         onClear,
-        itemsLenght,
         selectedItems,
         products
     }

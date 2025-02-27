@@ -40,7 +40,6 @@ const TabelaTopContent: React.FC<TabelaTopContentProps> = (
         setPriceFilter,
         onSearchChange,
         onClear,
-        itemsLenght,
     }
 ) => {
     const size = 'w-1/5';
