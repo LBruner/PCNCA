@@ -1,1 +1,1 @@
-export const fallbackImgUrl = 'https://placehold.co/600x300.png?text=Sem+Imagem'
+export const fallbackImgUrl = '/images/fallback_image.jpg'

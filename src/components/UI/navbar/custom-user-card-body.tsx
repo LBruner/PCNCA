@@ -54,7 +54,12 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                                 ADM
                             </DropdownItem>
                         ) : null as any}
-                        <DropdownItem onClick={() => {
+                        <DropdownItem onPress={() => {
+                             console.log()
+                        }} key="logout" color="primary">
+                            <p className={'text-medium'}>Configurações</p>
+                        </DropdownItem>
+                        <DropdownItem onPress={() => {
                             signOut().then(_ => console.log())
                         }} key="logout" color="danger">
                             <p className={'text-medium'}>Sair</p>
