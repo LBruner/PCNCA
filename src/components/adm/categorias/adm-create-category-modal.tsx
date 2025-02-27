@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import CustomModal from "@/components/UI/CustomModal";
 import {Input} from "@nextui-org/react";
-import {createCategory, updateCategory} from "@/actions/culturas";
+import {criarCultura, editarCultura} from "@/actions/culturas";
 import {Cultura} from "@prisma/client";
 
 export type CreateItemModalSettings = {
@@ -41,14 +41,17 @@ const AdmCreateCategoryModal: React.FC<CustomModalProps> = ({settings}) => {
         setIsLoading(true);
 
         if (settings.cultura) {
-            await updateCategory({
-                name: nomeCategoria,
-                description: descricaoCategoria,
-                url: urlCategoria,
-                id: settings.cultura.culturaId
+            await editarCultura({
+                nome: nomeCategoria,
+                descricao: descricaoCategoria,
+                imagemLink: urlCategoria,
+                culturaId: settings.cultura.culturaId
             });
         } else {
-            await createCategory(nomeCategoria, descricaoCategoria, urlCategoria);
+            await criarCultura(nomeCategoria, descricaoCategoria, urlCategoria);
+            setNomeCategoria('');
+            setUrlCategoria('');
+            setDescricaoCategoria('');
         }
 
         setIsLoading(false);
@@ -71,11 +74,11 @@ const AdmCreateCategoryModal: React.FC<CustomModalProps> = ({settings}) => {
                 <>
                     <form className={'flex flex-col gap-4'}>
                         <Input value={nomeCategoria} onValueChange={setNomeCategoria} isRequired={true}
-                               label={'Nome da categoria'} labelPlacement={'inside'}>Nome</Input>
+                               label={'Nome da cultura'} labelPlacement={'inside'}>Nome</Input>
                         <Input value={urlCategoria} onValueChange={setUrlCategoria} isRequired={true} required={true}
                                label={'Url da imagem'} labelPlacement={'inside'}>Nome</Input>
                         <Input value={descricaoCategoria} onValueChange={setDescricaoCategoria} isRequired={true}
-                               required={true} label={'Descrição da categoria'} labelPlacement={'inside'}>Nome</Input>
+                               required={true} label={'Descrição da cultura'} labelPlacement={'inside'}>Nome</Input>
                     </form>
                 </>
             }

@@ -23,7 +23,7 @@ const AdmCategoriasTableTopContent: React.FC<TabelaTopContentProps> = (
     return (React.useMemo(() => {
         return (
             <div className="flex justify-between gap-3">
-                <div className={'flex gap-1 w-10/12'}>
+                <div className={'flex gap-1 w-full'}>
                     <Input
                         size={'md'}
                         isClearable
@@ -37,7 +37,7 @@ const AdmCategoriasTableTopContent: React.FC<TabelaTopContentProps> = (
                 </div>
                 <div className="flex gap-1 ">
                     <Button onClick={openCreateCategoryModal} className={'text-white bg-orange-600 w-44'} startContent={<PlusIcon/>}>
-                        Adicionar categoria
+                        Adicionar Cultura
                     </Button>
                 </div>
             </div>

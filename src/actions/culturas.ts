@@ -16,12 +16,15 @@ export const pegaCulturaPorId = async (id: number): Promise<Cultura | null> => {
     })
 }
 
-export const createCategory = async (name: string, description: string, url: string) => {
-    await db.category.create({
+export const criarCultura = async (name: string, description: string, url: string) => {
+    console.log(name)
+    console.log(description)
+    console.log(url)
+    await db.cultura.create({
         data: {
-            name: name,
-            description: description,
-            url: url
+            nome: name,
+            descricao: description,
+            imagemLink: url
         }
     });
 
@@ -29,15 +32,15 @@ export const createCategory = async (name: string, description: string, url: str
     revalidatePath(paths.culturas());
 }
 
-export const updateCategory = async (category: Category) => {
-    await db.category.update({
+export const editarCultura = async (cultura: Cultura) => {
+    await db.cultura.update({
         where: {
-            id: category.id
+            culturaId: cultura.culturaId
         },
         data: {
-            name: category.name,
-            description: category.description,
-            url: category.url
+            nome: cultura.nome,
+            descricao: cultura.descricao,
+            imagemLink: cultura.imagemLink
         }
     });
 
@@ -45,10 +48,10 @@ export const updateCategory = async (category: Category) => {
     revalidatePath(paths.culturas());
 }
 
-export const deleteCategoria = async (categoriaId: number) => {
-    await db.category.delete({
+export const deletarCultura = async (cultura: number) => {
+    await db.cultura.delete({
         where: {
-            id: categoriaId,
+            culturaId: cultura,
         },
     })
 

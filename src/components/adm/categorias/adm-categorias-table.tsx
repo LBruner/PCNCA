@@ -22,7 +22,7 @@ import CustomModal from "@/components/UI/CustomModal";
 import CulturaCard from "@/components/noticias/culturas/cultura-card";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
 import AdmCreateCategoryModal, {CreateItemModalSettings} from "@/components/adm/categorias/adm-create-category-modal";
-import {deleteCategoria} from "@/actions/culturas";
+import {deletarCultura} from "@/actions/culturas";
 
 const columns = [
     {name: "ID", uid: "id", sortable: true},
@@ -167,14 +167,14 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
     const itemDeleteModalSettings: DeletingItemModalSettings = {
         title: 'Excluir Categoria',
         text: `Tem certeza que deseja excluir a categoria: ${selectedCultura?.nome}? Essa ação não pode ser desfeita...`,
-        actionFn: deleteCategoria.bind(null, selectedCultura?.culturaId ?? 0),
+        actionFn: deletarCultura.bind(null, selectedCultura?.culturaId ?? 0),
         isOpen: deleteModal.isOpen,
         onClose: deleteModal.onClose,
     }
 
     const itemCreateModalSettings: CreateItemModalSettings = {
-        title: 'Adicionar Categoria',
-        text: `Preencha abaixo os campos da nova categoria.`,
+        title: 'Adicionar Cultura',
+        text: `Preencha abaixo os campos da nova cultura.`,
         actionText: 'Adicionar',
         isOpen: createModal.isOpen,
         onClose: createModal.onClose,
@@ -182,8 +182,8 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
 
     const itemEditModalSettings: CreateItemModalSettings = {
         cultura: selectedCultura!,
-        title: 'Editar Categoria',
-        text: `Atualize abaixo os campos da categoria.`,
+        title: 'Editar Cultura',
+        text: `Atualize abaixo os campos da cultura.`,
         actionText: 'Editar',
         isOpen: editModal.isOpen,
         onClose: editModal.onClose,
