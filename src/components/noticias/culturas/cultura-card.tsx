@@ -12,7 +12,7 @@ interface CulturaCardProps {
 const CulturaCard: React.FC<CulturaCardProps> = ({image, id, title}) => {
     return (
         <div className="relative h-[364px] w-[100%]">
-            <Link href={`${paths.getCultura(id)}`}>
+            <Link href={paths.getCultura(id)}>
                 <Image
                     fill={true}
                     src={image}

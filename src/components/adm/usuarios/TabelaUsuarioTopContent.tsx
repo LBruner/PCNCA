@@ -65,7 +65,6 @@ const TabelaUsuarioTopContent: React.FC<TabelaUsuarioTopContentProps> = (
         empresasFilterCollection,
         filterValue,
         empresaFilter,
-        itemsLenght,
         onSearchChange,
         onClear,
         setEmpresaFilter,

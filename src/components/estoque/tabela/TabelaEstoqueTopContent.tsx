@@ -128,7 +128,6 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
         stockFilter,
         priceFilter,
         categoryFilter,
-        itemsLenght,
         onSearchChange,
         onClear,
         setCategoryFilter,
