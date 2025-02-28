@@ -234,12 +234,12 @@ export const editarPessoa = async (pessoa: PessoaCriacao) => {
         };
 
     const data = {
-        categoriaId: pessoa.categoria === 'Física' ? 5 : pessoa.tipo!,
+        categoriaId: pessoa.tipo!,
         email: pessoa.email!,
         imagemLink: pessoa.imagemLink!,
         telefones: atualizarTelefones,
         enderecos: atualizarEnderecos,
-        ...(pessoa.categoria === 'Física'
+        ...(pessoaExistente.pessoaFisica != null
                 ? {pessoaFisica: atualizarPessoaFisica()}
                 : {pessoaJuridica: atualizarPessoaJuridica()}
         ),
