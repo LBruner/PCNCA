@@ -12,7 +12,6 @@ import {authOptions} from "@/app/AuthOptions";
 
 const createProductSchema = z.object({
     nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
-    fornecedor: z.string({message: 'Você deve escolher um fornecedor'}),
     categoria: z.string(),
     preco: z.number().min(0, 'O preço deve ser maior que 0'),
     estoque: z.number().min(0, 'O valor em estoque deve ser maior que 0'),
@@ -51,7 +50,6 @@ function validateForm(formData: FormData): FormDataValidationResult {
         categoria: formData.get('categoria'),
         descricao: formData.get('descricao'),
         tipoComodity: formData.get('tipoComodity') || '',
-        fornecedor: formData.get('chave_fornecedor') || '',
         preco: parseFloat(formData.get('preco') as string) || 0,
         estoque: parseFloat(formData.get('estoque') as string) || 0,
         imagem: formData.get('imagem'),
@@ -225,22 +223,6 @@ export async function criarProduto(_: CreatePostFormState, formData: FormData): 
             }
         });
 
-        await db.vendaPessoa.create({
-            data: {
-                venda: {
-                    connect: {
-                        id: venda.id
-                    }
-                },
-                pessoa: {
-                    connect: {
-                        id: parseInt(data.fornecedor)
-                    }
-                },
-                tipoPessoa: "Fornecedor"
-            }
-        });
-
         await db.historicoEstoque.create({
             data: {
                 venda: {
@@ -276,19 +258,8 @@ export async function criarProduto(_: CreatePostFormState, formData: FormData): 
 }
 
 
-export async function editarProduto(vendaId: number, pessoaId: number, estoqueId: number, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
-    return handleFormSubmission(formData, async (data, userId) => {
-        await db.vendaPessoa.update({
-            where: {
-                vendaId_pessoaId: {
-                    vendaId: vendaId,
-                    pessoaId: pessoaId
-                }
-            },
-            data: {
-                pessoaId: parseInt(data.fornecedor)
-            }
-        })
+export async function editarProduto(vendaId: number, estoqueId: number, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
+    return handleFormSubmission(formData, async (data,userId) => {
         await db.estoque.update({
             where: {
                 id: estoqueId,

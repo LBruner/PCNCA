@@ -31,7 +31,6 @@ const columns = [
     {name: "PRODUTO", uid: "nome", sortable: true},
     {name: "CATEGORIA", uid: "categoria", sortable: false},
     {name: "TIPO", uid: "tipo", sortable: false},
-    {name: "FORNECEDOR", uid: "fornecedor", sortable: false},
     {name: "DATA DE ADIÇÃO", uid: "data", sortable: false},
     {name: "PREÇO", uid: "preco", sortable: false},
     {name: "ESTOQUE", uid: "quantidade", sortable: false},
@@ -120,12 +119,6 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                     <Chip className="capitalize" size="sm" variant="flat">
                         {product.estoque.categoriaId?.nome}
                     </Chip>
-                );
-            case "fornecedor":
-                return (
-                    <p>
-                        {product.venda.pessoas[0].pessoa.pessoaJuridica?.razaoSocial}
-                    </p>
                 );
             case "tipo":
                 return (

@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import {Autocomplete, AutocompleteItem, Button, Input, Select, SelectItem} from "@heroui/react";
+import {Button, Input, Select, SelectItem} from "@heroui/react";
 import {Textarea} from "@heroui/input";
 import {Radio, RadioGroup} from "@heroui/radio";
-import {CreatePostFormState, FornecedorComRelacoes} from "@/actions/produto";
+import {CreatePostFormState} from "@/actions/produto";
 import {Cultura} from "@prisma/client";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import {unidadesMedidaCollection} from "@/constants/UnidadesMedida";
@@ -12,12 +12,10 @@ interface ProdutoFormProps {
     formState: CreatePostFormState,
     action: (payload: FormData) => void,
     produto?: ProdutoEstoqueComRelacoes;
-    fornecedores?: FornecedorComRelacoes[];
     culturas: Cultura[];
 }
 
-const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fornecedores, culturas}) => {
-    const [selectedChaveFornecedor, setSelectedChaveFornecedor] = useState(produto?.venda?.pessoas[0].pessoa.id.toString() ?? '');
+const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, culturas}) => {
     const [selectedChaveCategoria, setselectedChaveCategoria] = useState(produto?.estoque.categoriaId?.culturaId.toString() ?? '');
     const [unidadeMedidaChave, setUnidadeMedidaChave] = useState(produto?.estoque.unidadeMedida.toString() ?? '');
 
@@ -30,7 +28,6 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
 
     return (
         <form action={formData => {
-            formData.append('chave_fornecedor', selectedChaveFornecedor);
             action(formData);
         }} className={'flex flex-col justify-center items-center'}>
             <div className={'w-5/6 flex justify-between mb-4 items-center'}>
@@ -61,13 +58,6 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
                             collection={culturaCollection} isInvalid={!!formState.errors.categoria}
                             errorMessage={formState.errors.categoria?.join(', ')}
                         />
-                        <Textarea defaultValue={produto?.estoque.descricao ?? undefined} name={'descricao'} size={'lg'}
-                                  minRows={1}
-                                  className={'font-semibold'}
-                                  labelPlacement={'outside'} label={'Descrição'}
-                                  placeholder={'Descreva seu produto em detalhes...'}
-                                  isInvalid={!!formState.errors.descricao}
-                                  errorMessage={formState.errors.descricao?.join(', ')}/>
                         <CustomInputButton defaultValue={produto?.estoque.imagemLink ?? undefined} name={'imagem'}
                                            label={'Imagem principal'}
                                            placeholder={'Digite a url da imagem...'}
@@ -77,27 +67,6 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
                 </div>
                 <div className={'flex flex-col gap-4 w-full px-8 py-6 mt-11'}>
                     <div className={'flex flex-col gap-7'}>
-                        <Autocomplete
-                            defaultSelectedKey={selectedChaveFornecedor ?? undefined}
-                            name={'fornecedor'}
-                            size={'lg'}
-                            labelPlacement={'outside'}
-                            label="Fornecedor"
-                            isRequired={true}
-                            multiple={false}
-                            placeholder={'Selecione um fornecedor'}
-                            className="w-full font-semibold"
-                            onSelectionChange={key => {
-                                setSelectedChaveFornecedor(key!.toString());
-                                console.log(`${unidadeMedidaChave}`)
-                            }}
-                        >
-                            {fornecedores!.map((fornecedor) => (
-                                <AutocompleteItem key={fornecedor.id}>
-                                    {fornecedor.pessoaJuridica?.razaoSocial}
-                                </AutocompleteItem>
-                            ))}
-                        </Autocomplete>
                         <CustomInputButton defaultValue={produto?.estoque.quantidade.toString() ?? undefined}
                                            name={'estoque'}
                                            type={'number'} label={'Estoque'}
@@ -112,6 +81,13 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, fo
                             collection={unidadesMedidaCollection} isInvalid={!!formState.errors.unidade}
                             errorMessage={formState.errors.unidade?.join(', ')}
                         />
+                        <Textarea defaultValue={produto?.estoque.descricao ?? undefined} name={'descricao'} size={'lg'}
+                                  minRows={1}
+                                  className={'font-semibold'}
+                                  labelPlacement={'outside'} label={'Descrição'}
+                                  placeholder={'Descreva seu produto em detalhes...'}
+                                  isInvalid={!!formState.errors.descricao}
+                                  errorMessage={formState.errors.descricao?.join(', ')}/>
                         <RadioGroup
                             defaultValue={produto?.estoque?.tipo ?? 'A'}
                             name={'tipoComodity'}
