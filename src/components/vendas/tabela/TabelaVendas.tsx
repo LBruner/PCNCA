@@ -68,8 +68,13 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
             for (let venda of filteredVendas) {
                 let nestedFilteredVendas = [];
                 for (let nestedVenda of venda) {
-                    if (nestedVenda.venda.pessoas[0].pessoa.pessoaJuridica?.razaoSocial == clientesFilter) {
-                        nestedFilteredVendas.push(nestedVenda);
+                    const pessoa = nestedVenda.venda.pessoas[0]?.pessoa;
+                    if (pessoa) {
+                        const razaoSocial = pessoa.pessoaJuridica?.razaoSocial;
+                        const nome = pessoa.pessoaFisica?.nome;
+                        if (razaoSocial && clientesFilter.includes(razaoSocial) || nome && clientesFilter.includes(nome)) {
+                            nestedFilteredVendas.push(nestedVenda);
+                        }
                     }
                 }
                 if (nestedFilteredVendas.length > 0) {
@@ -109,8 +114,6 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
         return filteredVendas;
     }, [vendas, produtosFilter, clientesFilter, clientesFilterCollection, produtosFilterCollection]);
 
-    console.log(filteredItems)
-
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
     const items = React.useMemo(() => {
@@ -126,7 +129,7 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
                 return (
                     <User
                         avatarProps={{radius: "lg", size: 'lg', src: venda[0].venda.pessoas[0].pessoa.imagemLink!}}
-                        name={venda[0].venda.pessoas[0].pessoa.pessoaJuridica?.razaoSocial}
+                        name={venda[0].venda.pessoas[0].pessoa.pessoaJuridica != null ? venda[0].venda.pessoas[0].pessoa.pessoaJuridica.razaoSocial : venda[0].venda.pessoas[0].pessoa.pessoaFisica?.nome}
                         description={<p>{venda[0].venda.pessoas[0].pessoa.email}</p>}
                     >
                     </User>

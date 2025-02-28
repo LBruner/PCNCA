@@ -51,7 +51,7 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     const clientesFilterCollection: FilterCollection[] = clientes[0].pessoas.map((cliente) => ({
-        name: cliente.pessoaJuridica?.razaoSocial!,
+        name: cliente.pessoaJuridica?.razaoSocial != null ? cliente.pessoaJuridica?.razaoSocial : cliente.pessoaFisica?.nome!,
         uid: cliente.id.toString()
     }));
 

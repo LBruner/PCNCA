@@ -9,6 +9,10 @@ const VendasPage: React.FC = async _ => {
     const clientes = await pegaTodosClientes();
     const produtos = await pegaTodosProdutos();
 
+    if (clientes[0] != null && clientes[1] != null) {
+        clientes[0].pessoas.push(...clientes[1].pessoas)
+    }
+
     return(
         <VendasPageBody vendas={vendas} clientes={clientes} produtos={produtos}/>
     )

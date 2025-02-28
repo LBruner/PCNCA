@@ -5,14 +5,14 @@ import {getServerSession} from "next-auth";
 import {authOptions} from "@/app/AuthOptions";
 import {getUserId} from "@/actions/produto";
 import {VendaComDados} from "@/components/vendas/criação/CriarVendaForm";
-import {Estoque, HistoricoEstoque, Pessoa, PessoaJuridica, Venda} from "@prisma/client";
+import {Estoque, HistoricoEstoque, Pessoa, PessoaFisica, PessoaJuridica, Venda} from "@prisma/client";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {BarChartData, LineChartData, PieChartData} from "@/models/graficos/charts";
 
 export type VendasAgrupadas = HistoricoEstoque & {
     venda: Venda & {
-        pessoas: (Pessoa & { pessoa: Pessoa & { pessoaJuridica?: PessoaJuridica | null } })[],
+        pessoas: (Pessoa & { pessoa: Pessoa & { pessoaJuridica?: PessoaJuridica | null, pessoaFisica?: PessoaFisica} })[],
         estoques: (Estoque & { estoque: Estoque })[],
     }
 }
@@ -40,6 +40,7 @@ export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
                             pessoa: {
                                 include: {
                                     pessoaJuridica: true,
+                                    pessoaFisica: true,
                                 },
                             },
                         },
@@ -67,7 +68,6 @@ export async function criarVenda(vendas: VendaComDados): Promise<void> {
     const session = await getServerSession(authOptions)
 
     const userId = await getUserId(session!.user.id!);
-
     let subtotal = 0;
     let quantidadeVendida = 0;
 
@@ -180,11 +180,22 @@ export async function getDadosGraficoPie(
             pessoas: {
                 some: {
                     pessoa: {
-                        pessoaJuridica: {
-                            razaoSocial: {
-                                in: clientesFilter,
+                        OR: [
+                            {
+                                pessoaJuridica: {
+                                    razaoSocial: {
+                                        in: clientesFilter,
+                                    },
+                                },
                             },
-                        },
+                            {
+                                pessoaFisica: {
+                                    nome: {
+                                        in: clientesFilter,
+                                    },
+                                },
+                            },
+                        ],
                     },
                 },
             },
@@ -236,7 +247,6 @@ export async function getDadosGraficoPie(
         value: total,
     }));
 
-    console.log(data);
     return data;
 }
 
@@ -290,11 +300,22 @@ export async function getDadosGraficoLine(
             pessoas: {
                 some: {
                     pessoa: {
-                        pessoaJuridica: {
-                            razaoSocial: {
-                                in: clientesFilter,
+                        OR: [
+                            {
+                                pessoaJuridica: {
+                                    razaoSocial: {
+                                        in: clientesFilter,
+                                    },
+                                },
                             },
-                        },
+                            {
+                                pessoaFisica: {
+                                    nome: {
+                                        in: clientesFilter,
+                                    },
+                                },
+                            },
+                        ],
                     },
                 },
             },
@@ -413,11 +434,22 @@ export async function getDadosGraficoBar(
             pessoas: {
                 some: {
                     pessoa: {
-                        pessoaJuridica: {
-                            razaoSocial: {
-                                in: clientesFilter,
+                        OR: [
+                            {
+                                pessoaJuridica: {
+                                    razaoSocial: {
+                                        in: clientesFilter,
+                                    },
+                                },
                             },
-                        },
+                            {
+                                pessoaFisica: {
+                                    nome: {
+                                        in: clientesFilter,
+                                    },
+                                },
+                            },
+                        ],
                     },
                 },
             },
@@ -495,6 +527,5 @@ export async function getDadosGraficoBar(
         },
     };
 
-    console.log(data);
     return data;
 }

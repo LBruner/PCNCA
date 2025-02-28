@@ -1,21 +1,19 @@
 'use server';
 
 import {db} from "@/db";
-import {CategoriaPessoa, Pessoa, PessoaJuridica} from "@prisma/client";
+import {CategoriaPessoa, Pessoa, PessoaFisica, PessoaJuridica} from "@prisma/client";
 
 export type CategoriaPessoaComEmpresa = CategoriaPessoa & {
-    pessoas: (Pessoa & { pessoaJuridica?: PessoaJuridica | null })[],
+    pessoas: (Pessoa & { pessoaJuridica?: PessoaJuridica | null, pessoaFisica?: PessoaFisica | null })[],
 }
 
 export const pegaTodosClientes = (): Promise<CategoriaPessoaComEmpresa[]> => {
     return db.categoriaPessoa.findMany({
-        where: {
-            descricao: 'Cliente',
-        },
         include: {
             pessoas: {
                 include: {
                     pessoaJuridica: true,
+                    pessoaFisica: true,
                 }
             }
         }

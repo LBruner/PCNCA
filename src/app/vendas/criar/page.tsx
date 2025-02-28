@@ -12,6 +12,10 @@ const CriarVendasPage: React.FC = async () => {
     const clientes = await pegaTodosClientes();
     const formaPagamento = await pegaTodasFormasPagamento();
 
+    if (clientes[0] != null && clientes[1] != null) {
+        clientes[0].pessoas.push(...clientes[1].pessoas)
+    }
+
     return (
         <CriarVendaForm clientes={clientes} formasPagamento={formaPagamento}/>
     )
