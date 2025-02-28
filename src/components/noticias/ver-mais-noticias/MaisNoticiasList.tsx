@@ -12,7 +12,6 @@ interface MaisNoticiasListProps {
 }
 
 const MaisNoticiasList: React.FC<MaisNoticiasListProps> = ({noticias}) => {
-    console.log(noticias)
     const noticiasOrdenadas = noticias.sort((a, b) => {
         const dateA = new Date(a.dataPubli);
         const dateB = new Date(b.dataPubli);

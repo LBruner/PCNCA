@@ -17,9 +17,6 @@ export const pegaCulturaPorId = async (id: number): Promise<Cultura | null> => {
 }
 
 export const criarCultura = async (name: string, description: string, url: string) => {
-    console.log(name)
-    console.log(description)
-    console.log(url)
     await db.cultura.create({
         data: {
             nome: name,

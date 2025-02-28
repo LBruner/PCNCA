@@ -44,7 +44,6 @@ const AdmNoticiasTableTopContent: React.FC<TabelaTopContentProps> = (
 ) => {
     const size = 'w-full';
 
-    console.log(authorFilterCollection)
     return (React.useMemo(() => {
         return (
             <div className="flex flex-col gap-4">

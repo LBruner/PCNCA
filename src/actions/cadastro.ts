@@ -31,7 +31,6 @@ const registerSchema = z.object({
 });
 
 export async function validarCadastro(_: CreateUserProps, formData: FormData): Promise<CreateUserProps> {
-    console.log(formData)
     const result = registerSchema.safeParse({
         nome: formData.get('nome'),
         cpf: formData.get('cpf'),

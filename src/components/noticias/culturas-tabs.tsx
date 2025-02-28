@@ -25,7 +25,6 @@ const CulturasTabs: React.FC<CulturasListProps> = ({noticias, culturas}) => {
         const novaCultura = parseInt(cultura.toString());
         setSelectedCultura(novaCultura);
     };
-        console.log(selectedCultura);
 
     if (culturas.length == 0) {
         return <p>Nenhuma categoria adicionada...</p>;

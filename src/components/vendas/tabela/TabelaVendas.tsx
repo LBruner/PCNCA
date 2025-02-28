@@ -59,7 +59,6 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
 
     const [currentPage, setCurrentPage] = React.useState(1);
 
-    console.log(produtosFilter)
     const filteredItems = React.useMemo(() => {
         let filteredVendas = [...vendas];
 

@@ -80,7 +80,6 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
 
         if (categoryFilter !== "all" && Array.from(categoryFilterCollection).length !== categoryFilter.length) {
             filteredProducts = filteredProducts.filter((noticia) => {
-                    console.log(categoryFilter)
                     return Array.from(categoryFilter).includes(noticia.cultura.nome);
                 }
             );

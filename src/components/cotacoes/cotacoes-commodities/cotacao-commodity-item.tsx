@@ -18,8 +18,6 @@ const CotacaoCommodityItem: React.FC<CotacaoCommodityItemProps> = ({ cotacao }) 
         setIsPositiveVariation(Math.floor(Math.random() * 2) === 0);
     }, [cotacao.preco, cotacao.variacao]);
 
-    console.log(randomVariation)
-
     return (
         <div className={'flex flex-col gap-4'}>
             <h1 className={'text-2xl font-semibold'}>{cotacao.nome}</h1>

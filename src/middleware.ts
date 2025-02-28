@@ -8,14 +8,12 @@ export default withAuth(
         const token = req.nextauth.token;
 
         if (token?.alterarSenha && !req.nextUrl.pathname.startsWith(paths.alterarSenha())) {
-            console.log('trocar senha')
             return NextResponse.redirect(
                 new URL(paths.alterarSenha(), req.url)
             );
         }
 
         if (req.nextUrl.pathname.startsWith('/auth/alterar-senha') && !token?.alterarSenha) {
-            console.log('444')
             return NextResponse.redirect(
                 new URL(paths.noticias(), req.url)
             );

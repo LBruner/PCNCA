@@ -70,7 +70,6 @@ export const getSortedCategoria = (items: Cultura[], sortDescriptor: SortDescrip
 }
 
 export const getSortedPessoas = (items: PessoaFisJurEnd[], sortDescriptor: SortDescriptor) => {
-    console.log(sortDescriptor);
     return [...items].sort((a: PessoaFisJurEnd, b: PessoaFisJurEnd) => {
         const first = a.pessoaFisica?.nome ?? a.pessoaJuridica?.razaoSocial;
         const second = b.pessoaFisica?.nome ?? b.pessoaJuridica?.razaoSocial;

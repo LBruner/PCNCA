@@ -29,7 +29,6 @@ const TradingViewAdvancedChartWidget: React.FC<TradingViewChartWidgetProps> = (
     }) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
-    console.log(symbol)
     useEffect(() => {
         if (containerRef.current) {
             containerRef.current.innerHTML = '';

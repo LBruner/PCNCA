@@ -40,8 +40,6 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
     const [selectedTab, setSelectedTab] = React.useState("geral");
     const [datesRange, setDatesRange] = useState<RangeValue<DateValue>>();
 
-
-    console.log(produtosFilter)
     const [isLoadingCharts, setIsLoadingCharts] = React.useState(true);
 
     useEffect(() => {

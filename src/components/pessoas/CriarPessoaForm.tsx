@@ -18,7 +18,6 @@ export interface CriarPessoaFormProps {
 const CriarPessoaForm: React.FC<CriarPessoaFormProps> = ({pessoaCriada, tiposPessoas}) => {
     const [screenIndex, setScreenIndex] = useState(0);
     const [pessoaPraCriar, setPessoaPraCriar] = useState<PessoaCriacao>(pessoaCriada != null ? getFlatPessoa(pessoaCriada) : getFlatPessoa());
-    console.log(pessoaPraCriar)
     let currentScreen;
 
     const tiposPessoaColletion: FilterCollection[] = tiposPessoas.map((tipo: CategoriaPessoa) => ({

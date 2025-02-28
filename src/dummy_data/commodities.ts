@@ -2,8 +2,6 @@ import {LineChartData} from "@/models/graficos/charts";
 import {CotacaoCommodity} from "@/models/cotacao-commodity/cotacao-commodity";
 
 export const getLineChartData = (commodityId: string): LineChartData => {
-
-    console.log(commodityId)
     const commodityDataData = commodityChartPlaceholderData.datasets.find(
         (item) => item.label === commodityId,
     );

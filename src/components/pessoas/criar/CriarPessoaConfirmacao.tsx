@@ -21,7 +21,6 @@ const CriarPessoaConfirmacao: React.FC<CriarPessoaConfirmacaoProps> = ({pessoa,c
 
         setIsLoading(false);
     }
-    console.log(pessoa)
 
     return (
 

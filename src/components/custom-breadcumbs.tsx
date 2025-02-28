@@ -13,7 +13,6 @@ type CustomBreadcumb = {
 }
 
 const CustomBreadcumbs: React.FC<CustomBreadcumbProps> = ({breadcumbs}) => {
-    console.log('om');
     return (
         <div className={'px-12 mb-8'}>
             <Breadcrumbs size={'lg'}>
