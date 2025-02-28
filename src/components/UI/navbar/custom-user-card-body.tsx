@@ -25,7 +25,7 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
 
     if (user) {
         authContent = <>
-            <NavbarContent className={'h-36 pr-7 pb-1 flex items-center'}>
+            <NavbarContent className={'h-36 pb-1 flex items-center'}>
                 <Dropdown className={'h-auto'} size="lg" disableAnimation={false} placement="bottom-end">
                     <DropdownTrigger>
                         <Avatar

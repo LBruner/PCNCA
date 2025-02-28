@@ -38,7 +38,7 @@ const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
                     <MoedasCard/>
                     <div className='w-40'/>
                 </div>
-                <NavbarItem className={'w-60 flex flex-col'}>
+                <NavbarItem className={'w-60 pl-10 flex flex-col'}>
                     <div className={'flex items-center justify-center mb-2'}>
                         <Link href={paths.noticias()}>
                             <p className={'text-4xl text-orange-400 font-bold'}>
