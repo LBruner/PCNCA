@@ -73,7 +73,7 @@ const NoticiasPage: React.FC = async _ => {
                                 />
                             </div>
                         ))}
-                        <CulturasTabs noticias={noticias} culturas={culturas.reverse().slice(0, 4)}/>
+                        <CulturasTabs noticias={noticias} culturas={[culturas[5], culturas[2], culturas[1], culturas[4]]}/>
                     </div>
                 </div>
             </div>
