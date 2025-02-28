@@ -12,13 +12,13 @@ interface ProdutoCreateFormProps {
     fornecedores: FornecedorComRelacoes[];
 }
 
-const ProdutoCreateForm: React.FC<ProdutoCreateFormProps> = ({culturas, fornecedores,}) => {
+const ProdutoCreateForm: React.FC<ProdutoCreateFormProps> = ({culturas,}) => {
     const [formState, action] = useFormState(actions.criarProduto, {
         errors: {},
     })
 
     return (
-        <ProdutoForm formState={formState} action={action} fornecedores={fornecedores} culturas={culturas}/>
+        <ProdutoForm formState={formState} action={action} culturas={culturas}/>
     )
 }
 

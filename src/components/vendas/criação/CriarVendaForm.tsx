@@ -30,6 +30,7 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes, formasPagament
     const [selectedProducts, setSelectedProducts] = useState<ProdutosSelecionados[]>([]);
     const [selectedKeys, setSelectedKeys] = React.useState(new Set(["1"]));
     const [selectedClienteId, setSelectedClienteId] = useState(new Set<number>([]));
+    const [selectedFormaPagamento, setSelectedFormaPagamento] = useState(new Set<number>([]));
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const router = useRouter();
@@ -77,7 +78,7 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes, formasPagament
             {
                 vendas: selectedProducts,
                 clienteId: parseInt(selectedClienteId as unknown as string),
-                formaPagamento: 1,
+                formaPagamento: Array.from(selectedFormaPagamento)[0]
             }
         );
 
@@ -130,8 +131,9 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes, formasPagament
                         title="Checkout"
                     >
                         <Divider/>
-                        <CriarVendaCheckout setSelectedClienteId={setSelectedClienteId}
-                                            formasPagamento={formasPagamento} clientes={clientes}
+                        <CriarVendaCheckout clienteSelecionadoId={selectedClienteId}
+                                            selectedFormaPagamento={selectedFormaPagamento} setSelectedClienteId={setSelectedClienteId}
+                                            formasPagamento={formasPagamento} setSelectedFormaPagamento={setSelectedFormaPagamento} clientes={clientes}
                                             onFinalizaVenda={onFinalizaVenda}/>
                     </AccordionItem>
                 </Accordion>
