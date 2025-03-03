@@ -91,14 +91,16 @@ export const formatCNPJ = (value: string): string => {
 export const formatInscricaoEstadual = (value: string): string => {
     const cleanedValue = value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos.
 
-    if (cleanedValue.length <= 3) {
-        return cleanedValue; // Exibe diretamente se tiver até 3 dígitos.
-    } else if (cleanedValue.length <= 6) {
-        return `${cleanedValue.slice(0, 3)}.${cleanedValue.slice(3)}`; // Formata como XXX.XXX.
-    } else if (cleanedValue.length <= 9) {
-        return `${cleanedValue.slice(0, 3)}.${cleanedValue.slice(3, 6)}.${cleanedValue.slice(6)}`; // Formata como XXX.XXX.XXX.
+    const limitedValue = cleanedValue.slice(0, 12);
+
+    if (limitedValue.length <= 3) {
+        return limitedValue; // Exibe diretamente se tiver até 3 dígitos.
+    } else if (limitedValue.length <= 6) {
+        return `${limitedValue.slice(0, 3)}.${limitedValue.slice(3)}`; // Formata como XXX.XXX.
+    } else if (limitedValue.length <= 9) {
+        return `${limitedValue.slice(0, 3)}.${limitedValue.slice(3, 6)}.${limitedValue.slice(6)}`; // Formata como XXX.XXX.XXX.
     } else {
-        return `${cleanedValue.slice(0, 3)}.${cleanedValue.slice(3, 6)}.${cleanedValue.slice(6, 9)}-${cleanedValue.slice(9)}`; // Formata como XXX.XXX.XXX-XX.
+        return `${limitedValue.slice(0, 3)}.${limitedValue.slice(3, 6)}.${limitedValue.slice(6, 9)}.${limitedValue.slice(9, 12)}`; // Formata como XXX.XXX.XXX-XX.
     }
 };
 
