@@ -85,7 +85,7 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
             filteredVendas = newFilteredVendas;
         }
 
-        if (produtosFilter !== "all" && Array.from(produtosFilterCollection).length !== produtosFilter.length) {
+        if (produtosFilter.length != 0 && Array.from(produtosFilterCollection).length !== produtosFilter.length) {
             let newFilteredVendas = [];
 
             for (let venda of filteredVendas) {
