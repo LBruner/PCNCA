@@ -28,9 +28,9 @@ const CriarVendaCheckout: React.FC<CriarVendaCheckoutFormProps> = (
         setSelectedClienteId
     }) => {
     return (
-        <div className={'mx-2 mt-6 flex flex-col gap-6'}>
+        <form onSubmit={(_) => {onFinalizaVenda()}} className={'mx-2 mt-6 flex flex-col gap-6'}>
             <p className={'text-xl font-normal'}>Selecione o cliente para entrega</p>
-            <Autocomplete selectedKey={clienteSelecionadoId ?? null as any}
+            <Autocomplete errorMessage={<p>Campo cliente é obrigatório</p>} isRequired={true} selectedKey={clienteSelecionadoId ?? null as any}
                           onSelectionChange={(key) => setSelectedClienteId(key as any)} size={'sm'} label={'Cliente'}>
                 {clientes[0].pessoas.map((cliente) => <AutocompleteItem
                     key={cliente.pessoaJuridica != null ? cliente.pessoaJuridica!.id : cliente.pessoaFisica!.id}>{cliente.pessoaJuridica != null ? cliente.pessoaJuridica!.razaoSocial : cliente.pessoaFisica!.nome}</AutocompleteItem>)}
@@ -40,20 +40,20 @@ const CriarVendaCheckout: React.FC<CriarVendaCheckoutFormProps> = (
 
                 <div className={'flex gap-2'}>
                     {formasPagamento.map((forma) =>
-                        <div onClick={() => setSelectedFormaPagamento(new Set([forma.id]))}
+                        <div key={forma.id} onClick={() => setSelectedFormaPagamento(new Set([forma.id]))}
                              className={'flex-1'}>
-                            <FormaPagamentoButton title={forma.tipo}
+                            <FormaPagamentoButton  title={forma.tipo}
                                                   isSelected={selectedFormaPagamento != null && selectedFormaPagamento.has(forma.id)}
                                                   icon={forma.id == 1 ? <FaBarcode/> : forma.id == 2 ?
                                                       <IoQrCodeOutline/> : <BsCreditCard2Front/>}/>
                         </div>
                     )}
                 </div>
-                <Button onClick={() => onFinalizaVenda()} className={'w-36'} color={'primary'}>
+                <Button type={'submit'}  className={'w-36'} color={'primary'}>
                     Finalizar Venda
                 </Button>
             </div>
-        </div>
+        </form>
     )
 }
 
