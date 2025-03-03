@@ -142,6 +142,18 @@ export const pegaTodosProdutos = async (): Promise<Estoque[]> => {
     return db.estoque.findMany();
 }
 
+export const pegaTodosProdutosQueVenderam = async (): Promise<Estoque[]> => {
+    return db.estoque.findMany({
+        where: {
+            historicos: {
+                some: {
+                    comprador: false
+                },
+            },
+        },
+    });
+};
+
 export async function pegaProduto(produtoId: number): Promise<ProdutoEstoqueComRelacoes | null> {
     return db.historicoEstoque.findUnique({
             where: {

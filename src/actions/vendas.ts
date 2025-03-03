@@ -12,7 +12,9 @@ import {BarChartData, LineChartData, PieChartData} from "@/models/graficos/chart
 
 export type VendasAgrupadas = HistoricoEstoque & {
     venda: Venda & {
-        pessoas: (Pessoa & { pessoa: Pessoa & { pessoaJuridica?: PessoaJuridica | null, pessoaFisica?: PessoaFisica} })[],
+        pessoas: (Pessoa & {
+            pessoa: Pessoa & { pessoaJuridica?: PessoaJuridica | null, pessoaFisica?: PessoaFisica }
+        })[],
         estoques: (Estoque & { estoque: Estoque })[],
     }
 }
@@ -87,13 +89,13 @@ export async function criarVenda(vendas: VendaComDados): Promise<void> {
     });
 
     await db.vendaFormaPagamento.create({
-        data:{
+        data: {
             venda: {
                 connect: {
                     id: novaVenda.id
                 }
             },
-            formaPagamento:{
+            formaPagamento: {
                 connect: {
                     id: vendas.formaPagamento
                 }
@@ -228,6 +230,8 @@ export async function getDadosGraficoPie(
     // Fetch vendas with the combined filters
     vendas = await db.historicoEstoque.findMany({
         where: whereClause,
+        distinct: ['estoqueId'], // Ensure unique products based on estoqueId
+        take: 12,
         include: {
             estoque: true,
             venda: {
@@ -361,6 +365,8 @@ export async function getDadosGraficoLine(
     // Fetch vendas with the combined filters
     vendas = await db.historicoEstoque.findMany({
         where: whereClause,
+        distinct: ['estoqueId'], // Ensure unique products based on estoqueId
+        take: 12,
         include: {
             estoque: true,
             venda: {
@@ -380,7 +386,7 @@ export async function getDadosGraficoLine(
     });
 
     // Define all months in reverse order (oldest to newest)
-    const monthNames = Array.from({ length: 12 }, (_, i) => {
+    const monthNames = Array.from({length: 12}, (_, i) => {
         const date = new Date(currentDate);
         date.setMonth(currentDate.getMonth() - 11 + i); // Calculate the month
         return getMonthName(date); // Get the month name
@@ -515,7 +521,7 @@ export async function getDadosGraficoBar(
     });
 
     // Define all months in reverse order (oldest to newest)
-    const monthNames = Array.from({ length: 12 }, (_, i) => {
+    const monthNames = Array.from({length: 12}, (_, i) => {
         const date = new Date(currentDate);
         date.setMonth(currentDate.getMonth() - 11 + i); // Calculate the month
         return getShortMonthName(date); // Get the month name
@@ -532,7 +538,7 @@ export async function getDadosGraficoBar(
 
         // Add the valorAlter to the corresponding month
         if (monthIndex !== -1) {
-            uData[monthIndex] += item.valorAlter;
+            uData[monthIndex] += item.venda.valorVenda;
         }
     });
 

@@ -1,6 +1,7 @@
 import React from "react";
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@heroui/react";
 import {ChevronDownIcon} from "@heroui/shared-icons";
+import {FilterCollection} from "@/models/shared/FilterCollection";
 
 interface TopContentDropDownProps {
     width: string;
@@ -10,11 +11,11 @@ interface TopContentDropDownProps {
     selectionType?: 'single' | 'multiple';
     filterStatus: string | string[];
     setFilterStatus: (status: string | string[]) => void;
-    collection: {
-        name: string;
-        uid: string;}[]
+    collection: FilterCollection[];
+    size?: 'sm' | 'md' | 'lg';
 }
-const VendasTopContentDropDown: React.FC<TopContentDropDownProps> = (
+
+const TopContentDropDown: React.FC<TopContentDropDownProps> = (
     {
         width,
         collection,
@@ -22,39 +23,39 @@ const VendasTopContentDropDown: React.FC<TopContentDropDownProps> = (
         filterStatus,
         setFilterStatus,
         multipleSelectedLabel,
-        allSelectedLabel,
-        selectionType
+        selectionType,
+        size
     }) => {
+
     return (
         <div className={`flex flex-col ${width}`}>
-            <p className={'text-sm mb-2'}>{label}</p>
-            <Dropdown size={'sm'}>
-                <DropdownTrigger className="hidden justify-between sm:flex font-semibold h-9">
+            {label && <p className="mb-2">{label}</p>}
+            <Dropdown size={size ?? 'sm'}>
+                <DropdownTrigger className="hidden justify-between p-5 sm:flex font-semibold h-9">
                     <Button endContent={<ChevronDownIcon className="text-small"/>} variant="flat">
-                        {filterStatus.length === 1 ? Array.from(filterStatus)[0] : filterStatus.length === collection.length || filterStatus === 'all' ? allSelectedLabel : Array.from(filterStatus)[0] === 'Desativado' ? 'Desativado' :multipleSelectedLabel}
+                        {filterStatus.length === 1 ? Array.from(filterStatus)[0] : filterStatus.length === collection.length || filterStatus.length == 0 ? 'Desativado' : Array.from(filterStatus)[0] === 'Desativado' ? 'Desativado' :multipleSelectedLabel}
                     </Button>
                 </DropdownTrigger>
                 <DropdownMenu
                     disallowEmptySelection
-                    aria-label="Table Columns"
                     closeOnSelect={false}
                     selectedKeys={filterStatus}
                     selectionMode={selectionType ?? 'multiple'}
-                    onSelectionChange={(keys) => setFilterStatus([...keys as unknown as string[]])}
+                    onSelectionChange={(keys) => { setFilterStatus([...keys as unknown as string[]])}}
                 >
                     {collection.map((status) => (
-                        <DropdownItem key={status.uid} className="capitalize">
+                        <DropdownItem key={status.name} className="capitalize">
                             {capitalize(status.name)}
                         </DropdownItem>
                     ))}
                 </DropdownMenu>
             </Dropdown>
         </div>
-    )
-}
+    );
+};
 
 function capitalize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export default VendasTopContentDropDown;
+export default TopContentDropDown;

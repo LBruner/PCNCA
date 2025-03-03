@@ -14,7 +14,8 @@ import {
     DateRangePicker,
     DateValue,
     ModalContent,
-    RangeValue, Spinner,
+    RangeValue,
+    Spinner,
     Tab,
     Tabs,
     useDisclosure
@@ -23,8 +24,8 @@ import {CiViewTable} from "react-icons/ci";
 import {CgMenuGridO} from "react-icons/cg";
 import {GoFilter} from "react-icons/go";
 import {Modal, ModalBody, ModalFooter, ModalHeader} from "@heroui/modal";
-import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
 import {I18nProvider} from "@react-aria/i18n";
+import VendasTopContentDropdown from "@/components/vendas/vendas-top-content-dropdown";
 
 interface VendasPageBodyProps {
     clientes: CategoriaPessoaComEmpresa[];
@@ -35,7 +36,7 @@ interface VendasPageBodyProps {
 const size = 'w-[80%]';
 
 const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produtos}) => {
-    const [produtosFilter, setProdutosFilter] = React.useState<string | string[]>("all");
+    const [produtosFilter, setProdutosFilter] = React.useState<string | string[]>([]);
     const [clientesFilter, setClientesFilter] = React.useState<string | string[]>("all");
     const [selectedTab, setSelectedTab] = React.useState("geral");
     const [datesRange, setDatesRange] = useState<RangeValue<DateValue>>();
@@ -59,6 +60,17 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
         name: produto.produto,
         uid: produto.id.toString(),
     }));
+
+    const handleSelectionChange = (keys: any) => {
+        const selectedKeys = [...keys as unknown as string[]];
+
+        if (selectedKeys.length > 12) {
+            alert("É possível selecionar no máximo 12 items");
+            return;
+        }
+
+        setProdutosFilter(selectedKeys);
+    };
 
     return (
         <div className={'flex flex-col w-full gap-1 min-h-[800px]'}>
@@ -118,7 +130,7 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
                     dateRange={datesRange!}
                     setDatesRange={setDatesRange}
                     produtosFilter={produtosFilter}
-                    setProdutosFilter={setProdutosFilter}
+                    setProdutosFilter={handleSelectionChange}
                     clientesFilter={clientesFilter}
                     setClientesFilter={setClientesFilter}
                     produtosFilterCollection={produtosFilterCollection}
@@ -138,16 +150,16 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
                             <ModalHeader className="flex flex-col gap-1">Filtrar conteúdo</ModalHeader>
                             <ModalBody>
                                 <div className="flex flex-col justify-center gap-8 items-center">
-                                    <TopContentDropDown collection={clientesFilterCollection}
+                                    <VendasTopContentDropdown collection={clientesFilterCollection}
                                                         label={'Clientes'} width={size}
                                                         filterStatus={clientesFilter}
                                                         setFilterStatus={setClientesFilter}
                                                         allSelectedLabel={'Todos Clientes'}
                                                         multipleSelectedLabel={'Vários Clientes'}/>
-                                    <TopContentDropDown collection={produtosFilterCollection}
+                                    <VendasTopContentDropdown collection={produtosFilterCollection}
                                                         label={'Produtos'} width={size}
                                                         filterStatus={produtosFilter}
-                                                        setFilterStatus={setProdutosFilter}
+                                                        setFilterStatus={handleSelectionChange}
                                                         allSelectedLabel={'Todos Produtos'}
                                                         multipleSelectedLabel={'Vários Produtos'}/>
                                     {selectedTab == 'detalhes' && <I18nProvider locale="pt-BR">
