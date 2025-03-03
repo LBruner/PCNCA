@@ -7,6 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model ComercioCommodities {
+  commodity_id Int                                @id @default(autoincrement())
+  nome         String
+  variacoes    ComercioCommoditiesVariacaoPreco[]
+}
+
+model ComercioCommoditiesVariacaoPreco {
+  variacao_id  Int                 @id @default(autoincrement())
+  commodity_id Int
+  commodity    ComercioCommodities @relation(fields: [commodity_id], references: [commodity_id], onDelete: Cascade)
+  valor        Float
+  data     DateTime
+  fonte        String?
+}
+
 model Account {
   id                 String    @id @default(cuid())
   userId             String
@@ -64,6 +79,7 @@ model Cultura {
   imagemLink String?   @map("imagem_link") @db.VarChar(300)
   Estoque    Estoque[]
 }
+
 model VerificationRequest {
   id         String   @id @default(cuid())
   identifier String
@@ -112,9 +128,8 @@ model ComercioInternacional {
   dataValor        DateTime?                      @map("dt_valor")
   categoria        String?                        @db.VarChar(1)
   descricao        String?                        @map("descrição") @db.VarChar(300)
-  linkCom          String?                        @map("link_com") @db.VarChar(300)
   historicoValores HistoricoValores[]
-  produtosInac     ComercioInternacionalProduto[]
+  produtos         ComercioInternacionalProduto[]
   noticias         ComercioInternacionalNoticia[]
 }
 

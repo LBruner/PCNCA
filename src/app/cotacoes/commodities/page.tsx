@@ -1,11 +1,13 @@
 import React from "react";
 import CotacoesCommoditiesBody from "@/components/cotacoes/cotacoes-commodities/cotacoes-commodities-body";
-import {cotacoesComodities} from "@/dummy_data/commodities";
+import {pegaCotacoes} from "@/actions/cotacoes";
 
-const CotacoesPage: React.FC = _ => {
+const CotacoesPage: React.FC = async _ => {
+    const cotacoes = await pegaCotacoes();
+
     return (
         <div className={'w-full flex justify-center'}>
-            <CotacoesCommoditiesBody cotacoes={cotacoesComodities}/>
+            <CotacoesCommoditiesBody cotacoes={cotacoes}/>
         </div>
     )
 }

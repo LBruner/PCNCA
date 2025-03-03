@@ -1,16 +1,16 @@
 import React from "react";
-import {CotacaoCommodity} from "@/models/cotacao-commodity/cotacao-commodity";
 import CotacaoCommodityItem from "@/components/cotacoes/cotacoes-commodities/cotacao-commodity-item";
+import {CotacoesComCommodities} from "@/actions/cotacoes";
 
 interface CotacaoCommodityListProps {
-    cotacoes: CotacaoCommodity[];
+    cotacoes: CotacoesComCommodities[];
 }
 
 const CotacaoCommodityList: React.FC<CotacaoCommodityListProps> = ({cotacoes}) => {
     return (
-        <div className={'grid grid-cols-2 gap-x-12 gap-y-6'}>
+        <div className={'mt-12 grid grid-cols-2 gap-x-12 gap-y-6'}>
             {cotacoes.map((cotacao) => (
-                    <CotacaoCommodityItem key={cotacao.id} cotacao={cotacao}/>
+                    <CotacaoCommodityItem key={cotacao.variacao_id} cotacao={cotacao}/>
                 )
             )
             }

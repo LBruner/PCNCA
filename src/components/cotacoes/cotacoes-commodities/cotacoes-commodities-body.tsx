@@ -3,17 +3,16 @@ import React, {useState} from "react";
 import CotacaoCommodityList from "@/components/cotacoes/cotacoes-commodities/cotacao-commodity-list";
 import TradingViewSymbolChart from "@/components/cotacoes/cotacoes-commodities/trading-view-symbol-chart";
 import Link from "next/link";
-import CotacaoCommodityChart from "@/components/cotacoes/cotacoes-commodities/cotacao-commodity-chart";
-import {getLineChartData} from "@/dummy_data/commodities";
-import {CotacaoCommodity} from "@/models/cotacao-commodity/cotacao-commodity";
+import {CotacoesComCommodities} from "@/actions/cotacoes";
 import {Select, SelectItem} from "@heroui/react";
+import CotacaoCommodityChart from "@/components/cotacoes/cotacoes-commodities/cotacao-commodity-chart";
 
 interface CotacoesCommoditiesProps {
-    cotacoes: CotacaoCommodity[];
+    cotacoes: CotacoesComCommodities[];
 }
 
 const CotacoesCommoditiesBody: React.FC<CotacoesCommoditiesProps> = ({cotacoes}) => {
-    const [selectedCotacao, setSelectedCotacao] = useState<CotacaoCommodity>(cotacoes[0]);
+    const [selectedCommodity, setSelectedCommodity] = useState<CotacoesComCommodities>(cotacoes[0]);
 
     return (
         <div className={`w-full px-36`}>
@@ -31,23 +30,23 @@ const CotacoesCommoditiesBody: React.FC<CotacoesCommoditiesProps> = ({cotacoes})
                         multiple={false}
                         onSelectionChange={(keys: any) => {
                             const selectedId = [...keys][0];
-                            const currentSelecao = cotacoes.find((cotacao) => cotacao.id.toString() === selectedId);
+                            const currentSelecao = cotacoes.find((cotacao) => cotacao.variacao_id.toString() === selectedId);
                             if (currentSelecao) {
-                                setSelectedCotacao(currentSelecao);
+                                setSelectedCommodity(currentSelecao);
                             }
                         }}
-                        selectedKeys={new Set([selectedCotacao.id.toString()])}
+                        selectedKeys={new Set([selectedCommodity.variacao_id.toString()])}
                     >
                         {cotacoes.map((cotacao) => (
-                            <SelectItem key={cotacao.id.toString()}>
-                                {cotacao.nome}
+                            <SelectItem key={cotacao.variacao_id.toString()}>
+                                {cotacao.commodity.nome}
                             </SelectItem>
                         ))}
                     </Select>
                 </div>
             </div>
 
-            <CotacaoCommodityChart chartData={getLineChartData(selectedCotacao.nome.toString())}/>
+            <CotacaoCommodityChart selectedCommodity={selectedCommodity}/>
 
             <CotacaoCommodityList cotacoes={cotacoes}/>
 
