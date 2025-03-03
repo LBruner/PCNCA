@@ -57,10 +57,10 @@ const PieCenterLabel = ({valorTotal}: { valorTotal: string }) => {
     const {height} = useDrawingArea();
     return (
         <>
-            <StyleSubtitle fontSize={'20px'} x={505 / 2} y={height / 2.3}>
+            <StyleSubtitle fontSize={'20px'} x={605 / 2} y={height / 2.3}>
                 Total
             </StyleSubtitle>
-            <StyledValue fontWeight={600} x={505 / 2} y={height / 1.8}>
+            <StyledValue fontWeight={600} x={605 / 2} y={height / 1.8}>
                 {formatNumber(parseFloat(valorTotal))}
             </StyledValue>
         </>
@@ -100,13 +100,16 @@ const VendasGraficoPie: React.FC<VendasGraficoPieProps> = ({produtosFilter, clie
         <div>
             <p className={'font-semibold text-xl mb-4'}>Venda Geral por Produto</p>
             <PieChart
-                className={'w-[800px] flex h-[400px]'} // Increased height
+                viewBox={{
+                    x: 60
+                }}
+                className={' flex h-[400px]'} // Increased height
                 colors={chartColors}
                 slotProps={{
                     legend: {
                         direction: 'column',
                         position: { vertical: 'middle', horizontal: 'right' }, // Adjust legend position
-                        padding: { top: 20 }, // Add padding to the top of the legend
+                        padding: { top: 20}, // Add padding to the top of the legend
                     },
                 }}
                 series={[
@@ -119,7 +122,7 @@ const VendasGraficoPie: React.FC<VendasGraficoPieProps> = ({produtosFilter, clie
                         data: chartData,
                     },
                 ]}
-                width={600}
+                width={700}
                 height={200} // Increased height
             >
                 <PieCenterLabel valorTotal={`${totalVendas}`}/>

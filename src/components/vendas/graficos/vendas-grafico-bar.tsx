@@ -5,6 +5,7 @@ import {BarChart} from '@mui/x-charts/BarChart';
 import {getFullMonthName} from '@/helpers/graficos';
 import {BarChartData} from '@/models/graficos/charts';
 import {getDadosGraficoBar} from '@/actions/vendas';
+import {formatToBrazilianCurrency} from "@/helpers";
 
 interface VendasGraficoBarProps {
     produtosFilter: string | string[];
@@ -51,9 +52,9 @@ const VendasGraficoBar: React.FC<VendasGraficoBarProps> = ({produtosFilter, clie
                     series={[
                         {
                             data: chartData.chartData.uData,
-                            label: 'Vendas',
+                            label: 'Vendas (R$)',
                             id: 'uvId',
-                            valueFormatter: (value) => `${value}`,
+                            valueFormatter: (value) => formatToBrazilianCurrency(value!),
                         },
                     ]}
                     grid={{horizontal: true}}
