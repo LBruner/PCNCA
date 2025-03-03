@@ -20,7 +20,7 @@ export const InformationDisplay: React.FC<{ title: string, value?: string }> = (
 }
 
 const ProfileSettingsBody: React.FC<ProfileSettingsBodyProps> = ({user}) => {
-    const usuarioPessoaFisica = user.cnpj == null;
+    const usuarioPessoaFisica = user.categoria == 'Física';
 
     return (
         <div className={'w-full'}>
@@ -45,7 +45,7 @@ const ProfileSettingsBody: React.FC<ProfileSettingsBodyProps> = ({user}) => {
                         </div>
                         <div className={' flex flex-col gap-2'}>
                             <div className={'flex gap-12'}>
-                                <InformationDisplay title={'Data nascimento'} value={usuarioPessoaFisica ? formatarData(new Date(user?.dataNascimento!)) : 'Sem data de nascimento' }/>
+                                <InformationDisplay title={usuarioPessoaFisica ? 'Data nascimento' : 'Data de fundação'} value={formatarData(new Date(user?.dataNascimento!))}/>
                                 <InformationDisplay title={'Celular'} value={formatPhoneNumber(user?.telefone!.toString()!) ?? 'Sem celular'}/>
                             </div>
                             <div className={'flex gap-12 items-start'}>
