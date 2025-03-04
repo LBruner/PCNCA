@@ -36,7 +36,7 @@ interface VendasPageBodyProps {
 const size = 'w-[80%]';
 
 const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produtos}) => {
-    const [produtosFilter, setProdutosFilter] = React.useState<string | string[]>([]);
+    const [produtosFilter, setProdutosFilter] = React.useState<string | string[]>(produtos.map((produto) => produto.produto).slice(0,5));
     const [clientesFilter, setClientesFilter] = React.useState<string | string[]>("all");
     const [selectedTab, setSelectedTab] = React.useState("geral");
     const [datesRange, setDatesRange] = useState<RangeValue<DateValue>>();
@@ -64,8 +64,8 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
     const handleSelectionChange = (keys: any) => {
         const selectedKeys = [...keys as unknown as string[]];
 
-        if (selectedKeys.length > 12) {
-            alert("É possível selecionar no máximo 12 items");
+        if (selectedKeys.length > 5) {
+            alert("É possível selecionar no máximo 5 items");
             return;
         }
 

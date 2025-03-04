@@ -230,8 +230,6 @@ export async function getDadosGraficoPie(
     // Fetch vendas with the combined filters
     vendas = await db.historicoEstoque.findMany({
         where: whereClause,
-        distinct: ['estoqueId'], // Ensure unique products based on estoqueId
-        take: 12,
         include: {
             estoque: true,
             venda: {
@@ -365,8 +363,7 @@ export async function getDadosGraficoLine(
     // Fetch vendas with the combined filters
     vendas = await db.historicoEstoque.findMany({
         where: whereClause,
-        distinct: ['estoqueId'], // Ensure unique products based on estoqueId
-        take: 12,
+
         include: {
             estoque: true,
             venda: {
@@ -532,7 +529,7 @@ export async function getDadosGraficoBar(
 
     // Iterate over the vendas data
     vendas.forEach((item) => {
-        const date = new Date(item.dataAlter); // Convert dataAlter to a Date object
+        const date = new Date(item.venda.dataVenda); // Convert dataAlter to a Date object
         const month = getShortMonthName(date); // Get the month name
         const monthIndex = monthNames.indexOf(month); // Get the index of the month
 

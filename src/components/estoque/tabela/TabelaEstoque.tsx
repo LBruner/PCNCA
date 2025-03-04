@@ -145,7 +145,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
             case "quantidade":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small capitalize">{`${product.estoque.quantidade} ${product.estoque.unidadeMedida}`}</p>
+                        <p className="text-bold text-small capitalize">{`${product.estoque.quantidade}`}</p>
                     </div>);
             case "actions":
                 return (

@@ -5,7 +5,6 @@ import {LineChart} from "@mui/x-charts";
 import {LineChartData} from "@/models/graficos/charts";
 import {getDadosGraficoLine} from "@/actions/vendas";
 import {chartColors} from "@/components/vendas/graficos/vendas-grafico-pie";
-import {formatToBrazilianCurrency} from "@/helpers";
 
 interface VendasGraficoLineProps {
     produtosFilter: string | string[];
@@ -58,14 +57,14 @@ const VendasGraficoLine: React.FC<VendasGraficoLineProps> = ({produtosFilter, cl
                         },
                     }}
                     yAxis={[{
-                        tickLabelStyle: {fontSize: 14}, valueFormatter: (value) => formatToBrazilianCurrency(value),
+                        tickLabelStyle: {fontSize: 14}, valueFormatter: (value) => value,
                     },]}
                     series={chartData.datasets.map((item) => {
                         return {
                             data: item.data,
                             label: item.label,
                             id: item.label,
-                            valueFormatter: (value) => formatToBrazilianCurrency(value!)
+                            valueFormatter: (value) => `${value} vendas`
                         }
                     })}
                     xAxis={[{
