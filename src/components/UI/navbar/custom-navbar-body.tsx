@@ -32,7 +32,7 @@ const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
 
     return (
         <>
-            <Navbar maxWidth={'full'} shouldHideOnScroll={true}
+            <Navbar classNames={{content: 'z-1', wrapper: 'z-1', base: 'z-1'}} maxWidth={'full'} shouldHideOnScroll={true}
                     className={'fixed shadow-sm bg-gray-100 bg-opacity-70 flex top-0 left-0 h-28 items-start py-5'}>
                 <div>
                     <MoedasCard/>

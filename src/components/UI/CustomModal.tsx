@@ -37,7 +37,7 @@ const CustomModal: React.FC<CustomModalProps> = (
 
     if (isLoading) {
         modalBody = <div
-            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10  z-50">
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10  z-1">
             <Spinner color={'warning'}/>
         </div>
     } else {
