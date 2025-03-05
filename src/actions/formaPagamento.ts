@@ -3,6 +3,6 @@
 import {FormaPagamento} from "@prisma/client";
 import {db} from "@/db";
 
-export const pegaTodasFormasPagamento = (): Promise<FormaPagamento[]> => {
+export const pegaTodasFormasPagamento = async (): Promise<FormaPagamento[]> => {
     return db.formaPagamento.findMany()
 }

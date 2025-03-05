@@ -2,6 +2,7 @@ import React from "react";
 import AdmNoticiasTable from "@/components/adm/noticias/adm-noticias-table";
 import {getAutoresFilterColletion, getCategoriasFilterColletion} from "@/actions/adm";
 import {pegaTodasNoticias} from "@/actions/noticias";
+import {db} from "@/db";
 
 const AdmNoticiasPage: React.FC = async _ => {
     const noticias = await pegaTodasNoticias();
@@ -16,3 +17,13 @@ const AdmNoticiasPage: React.FC = async _ => {
 }
 
 export default AdmNoticiasPage;
+
+export async function generateStaticParams(){
+    const noticias = await db.noticia.findMany();
+
+    return noticias.map((noticia) => {
+        return {
+            id: noticia.notId.toString(),
+        }
+    })
+}

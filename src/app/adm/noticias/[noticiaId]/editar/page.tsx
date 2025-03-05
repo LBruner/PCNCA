@@ -6,17 +6,18 @@ import {pegaCulturasUnicas} from "@/actions/adm";
 import {pegaUmaNoticia} from "@/actions/noticias";
 
 interface EditNoticiaPageProps {
-    params: {
-        noticiaId: string
-    },
+    params: Promise<{
+        noticiaId: string;
+    }>;
 }
 
 const EditNoticiaPage: React.FC<EditNoticiaPageProps> = async ({params}) => {
     const categories = await pegaCulturasUnicas();
-    const noticiaId = params.noticiaId;    let createdNoticia;
+    const noticiaId = (await params).noticiaId;
+    let createdNoticia;
 
     if (noticiaId) {
-        createdNoticia = await pegaUmaNoticia(parseInt(params.noticiaId));
+        createdNoticia = await pegaUmaNoticia(parseInt(noticiaId));
     }
 
     if (!createdNoticia) {

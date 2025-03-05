@@ -5,15 +5,16 @@ import {generateMarkdown} from "@/helpers/noticia/criacao/criar-noticia";
 import ShowNoticiaPageBody from "@/components/noticias/show-noticia-page-body";
 
 interface NoticiaPageProps {
-    params: {
+    params: Promise<{
         id: string;
-    }
+    }>
 }
 
 const NoticiaShowPage: React.FC<NoticiaPageProps> = async ({params}) => {
-    const noticia = await pegaUmaNoticia(parseInt(params.id));
+    const noticiaId = (await params).id;
+    const noticia = await pegaUmaNoticia(parseInt(noticiaId));
 
-    const noticiasRelacionadas = await pegaArtigosRelacionados(parseInt(params.id), 4, noticia?.idCultura);
+    const noticiasRelacionadas = await pegaArtigosRelacionados(parseInt(noticiaId), 4, noticia?.idCultura);
 
     if (!noticia) return notFound();
 

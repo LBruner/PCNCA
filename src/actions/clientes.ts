@@ -7,7 +7,7 @@ export type CategoriaPessoaComEmpresa = CategoriaPessoa & {
     pessoas: (Pessoa & { pessoaJuridica?: PessoaJuridica | null, pessoaFisica?: PessoaFisica | null })[],
 }
 
-export const pegaTodosClientes = (): Promise<CategoriaPessoaComEmpresa[]> => {
+export const pegaTodosClientes = async (): Promise<CategoriaPessoaComEmpresa[]> => {
     return db.categoriaPessoa.findMany({
         include: {
             pessoas: {

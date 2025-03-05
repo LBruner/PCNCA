@@ -4,13 +4,14 @@ import {notFound} from "next/navigation";
 import CriarPessoaForm from "@/components/pessoas/CriarPessoaForm";
 
 interface EditPessoaPageProps {
-    params: {
-        pessoaId: number
-    },
+    params: Promise<{
+        pessoaId: number;
+    }>,
 }
 
 const EditarPessoaPage: React.FC<EditPessoaPageProps> = async ({params}) => {
-    const pessoa = await pegaUmaPessoa(params.pessoaId);
+    const pessoaId = (await params).pessoaId;
+    const pessoa = await pegaUmaPessoa(pessoaId);
     const tiposPessoa = await pegaTodasCategoriasPessoas();
 
     if(!pessoa) return notFound();

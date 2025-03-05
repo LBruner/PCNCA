@@ -6,14 +6,15 @@ import {NoticiaComAutorCultura, pegaNoticiasPorId} from "@/actions/noticias";
 import EmptyState from "@/components/UI/NoData";
 
 interface CulturaShowPageProps {
-    params: {
-        id: string;
-    }
+    params: Promise<{
+        id: string
+    }>
 }
 
-const CulturaShowPage: React.FC<CulturaShowPageProps> = async ({params: {id}}) => {
-    const noticiasFiltradas: NoticiaComAutorCultura[] = await pegaNoticiasPorId(parseInt(id));
-    const cultura: Cultura | null = await pegaCulturaPorId(parseInt(id));
+const CulturaShowPage: React.FC<CulturaShowPageProps> = async ({params}) => {
+    const culturaId = (await params).id;
+    const noticiasFiltradas: NoticiaComAutorCultura[] = await pegaNoticiasPorId(parseInt(culturaId));
+    const cultura: Cultura | null = await pegaCulturaPorId(parseInt(culturaId));
 
     if (noticiasFiltradas.length === 0) {
         return <EmptyState description={'Nenhuma notícia dessa categoria encontrada'}/>
