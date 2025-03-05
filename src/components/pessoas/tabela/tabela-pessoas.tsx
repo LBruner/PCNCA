@@ -241,7 +241,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                 selectionMode="none"
                 sortDescriptor={sortDescriptor}
                 classNames={{
-                    wrapper: "max-h-2/4 min-h-[25rem] h-[35rem]",
+                    wrapper: "max-h-2/4 min-h-[37rem] h-full",
                 }}
                 onSortChange={setSortDescriptor}
             >
@@ -256,7 +256,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody className={'h-auto'} emptyContent={"Nenhuma pessoa encontrada"}
+                <TableBody className={'h-full'} emptyContent={"Nenhuma pessoa encontrada"}
                            items={sortedItems}>
                     {(pessoa: PessoaFisJurEnd) => (
                         <TableRow key={pessoa.id}>

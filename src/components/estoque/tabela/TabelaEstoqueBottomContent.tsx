@@ -37,9 +37,6 @@ const TabelaEstoqueBottomContent: React.FC<TabelaBottomContentProps> = (
         return (
             <div className="py-2 px-2 flex justify-between items-center">
         <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === "all"
-              ? "Todos produtos selecionados"
-              : `${typeof selectedKeys !== "string" && selectedKeys ? selectedKeys?.length : 0} de ${filteredItemsLength} items selecionado${typeof selectedKeys !== "string" && selectedKeys?.length != 1 ? "s" : ""}`}
         </span>
                 {showPagination && <>
                     <Pagination
