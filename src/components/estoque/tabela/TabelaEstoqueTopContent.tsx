@@ -1,7 +1,6 @@
 import React from "react";
-import {Button, Divider, Input, Tooltip} from "@heroui/react";
+import {Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Tooltip} from "@heroui/react";
 import {SearchIcon} from "@heroui/shared-icons";
-import {PiPrinterFill} from "react-icons/pi";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
 import {priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
 import Link from "next/link";
@@ -11,6 +10,13 @@ import {MdOutlineSell} from "react-icons/md";
 import {FaCirclePlus} from "react-icons/fa6";
 import {useRouter} from "next/navigation";
 import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import ExcelJS from "exceljs";
+import {saveAs} from "file-saver";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import {PiPrinterFill} from "react-icons/pi";
+import {RiFileExcel2Line} from "react-icons/ri";
+import {FaRegFilePdf} from "react-icons/fa";
 
 interface TabelaTopContentProps {
     categoriesOptions: FilterCollection[]
@@ -58,9 +64,77 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
         router.push(paths.createVenda());
     }
 
-    const imprimirExcel = () => {
+    const imprimirExcel = async () => {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Produtos");
 
-    }
+        worksheet.addRow(["Produto", "Categoria", "Tipo", "Data de Adição", "Preço", "Estoque"]);
+
+        products.forEach((produto) => {
+            worksheet.addRow([
+                produto?.estoque?.produto || "",
+                produto?.estoque?.categoriaculturaId || "",
+                produto?.estoque?.tipo || "",
+                produto?.dataAlter || "",
+                produto?.estoque?.preco || "",
+                produto?.estoque?.quantidade || "",
+            ]);
+        });
+
+        worksheet.columns = [
+            {width: 20},
+            {width: 30},
+            {width: 20},
+            {width: 20},
+            {width: 15},
+            {width: 15},
+        ];
+
+        worksheet.eachRow((row) => {
+            row.eachCell((cell) => {
+                cell.border = {
+                    top: {style: "thin"},
+                    bottom: {style: "thin"},
+                    left: {style: "thin"},
+                    right: {style: "thin"},
+                };
+                cell.alignment = {horizontal: "center", vertical: "middle"};
+            });
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        saveAs(new Blob([buffer]), "Relatório_Estoque.xlsx");
+    };
+
+    const imprimirPDF = () => {
+        const doc = new jsPDF();
+
+        doc.setFontSize(18);
+        doc.text("Relatório de Estoque", 14, 15);
+
+        const head = [["Produto", "Categoria", "Tipo", "Data de Adição", "Preço", "Estoque"]];
+
+        const body = products.map((produto) => [
+            produto?.estoque?.produto || "",
+            produto?.estoque?.categoriaculturaId || "",
+            produto?.estoque?.tipo || "",
+            produto?.dataAlter ? new Date(produto?.dataAlter).toLocaleDateString() : "",
+            produto?.estoque?.preco || "",
+            produto?.estoque?.quantidade || "",
+        ]);
+
+        autoTable(doc, {
+            startY: 25,
+            head: head,
+            body: body,
+            theme: "striped",
+            styles: { fontSize: 12 },
+            headStyles: { fillColor: [22, 160, 133] },
+        });
+
+        doc.save("Relatório_Estoque.pdf");
+    };
+
 
     return (React.useMemo(() => {
         return (
@@ -93,10 +167,18 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
                                 startContent={<FaCirclePlus size={20}/>}>
                             <Link href={paths.createProduto()}>Adicionar Estoque</Link>
                         </Button>
-                        <Button onClick={imprimirExcel} variant={'flat'} color={'default'} className={'w-52'}
-                                startContent={<PiPrinterFill size={20}/>}>
-                            Imprimir Estoque
-                        </Button>
+                        <Dropdown className={'w-56'}>
+                            <DropdownTrigger className={'w-56'}>
+                                <Button variant="bordered">{<PiPrinterFill size={20}/>} Exportar Dados</Button>
+                            </DropdownTrigger>
+                            <DropdownMenu variant={'flat'} color={'default'}>
+                                <DropdownItem color={'success'} startContent={
+                                    <RiFileExcel2Line size={18}/>} onPress={imprimirExcel} key={'1'}><p
+                                    className={'text-lg'}>Excel</p></DropdownItem>
+                                <DropdownItem color={'danger'} startContent={<FaRegFilePdf size={18}/>} onPress={imprimirPDF} key={'2'}><p
+                                    className={'text-lg'}>PDF</p></DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
                     </div>
                 </div>
                 <Divider/>
