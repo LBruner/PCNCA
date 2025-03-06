@@ -95,7 +95,6 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
 
     return (
         <>
-            <ToastProvider placement={'top-center'} maxVisibleToasts={1} toastOffset={180}/>
             <div className={'flex flex-col w-full gap-1 min-h-[800px]'}>
                 <div className={'flex justify-between items-center'}>
                     <div className={'flex flex-col w-full gap-4 justify-start pl-24'}>
@@ -163,7 +162,6 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
                         vendas={vendas}/>}
                 </div>
                 <Modal
-                    classNames={{backdrop: 'z-2', base: 'z-2', wrapper: 'z-2'}}
                     draggable={true}
                     isOpen={isOpen}
                     placement={'auto'}
@@ -173,33 +171,36 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
                     <ModalContent>
                         {(onClose) => (
                             <>
-                                <ModalHeader className="flex flex-col gap-1">Filtrar conteúdo</ModalHeader>
+                                <ToastProvider placement={'top-center'} maxVisibleToasts={1} toastOffset={180}/>
+                                <ModalHeader className="">Filtrar conteúdo</ModalHeader>
                                 <ModalBody>
-                                    <div className="flex flex-col justify-center gap-8 items-center">
-                                        <VendasTopContentDropdown collection={clientesFilterCollection}
-                                                                  label={'Clientes'} width={size}
-                                                                  filterStatus={clientesFilter}
-                                                                  setFilterStatus={setClientesFilter}
-                                                                  allSelectedLabel={'Todos Clientes'}
-                                                                  multipleSelectedLabel={'Vários Clientes'}/>
-                                        <VendasTopContentDropdown collection={produtosFilterCollection}
-                                                                  label={'Produtos'} width={size}
-                                                                  filterStatus={produtosFilter}
-                                                                  setFilterStatus={handleSelectionChange}
-                                                                  allSelectedLabel={'Todos Produtos'}
-                                                                  multipleSelectedLabel={'Vários Produtos'}/>
-                                        {selectedTab == 'detalhes' && <I18nProvider locale="pt-BR">
-                                            <DateRangePicker
-                                                radius={'md'}
-                                                fullWidth={true}
-                                                label={'Data de início e fim'}
-                                                labelPlacement={'outside'}
-                                                className="max-w-xs"
-                                                // @ts-ignore
-                                                onChange={setDatesRange}
-                                                disableAnimation={false} size={'md'} variant={'flat'}/>
-                                        </I18nProvider>}
-                                    </div>
+                                    <>
+                                        <div className="flex flex-col justify-center gap-8 items-center">
+                                            <VendasTopContentDropdown collection={clientesFilterCollection}
+                                                                      label={'Clientes'} width={size}
+                                                                      filterStatus={clientesFilter}
+                                                                      setFilterStatus={setClientesFilter}
+                                                                      allSelectedLabel={'Todos Clientes'}
+                                                                      multipleSelectedLabel={'Vários Clientes'}/>
+                                            <VendasTopContentDropdown collection={produtosFilterCollection}
+                                                                      label={'Produtos'} width={size}
+                                                                      filterStatus={produtosFilter}
+                                                                      setFilterStatus={handleSelectionChange}
+                                                                      allSelectedLabel={'Todos Produtos'}
+                                                                      multipleSelectedLabel={'Vários Produtos'}/>
+                                            {selectedTab == 'detalhes' && <I18nProvider locale="pt-BR">
+                                                <DateRangePicker
+                                                    radius={'md'}
+                                                    fullWidth={true}
+                                                    label={'Data de início e fim'}
+                                                    labelPlacement={'outside'}
+                                                    className="max-w-xs"
+                                                    // @ts-ignore
+                                                    onChange={setDatesRange}
+                                                    disableAnimation={false} size={'md'} variant={'flat'}/>
+                                            </I18nProvider>}
+                                        </div>
+                                    </>
                                 </ModalBody>
                                 <ModalFooter>
                                     <Button color="success" onPress={onClose}>
