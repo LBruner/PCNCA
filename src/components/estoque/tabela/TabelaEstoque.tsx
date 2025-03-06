@@ -150,11 +150,6 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
             case "actions":
                 return (
                     <div className="relative flex items-center justify-center gap-2">
-                        <Tooltip content="Detalhes">
-                          <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                            <EyeIcon/>
-                          </span>
-                        </Tooltip>
                         <Tooltip content="Editar Produto">
                           <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                             <Link href={paths.editProduto(product.id.toString())}><EditIcon/></Link>

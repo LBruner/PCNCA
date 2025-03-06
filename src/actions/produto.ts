@@ -271,7 +271,7 @@ export async function criarProduto(_: CreatePostFormState, formData: FormData): 
 
 
 export async function editarProduto(vendaId: number, estoqueId: number, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
-    return handleFormSubmission(formData, async (data,userId) => {
+    return handleFormSubmission(formData, async (data, userId) => {
         await db.estoque.update({
             where: {
                 id: estoqueId,
@@ -290,11 +290,43 @@ export async function editarProduto(vendaId: number, estoqueId: number, _: Creat
     });
 }
 
-export async function deletarProduto(productId: number) {
-    // await db.product.delete({
-    //     where: {
-    //         id: productId,
-    //     },
-    // });
+export async function deletarProduto(historicoEstoqueId: number) {
+    const historicoEstoque = await db.historicoEstoque.findUnique({
+        where: {
+            id: historicoEstoqueId
+        },
+        include: {
+            venda: true
+        }
+    });
+
+    if (!historicoEstoque) return;
+
+    const estoqueId = historicoEstoque?.estoqueId;
+
+    const vendaEstoque = await db.vendaEstoque.findFirst({
+        where: {
+            vendaId: historicoEstoque.venda.id
+        }
+    })
+
+    await db.historicoEstoque.delete({
+        where: {
+            id: historicoEstoque.id,
+        }
+    });
+
+    await db.vendaEstoque.delete({
+        where: {
+            id: vendaEstoque?.id,
+        }
+    });
+
+    await db.estoque.delete({
+        where: {
+            id: estoqueId,
+        },
+    });
+
     revalidatePath(paths.estoque());
 }
