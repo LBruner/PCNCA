@@ -59,10 +59,12 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
     const router = useRouter();
 
     const handleNewSale = () => {
-        localStorage.removeItem('selectedItems');
-        localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-        router.push(paths.createVenda());
-    }
+        if (typeof window !== "undefined") {
+            localStorage.removeItem('selectedItems');
+            localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+            router.push(paths.createVenda());
+        }
+    };
 
     const imprimirExcel = async () => {
         const workbook = new ExcelJS.Workbook();
@@ -128,8 +130,8 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
             head: head,
             body: body,
             theme: "striped",
-            styles: { fontSize: 12 },
-            headStyles: { fillColor: [22, 160, 133] },
+            styles: {fontSize: 12},
+            headStyles: {fillColor: [22, 160, 133]},
         });
 
         doc.save("Relatório_Estoque.pdf");
@@ -163,10 +165,13 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
                                 </Button>
                             }
                         </Tooltip>
-                        <Button className={'w-56'} variant={'flat'} color={'warning'}
-                                startContent={<FaCirclePlus size={20}/>}>
-                            <Link href={paths.createProduto()}>Adicionar Estoque</Link>
-                        </Button>
+                        <Link href={paths.createProduto()}>
+                            <Button className={'w-56'} variant={'flat'} color={'warning'}
+                                    startContent={<FaCirclePlus size={20}/>}>
+                                Adicionar Estoque
+                            </Button>
+                        </Link>
+
                         <Dropdown className={'w-56'}>
                             <DropdownTrigger className={'w-56'}>
                                 <Button variant="bordered">{<PiPrinterFill size={20}/>} Exportar Dados</Button>
@@ -175,7 +180,8 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
                                 <DropdownItem color={'success'} startContent={
                                     <RiFileExcel2Line size={18}/>} onPress={imprimirExcel} key={'1'}><p
                                     className={'text-lg'}>Excel</p></DropdownItem>
-                                <DropdownItem color={'danger'} startContent={<FaRegFilePdf size={18}/>} onPress={imprimirPDF} key={'2'}><p
+                                <DropdownItem color={'danger'} startContent={<FaRegFilePdf size={18}/>}
+                                              onPress={imprimirPDF} key={'2'}><p
                                     className={'text-lg'}>PDF</p></DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
