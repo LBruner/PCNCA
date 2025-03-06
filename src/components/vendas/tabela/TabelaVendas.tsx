@@ -36,8 +36,6 @@ interface TabelaVendasProps {
     produtosFilterCollection: FilterCollection[];
     clientesFilter: string | string[];
     setClientesFilter: Dispatch<SetStateAction<string | string[]>>;
-    produtosFilter: string | string[];
-    setProdutosFilter: Dispatch<SetStateAction<string | string[]>>;
     dateRange: RangeValue<DateValue>;
     setDatesRange: (range: RangeValue<DateValue>) => void;
 }
@@ -47,7 +45,6 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
         vendas,
         clientesFilterCollection,
         produtosFilterCollection,
-        produtosFilter,
         clientesFilter,
     }) => {
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
@@ -85,34 +82,10 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
             filteredVendas = newFilteredVendas;
         }
 
-        if (produtosFilter.length != 0 && Array.from(produtosFilterCollection).length !== produtosFilter.length) {
-            let newFilteredVendas = [];
 
-            for (let venda of filteredVendas) {
-                let nestedFilteredVendas = [];
-                for (let nestedVenda of venda) {
-                    // Check if any of the produtos in nestedVenda match any item in produtosFilter
-                    const hasMatchingProduto = nestedVenda.venda.estoques.some((produto) =>
-                    // @ts-ignore
-                        produtosFilter.map((p: any) => p.toLowerCase().trim()).includes(
-                            produto.estoque.produto.toLowerCase().trim()
-                        )
-                    );
-
-                    if (hasMatchingProduto) {
-                        nestedFilteredVendas.push(nestedVenda);
-                    }
-                }
-                if (nestedFilteredVendas.length > 0) {
-                    newFilteredVendas.push(nestedFilteredVendas);
-                }
-            }
-
-            filteredVendas = newFilteredVendas;
-        }
 
         return filteredVendas;
-    }, [vendas, produtosFilter, clientesFilter, clientesFilterCollection, produtosFilterCollection]);
+    }, [vendas, clientesFilter, clientesFilterCollection, produtosFilterCollection]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 

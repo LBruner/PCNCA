@@ -153,8 +153,6 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
                     {selectedTab == 'detalhes' && <TabelaVendas
                         dateRange={datesRange!}
                         setDatesRange={setDatesRange}
-                        produtosFilter={produtosFilter}
-                        setProdutosFilter={handleSelectionChange}
                         clientesFilter={clientesFilter}
                         setClientesFilter={setClientesFilter}
                         produtosFilterCollection={produtosFilterCollection}
