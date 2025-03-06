@@ -3,7 +3,6 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import ShortNoticiaCardDetailedBottom
     from "@/components/noticias/short-noticia-card/short-noticia-card-detailed-bottom";
-import {useSearchParams} from "next/navigation";
 import paths from "@/paths";
 import CustomBreadcumbs from "@/components/custom-breadcumbs";
 import {Noticia} from "@prisma/client";
@@ -11,6 +10,7 @@ import {Noticia} from "@prisma/client";
 interface ShowNoticiaPageBodyProps {
     content: string;
     noticiasRelacionadas: Noticia[];
+    from?: string;
 }
 
 const getBreadcumbs = (fromPage: string) => {
@@ -43,9 +43,7 @@ const getBreadcumbs = (fromPage: string) => {
     return [];
 }
 
-const ShowNoticiaPageBody: React.FC<ShowNoticiaPageBodyProps> = ({content, noticiasRelacionadas}) => {
-    const searchParams = useSearchParams();
-    const from = searchParams.get('from')
+const ShowNoticiaPageBody: React.FC<ShowNoticiaPageBodyProps> = ({content, noticiasRelacionadas, from}) => {
 
     return (
         <>

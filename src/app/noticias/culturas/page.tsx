@@ -3,6 +3,7 @@ import {pegaTodasCulturas} from "@/actions/culturas";
 import CulturaPageBody from "@/components/noticias/culturas/cultura-page-body";
 import {Cultura} from "@prisma/client";
 import EmptyState from "@/components/UI/NoData";
+import {db} from "@/db";
 
 
 const CategoriasPage: React.FC = async _ => {
@@ -21,3 +22,11 @@ const CategoriasPage: React.FC = async _ => {
 }
 
 export default CategoriasPage;
+
+export async function generateStaticParams (){
+    return (await db.cultura.findMany()).map((cultura) => {
+        return {
+            id: cultura.culturaId.toString(),
+        }
+    })
+}

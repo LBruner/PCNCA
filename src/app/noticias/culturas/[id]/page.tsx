@@ -4,6 +4,7 @@ import {Cultura} from "@prisma/client";
 import {pegaCulturaPorId} from "@/actions/culturas";
 import {NoticiaComAutorCultura, pegaNoticiasPorId} from "@/actions/noticias";
 import EmptyState from "@/components/UI/NoData";
+import {db} from "@/db";
 
 interface CulturaShowPageProps {
     params: Promise<{
@@ -26,3 +27,11 @@ const CulturaShowPage: React.FC<CulturaShowPageProps> = async ({params}) => {
 };
 
 export default CulturaShowPage;
+
+export async function generateStaticParams (){
+    return (await db.cultura.findMany()).map((cultura) => {
+        return {
+            id: cultura.culturaId.toFixed(),
+        }
+    })
+}

@@ -2,7 +2,7 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import Providers from "@/app/providers";
-import React from "react";
+import React, {Suspense} from "react";
 import CustomNavbar from "@/components/UI/navbar/CustomNavbar";
 import ScrollToTop from "@/components/UI/scroll-to-top";
 import AdmNavbar from "@/components/adm/adm-navbar";
@@ -26,8 +26,13 @@ export default function RootLayout(
         <html className={'h-screen bg-slate-50'} lang="en">
         <body className={`${inter.className} `}>
         <Providers>
-            <AdmNavbar/>
-            <CustomNavbar/>
+            <Suspense fallback={<div></div>}>
+                <AdmNavbar/>
+            </Suspense>
+            <Suspense fallback={<div></div>}>
+                <CustomNavbar/>
+            </Suspense>
+
             <div className="flex flex-col">
                 {children}
             </div>
