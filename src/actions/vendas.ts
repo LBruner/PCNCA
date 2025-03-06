@@ -488,7 +488,7 @@ export async function getDadosGraficoBar(
     // Combine all filters
     const whereClause = {
         ...baseFilter,
-        ...produtoFilter,
+        // ...produtoFilter,
         ...clienteFilter,
         dataAlter: {
             gte: startDate, // Greater than or equal to the start of the last 12 months
