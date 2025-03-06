@@ -141,11 +141,11 @@ const NoticiaCreateForm: React.FC<NoticiaCreateForm> = ({culturas, noticiaCriada
                         </div>
                         <div className={'flex gap-3'}>
                             {screenIndex != 0 &&
-                                <Button color={'default'} onClick={() => {
+                                <Button color={'default'} onPress={() => {
                                     setScreenIndex(prevState => prevState - 1)
                                 }} type={'submit'}>Voltar</Button>}
 
-                            <Button color={'primary'} onClick={goToNextScreen}
+                            <Button color={'primary'} onPress={goToNextScreen}
                                     type={'submit'}>{screenIndex == 2 ? 'Publicar' : 'Avançar'}</Button>
                         </div>
                     </div>

@@ -46,7 +46,7 @@ const CriarVendaSeletorProdutos: React.FC<CriarVendaSeletorProdutosProps> = (
                 </div>
             </div>
            <div className={'mt-2 w-full flex justify-end'}>
-               <Button onClick={openCheckoutAccordion} className={'w-36'} color={'primary'}>
+               <Button onPress={openCheckoutAccordion} className={'w-36'} color={'primary'}>
                    Ir para o checkout
                </Button>
            </div>

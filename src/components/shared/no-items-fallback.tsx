@@ -26,7 +26,7 @@ const NoItemsFallback: React.FC<NoItemsProps> = ({title, buttonText, showButton,
                 </p>
                 {showButton &&
                     <Button
-                        onClick={onCreateClick}
+                        onPress={onCreateClick}
                         className="flex items-center gap-2"
                     >
                         {buttonText}

@@ -17,7 +17,7 @@ const ChartIntervalItem: React.FC<ChartIntervalItem> = ({ interval, selectedInte
 
     return (
         <div className={`py-1 flex justify-center items-center}`}>
-            <Button onClick={onSelectionChange} color={`${isSelected ? 'primary' : 'default'}`}>{interval.interval}</Button>
+            <Button onPress={onSelectionChange} color={`${isSelected ? 'primary' : 'default'}`}>{interval.interval}</Button>
         </div>
     )
 }

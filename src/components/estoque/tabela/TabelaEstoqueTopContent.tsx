@@ -158,7 +158,7 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
                         <Tooltip color={'foreground'}
                                  content={`${selectedItems.length === 0 ? 'Selecione produtos para criar uma venda' : 'Criar venda com produtos selecionados'}`}>
                             {
-                                <Button onClick={handleNewSale} variant={'flat'}
+                                <Button onPress={handleNewSale} variant={'flat'}
                                         disabled={selectedItems.length === 0} color={'primary'} className={'w-52'}
                                         startContent={<MdOutlineSell size={20}/>}>
                                     Criar Venda

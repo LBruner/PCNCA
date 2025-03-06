@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import {useFormState} from "react-dom";
+import { useActionState } from "react";
 import * as actions from "@/actions";
 import ProdutoForm from "@/components/produtos/ProdutoForm";
 import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
@@ -14,7 +14,7 @@ interface ProdutoEditFormProps {
 }
 
 const ProdutoEditForm: React.FC<ProdutoEditFormProps> = ({culturas, produto}) => {
-    const [formState, action] = useFormState(actions.editarProduto.bind(null, produto.vendaId, produto.estoqueId), {
+    const [formState, action] = useActionState(actions.editarProduto.bind(null, produto.vendaId, produto.estoqueId), {
         errors: {},
     })
 
