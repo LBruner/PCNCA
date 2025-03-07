@@ -50,9 +50,8 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                                 ADM
                             </DropdownItem>
                         ) : null as any}
-                        <DropdownItem textValue={'Configuracoes'}  onPress={() => {
-                            console.log()
-                        }} key="configuracoes" color="default">
+                        <DropdownItem textValue={'Configuracoes'} href={paths.configuracoes()
+                        } key="configuracoes" color="default">
                             <p className={'text-medium'}>Configurações</p>
                         </DropdownItem>
                         <DropdownItem textValue={'Logout'} onPress={() => {

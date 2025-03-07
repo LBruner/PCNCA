@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
-import { Accordion, AccordionItem, Button, Navbar, NavbarContent, NavbarItem } from "@heroui/react";
+import React, {useEffect, useState} from "react";
+import {Accordion, AccordionItem, Button, Navbar, NavbarContent, NavbarItem} from "@heroui/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import {usePathname} from "next/navigation";
 import paths from "@/paths";
-import { BiCategory, BiNews, BiUser } from "react-icons/bi";
+import {BiCategory, BiNews, BiUser} from "react-icons/bi";
 
 const AdmNavbar: React.FC = () => {
     const pathname = usePathname();
@@ -50,7 +50,7 @@ const AdmNavbar: React.FC = () => {
         return null;
     }
 
-    if (!pathname.startsWith('/adm')) {
+    if (!pathname.startsWith('/adm') && !pathname.startsWith('/configuracoes')) {
         return null;
     }
     return (
@@ -62,49 +62,61 @@ const AdmNavbar: React.FC = () => {
                     </Link>
                 </NavbarItem>
                 <NavbarItem>
-                    <Accordion
-                        defaultExpandedKeys={['1','2']}
-                        onExpandedChange={(keys) => setExpandedKeys(Array.from(keys) as string[])}
-                        className="w-full"
-                    >
-                        <AccordionItem
-                            key="1"
-                            title="Notícias"
-                            className="flex flex-col"
+                    {pathname.startsWith('/adm') &&
+                        <Accordion
+                            defaultExpandedKeys={['1', '2']}
+                            onExpandedChange={(keys) => setExpandedKeys(Array.from(keys) as string[])}
+                            className="w-full"
                         >
-                            <div className="flex flex-col w-36 gap-2">
-                                <Link href={paths.admNoticias()}>
-                                    <Button className="text-right w-full justify-start"
-                                            color={pathname === paths.admNoticias() ? "primary" : "default"}
-                                            startContent={<BiNews/>}>
-                                        Notícias
-                                    </Button>
-                                </Link>
-                                <Link href={paths.admCulturas()}>
-                                    <Button className="text-right w-full justify-start"
-                                            color={pathname === paths.admCulturas() ? "primary" : "default"}
-                                            startContent={<BiCategory/>}>
-                                        Culturas
-                                    </Button>
-                                </Link>
-                            </div>
-                        </AccordionItem>
-                        <AccordionItem
-                            key="2"
-                            title="Cadastro"
-                            className="flex flex-col"
+                            <AccordionItem
+                                key="1"
+                                title="Notícias"
+                                className="flex flex-col"
+                            >
+                                <div className="flex flex-col w-36 gap-2">
+                                    <Link href={paths.admNoticias()}>
+                                        <Button className="text-right w-full justify-start"
+                                                color={pathname === paths.admNoticias() ? "primary" : "default"}
+                                                startContent={<BiNews/>}>
+                                            Notícias
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </AccordionItem>
+                        </Accordion>
+
+                    }
+
+                    {pathname.startsWith('/configuracoes') &&
+                        <Accordion
+                            defaultExpandedKeys={['1', '2']}
+                            onExpandedChange={(keys) => setExpandedKeys(Array.from(keys) as string[])}
+                            className="w-full"
                         >
-                            <div className="flex flex-col w-36 gap-2">
-                                <Link href={paths.admUsuarios()}>
-                                    <Button className="text-right w-full justify-start"
-                                            color={pathname === paths.admUsuarios() ? "primary" : "default"}
-                                            startContent={<BiUser/>}>
-                                        Usuários
-                                    </Button>
-                                </Link>
-                            </div>
-                        </AccordionItem>
-                    </Accordion>
+                            <AccordionItem
+                                key="2"
+                                title="Cadastro"
+                                className="flex flex-col"
+                            >
+                                <div className="flex flex-col w-36 gap-2">
+                                    <Link href={paths.admCulturas()}>
+                                        <Button className="text-right w-full justify-start"
+                                                color={pathname === paths.admCulturas() ? "primary" : "default"}
+                                                startContent={<BiCategory/>}>
+                                            Culturas
+                                        </Button>
+                                    </Link>
+                                    <Link href={paths.admUsuarios()}>
+                                        <Button className="text-right w-full justify-start"
+                                                color={pathname === paths.admUsuarios() ? "primary" : "default"}
+                                                startContent={<BiUser/>}>
+                                            Usuários
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </AccordionItem>
+                        </Accordion>
+                    }
                 </NavbarItem>
             </NavbarContent>
         </Navbar>

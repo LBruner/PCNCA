@@ -6,4 +6,6 @@ export const shouldHideFooterPaths = [
     '/editar',
     '/auth',
     '/vendas/criar',
+    '/vendas/estoque/criar',
+    '/configuracoes'
 ]
