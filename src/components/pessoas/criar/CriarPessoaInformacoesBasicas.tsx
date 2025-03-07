@@ -112,7 +112,7 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                         </div>
                         <I18nProvider locale="pt-BR"
                         >
-                            <DateInput className={'w-full'} isRequired={true}
+                            <DateInput aria-label={' '} className={'w-full'} isRequired={true}
                                        errorMessage={'Data inválida'} onChange={(novaData) => {
                                 setDataNascimento(novaData!.toString())
                             }} size={'lg'} endContent={<LiaBirthdayCakeSolid size={22} color={'black'}/>}/>

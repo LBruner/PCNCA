@@ -211,6 +211,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                 />
             </div>
             <Table
+                aria-label={' '}
                 isHeaderSticky
                 bottomContentPlacement="outside"
                 bottomContent={

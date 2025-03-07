@@ -147,6 +147,7 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
     return (
         <div className={'w-5/6 mt-8'}>
             <Table
+                aria-label={' '}
                 isStriped={true}
                 isHeaderSticky
                 key={`${sortDescriptor.column}-${sortDescriptor.direction}`}

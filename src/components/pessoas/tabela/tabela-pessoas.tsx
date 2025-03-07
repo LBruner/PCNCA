@@ -13,7 +13,7 @@ import {
     useDisclosure,
 } from "@heroui/react";
 import {Chip} from "@heroui/chip";
-import {DeleteIcon, EditIcon, EyeIcon} from "@heroui/shared-icons";
+import {DeleteIcon, EditIcon} from "@heroui/shared-icons";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getSortedPessoas} from "@/helpers/tabela";
 import {FilterCollection} from "@/models/shared/FilterCollection";
@@ -155,14 +155,14 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
             case "actions":
                 return (
                     <div className="relative flex items-center justify-center gap-2">
-                        <Tooltip content="Ver Detalhes">
-                          <span className="text-lg text-default-700 cursor-pointer">
-                            <EyeIcon onClick={() => {
-                                setSelectedPessoa(pessoa);
-                                addPessoaModal.onOpen();
-                            }} color={'black'}/>
-                          </span>
-                        </Tooltip>
+                        {/*<Tooltip content="Ver Detalhes">*/}
+                        {/*  <span className="text-lg text-default-700 cursor-pointer">*/}
+                        {/*    <EyeIcon onClick={() => {*/}
+                        {/*        setSelectedPessoa(pessoa);*/}
+                        {/*        addPessoaModal.onOpen();*/}
+                        {/*    }} color={'black'}/>*/}
+                        {/*  </span>*/}
+                        {/*</Tooltip>*/}
                         <Tooltip content="Editar Pessoa">
                             <Link href={paths.editPessoa(pessoa.id)}>
                            <span className="text-lg text-default-700 cursor-pointer">
@@ -218,6 +218,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                 settings={itemDeleteModalSettings}
             />
             <Table
+                aria-label={' '}
                 isStriped={true}
                 isHeaderSticky={false}
                 topContent={<TabelaPessoasTopContent

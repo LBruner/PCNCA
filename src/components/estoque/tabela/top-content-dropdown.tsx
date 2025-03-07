@@ -36,6 +36,7 @@ const TopContentDropDown: React.FC<TopContentDropDownProps> = (
                     </Button>
                 </DropdownTrigger>
                 <DropdownMenu
+                    aria-label={' '}
                     disallowEmptySelection
                     closeOnSelect={false}
                     selectedKeys={filterStatus}
@@ -43,7 +44,7 @@ const TopContentDropDown: React.FC<TopContentDropDownProps> = (
                     onSelectionChange={(keys) => { setFilterStatus([...keys as unknown as string[]])}}
                 >
                     {collection.map((status) => (
-                        <DropdownItem key={status.name} className="capitalize">
+                        <DropdownItem textValue={status.name} key={status.name} className="capitalize">
                             {capitalize(status.name)}
                         </DropdownItem>
                     ))}

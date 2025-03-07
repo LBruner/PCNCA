@@ -221,6 +221,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
                 itemId={selectedProductId}
                 settings={itemDeleteModalSettings}/>
             <Table
+                aria-label={' '}
                 isHeaderSticky={false}
                 topContent={<
                     AdmNoticiasTableTopContent

@@ -28,6 +28,7 @@ export default function CustomDropdown() {
                 selectedKeys={selectedKeys}
                 onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}>
                 <DropdownItem
+                    textValue={'1'}
                     key="Mostrar: Todos">Todos</DropdownItem>
                 <DropdownItem key="Mostrar: Ativos">Ativos</DropdownItem>
                 <DropdownItem key="Mostrar: Desativados">Desativados</DropdownItem>

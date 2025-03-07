@@ -209,6 +209,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
                     filterValue={filterValue}/>
             </div>
             <Table
+                aria-label={' '}
                 isHeaderSticky
                 bottomContentPlacement="outside"
                 bottomContent={

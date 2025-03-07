@@ -209,6 +209,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
             <AdmCreateCategoryModal settings={itemCreateModalSettings}/>
             <AdmCreateCategoryModal settings={itemEditModalSettings}/>
             <Table
+                aria-label={' '}
                 isHeaderSticky={false}
                 topContent={<AdmCategoriasTableTopContent
                     openCreateCategoryModal={createModal.onOpen}

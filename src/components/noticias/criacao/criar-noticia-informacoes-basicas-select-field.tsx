@@ -11,8 +11,15 @@ interface ConfigurarNoticiaFormFieldProps {
     placeholder: string;
 }
 
-const CriarNoticiaInformacoesBasicasSelectField: React.FC<ConfigurarNoticiaFormFieldProps> = ({valor, titulo, subtitulo, collection, onChange, placeholder}) => {
-        const selectedKeys = valor == null ? [] : [valor];
+const CriarNoticiaInformacoesBasicasSelectField: React.FC<ConfigurarNoticiaFormFieldProps> = ({
+                                                                                                  valor,
+                                                                                                  titulo,
+                                                                                                  subtitulo,
+                                                                                                  collection,
+                                                                                                  onChange,
+                                                                                                  placeholder
+                                                                                              }) => {
+    const selectedKeys = valor == null ? [] : [valor];
     return (
         <div className={'flex w-full items-start'}>
             <div className={'flex flex-col'}>
@@ -20,6 +27,7 @@ const CriarNoticiaInformacoesBasicasSelectField: React.FC<ConfigurarNoticiaFormF
                 <p className={'text-md w-48 text-gray-500'}>{subtitulo}</p>
             </div>
             <Select
+                label={' '}
                 onChange={event => onChange(event.target.value)}
                 value={valor}
                 selectedKeys={selectedKeys}
@@ -33,7 +41,7 @@ const CriarNoticiaInformacoesBasicasSelectField: React.FC<ConfigurarNoticiaFormF
                 placeholder={placeholder}
             >
                 {collection.map((item) => (
-                    <SelectItem key={item.uid}>
+                    <SelectItem aria-label={''} key={item.uid}>
                         {item.name}
                     </SelectItem>
                 ))}

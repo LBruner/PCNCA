@@ -26,7 +26,7 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
     if (user) {
         authContent = <>
             <NavbarContent className={'h-36 pb-1 flex items-center'}>
-                <Dropdown className={'h-auto'} size="lg" disableAnimation={false} placement="bottom-end">
+                <Dropdown shouldBlockScroll={false} size="lg" disableAnimation={false} placement="bottom-end">
                     <DropdownTrigger>
                         <Avatar
                             showFallback={true}
@@ -41,21 +41,21 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                         />
                     </DropdownTrigger>
                     <DropdownMenu aria-label="Profile Actions" variant="flat">
-                        <DropdownItem key="perfil" className="h-14 gap-2">
+                        <DropdownItem textValue={'User'} key="perfil" className="h-14 gap-2">
                             <p className="font-medium">Logado como</p>
                             <p className="font-semibold">{user.email}</p>
                         </DropdownItem>
                         {user.admin ? (
-                            <DropdownItem key={user.id} color={'default'} href={paths.admNoticias()}>
+                            <DropdownItem textValue={'Adm'}  key={user.id} color={'default'} href={paths.admNoticias()}>
                                 ADM
                             </DropdownItem>
                         ) : null as any}
-                        <DropdownItem onPress={() => {
+                        <DropdownItem textValue={'Configuracoes'}  onPress={() => {
                             console.log()
-                        }} key="logout" color="default">
+                        }} key="configuracoes" color="default">
                             <p className={'text-medium'}>Configurações</p>
                         </DropdownItem>
-                        <DropdownItem onPress={() => {
+                        <DropdownItem textValue={'Logout'} onPress={() => {
                             signOut().then(_ => console.log())
                         }} key="logout" color="danger">
                             <p className={'text-medium'}>Sair</p>

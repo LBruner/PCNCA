@@ -26,6 +26,7 @@ const CotacoesCommoditiesBody: React.FC<CotacoesCommoditiesProps> = ({cotacoes})
                 <div className={'w-64'}>
                     <p className={'font-semibold mb-2'}>Commodity Selecionada</p>
                     <Select
+                        label={' '}
                         labelPlacement={'outside'}
                         multiple={false}
                         onSelectionChange={(keys: any) => {
