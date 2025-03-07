@@ -155,7 +155,6 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
                         setDatesRange={setDatesRange}
                         clientesFilter={clientesFilter}
                         setClientesFilter={setClientesFilter}
-                        produtosFilterCollection={produtosFilterCollection}
                         clientesFilterCollection={clientesFilterCollection}
                         vendas={vendas}/>}
                 </div>

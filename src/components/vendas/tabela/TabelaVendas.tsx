@@ -33,7 +33,6 @@ const columns = [
 interface TabelaVendasProps {
     vendas: VendasAgrupadas[][],
     clientesFilterCollection: FilterCollection[];
-    produtosFilterCollection: FilterCollection[];
     clientesFilter: string | string[];
     setClientesFilter: Dispatch<SetStateAction<string | string[]>>;
     dateRange: RangeValue<DateValue>;
@@ -44,7 +43,6 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
     {
         vendas,
         clientesFilterCollection,
-        produtosFilterCollection,
         clientesFilter,
     }) => {
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
@@ -85,7 +83,7 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
 
 
         return filteredVendas;
-    }, [vendas, clientesFilter, clientesFilterCollection, produtosFilterCollection]);
+    }, [vendas, clientesFilter, clientesFilterCollection]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 

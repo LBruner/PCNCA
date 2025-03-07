@@ -1,7 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
-import {ArrowUpIcon} from "@radix-ui/react-icons";
-import {BsBoxArrowUp} from "react-icons/bs";
+import {useEffect, useState} from 'react';
 import {FiArrowUp} from "react-icons/fi";
 
 const ScrollToTop = () => {

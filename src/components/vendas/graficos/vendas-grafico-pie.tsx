@@ -72,7 +72,7 @@ const VendasGraficoPie: React.FC<VendasGraficoPieProps> = ({produtosFilter, clie
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        fetchChartData(produtosFilter, clientesFilter);
+        fetchChartData(produtosFilter, clientesFilter).then(_ => {});
     }, [produtosFilter, clientesFilter]);
 
     const fetchChartData = async (produtoFilter: string | string[], clientesFilter: string | string[]) => {

@@ -36,7 +36,7 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes, formasPagament
     const router = useRouter();
 
     useEffect(() => {
-        getSelectedProducts();
+        getSelectedProducts().then();
     }, []);
 
     const getSelectedProducts = async () => {
