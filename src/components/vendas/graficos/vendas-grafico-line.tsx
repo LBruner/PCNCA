@@ -42,7 +42,7 @@ const VendasGraficoLine: React.FC<VendasGraficoLineProps> = ({produtosFilter, cl
 
     return (
         <div>
-            <p className={'font-semibold text-xl mb-4'}>Total de Vendas por Produto nos Últimos 12 Meses</p>
+            <p className={'font-semibold text-xl mb-4 dark:text-black'}>Total de Vendas por Produto nos Últimos 12 Meses</p>
             <div ref={containerRef} style={{width: '103%'}}>
                 <LineChart
                     colors={chartColors}

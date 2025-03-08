@@ -23,8 +23,8 @@ export default function RootLayout(
     }>) {
 
     return (
-        <html className={'h-screen'} lang="en">
-        <body className={`${inter.className} `}>
+        <html className={'dark:bg-customDarkBg'} lang="en">
+        <body className={`${inter.className} dark:bg-customDarkBg`}>
         <Providers>
             <Suspense fallback={<div></div>}>
                 <AdmNavbar/>

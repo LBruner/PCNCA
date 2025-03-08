@@ -136,16 +136,16 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
                                 <Spinner color={'warning'}/>
                             </div> : <>
                                 <div className={'flex gap-4 mt-4'}>
-                                    <div className={'h-72 w-1/2 shadow border rounded-lg p-6 col-start-1 row-start-1'}>
+                                    <div className={'h-72 dark:invert w-1/2 shadow border rounded-lg p-6 col-start-1 row-start-1'}>
                                         <VendasGraficoPie clientesFilter={clientesFilter}
                                                           produtosFilter={produtosFilter}/>
                                     </div>
-                                    <div className={'h-72 w-1/2 shadow border rounded p-5 col-start-2 row-start-1'}>
+                                    <div className={'h-72 dark:invert w-1/2 shadow border rounded p-5 col-start-2 row-start-1'}>
                                         <VendasGraficoBar clientesFilter={clientesFilter}
                                                           produtosFilter={produtosFilter}/>
                                     </div>
                                 </div>
-                                <div className={'border mt-4 h-96 shadow rounded p-6 col-span-2 row-start-2'}>
+                                <div className={'border dark:invert mt-4 h-96 shadow rounded p-6 col-span-2 row-start-2'}>
                                     <VendasGraficoLine clientesFilter={clientesFilter} produtosFilter={produtosFilter}/>
                                 </div>
                             </>}
@@ -168,7 +168,7 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
                     <ModalContent>
                         {(onClose) => (
                             <>
-                                <ToastProvider placement={'top-center'} maxVisibleToasts={1} toastOffset={180}/>
+                                <ToastProvider placement={'bottom-center'} maxVisibleToasts={1} toastOffset={180}/>
                                 <ModalHeader className="">Filtrar conteúdo</ModalHeader>
                                 <ModalBody>
                                     <>

@@ -98,7 +98,7 @@ const VendasGraficoPie: React.FC<VendasGraficoPieProps> = ({produtosFilter, clie
 
     return (
         <div>
-            <p className={'font-semibold text-xl mb-4'}>Venda Geral por Produto</p>
+            <p className={'font-semibold text-xl mb-4 dark:text-black'}>Venda Geral por Produto</p>
             <PieChart
                 viewBox={{
                     x: 60

@@ -43,7 +43,7 @@ const VendasGraficoBar: React.FC<VendasGraficoBarProps> = ({produtosFilter, clie
 
     return (
         <>
-            <p style={{width: '105%'}} className={'font-semibold text-xl mb-2'}>Venda de Todos os Produtos nos Últimos 12 Meses</p>
+            <p style={{width: '105%'}} className={'font-semibold text-xl mb-2 dark:text-black'}>Venda de Todos os Produtos nos Últimos 12 Meses</p>
             <div ref={containerRef} style={{width: '105%'}}>
                 <BarChart
                     borderRadius={12}

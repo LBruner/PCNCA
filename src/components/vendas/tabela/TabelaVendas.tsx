@@ -156,8 +156,7 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
                 bottomContent={<VendasTabelaBottomContent
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
                     filteredItemsLength={filteredItems.length}
-                    totalPagesQuantity={totalPagesQuantity}
-                    selectedKeys={[]}/>}
+                    totalPagesQuantity={totalPagesQuantity}/>}
                 selectionMode="none"
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}

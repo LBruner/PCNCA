@@ -5,7 +5,6 @@ interface TabelaBottomContentProps {
     currentPage: number;
     setCurrentPage: (page: number) => void;
     totalPagesQuantity: number;
-    selectedKeys: string | string[];
     filteredItemsLength: number;
 }
 
@@ -14,7 +13,6 @@ const VendasTabelaBottomContent: React.FC<TabelaBottomContentProps> = (
         setCurrentPage,
         currentPage,
         totalPagesQuantity,
-        selectedKeys,
         filteredItemsLength,
     }
 ) => {
@@ -34,9 +32,6 @@ const VendasTabelaBottomContent: React.FC<TabelaBottomContentProps> = (
         return (
             <div className="py-2 px-2 flex justify-between items-center">
         <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === "all"
-              ? "Todos produtos selecionados"
-              : `${typeof selectedKeys !== "string" && selectedKeys ? selectedKeys?.length : 0} de ${filteredItemsLength} items selecionado${typeof selectedKeys !== "string" && selectedKeys?.length != 1 ? "s" : ""}`}
         </span>
                 <Pagination
                     isCompact
@@ -57,7 +52,7 @@ const VendasTabelaBottomContent: React.FC<TabelaBottomContentProps> = (
                 </div>
             </div>
         );
-    }, [selectedKeys, filteredItemsLength, currentPage, totalPagesQuantity, setCurrentPage, onNextPage, onPreviousPage]);
+    }, [filteredItemsLength, currentPage, totalPagesQuantity, setCurrentPage, onNextPage, onPreviousPage]);
 }
 
 
