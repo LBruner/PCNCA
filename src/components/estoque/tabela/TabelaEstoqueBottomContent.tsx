@@ -35,7 +35,7 @@ const TabelaEstoqueBottomContent: React.FC<TabelaBottomContentProps> = (
 
     return React.useMemo(() => {
         return (
-            <div className="p-6 dark:bg-customDarkFooter flex justify-between items-center">
+            <div className="p-6 flex justify-between items-center">
         <span className="w-[30%] text-small text-default-400">
         </span>
                 {showPagination && <>

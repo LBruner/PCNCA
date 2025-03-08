@@ -51,7 +51,7 @@ export const resetarSenha = async (idUsuario: string): Promise<void> => {
         }
     });
 
-    revalidatePath(paths.admUsuarios());
+    revalidatePath(paths.configuracoesUsuario());
 }
 
 export const deletarUsuario = async (idUsuario: string): Promise<void> => {
@@ -61,7 +61,7 @@ export const deletarUsuario = async (idUsuario: string): Promise<void> => {
         }
     );
 
-    revalidatePath(paths.admUsuarios());
+    revalidatePath(paths.configuracoesUsuario());
 }
 
 

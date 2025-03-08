@@ -34,7 +34,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, cu
                 <p className={'text-2xl font-semibold'}>Criar Produto</p>
                 <Button type={'submit'}>{produto ? 'Editar' : 'Criar'} Produto</Button>
             </div>
-            <div className={'w-5/6 flex justify-center dark:bg-customDarkFooter dark:border-gray-900 bg-white rounded-lg border-1 border-gray-200'}>
+            <div className={'w-5/6 px-4 py-2 flex justify-center dark:bg-customDarkFooter dark:border-gray-900 bg-white rounded-lg border-1 border-gray-200'}>
                 <div className={'flex flex-col gap-4 w-full px-8 py-6'}>
                     <p className={'text-xl font-bold'}>Informações Gerais</p>
                     <div className={'flex flex-col gap-7'}>
