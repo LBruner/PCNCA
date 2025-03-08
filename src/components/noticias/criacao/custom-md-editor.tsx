@@ -53,7 +53,7 @@ const CustomMdEditor: React.FC<CustomMdEditorProps> = ({handleChange, content}) 
     }, []);
 
     return (
-        <div ref={containerRef} className={'w-full h-full'}>
+        <div ref={containerRef} className={'w-full h-full dark:invert'}>
             <MDXEditor
                 className={'w-full prose prose-full'}
                 markdown={content}

@@ -45,9 +45,9 @@ const CriarNoticiaInformacoesBasicasInputField: React.FC<ConfigurarNoticiaFormFi
 ) => {
     return (
         <div className={'flex w-full'}>
-            <div className={'flex flex-col'}>
+            <div className={'flex flex-col '}>
                 <p className={'text-lg w-48 font-semibold'}>{titulo}</p>
-                <p className={'text-md w-48 text-gray-500'}>{subtitulo}</p>
+                <p className={'text-md w-48 text-gray-500 dark:text-gray-200'}>{subtitulo}</p>
             </div>
             <CustomInputButton
                 required={required}

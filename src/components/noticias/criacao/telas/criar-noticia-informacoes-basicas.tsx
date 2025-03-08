@@ -55,7 +55,7 @@ const CriarNoticiaInformacoesBasicas = forwardRef((props: ProdutoFormProps, ref)
 
     return (
         <form ref={formRef}
-              className={'flex flex-col items-center pt-8 h-auto overflow-hidden mb-5'}>
+              className={'flex flex-col items-center pt-8 h-auto overflow-hidden mb-5 dark:bg-customDarkFooter'}>
             <div className={'w-[88%] flex flex-col gap-8 justify-start items-start'}>
                 <CriarNoticiaInformacoesBasicasInputField
                     titulo={'Título do artigo'}
@@ -95,9 +95,9 @@ const CriarNoticiaInformacoesBasicas = forwardRef((props: ProdutoFormProps, ref)
                     }))}
                     onChange={(novaCategoria) => setCultura(parseInt(novaCategoria))}
                 />
-                <div className={'flex flex-col justify-start w-full border-t-1 '}>
+                <div className={'flex flex-col justify-start w-full border-t-1 dark:border-none'}>
                     <p className={'text-start font-semibold text-lg mt-4'}>Thumbnail preview</p>
-                    <p className={'text-start text-gray-500'}>Visualize como a sua configuração irá ser
+                    <p className={'text-start text-gray-500 dark:text-gray-200'}>Visualize como a sua configuração irá ser
                         mostrada em tempo real</p>
                 </div>
                 <div className="w-full h-72">

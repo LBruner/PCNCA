@@ -130,8 +130,8 @@ const NoticiaCreateForm: React.FC<NoticiaCreateForm> = ({culturas, noticiaCriada
             )}
 
             <div className={'flex justify-center items-center h-auto w-11/12'}>
-                <div className={'mb-8 bg-white w-full h-full border rounded-lg'}>
-                    <div className={'flex px-4 border-b-1 items-center justify-between'}>
+                <div className={'mb-8 bg-white w-full h-full border rounded-lg dark:border-none  dark:bg-customDarkFooter'}>
+                    <div className={'flex px-4 border-b-1 dark:border-none items-center justify-between'}>
                         <div className={'flex items-center gap-2'}>
                             <RoundedStepsGuide isEnabled={screenIndex == 0} number={1} text={'Informações Básicas'}/>
                             <Spacer/>

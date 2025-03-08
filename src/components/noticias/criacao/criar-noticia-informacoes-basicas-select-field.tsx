@@ -21,23 +21,23 @@ const CriarNoticiaInformacoesBasicasSelectField: React.FC<ConfigurarNoticiaFormF
                                                                                               }) => {
     const selectedKeys = valor == null ? [] : [valor];
     return (
-        <div className={'flex w-full items-start'}>
+        <div className={'flex w-full'}>
             <div className={'flex flex-col'}>
                 <p className={'text-lg w-48 font-semibold'}>{titulo}</p>
-                <p className={'text-md w-48 text-gray-500'}>{subtitulo}</p>
+                <p className={'text-md w-48 text-gray-500 dark:text-gray-200'}>{subtitulo}</p>
             </div>
             <Select
-                label={' '}
+                aria-label={' '}
+                label={undefined}
                 onChange={event => onChange(event.target.value)}
                 value={valor}
                 selectedKeys={selectedKeys}
                 name={'name'}
-                isRequired={true}
                 classNames={{
-                    label: "font-medium font-lg",
+                    base: "font-medium font-2xl",
                 }}
                 size={'lg'}
-                labelPlacement={'outside'}
+                labelPlacement={'outside-left'}
                 placeholder={placeholder}
             >
                 {collection.map((item) => (
