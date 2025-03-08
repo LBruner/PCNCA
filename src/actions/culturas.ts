@@ -25,7 +25,7 @@ export const criarCultura = async (name: string, description: string, url: strin
         }
     });
 
-    revalidatePath(paths.admCulturas());
+    revalidatePath(paths.configuracoesCultura());
     revalidatePath(paths.culturas());
 }
 
@@ -41,7 +41,7 @@ export const editarCultura = async (cultura: Cultura) => {
         }
     });
 
-    revalidatePath(paths.admCulturas());
+    revalidatePath(paths.configuracoesCultura());
     revalidatePath(paths.culturas());
 }
 
@@ -52,6 +52,6 @@ export const deletarCultura = async (cultura: number) => {
         },
     })
 
-    revalidatePath(paths.admCulturas());
+    revalidatePath(paths.configuracoesCultura());
     revalidatePath(paths.culturas());
 };

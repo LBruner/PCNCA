@@ -6,6 +6,7 @@ import Link from "next/link";
 import {usePathname} from "next/navigation";
 import paths from "@/paths";
 import {BiCategory, BiNews, BiUser} from "react-icons/bi";
+import ThemeButton from "@/components/UI/ThemeButton";
 
 const AdmNavbar: React.FC = () => {
     const pathname = usePathname();
@@ -39,9 +40,9 @@ const AdmNavbar: React.FC = () => {
         localStorage.setItem('activePath', pathname);
 
         // Expandir o Accordion correspondente ao pathname ativo
-        if (pathname.startsWith(paths.admNoticias()) || pathname.startsWith(paths.admCulturas())) {
+        if (pathname.startsWith(paths.admNoticias()) || pathname.startsWith(paths.configuracoesCultura())) {
             setExpandedKeys(["1"]); // Abre o AccordionItem das "Notícias"
-        } else if (pathname.startsWith(paths.admUsuarios())) {
+        } else if (pathname.startsWith(paths.configuracoesUsuario())) {
             setExpandedKeys(["2"]); // Abre o AccordionItem do "Cadastro"
         }
     }, [pathname]);
@@ -54,12 +55,17 @@ const AdmNavbar: React.FC = () => {
         return null;
     }
     return (
-        <Navbar className="h-screen fixed w-64 flex-col items-start justify-start p-4 bg-gray-100" position="static">
+        <Navbar
+            className="h-screen fixed w-64 flex-col items-start justify-start p-4 bg-gray-100 dark:bg-customDarkFooter"
+            position="static">
             <NavbarContent className="flex-col items-start gap-4">
-                <NavbarItem>
-                    <Link href={paths.noticias()} className="flex items-center gap-2 text-foreground">
-                        <p className="font-bold text-xl">PCNCA</p>
-                    </Link>
+                <NavbarItem className={'w-full'}>
+                    <div className={'flex justify-around w-full gap-12'}>
+                        <Link href={paths.noticias()} className="flex items-center gap-2 text-foreground">
+                            <p className="font-bold text-xl">PCNCA</p>
+                        </Link>
+                        <ThemeButton/>
+                    </div>
                 </NavbarItem>
                 <NavbarItem>
                     {pathname.startsWith('/adm') &&
@@ -84,7 +90,6 @@ const AdmNavbar: React.FC = () => {
                                 </div>
                             </AccordionItem>
                         </Accordion>
-
                     }
 
                     {pathname.startsWith('/configuracoes') &&
@@ -99,16 +104,16 @@ const AdmNavbar: React.FC = () => {
                                 className="flex flex-col"
                             >
                                 <div className="flex flex-col w-36 gap-2">
-                                    <Link href={paths.admCulturas()}>
+                                    <Link href={paths.configuracoesCultura()}>
                                         <Button className="text-right w-full justify-start"
-                                                color={pathname === paths.admCulturas() ? "primary" : "default"}
+                                                color={pathname === paths.configuracoesCultura() ? "primary" : "default"}
                                                 startContent={<BiCategory/>}>
                                             Culturas
                                         </Button>
                                     </Link>
-                                    <Link href={paths.admUsuarios()}>
+                                    <Link href={paths.configuracoesUsuario()}>
                                         <Button className="text-right w-full justify-start"
-                                                color={pathname === paths.admUsuarios() ? "primary" : "default"}
+                                                color={pathname === paths.configuracoesUsuario() ? "primary" : "default"}
                                                 startContent={<BiUser/>}>
                                             Usuários
                                         </Button>
@@ -119,6 +124,7 @@ const AdmNavbar: React.FC = () => {
                     }
                 </NavbarItem>
             </NavbarContent>
+
         </Navbar>
     );
 };

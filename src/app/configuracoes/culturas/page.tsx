@@ -16,7 +16,7 @@ const AdmCategoriasPage: React.FC = async _ => {
     }
 
     return (
-        <div className={'flex justify-center'}>
+        <div className={'flex justify-center dark:bg-customDarkFooter bg-slate-50'}>
             {renderingContent}
         </div>
     )
