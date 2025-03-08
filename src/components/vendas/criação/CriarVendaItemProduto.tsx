@@ -19,9 +19,9 @@ const CriarVendaItemProduto: React.FC<CriarVendaItemProduto> = (props) => {
                     <Image isZoomed={true} src={produto.estoque.imagemLink!} alt={produto.estoque.produto}/>
                 </div>
                 <div>
-                    <p className={'text-md  text-gray-700 font-light'}>{produto.estoque.categoriaId?.nome ?? "Sem categoria"}</p>
+                    <p className={'text-md dark:text-gray-300  text-gray-700 font-light'}>{produto.estoque.categoriaId?.nome ?? "Sem categoria"}</p>
                     <p className={'text-2xl font-semibold'}>{produto.estoque.produto}</p>
-                    <p className={'text-sm text-gray-700 font-light'}>Disponíveis: {produto.estoque.quantidade}</p>
+                    <p className={'text-sm text-gray-700 dark:text-gray-300 font-light'}>Disponíveis: {produto.estoque.quantidade}</p>
                 </div>
             </div>
             <div className={'flex gap-8 items-center'}>

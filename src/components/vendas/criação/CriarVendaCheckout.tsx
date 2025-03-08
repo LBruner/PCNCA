@@ -28,7 +28,7 @@ const CriarVendaCheckout: React.FC<CriarVendaCheckoutFormProps> = (
         setSelectedClienteId
     }) => {
     return (
-        <form onSubmit={(_) => {onFinalizaVenda()}} className={'mx-2 mt-6 flex flex-col gap-6'}>
+        <form onSubmit={(_) => {onFinalizaVenda()}} className={'mx-2 mt-6 flex flex-col gap-6 dark:bg-customDarkFooter'}>
             <p className={'text-xl font-normal'}>Selecione o cliente para entrega</p>
             <Autocomplete errorMessage={<p>Campo cliente é obrigatório</p>} isRequired={true} selectedKey={clienteSelecionadoId ?? null as any}
                           onSelectionChange={(key) => setSelectedClienteId(key as any)} size={'sm'} label={'Cliente'}>

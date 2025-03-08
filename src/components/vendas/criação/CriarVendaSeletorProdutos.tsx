@@ -26,7 +26,7 @@ const CriarVendaSeletorProdutos: React.FC<CriarVendaSeletorProdutosProps> = (
     );
 
     return (
-        <div className={'flex flex-col gap-6'}>
+        <div className={'flex flex-col gap-6 dark:bg-customDarkFooter'}>
             <div className={'w-full flex'}>
                 <CriarVendaListaProdutos produtos={produtos} changeProductQuantity={changeProductQuantity}
                                          removeProduct={removeProduct}/>

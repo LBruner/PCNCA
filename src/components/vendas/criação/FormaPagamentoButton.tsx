@@ -9,7 +9,7 @@ interface FormaPagamentoButtonProps {
 const FormaPagamentoButton: React.FC<FormaPagamentoButtonProps> = ({title, icon, isSelected}) => {
     return (
         <div
-            className={`${isSelected ? 'border-blue-500' : 'shadow'} px-4 py-6 gap-1 flex flex-col border rounded-lg hover:bg-gray-100`}>
+            className={`${isSelected ? 'border-blue-500' : 'shadow'} px-4 py-6 gap-1 flex flex-col border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-950`}>
             <div>
                 {icon}
             </div>

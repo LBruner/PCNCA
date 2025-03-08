@@ -103,7 +103,7 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes, formasPagament
 
     return (
         <div className={'flex justify-center w-full'}>
-            <div className={'w-4/6 flex flex-col '}>
+            <div className={'w-4/6 flex flex-col'}>
                 <Accordion selectedKeys={selectedKeys}
                            onSelectionChange={(key) => setSelectedKeys(key as any)}>
                     <AccordionItem
@@ -111,7 +111,7 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes, formasPagament
                         subtitle="Escolha e gerencie seus produtos"
                         classNames={{title: 'text-3xl', subtitle: 'text-lg', heading: 'px-2'}}
                         key="1"
-                        className="font-semibold py-4"
+                        className="font-semibold py-4 dark:bg-customDarkFooter px-8 rounded-lg"
                         title="Seleção de Produtos"
                     >
                         <Divider/>
@@ -127,7 +127,7 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes, formasPagament
                         subtitle="Finalize a venda"
                         classNames={{title: 'text-3xl', subtitle: 'text-lg', heading: 'px-2'}}
                         key="2"
-                        className="font-semibold py-4"
+                        className="font-semibold py-4 dark:bg-customDarkFooter px-8 rounded-lg"
                         title="Checkout"
                     >
                         <Divider/>
