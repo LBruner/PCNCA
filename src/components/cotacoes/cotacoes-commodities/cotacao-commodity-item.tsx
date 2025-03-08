@@ -13,30 +13,30 @@ const CotacaoCommodityItem: React.FC<CotacaoCommodityItemProps> = ({cotacao}) =>
             <hr className={'border-opacity-0.5 border-gray-600'}/>
             <div className={'flex justify-between'}>
                 <div>
-                    <p className={'text-green-700 font-medium'}>Negociação</p>
+                    <p className={'text-green-700 dark:text-green-600 font-medium'}>Negociação</p>
                     <p>Preço Físico</p>
                     <p>Futuro (set/25)</p>
                 </div>
                 <div>
-                    <p className={'text-green-700 font-medium'}>Fonte</p>
+                    <p className={'text-green-700 dark:text-green-600 font-medium'}>Fonte</p>
                     <p>{cotacao.fonte}</p>
                 </div>
                 <div>
-                    <p className={'text-green-700 font-medium'}>Data</p>
+                    <p className={'text-green-700 dark:text-green-600 font-medium'}>Data</p>
                     <p>{formatarData(cotacao.data)}</p>
                 </div>
                 <div>
-                    <p className={'text-green-700 font-medium'}>Preço</p>
+                    <p className={'text-green-700 dark:text-green-600 font-medium'}>Preço</p>
                     <p>{formatToBrazilianCurrency(cotacao.valor)}</p>
                 </div>
                 <div>
-                    <p className={'text-green-700 font-medium'}>Variação</p>
-                    <p className={`${cotacao.percentageChange == 0 ? 'text-black' : cotacao.priceIncreased ? 'text-green-700' : 'text-red-500'}`}>
+                    <p className={'text-green-700 dark:text-green-600 font-medium'}>Variação</p>
+                    <p className={`${cotacao.percentageChange == 0 ? 'text-black' : cotacao.priceIncreased ? 'text-green-700 dark:text-green-500' : 'text-red-500'}`}>
                         {cotacao.percentageChange.toFixed(2)}%
                     </p>
                 </div>
                 <div>
-                    <p className={'text-green-700 font-medium'}>Mudança</p>
+                    <p className={'text-green-700 dark:text-green-600 font-medium'}>Mudança</p>
                     <p>{formatToBrazilianCurrency(cotacao.priceDifference)}</p>
                 </div>
             </div>

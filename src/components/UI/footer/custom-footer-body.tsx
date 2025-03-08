@@ -28,7 +28,7 @@ const CustomFooterBody: React.FC<CustomFooterProps> = ({culturas,}) => {
     }
 
     return (
-        <footer className="shadow mt-14 bg-green-900 dark:bg-customDarkFooter text-white py-10 px-5">
+        <footer className="shadow mt-12 pt-14 bg-green-900 dark:bg-customDarkFooter text-white py-10 px-5">
             <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
                 {/* Logo and Social Section */}
                 <div className="space-y-4">

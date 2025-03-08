@@ -1,5 +1,7 @@
 'use client';
-import React, {useEffect, useRef} from 'react';
+
+import React, { useEffect, useRef } from 'react';
+import { useTheme } from 'next-themes'; // Import useTheme
 
 interface TradingViewWidgetProps {
     symbols?: string[][];
@@ -30,7 +32,7 @@ const TradingViewWidget: React.FC<TradingViewWidgetProps> = (
         ],
         chartOnly = false,
         locale = 'br',
-        colorTheme = 'light',
+        colorTheme = 'light', // Default color theme
         timezone = 'America/Sao_Paulo',
         autosize = true,
         showVolume = false,
@@ -38,20 +40,25 @@ const TradingViewWidget: React.FC<TradingViewWidgetProps> = (
         height = '100%',
     }) => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const { resolvedTheme } = useTheme(); // Get the current theme
 
     useEffect(() => {
         if (containerRef.current) {
-            containerRef.current.innerHTML = '';
+            containerRef.current.innerHTML = ''; // Clear the container
 
             const script = document.createElement('script');
             script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
             script.type = 'text/javascript';
             script.async = true;
+
+            // Set the colorTheme based on the resolved theme
+            const currentColorTheme = resolvedTheme === 'dark' ? 'dark' : 'light';
+
             script.innerHTML = JSON.stringify({
                 symbols,
                 chartOnly,
                 locale,
-                colorTheme,
+                colorTheme: currentColorTheme, // Use dynamic color theme
                 autosize,
                 showVolume,
                 width,
@@ -68,10 +75,10 @@ const TradingViewWidget: React.FC<TradingViewWidgetProps> = (
 
         return () => {
             if (containerRef.current) {
-                containerRef.current.innerHTML = '';
+                containerRef.current.innerHTML = ''; // Cleanup on unmount
             }
         };
-    }, [symbols, chartOnly, locale, colorTheme, autosize, showVolume, width, height]);
+    }, [symbols, chartOnly, locale, autosize, showVolume, width, height, resolvedTheme]); // Add resolvedTheme as a dependency
 
     return (
         <div className="tradingview-widget-container" ref={containerRef} style={{ height: '100%', width: '100%' }}>

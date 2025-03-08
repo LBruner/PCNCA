@@ -35,7 +35,7 @@ const CotacaoCommodityChart: React.FC<CotacaoCommodityChartProps> = ({selectedCo
     }
 
     return (
-        <div className="h-[320px] my-4" ref={containerRef} style={{width: "100%"}}>
+        <div className="h-[320px] dark:invert my-4" ref={containerRef} style={{width: "100%"}}>
             <LineChart
                 loading={isLoading}
                 colors={["#4a946f"]}
@@ -55,7 +55,13 @@ const CotacaoCommodityChart: React.FC<CotacaoCommodityChartProps> = ({selectedCo
                     },
                 ]}
                 series={chartData.datasets.map((item) => {
-                    return {curve: 'linear',data: item.data, label: item.label, id: item.label,                             valueFormatter: (value) => formatToBrazilianCurrency(value!)
+                    return {
+                        curve: 'linear',
+                        data: item.data,
+                        label: item.label,
+                        id: item.label,
+                        color: '#4a946f',
+                        valueFormatter: (value) => formatToBrazilianCurrency(value!)
                     };
                 })}
                 xAxis={[
