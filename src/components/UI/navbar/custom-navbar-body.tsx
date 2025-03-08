@@ -9,6 +9,7 @@ import Link from "next/link";
 import NavLink from "@/components/UI/navbar/NavLink";
 import CustomUserCard from "@/components/UI/navbar/custom-user-card";
 import {UsuarioComEmpresa} from "@/actions/usuarios";
+import ThemeButton from "@/components/UI/ThemeButton";
 
 interface CustomNavbarBodyProps {
     user?: UsuarioComEmpresa;
@@ -17,12 +18,11 @@ interface CustomNavbarBodyProps {
 const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
     const pathName = usePathname();
 
-    try{
-        if(localStorage != null){
+    try {
+        if (localStorage != null) {
             localStorage.removeItem('activePath');
         }
-    }
-    catch (e){
+    } catch (e) {
 
     }
 
@@ -33,12 +33,12 @@ const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
     return (
         <>
             <Navbar maxWidth={'full'} shouldHideOnScroll={true}
-                    className={'fixed shadow-sm bg-gray-100 bg-opacity-70 flex top-0 left-0 h-28 items-start py-5'}>
-                <div>
+                    className={'fixed shadow-sm dark:bg-gray-950 dark:bg-opacity-40 bg-gray-100  bg-opacity-70 flex top-0 left-0 h-28 items-start py-5'}>
+                <div className={'w-96'}>
                     <MoedasCard/>
                     <div className='w-40'/>
                 </div>
-                <NavbarItem className={'max-w-[50vw] h-full pl-10 flex flex-col'}>
+                <NavbarItem className={'w-full h-full flex flex-col'}>
                     <div className={'flex items-center justify-center mb-2'}>
                         <Link href={paths.noticias()}>
                             <p className={'text-4xl text-orange-400 font-bold'}>
@@ -56,10 +56,15 @@ const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
                     </NavbarContent>
                 </NavbarItem>
                 <NavbarItem>
-                    <CustomUserCard user={user}/>
+                    <NavbarContent className={'flex justify-end w-full'}>
+                        <div className={' justify-center flex items-center gap-5'}>
+                            <ThemeButton/>
+                            <CustomUserCard user={user}/>
+                        </div>
+                    </NavbarContent>
                 </NavbarItem>
             </Navbar>
-            <div className={'mb-36'}/>
+            <div className={'mb-40'}/>
         </>
     );
 }

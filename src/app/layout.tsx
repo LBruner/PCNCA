@@ -23,7 +23,7 @@ export default function RootLayout(
     }>) {
 
     return (
-        <html className={'h-screen bg-slate-50'} lang="en">
+        <html className={'h-screen'} lang="en">
         <body className={`${inter.className} `}>
         <Providers>
             <Suspense fallback={<div></div>}>

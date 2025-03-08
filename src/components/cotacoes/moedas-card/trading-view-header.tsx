@@ -1,37 +1,44 @@
+'use client';
+
 import React, { useEffect } from 'react';
+import { useTheme } from 'next-themes';
 
 const TradingViewWidget = () => {
+    const { resolvedTheme } = useTheme(); // Get the current theme
+
     useEffect(() => {
         const script = document.createElement('script');
-        let scriptAppended = false;
         script.src = "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
         script.async = true;
 
+        // Set the colorTheme based on the resolved theme
         script.innerHTML = JSON.stringify({
             "symbol": "FX_IDC:USDBRL",
             "width": "100%",
-            "isTransparent": true,
-            "colorTheme": "light",
+            "isTransparent": false,
+            "colorTheme": resolvedTheme === 'dark' ? 'dark' : 'light', // Dynamic theme
             "locale": "br"
         });
 
         const widgetContainer = document.getElementById('tradingview-widget-container');
         if (widgetContainer) {
+            // Clear any existing script
+            widgetContainer.innerHTML = '';
+            // Append the new script
             widgetContainer.appendChild(script);
-            scriptAppended = true;
         }
 
+        // Cleanup function to remove the script when the component unmounts
         return () => {
-            if (scriptAppended && widgetContainer && widgetContainer.contains(script)) {
+            if (widgetContainer && widgetContainer.contains(script)) {
                 widgetContainer.removeChild(script);
             }
         };
-    }, []);
+    }, [resolvedTheme]);
 
     return (
-        <div className="tradingview-widget-container" id="tradingview-widget-container">
-            <div className="tradingview-widget-container__widget">
-            </div>
+        <div key={resolvedTheme} className="tradingview-widget-container" id="tradingview-widget-container">
+            <div className="tradingview-widget-container__widget"></div>
         </div>
     );
 };

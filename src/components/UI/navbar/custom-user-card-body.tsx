@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import {
     Avatar,
@@ -15,6 +17,7 @@ import {signOut} from "next-auth/react";
 import {fallbackImgUrl} from "@/constants/messages/images";
 import {UsuarioComEmpresa} from "@/actions/usuarios";
 import {SlCamera} from "react-icons/sl";
+import { useTheme } from "next-themes";
 
 interface CustomUserCardBodyProps {
     user?: UsuarioComEmpresa;
@@ -22,10 +25,11 @@ interface CustomUserCardBodyProps {
 
 const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
     let authContent: React.ReactNode;
+    const {theme, setTheme} = useTheme();
 
     if (user) {
         authContent = <>
-            <NavbarContent className={'h-36 pb-1 flex items-center'}>
+            <NavbarContent className={'h-36 pb-1 flex items-center justify-end'}>
                 <Dropdown shouldBlockScroll={false} size="lg" disableAnimation={false} placement="bottom-end">
                     <DropdownTrigger>
                         <Avatar
@@ -46,10 +50,15 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                             <p className="font-semibold">{user.email}</p>
                         </DropdownItem>
                         {user.admin ? (
-                            <DropdownItem textValue={'Adm'}  key={user.id} color={'default'} href={paths.admNoticias()}>
+                            <DropdownItem textValue={'Adm'} key={user.id} color={'default'} href={paths.admNoticias()}>
                                 ADM
                             </DropdownItem>
                         ) : null as any}
+                        <DropdownItem textValue={'Tema'}
+                                      onPress={() => theme == "dark" ? setTheme('light') : setTheme("dark")
+                                      } key="configuracoes" color="default">
+                            <p className={'text-medium'}>Tema</p>
+                        </DropdownItem>
                         <DropdownItem textValue={'Configuracoes'} href={paths.configuracoes()
                         } key="configuracoes" color="default">
                             <p className={'text-medium'}>Configurações</p>
@@ -61,7 +70,7 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                         </DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
-                <div className={'flex flex-col ml-2 max-w-[200px]'}>
+                <div className={'flex flex-col max-w-[200px]'}>
                     <p className={'text-md font-medium text-lg whitespace-nowrap overflow-hidden text-ellipsis'}>
                         {user.nome}
                     </p>

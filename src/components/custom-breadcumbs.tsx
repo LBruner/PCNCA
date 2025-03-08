@@ -15,7 +15,7 @@ type CustomBreadcumb = {
 const CustomBreadcumbs: React.FC<CustomBreadcumbProps> = ({breadcumbs}) => {
     return (
         <div className={'px-12 mb-8'}>
-            <Breadcrumbs size={'lg'}>
+            <Breadcrumbs classNames={{list: 'font-semibold'}} size={'lg'}>
                 {breadcumbs.map((breadcumb, index) => (
                     <BreadcrumbItem key={index}>
                         <Link href={breadcumb.href ?? ''}>

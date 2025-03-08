@@ -55,12 +55,18 @@ const ShowNoticiaPageBody: React.FC<ShowNoticiaPageBodyProps> = ({content, notic
                             img: ({node, ...props}) => (
                                 <img {...props} className="mx-auto my-4" alt={props.alt}/>
                             ),
-                        }} className="markdown-body text-xl">
+                            h1: ({node, ...props}) => (
+                                <h1 {...props} className={'dark:text-green-600 text-green-700'}></h1>
+                            ),
+                            strong: ({node, ...props}) => (
+                                <strong {...props} className={'dark:text-white'}></strong>
+                            ),
+                        }} className="markdown-body text-xl dark:text-white">
                             {content}
                         </ReactMarkdown>
                     </div>
-                    {noticiasRelacionadas.length > 0 && <div className={'mt-12'}>
-                        <p className={'text-2xl font-semibold text-orange-500'}>VEJA TAMBÉM:</p>
+                    {noticiasRelacionadas.length > 0 && <div className={'mt-24'}>
+                        <p className={'text-2xl font-semibold text-orange-400 dark:text-orange-400'}>VEJA TAMBÉM:</p>
                         <div className="mt-12 mb-4 grid grid-cols-4 gap-4">
                             {noticiasRelacionadas.map(noticia => (
                                 <div key={noticia.notId} className="">

@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base{
+    html {
+        @apply dark:bg-customDarkBg bg-slate-50
+    }
+}
+
+
 @keyframes slideInRight {
     from {
         opacity: 0;

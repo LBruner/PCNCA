@@ -15,7 +15,7 @@ const NavLink: React.FC<NavLinkProps> = ({path, text}) => {
     const isActive = pathName.includes(path);
     return (
         <NavbarItem>
-            <Link className={`font-medium drop-shadow-sm ${isActive ? 'text-orange-400' : 'text-gray-800'} text-lg`} href={path}>
+            <Link className={`font-medium drop-shadow-sm ${isActive ? 'text-orange-400' : 'dark:text-white text-gray-800'} text-lg`} href={path}>
                 {text}
             </Link>
         </NavbarItem>

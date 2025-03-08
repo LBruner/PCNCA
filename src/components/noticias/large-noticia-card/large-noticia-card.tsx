@@ -31,7 +31,7 @@ const LargeNoticiaCard: React.FC<LargeNoticiaCardProps> = ({date, content, image
                         </div>
                         <div className={'flex flex-col'}>
                             <div>
-                                <p className={'text-2xl font-bold text-green-800'}>
+                                <p className={'text-2xl font-bold dark:text-green-700 text-green-800'}>
                                     {title}
                                 </p>
                             </div>

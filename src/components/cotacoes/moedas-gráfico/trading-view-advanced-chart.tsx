@@ -19,7 +19,7 @@ const TradingViewAdvancedChartWidget: React.FC<TradingViewChartWidgetProps> = (
         symbol,
         interval,
         timezone = 'America/Sao_Paulo',
-        theme = 'light',
+        theme = 'dark',
         style = '2',
         locale = 'br',
         withDateRanges = true,
