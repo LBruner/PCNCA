@@ -24,7 +24,7 @@ const ProfileSettingsBody: React.FC<ProfileSettingsBodyProps> = ({user}) => {
 
     return (
         <div className={'w-full'}>
-            <div className={'my-2 border rounded-lg p-6 flex flex-col gap-4 justify-start items-start'}>
+            <div className={' border dark:bg-customDarkFooter dark:border-none rounded-lg p-6 flex flex-col gap-4 justify-start items-start'}>
                 <p className={'text-2xl font-semibold'}>Perfil</p>
                 <div className={'flex gap-8 items-center'}>
                     <Avatar
@@ -32,13 +32,13 @@ const ProfileSettingsBody: React.FC<ProfileSettingsBodyProps> = ({user}) => {
                         className="w-24 h-24 text-large"/>
                     <div className={'flex flex-col gap-1'}>
                         <p className={'font-semibold text-2xl'}>{user?.nome ?? 'Maria Clara'}</p>
-                        <p className={'text-gray-600 text-lg'}>{user.email}</p>
-                        <p className={'text-gray-600'}>{user.cidade != null ? `${user.cidade}, Brasil` : 'São Paulo, Brasil'}</p>
+                        <p className={'text-gray-600 text-lg dark:text-white'}>{user.email}</p>
+                        <p className={'text-gray-600 dark:text-white'}>{user.cidade != null ? `${user.cidade}, Brasil` : 'São Paulo, Brasil'}</p>
                     </div>
                 </div>
             </div>
             <div className={'flex w-full h-auto'}>
-            <div className={'h-auto my-2 w-full border rounded-lg p-6 flex gap-5'}>
+            <div className={'h-auto my-2 dark:border-none dark:bg-customDarkFooter w-full border rounded-lg p-6 flex gap-5'}>
                     <div className={'flex flex-col gap-4 w-1/2 justify-start'}>
                         <div className={'flex justify-between items-center'}>
                             <p className={'text-2xl font-semibold'}>Informações Pessoais</p>

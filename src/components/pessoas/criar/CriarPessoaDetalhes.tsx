@@ -250,9 +250,9 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
     return (
         <form
             ref={formRef}
-            className={'flex flex-col items-center pt-8 h-auto overflow-hidden mb-5'}>
+            className={'flex flex-col items-center h-auto overflow-hidden mb-5 rounded-b-lg'}>
             <div
-                className={'w-full mx-36 border rounded-lg py-10 px-12 flex flex-col gap-8'}>
+                className={'w-full mx-36 dark:border-none dark:bg-customDarkFooter border  py-10 px-12 flex flex-col gap-8'}>
                 {pessoa.categoria == 'Física' ? pessoaFisicaFields : pessoaJuridicaFields}
                 {enderecoFields}
                 <CriarPessoaFormControls currentScreenIndex={currentScreenIndex} submitForm={submitForm}

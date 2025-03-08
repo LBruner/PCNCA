@@ -14,7 +14,6 @@ import {
 } from "@heroui/react";
 import {Chip} from "@heroui/chip";
 import {DeleteIcon, EditIcon} from "@heroui/shared-icons";
-import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getSortedPessoas} from "@/helpers/tabela";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import TabelaPessoasTopContent from "@/components/pessoas/tabela/tabela-pessoas-top-content";
@@ -94,8 +93,6 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
 
         return filteredPessoas;
     }, [pessoas, filterValue, categoryFilter, categoryFilterCollection, tipoFilterCollection, tipoFilter, hasSearchFilter]);
-
-    const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
     const items = React.useMemo(() => {
         const start = (currentPage - 1) * rowsPerPage;
@@ -234,11 +231,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                     itemsLenght={pessoas.length}/>}
                 topContentPlacement={'outside'}
                 bottomContentPlacement="outside"
-                bottomContent={<TabelaEstoqueBottomContent
-                    currentPage={currentPage} setCurrentPage={setCurrentPage}
-                    filteredItemsLength={filteredItems.length}
-                    totalPagesQuantity={totalPagesQuantity}
-                    hasSearchFilter={hasSearchFilter} selectedKeys={[]}/>}
+
                 selectionMode="none"
                 sortDescriptor={sortDescriptor}
                 classNames={{

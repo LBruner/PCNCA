@@ -5,14 +5,14 @@ const paths = {
     adm() {
         return `/adm`;
     },
-    admUsuarios() {
-        return `/adm/usuarios`;
+    configuracoesUsuario() {
+        return `/configuracoes/usuarios`;
     },
     admNoticias() {
         return `/adm/noticias`;
     },
-    admCulturas() {
-        return `/adm/culturas`;
+    configuracoesCultura() {
+        return `/configuracoes/culturas`;
     },
     alterarSenha() {
         return `/auth/alterar-senha`;

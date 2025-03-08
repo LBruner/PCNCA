@@ -17,7 +17,6 @@ import {signOut} from "next-auth/react";
 import {fallbackImgUrl} from "@/constants/messages/images";
 import {UsuarioComEmpresa} from "@/actions/usuarios";
 import {SlCamera} from "react-icons/sl";
-import { useTheme } from "next-themes";
 
 interface CustomUserCardBodyProps {
     user?: UsuarioComEmpresa;
@@ -25,7 +24,6 @@ interface CustomUserCardBodyProps {
 
 const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
     let authContent: React.ReactNode;
-    const {theme, setTheme} = useTheme();
 
     if (user) {
         authContent = <>
@@ -54,12 +52,7 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                                 ADM
                             </DropdownItem>
                         ) : null as any}
-                        <DropdownItem textValue={'Tema'}
-                                      onPress={() => theme == "dark" ? setTheme('light') : setTheme("dark")
-                                      } key="configuracoes" color="default">
-                            <p className={'text-medium'}>Tema</p>
-                        </DropdownItem>
-                        <DropdownItem textValue={'Configuracoes'} href={paths.configuracoes()
+                        <DropdownItem textValue={'Configuracoes'} href={paths.configuracoesCultura()
                         } key="configuracoes" color="default">
                             <p className={'text-medium'}>Configurações</p>
                         </DropdownItem>

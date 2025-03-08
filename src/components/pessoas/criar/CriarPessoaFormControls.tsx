@@ -10,7 +10,7 @@ interface CriaPessoaFormControlsProps {
 const CriarPessoaFormControls: React.FC<CriaPessoaFormControlsProps> = ({submitForm,currentScreenIndex, setScreenIndex,}) => {
     return (
         <div className={'flex justify-between my-6 w-full items-center'}>
-            <p className={'text-gray-500 font-medium'}>
+            <p className={'text-gray-500 font-medium dark:text-white'}>
                 * Campo de preenchimento obrigatório
             </p>
             <div className={'flex gap-12 items-center'}>

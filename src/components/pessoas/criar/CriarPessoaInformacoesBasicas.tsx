@@ -61,12 +61,12 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
 
     return (
         <form ref={formRef}
-              className={'flex flex-col items-center pt-8 h-auto overflow-hidden mb-5'}>
+              className={'flex flex-col items-center pt-8 h-auto overflow-hidden mb-5 dark:bg-customDarkFooter rounded-b-lg'}>
             <div
-                className={'w-full mx-36 border rounded-lg py-10 px-12 flex flex-col gap-8 justify-start items-center'}>
+                className={'w-full mx-36 border dark:border-none rounded-xl py-10 px-12 flex flex-col gap-8 justify-start items-center'}>
                 <InputWrapper>
                     <CriarNoticiaInformacoesBasicasSelectField
-                        titulo={'Categoria'} valor={categoria}
+                        titulo={'Categoria *'} valor={categoria}
                         placeholder={''}
                         subtitulo={`Tipo de pessoa`}
                         collection={[{name: 'Física', uid: 'Física',}, {uid: 'Jurídica', name: 'Jurídica',}]}
@@ -108,7 +108,7 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                     <div className={'flex w-full justify-around'}>
                         <div className={'flex flex-col'}>
                             <p className={'text-lg w-48 font-semibold'}>{`${categoria == 'Jurídica' ? 'Data de Fundação *' : 'Data de Nascimento *'}`}</p>
-                            <p className={'text-md w-48 text-gray-500'}>{'Data válida'}</p>
+                            <p className={'text-md w-48 text-gray-500 dark:text-white'}>{'Data válida'}</p>
                         </div>
                         <I18nProvider locale="pt-BR"
                         >

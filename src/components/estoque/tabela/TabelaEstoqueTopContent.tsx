@@ -140,7 +140,7 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
 
     return (React.useMemo(() => {
         return (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 dark:bg-customDarkFooter">
                 <div className="flex justify-between gap-4">
                     <div className={'flex gap-1 w-10/12'}>
                         <Input
@@ -172,7 +172,7 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
                             </Button>
                         </Link>
 
-                        <Dropdown className={'w-56'}>
+                        <Dropdown shouldBlockScroll={false} className={'w-56'}>
                             <DropdownTrigger className={'w-56'}>
                                 <Button variant="bordered">{<PiPrinterFill size={20}/>} Exportar Dados</Button>
                             </DropdownTrigger>

@@ -59,12 +59,12 @@ const CriarPessoaForm: React.FC<CriarPessoaFormProps> = ({pessoaCriada, tiposPes
         </div>
         <div className={'flex flex-col items-center gap-4 justify-center'}>
             <p className={'text-4xl font-semibold'}>{pessoaCriada ? 'Edição de Pessoa' : 'Criação de Pessoa'}</p>
-            <p className={'text-lg text-gray-600'}>{screenIndex != 2 ? 'Preencha as informações abaixo' : 'Revise o perfil e conclua a criação'}</p>
+            <p className={'text-lg text-gray-600 dark:text-white'}>{screenIndex != 2 ? 'Preencha as informações abaixo' : 'Revise o perfil e conclua a criação'}</p>
         </div>
     </div>
 
     return (
-        <div className={'flex justify-center items-center h-auto w-full'}>
+        <div className={'flex justify-center items-center h-fit w-full rounded-lg'}>
             <div className={'w-full h-full'}>
                 {header}
                 {<CriarPessoaInputWrapper screenIndex={screenIndex} setScreenIndex={setScreenIndex}>
