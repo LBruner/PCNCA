@@ -14,7 +14,7 @@ const ProductionProductPicker: React.FC<Props> = ({selectedProduct,setSelectedPr
 
     return (
         <div className={'mb-5 flex gap-6 items-center justify-between'}>
-            <p className={'text-left text-2xl font-semibold text-gray-700'}>
+            <p className={'text-left text-2xl font-semibold text-gray-700 dark:text-white'}>
                 Produção de {selectedProduct.translationName}, 2022
             </p>
             <Button onPress={onOpen} color={'primary'}>Alterar produto</Button>
