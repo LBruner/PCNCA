@@ -31,7 +31,7 @@ const HomePage: React.FC = () => {
                             </div>
                             <div className="w-full h-auto lg:w-1/2">
                                 <Image
-                                    className="border rounded object-cover shadow-xl"
+                                    className="border dark:border-none rounded object-cover shadow-xl"
                                     alt="PCNCA"
                                     src="/images/landing-page-image.jpg"
                                     width={900}
@@ -41,7 +41,7 @@ const HomePage: React.FC = () => {
                         </div>
                     </div>
                     <div id={'sobre'} className={'mb-32 flex flex-col px-8 md:px-24 lg:px-56 gap-12'}>
-                        <p  className={'mt-8 text-3xl md:text-5xl'}>
+                        <p className={'mt-8 text-3xl md:text-5xl'}>
                             Acompanhe Preços e Cotações em Tempo Real
                         </p>
                         <div className={'flex'}>
@@ -69,8 +69,8 @@ const HomePage: React.FC = () => {
                 </div>
             </div>
             <div
-                className={'w-full border py-32 bg-green-800 flex flex-col items-center gap-8 justify-center shadow-xl'}>
-                <div className={'flex px-12 py-12 h-[40%] flex-col w-[55%] bg-white border rounded-lg shadow-xl'}>
+                className={'w-full border dark:border-none py-32 bg-green-800 dark:bg-green-950 flex flex-col items-center gap-8 justify-center shadow-xl'}>
+                <div className={'flex px-12 py-12 h-[40%] flex-col w-[55%] bg-white dark:bg-customDarkFooter dark:border-none border rounded-lg shadow-xl'}>
                     <div>
                         <p className={'text-3xl font-semibold'}>Mantenha-se Atualizado com Notícias do Setor
                         </p>
@@ -100,10 +100,10 @@ const HomePage: React.FC = () => {
             </div>
             <div className={'md:px-24 lg:px-56 mt-24 flex gap-2 items-center'}>
                 <div>
-                    <p className={'text-5xl w-80 font-semibold text-blue-900'}>Gerencie seu estoque com eficiência</p>
+                    <p className={'text-5xl w-80 font-semibold text-blue-900 dark:text-blue-600'}>Gerencie seu estoque com eficiência</p>
                     <div className={'flex my-4 mt-8 gap-4 w-[80%]'}>
-                        <div className={'flex gap-2 flex-col border rounded p-5 w-[50%]'}>
-                            <p className={'text-2xl font-semibold text-blue-900'}>
+                        <div className={'flex gap-2 flex-col border p-5 w-[50%] dark:bg-customDarkFooter dark:border-none rounded-lg'}>
+                            <p className={'text-2xl font-semibold text-blue-900 dark:text-blue-600'}>
                                 Categorização de Produtos
                             </p>
                             <p className={'text-lg'}>
@@ -111,8 +111,8 @@ const HomePage: React.FC = () => {
                                 facilitando o acompanhamento e a tomada de decisões sobre seu estoque.
                             </p>
                         </div>
-                        <div className={'flex gap-2 flex-col border rounded p-5 w-[50%]'}>
-                            <p className={'text-2xl font-semibold text-blue-900'}>
+                        <div className={'flex gap-2 flex-col border p-5 w-[50%] dark:bg-customDarkFooter dark:border-none rounded-lg'}>
+                            <p className={'text-2xl font-semibold text-blue-900 dark:text-blue-600'}>
                                 Relatórios Personalizados
                             </p>
                             <p className={'text-lg'}>
@@ -121,8 +121,8 @@ const HomePage: React.FC = () => {
                             </p>
                         </div>
                     </div>
-                    <div className={'p-5 w-[80%] border'}>
-                        <p className={'text-2xl font-semibold text-blue-900'}>
+                    <div className={'p-5 w-[80%] border dark:bg-customDarkFooter dark:border-none rounded-lg'}>
+                        <p className={'text-2xl font-semibold text-blue-900 dark:text-blue-600'}>
                             Visão Global
                         </p>
                         <p className={'text-lg'}>
@@ -142,7 +142,7 @@ const HomePage: React.FC = () => {
                 </div>
             </div>
             <div
-                className={'w-full mt-32 border py-24 bg-blue-950 flex flex-col items-center gap-8 shadow-xl'}>
+                className={'w-full mt-32 border py-24 bg-blue-950 flex flex-col items-center gap-8 shadow-xl dark:border-none'}>
                 <div className={'flex px-12 py-6 flex-col h-full w-[55%] rounded-lg '}>
                     <div className={'mb-8'}>
                         <p className={'text-white text-3xl font-bold'}>Visualize a Produção Global
@@ -168,7 +168,8 @@ const HomePage: React.FC = () => {
                         </div>
                     </div>
                     <div className={'w-full relative my-2'}>
-                        <Image src="/images/custom-list-vector.svg" alt="Ícone" fill={false} width={10000} height={100}/>
+                        <Image src="/images/custom-list-vector.svg" alt="Ícone" fill={false} width={10000}
+                               height={100}/>
                     </div>
                     <div className={'flex flex-col justify-center items-center'}>
                         <div className={'w-[50%] flex flex-col justify-center items-center'}>
@@ -222,12 +223,12 @@ const HomePage: React.FC = () => {
     )
 }
 
-const LandingPageBtn: React.FC<{ text: string, href: string, color?: string }> = ({text, href,color}) => {
+const LandingPageBtn: React.FC<{ text: string, href: string, color?: string }> = ({text, href, color}) => {
     return (
         <Link href={href}>
             <Button
                 radius={'sm'}
-                className={`text-lg text-white p-6 ${color ?? 'bg-green-700'}`}>{text}</Button>
+                className={`text-lg text-white p-6 ${color ?? 'bg-green-700 dark:bg-green-900'}`}>{text}</Button>
         </Link>
     )
 }
@@ -238,15 +239,15 @@ const LadingPageHightlightItem: React.FC<{ title: string, icon: ReactElement, de
         title,
         description
     }) => {
-    return <Link href={''} className={'w-[25%] flex flex-col gap-2'}>
+    return <div className={'w-[25%] flex flex-col gap-2'}>
         {icon}
-        <p className={'text-2xl'}>
+        <p className={'text-2xl dark:text-white'}>
             {title}
         </p>
         <p className={'text-lg'}>
             {description}
         </p>
-    </Link>
+    </div>
 }
 
 export default HomePage;
