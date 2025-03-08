@@ -221,7 +221,9 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
         setPriceFilter,
         setStatusFilter,
         setStockFilter,
-        selectedItems
+        selectedItems,
+        imprimirExcel,
+        imprimirPDF
     ]))
 }
 

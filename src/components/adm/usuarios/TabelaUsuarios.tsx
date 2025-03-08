@@ -216,9 +216,8 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
                     <TabelaEstoqueBottomContent
                         showPagination={true}
                         currentPage={currentPage} setCurrentPage={setCurrentPage}
-                        filteredItemsLength={filteredItems.length}
                         totalPagesQuantity={totalPagesQuantity}
-                        hasSearchFilter={hasSearchFilter} selectedKeys={selectedKeys}/>
+                        hasSearchFilter={hasSearchFilter}/>
                 }
                 selectionMode="none"
                 onSelectionChange={keys => setSelectedKeys([...keys as unknown as string[]])}

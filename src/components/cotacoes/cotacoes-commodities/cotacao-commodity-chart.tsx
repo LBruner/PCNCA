@@ -15,9 +15,6 @@ const CotacaoCommodityChart: React.FC<CotacaoCommodityChartProps> = ({selectedCo
     const [chartData, setChartData] = useState<LineChartData | undefined>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        getChartData().then();
-    }, [selectedCommodity])
 
     const getChartData = async () => {
         setIsLoading(true);
@@ -27,6 +24,10 @@ const CotacaoCommodityChart: React.FC<CotacaoCommodityChartProps> = ({selectedCo
         setChartData(data);
         setIsLoading(false);
     }
+
+    useEffect(() => {
+        getChartData().then();
+    }, [selectedCommodity, getChartData])
 
     if (isLoading || !chartData) {
         return <div className={'w-full h-[320px] my-4 flex justify-center items-center'}>

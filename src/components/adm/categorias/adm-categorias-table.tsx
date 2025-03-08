@@ -222,9 +222,8 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
                 bottomContent={<TabelaEstoqueBottomContent
                     showPagination={true}
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
-                    filteredItemsLength={filteredItems.length}
                     totalPagesQuantity={totalPagesQuantity}
-                    hasSearchFilter={hasSearchFilter} selectedKeys={[]}/>}
+                    hasSearchFilter={hasSearchFilter}/>}
                 selectionMode="none"
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}

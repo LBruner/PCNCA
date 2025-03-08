@@ -5,8 +5,8 @@ interface TabelaBottomContentProps {
     currentPage: number;
     setCurrentPage: (page: number) => void;
     totalPagesQuantity: number;
-    selectedKeys: string | string[];
-    filteredItemsLength: number;
+    selectedKeys?: string | string[];
+    filteredItemsLength?: number;
     hasSearchFilter: boolean;
     showPagination?: boolean;
 }
@@ -16,7 +16,6 @@ const TabelaEstoqueBottomContent: React.FC<TabelaBottomContentProps> = (
         setCurrentPage,
         currentPage,
         totalPagesQuantity,
-        selectedKeys,
         filteredItemsLength,
         showPagination
     }
@@ -60,7 +59,7 @@ const TabelaEstoqueBottomContent: React.FC<TabelaBottomContentProps> = (
 
             </div>
         );
-    }, [selectedKeys, showPagination, filteredItemsLength, currentPage, totalPagesQuantity, setCurrentPage, onNextPage, onPreviousPage]);
+    }, [showPagination, currentPage, totalPagesQuantity, setCurrentPage, onNextPage, onPreviousPage]);
 }
 
 

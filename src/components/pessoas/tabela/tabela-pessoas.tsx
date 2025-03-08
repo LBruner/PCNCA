@@ -182,7 +182,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
             default:
                 return <h1>Implementar</h1>;
         }
-    }, [addPessoaModal, deleteModal]);
+    }, [deleteModal]);
 
 
     const onSearchChange = React.useCallback((value: string | null) => {

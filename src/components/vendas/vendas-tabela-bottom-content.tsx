@@ -13,7 +13,6 @@ const VendasTabelaBottomContent: React.FC<TabelaBottomContentProps> = (
         setCurrentPage,
         currentPage,
         totalPagesQuantity,
-        filteredItemsLength,
     }
 ) => {
     const onNextPage = React.useCallback(() => {
@@ -52,7 +51,7 @@ const VendasTabelaBottomContent: React.FC<TabelaBottomContentProps> = (
                 </div>
             </div>
         );
-    }, [filteredItemsLength, currentPage, totalPagesQuantity, setCurrentPage, onNextPage, onPreviousPage]);
+    }, [currentPage, totalPagesQuantity, setCurrentPage, onNextPage, onPreviousPage]);
 }
 
 

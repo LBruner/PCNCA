@@ -241,9 +241,8 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
                 bottomContent={<TabelaEstoqueBottomContent
                     showPagination={true}
                     currentPage={currentPage} setCurrentPage={setCurrentPage}
-                    filteredItemsLength={filteredItems.length}
                     totalPagesQuantity={totalPagesQuantity}
-                    hasSearchFilter={hasSearchFilter} selectedKeys={[]}/>}
+                    hasSearchFilter={hasSearchFilter}/>}
                 selectionMode="none"
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}

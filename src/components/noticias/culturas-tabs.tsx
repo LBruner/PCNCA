@@ -38,9 +38,9 @@ const CulturasTabs: React.FC<CulturasListProps> = ({noticias, culturas}) => {
                     <p className={'font-semibold text-lg'}>Mais culturas</p>
                 </Link>
             </div>
-            <Tabs defaultSelectedKey={selectedCultura.toString()} onSelectionChange={handleCulturaChange} aria-label="Options">
+            <Tabs size={'lg'} defaultSelectedKey={selectedCultura.toString()} onSelectionChange={handleCulturaChange} aria-label="Options">
                 {culturas.map((categoria) => (
-                    <Tab title={categoria.nome} key={categoria.culturaId} className="mb-2">
+                    <Tab title={categoria.nome} key={categoria.culturaId}>
                         {noticiasAmostradas.length === 0 ?
                             <p className={'text-lg font-semibold'}>Nenhuma notícia dessa categoria encontrada</p> :
                             <CulturasList noticiasFiltradas={noticiasAmostradas}/>
@@ -48,7 +48,7 @@ const CulturasTabs: React.FC<CulturasListProps> = ({noticias, culturas}) => {
                     </Tab>
                 ))}
             </Tabs>
-            <div className={'flex justify-center'}>
+            <div className={'flex justify-center mt-2'}>
                 <Link href={paths.maisNoticias()}>
                     <Button className={'px-4 py-6 text-white bg-green-800 font-semibold'} radius={'sm'}>
                         MAIS NOTÍCIAS
