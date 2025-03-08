@@ -29,7 +29,7 @@ const TopContentDropDown: React.FC<TopContentDropDownProps> = (
     return (
         <div className={`flex flex-col ${width}`}>
             {label && <p className="mb-2">{label}</p>}
-            <Dropdown size={size ?? 'sm'}>
+            <Dropdown shouldBlockScroll={false} size={size ?? 'sm'}>
                 <DropdownTrigger className="hidden justify-between p-5 sm:flex font-semibold h-9">
                     <Button endContent={<ChevronDownIcon className="text-small"/>} variant="flat">
                         {filterStatus.length === 1 ? Array.from(filterStatus)[0] : filterStatus.length === collection.length || filterStatus === 'all' ? allSelectedLabel : Array.from(filterStatus)[0] === 'Desativado' ? 'Desativado' :multipleSelectedLabel}

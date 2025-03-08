@@ -196,7 +196,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
     return (
         <div className={'w-11/12'}>
             <ItemDeleteModal itemId={selectedProductId} settings={itemDeleteModalSettings}/>
-            <div className={'bg-white rounded-md p-4 mb-4 shadow-md'}>
+            <div className={'bg-white dark:bg-customDarkFooter rounded-md p-4 mb-4 shadow-md'}>
                 <TabelaEstoquesTopContent
                     products={products}
                     selectedItems={selectedKeys}

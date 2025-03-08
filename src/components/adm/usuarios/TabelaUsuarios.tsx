@@ -197,7 +197,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
         <div className={'w-11/12'}>
             <ItemDeleteModal itemId={selectedUsuario} settings={itemDesativarUsuarioModalSettings}/>
             <ItemDeleteModal itemId={selectedUsuario} settings={resetPasswordModalSettings}/>
-            <div className={'bg-white rounded-md p-4 mb-4 shadow-md'}>
+            <div className={'bg-white dark:bg-customDarkFooter rounded-md p-4 mb-4 shadow-md'}>
                 <TabelaUsuarioTopContent
                     products={usuarios}
                     selectedItems={selectedKeys}
@@ -225,7 +225,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
                 classNames={{
-                    wrapper: "max-h-2/4 min-h-[25rem] h-[33rem]",
+                    wrapper: "max-h-2/4 min-h-[37rem] h-full",
                 }}
             >
                 <TableHeader columns={columns}>
