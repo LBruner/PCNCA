@@ -16,10 +16,10 @@ model ComercioCommodities {
 model ComercioCommoditiesVariacaoPreco {
   variacao_id  Int                 @id @default(autoincrement())
   commodity_id Int
-  commodity    ComercioCommodities @relation(fields: [commodity_id], references: [commodity_id], onDelete: Cascade)
-  valor        Float
-  data     DateTime
   fonte        String?
+  valor        Float
+  data         DateTime
+  commodity    ComercioCommodities @relation(fields: [commodity_id], references: [commodity_id], onDelete: Cascade)
 }
 
 model Account {
@@ -56,28 +56,27 @@ model Autor {
 }
 
 model Noticia {
-  notId      Int      @id @default(autoincrement())
-  titulo     String   @map("titulo") @db.VarChar(200)
-  subtitulo  String   @map("subtitulo") @db.VarChar(1000)
-  corpo      String   @map("corpo") @db.Text
-  dataPubli  DateTime @map("data_publicacao")
-  descricao  String?  @map("descricao") @db.VarChar(1000)
-  idAutor    Int      @map("id_autor")
-  idCultura  Int      @map("id_cultura")
-  imagemLink String   @map("imagem_link") @db.VarChar(300)
-
+  notId                        Int                            @id @default(autoincrement())
+  titulo                       String                         @map("titulo") @db.VarChar(200)
+  subtitulo                    String                         @map("subtitulo") @db.VarChar(1000)
+  corpo                        String                         @map("corpo")
+  dataPubli                    DateTime                       @map("data_publicacao")
+  descricao                    String?                        @map("descricao") @db.VarChar(1000)
+  idAutor                      Int                            @map("id_autor")
+  idCultura                    Int                            @map("id_cultura")
+  imagemLink                   String                         @map("imagem_link") @db.VarChar(300)
+  ComercioInternacionalNoticia ComercioInternacionalNoticia[]
   autor                        Autor                          @relation(fields: [idAutor], references: [autorId])
   cultura                      Cultura                        @relation(fields: [idCultura], references: [culturaId])
-  ComercioInternacionalNoticia ComercioInternacionalNoticia[]
 }
 
 model Cultura {
   culturaId  Int       @id @default(autoincrement()) @map("id_cultura")
   nome       String    @map("nome") @db.VarChar(100)
   descricao  String?   @map("descricao") @db.VarChar(500)
-  noticias   Noticia[]
   imagemLink String?   @map("imagem_link") @db.VarChar(300)
   Estoque    Estoque[]
+  noticias   Noticia[]
 }
 
 model VerificationRequest {
@@ -105,18 +104,18 @@ model CategoriaPessoa {
 
 model ComercioInternacionalNoticia {
   id            Int                   @id @map("cint_id")
-  comercioInt   ComercioInternacional @relation(fields: [comercioIntId], references: [id])
   comercioIntId Int                   @unique @map("com_int_com_int_id")
-  noticia       Noticia               @relation(fields: [noticiaId], references: [notId])
   noticiaId     Int                   @map("not_not_id")
+  comercioInt   ComercioInternacional @relation(fields: [comercioIntId], references: [id])
+  noticia       Noticia               @relation(fields: [noticiaId], references: [notId])
 }
 
 model ComercioInternacionalProduto {
   id            Int                   @id @map("cipi_id")
-  produtoInac   ProdutoInac           @relation(fields: [produtoInacId], references: [id])
   produtoInacId Int                   @map("prd_inac_prd_inac_id")
-  comercioInt   ComercioInternacional @relation(fields: [comercioIntId], references: [id])
   comercioIntId Int                   @map("com_int_com_int_id")
+  comercioInt   ComercioInternacional @relation(fields: [comercioIntId], references: [id])
+  produtoInac   ProdutoInac           @relation(fields: [produtoInacId], references: [id])
 
   @@unique([comercioIntId, produtoInacId])
 }
@@ -128,9 +127,9 @@ model ComercioInternacional {
   dataValor        DateTime?                      @map("dt_valor")
   categoria        String?                        @db.VarChar(1)
   descricao        String?                        @map("descrição") @db.VarChar(300)
-  historicoValores HistoricoValores[]
+  noticias         ComercioInternacionalNoticia?
   produtos         ComercioInternacionalProduto[]
-  noticias         ComercioInternacionalNoticia[]
+  historicoValores HistoricoValores[]
 }
 
 model Empresa {
@@ -148,23 +147,25 @@ model Endereco {
   complemento String  @db.VarChar(100)
   cidade      String  @db.VarChar(100)
   estado      String? @db.VarChar(2)
-  cep         Int?    @db.Integer
+  cep         Int?
   pais        String  @db.VarChar(100)
-  pessoa      Pessoa  @relation(fields: [pessoaId], references: [id])
   pessoaId    Int     @map("pessoa_pess_pessoa_id")
+  pessoa      Pessoa  @relation(fields: [pessoaId], references: [id])
 }
 
 model Estoque {
   id                 Int                @id @default(autoincrement()) @map("estoque_id")
   produto            String             @db.VarChar(50)
-  categoriaId        Cultura?           @relation(fields: [categoriaculturaId], references: [culturaId])
   categoriaculturaId Int?
   tipo               String             @db.VarChar(1)
   descricao          String             @db.VarChar(2000)
   quantidade         Float              @map("qtd")
   preco              Float
-  unidadeMedida      String             @map("unidade_medida") @db.VarChar(5)
+  unidadeMedida      String             @map("unidade_medida") @db.VarChar(25)
   imagemLink         String?            @map("imagem_link") @db.VarChar(300)
+  ativo              Boolean            @default(true)
+  foiUtilizado       Boolean            @default(false) @map("foi_utilizado")
+  categoriaId        Cultura?           @relation(fields: [categoriaculturaId], references: [culturaId])
   historicos         HistoricoEstoque[]
   vendas             VendaEstoque[]
 }
@@ -182,20 +183,20 @@ model HistoricoEstoque {
   horaAlter  String   @map("hora_alter") @db.VarChar(5)
   valorAlter Float    @map("valor_alter")
   comprador  Boolean  @default(false)
-  estoque    Estoque  @relation(fields: [estoqueId], references: [id])
   estoqueId  Int      @map("estoque_estoque_id")
-  venda      Venda    @relation(fields: [vendaId], references: [id])
   vendaId    Int      @map("venda_venda_id")
-  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
   usuarioId  String   @map("usuario_usuario_id")
+  estoque    Estoque  @relation(fields: [estoqueId], references: [id])
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  venda      Venda    @relation(fields: [vendaId], references: [id])
 }
 
 model HistoricoValores {
   id            Int                   @id @map("hist_valores_id")
   valor         Float
   dataValorHist DateTime              @map("dt_valor_hist")
-  comercioInt   ComercioInternacional @relation(fields: [comercioIntId], references: [id])
   comercioIntId Int                   @map("com_int_com_int_id")
+  comercioInt   ComercioInternacional @relation(fields: [comercioIntId], references: [id])
 }
 
 model Imagem {
@@ -218,11 +219,11 @@ model Pessoa {
   id             Int             @id @default(autoincrement()) @map("pess_pessoa_id")
   email          String          @map("pess_email") @db.VarChar(50)
   imagemLink     String?         @map("imagem_link") @db.VarChar(300)
-  categoria      CategoriaPessoa @relation(fields: [categoriaId], references: [id])
   categoriaId    Int             @map("categ_pess_categ_pessoa_id")
+  enderecos      Endereco[]
+  categoria      CategoriaPessoa @relation(fields: [categoriaId], references: [id])
   pessoaFisica   PessoaFisica?
   pessoaJuridica PessoaJuridica?
-  enderecos      Endereco[]
   telefones      Telefone[]
   vendas         VendaPessoa[]
 }
@@ -258,8 +259,8 @@ model Telefone {
   id       Int    @id @default(autoincrement()) @map("telefone_id")
   tipo     String @db.VarChar(30)
   numero   String @db.VarChar(30)
-  pessoa   Pessoa @relation(fields: [pessoaId], references: [id])
   pessoaId Int    @map("pessoa_pess_pessoa_id")
+  pessoa   Pessoa @relation(fields: [pessoaId], references: [id])
 }
 
 model Usuario {
@@ -274,11 +275,11 @@ model Usuario {
   email        String?            @db.VarChar(300)
   esp1         String?            @db.VarChar(20)
   esp2         String?            @db.VarChar(20)
-  empresa      Empresa            @relation(fields: [empresaId], references: [id])
   empresaId    Int                @map("empresa_empresa_id")
-  historicos   HistoricoEstoque[]
   Account      Account[]
+  historicos   HistoricoEstoque[]
   Session      Session[]
+  empresa      Empresa            @relation(fields: [empresaId], references: [id])
 }
 
 model Venda {
@@ -296,31 +297,31 @@ model Venda {
 model VendaEstoque {
   id        Int     @id @default(autoincrement()) @map("vest_id")
   precoProp Float   @map("prc_prop")
-  estoque   Estoque @relation(fields: [estoqueId], references: [id])
   estoqueId Int     @map("estoque_estoque_id")
-  venda     Venda   @relation(fields: [vendaId], references: [id])
   vendaId   Int     @map("venda_venda_id")
+  estoque   Estoque @relation(fields: [estoqueId], references: [id])
+  venda     Venda   @relation(fields: [vendaId], references: [id])
 
   @@unique([vendaId, estoqueId])
 }
 
 model VendaFormaPagamento {
   id               Int            @id @default(autoincrement()) @map("vfpag_id")
-  venda            Venda          @relation(fields: [vendaId], references: [id])
   vendaId          Int            @map("venda_venda_id")
-  formaPagamento   FormaPagamento @relation(fields: [formaPagamentoId], references: [id])
   formaPagamentoId Int            @map("forma_pagamento_form_pag_id")
+  formaPagamento   FormaPagamento @relation(fields: [formaPagamentoId], references: [id])
+  venda            Venda          @relation(fields: [vendaId], references: [id])
 
   @@unique([formaPagamentoId, vendaId])
 }
 
 model VendaPessoa {
   id         Int    @id @default(autoincrement()) @map("vpes_id")
-  venda      Venda  @relation(fields: [vendaId], references: [id])
   vendaId    Int    @map("venda_venda_id")
-  pessoa     Pessoa @relation(fields: [pessoaId], references: [id])
   pessoaId   Int    @map("pessoa_pess_pessoa_id")
-  tipoPessoa String @map("tipo_pessoa") @db.VarChar(15) // Ex: "Comprador", "Vendedor"
+  tipoPessoa String @map("tipo_pessoa") @db.VarChar(15)
+  pessoa     Pessoa @relation(fields: [pessoaId], references: [id])
+  venda      Venda  @relation(fields: [vendaId], references: [id])
 
   @@unique([vendaId, pessoaId])
 }

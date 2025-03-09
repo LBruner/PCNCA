@@ -1,12 +1,13 @@
 import React, {useState} from "react";
 import CustomModal from "@/components/UI/CustomModal";
+import {addToast} from "@heroui/react";
 
 export type DeletingItemModalSettings = {
     title: string
     text: string
     actionText?: string
     closeText?: string
-    actionFn: (id: any) => Promise<void>
+    actionFn: (id: any) => Promise<any>
     isOpen: boolean,
     onClose: () => void,
 }
@@ -24,7 +25,17 @@ const ItemDeleteModal: React.FC<CustomModalProps> = ({itemId, settings}) => {
         return null;
     const onDeleteProduct = async () => {
         setIsLoading(true);
-        await settings.actionFn(itemId);
+        const response = await settings.actionFn(itemId);
+
+        if(!response){
+            addToast({
+                color: 'success',
+                title: "Produto inativado",
+                description: "Esse estoque já foi utilizado em uma venda.",
+                timeout: 5000,
+            });
+        }
+
         setIsLoading(false);
         settings.onClose();
     }

@@ -24,6 +24,11 @@ export const pegaTodosEstoquesUsuario = async (): Promise<ProdutoEstoqueComRelac
     }
 
     return db.historicoEstoque.findMany({
+        orderBy:{
+          estoque:{
+              produto: 'asc',
+          },
+        },
             where: {
                 usuarioId: session?.user.id,
                 comprador: true,
@@ -31,7 +36,7 @@ export const pegaTodosEstoquesUsuario = async (): Promise<ProdutoEstoqueComRelac
                     quantidade: {
                         gt: 0
                     },
-                }
+                },
             },
             include: {
                 venda: {

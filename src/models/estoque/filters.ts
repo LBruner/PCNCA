@@ -5,8 +5,7 @@ export interface IFilterable {
 
 export const statusOptions: IFilterable[] = [
     {name: "Ativo", uid: "Ativo"},
-    {name: "Em espera", uid: "Em espera"},
-    {name: "Desativado", uid: "Desativado"},
+    {name: "Inativo", uid: "Inativo"},
 ];
 
 export const priceOptions: IFilterable[] = [

@@ -138,9 +138,6 @@ async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOr
     redirect(paths.estoque());
 }
 
-export const pegaTodosProdutos = async (): Promise<Estoque[]> => {
-    return db.estoque.findMany();
-}
 
 export const pegaTodosProdutosQueVenderam = async (): Promise<Estoque[]> => {
     return db.estoque.findMany({
@@ -300,9 +297,28 @@ export async function deletarProduto(historicoEstoqueId: number) {
         }
     });
 
-    if (!historicoEstoque) return;
-
+    if (!historicoEstoque) return false;
     const estoqueId = historicoEstoque?.estoqueId;
+
+    const estoque = await db.estoque.findFirst({
+        where: {
+            id: estoqueId,
+        }
+    });
+
+    if (estoque && estoque.foiUtilizado) {
+        await db.estoque.update({
+            where: {
+                id: estoqueId
+            }, data: {
+                ativo: false,
+            }
+        });
+
+        revalidatePath(paths.estoque());
+
+        return false;
+    }
 
     const vendaEstoque = await db.vendaEstoque.findFirst({
         where: {
@@ -329,4 +345,5 @@ export async function deletarProduto(historicoEstoqueId: number) {
     });
 
     revalidatePath(paths.estoque());
+    return true;
 }

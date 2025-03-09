@@ -1,7 +1,8 @@
 'use client';
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
+    addToast,
     SortDescriptor,
     Table,
     TableBody,
@@ -32,6 +33,7 @@ const columns = [
     {name: "CATEGORIA", uid: "categoria", sortable: false},
     {name: "TIPO", uid: "tipo", sortable: false},
     {name: "DATA DE ADIÇÃO", uid: "data", sortable: false},
+    {name: "STATUS", uid: "status", sortable: false},
     {name: "PREÇO", uid: "preco", sortable: false},
     {name: "ESTOQUE", uid: "quantidade", sortable: false},
     {name: "AÇÕES", uid: "actions", sortable: true},
@@ -44,7 +46,7 @@ interface TabelaEstoqueProps {
 
 const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollection}) => {
     const [filterValue, setFilterValue] = React.useState("");
-    const [selectedKeys, setSelectedKeys] = React.useState<string | string[]>([]);
+    const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set());
     const [statusFilter, setStatusFilter] = React.useState<string | string[]>("all");
     const [categoryFilter, setCategoryFilter] = React.useState<string | string[]>("all");
     const [priceFilter, setPriceFilter] = React.useState<string | string[]>(['Desativado']);
@@ -53,15 +55,22 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
         column: "id",
         direction: "ascending",
     });
+    const [isShowingToast, setIsShowingToast] = useState<boolean>(false);
 
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
 
-    const rowsPerPage = 7;
-
+    const rowsPerPage = 6;
     const [currentPage, setCurrentPage] = React.useState(1);
-
     const hasSearchFilter = Boolean(filterValue);
+
+    useEffect(() => {
+        if (isShowingToast) {
+            setTimeout(() => {
+                setIsShowingToast(false)
+            }, 5000)
+        }
+    }, [isShowingToast]);
 
     const filteredItems = React.useMemo(() => {
         let filteredProducts = [...products];
@@ -79,6 +88,19 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
             );
         }
 
+        if (statusFilter !== "all") {
+            filteredProducts = filteredProducts.filter((product) => {
+                const statusMap = {
+                    'Ativo': true,
+                    'Inativo': false
+                };
+
+                return Array.from(statusFilter).some((status) => {
+                    return product.estoque.ativo === statusMap[status as keyof typeof statusMap];
+                });
+            });
+        }
+
         if (stockFilter !== "all" && Array.from(stockOptions).length !== stockFilter.length) {
             filteredProducts = filteredProducts.filter((product) => getFilteredItems(product.estoque.quantidade, stockFilter, stockOptions, ' unidades'));
         }
@@ -88,7 +110,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
         }
 
         return filteredProducts;
-    }, [products, filterValue, categoryFilter, priceFilter, stockFilter, hasSearchFilter, categoriesCollection]);
+    }, [products, filterValue, statusFilter, categoryFilter, priceFilter, stockFilter, hasSearchFilter, categoriesCollection]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -127,6 +149,14 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                         {product.estoque.tipo == 'A' ? 'Agrícola' : 'Pecuária'}
                     </Chip>
                 );
+            case "status":
+                return (
+                    <Chip classNames={{base: 'border-none'}} className="capitalize"
+                          color={product.estoque.ativo ? 'success' : 'danger'} size="sm"
+                          variant="dot">
+                        {product.estoque.ativo ? 'Ativo' : 'Inativo'}
+                    </Chip>
+                );
             case "data":
                 return (
                     <p>
@@ -151,17 +181,19 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                 return (
                     <div className="relative flex items-center justify-center gap-2">
                         <Tooltip content="Editar Produto">
-                          <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                            <Link href={paths.editProduto(product.id.toString())}><EditIcon/></Link>
-                          </span>
+                            <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                <Link href={paths.editProduto(product.id.toString())}><EditIcon/></Link>
+                            </span>
                         </Tooltip>
-                        <Tooltip color="danger" content="Deletar Produto">
-                          <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                            <DeleteIcon onClick={() => {
-                                setSelectedProductId(product.id);
-                                onOpen();
-                            }}/>
-                          </span>
+                        <Tooltip isDisabled={!product.estoque.ativo} color="danger" content="Deletar Produto">
+                            <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                                <DeleteIcon className={`${!product.estoque.ativo ? 'opacity-25 text-gray-300' : ''}`} onClick={() => {
+                                    if (!product.estoque.ativo) return;
+                                    setSelectedKeys(new Set())
+                                    setSelectedProductId(product.id);
+                                    onOpen();
+                                }}/>
+                            </span>
                         </Tooltip>
                     </div>
                 );
@@ -169,7 +201,6 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                 return <h1>Implementar</h1>;
         }
     }, [onOpen]);
-
 
     const onSearchChange = React.useCallback((value: string | null) => {
         if (value) {
@@ -186,12 +217,13 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
     }, [])
 
     const itemDeleteModalSettings: DeletingItemModalSettings = {
-        title: 'Excluir Produto',
-        text: 'Tem certeza que deseja excluir este produto?',
+        title: 'Excluir/Inativar Estoque',
+        text: 'Tem certeza que deseja excluir este estoque? Caso ele tenha sido utilizado em vendas, ele será inativado..',
         actionFn: deletarProduto,
         isOpen: isOpen,
         onClose: onClose,
     }
+
 
     return (
         <div className={'w-11/12'}>
@@ -199,7 +231,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
             <div className={'bg-white dark:bg-customDarkFooter rounded-md p-4 mb-4 shadow-md'}>
                 <TabelaEstoquesTopContent
                     products={products}
-                    selectedItems={selectedKeys}
+                    selectedItems={Array.from(selectedKeys)} // Convert Set to array
                     categoriesOptions={categoriesCollection}
                     setCategoryFilter={setCategoryFilter}
                     categoryFilter={categoryFilter} filterValue={filterValue}
@@ -220,14 +252,42 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                         currentPage={currentPage} setCurrentPage={setCurrentPage}
                         filteredItemsLength={filteredItems.length}
                         totalPagesQuantity={totalPagesQuantity}
-                        hasSearchFilter={hasSearchFilter} selectedKeys={selectedKeys}/>
+                        hasSearchFilter={hasSearchFilter}
+                        selectedKeys={Array.from(selectedKeys)} // Convert Set to array
+                    />
                 }
                 selectionMode="multiple"
-                onSelectionChange={keys => setSelectedKeys([...keys as unknown as string[]])}
+                selectedKeys={selectedKeys} // Pass Set directly
+                onSelectionChange={(keys) => {
+                    const keysSet = new Set(keys); // Convert Selection to Set
+                    const lastSelectedKey = Array.from(keysSet).pop(); // Get the last selected key
+
+                    const product = products.find((item) => item.id === parseInt(lastSelectedKey!.toString()!));
+
+                    if (product && product.estoque.ativo) {
+                        setSelectedKeys(keysSet as any); // Update state with the new Set
+                    } else {
+                        keysSet.delete(lastSelectedKey!); // Remove the last selected key if the product is not available
+
+                        if (!isShowingToast) {
+                            addToast({
+                                color: 'danger',
+                                title: "Produto inativado",
+                                description: "Não é possível selecionar esse produto",
+                                timeout: 5000,
+                                onClose: () => setIsShowingToast(false),
+                            });
+                            setIsShowingToast(true);
+                        }
+
+
+                        setSelectedKeys(new Set(keysSet) as any); // Update state with the filtered Set
+                    }
+                }}
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
                 classNames={{
-                    wrapper: "max-h-2/4 min-h-[25rem] h-[33rem]",
+                    wrapper: "max-h-2/4 min-h-[25rem] h-[34rem]",
                 }}
             >
                 <TableHeader columns={columns}>
