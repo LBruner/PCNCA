@@ -4,15 +4,15 @@ import CriarNoticiaInformacoesBasicasInputField
     from "@/components/noticias/criacao/criar-noticia-informacoes-basicas-input-field";
 import CriarNoticiaInformacoesBasicasSelectField
     from "@/components/noticias/criacao/criar-noticia-informacoes-basicas-select-field";
-import {DateInput} from "@heroui/react";
+import {DatePicker} from "@heroui/react";
 import {I18nProvider} from "@react-aria/i18n";
 import CriarPessoaFormControls from "@/components/pessoas/criar/CriarPessoaFormControls";
 import {formatPhoneNumber} from "@/helpers";
 import {MdOutlineAlternateEmail, MdOutlineLocalPhone} from "react-icons/md";
 import {BsPerson} from "react-icons/bs";
 import {IoMdImages} from "react-icons/io";
-import {LiaBirthdayCakeSolid} from "react-icons/lia";
 import {PessoaCriacao} from "@/actions/pessoas";
+import {parseDate} from "@internationalized/date";
 
 interface PessoaFormProps {
     pessoa: PessoaCriacao;
@@ -27,7 +27,7 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
     const [nome, setNome] = useState(pessoa?.nome ?? '');
     const [email, setEmail] = useState(pessoa?.email ?? '');
     const [telefone, setTelefone] = useState(pessoa?.telefone ?? '');
-    const [dataNascimento, setDataNascimento] = useState(pessoa?.dataNascimento ?? new Date().toISOString().slice(0, 10));
+    const [dataNascimento, setDataNascimento] = useState(pessoa?.dataNascimento ?? new Date('2020-02-29').toISOString().slice(0, 10));
     const [categoria, setCategoria] = useState(pessoa.categoria ?? 'Física');
     const [imagemUrl, setImagemUrl] = useState(pessoa?.imagemLink ?? '')
 
@@ -112,10 +112,10 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                         </div>
                         <I18nProvider locale="pt-BR"
                         >
-                            <DateInput aria-label={' '} className={'w-full'} isRequired={true}
+                            <DatePicker maxValue={parseDate(new Date('2020-02-29').toISOString().slice(0, 10))} labelPlacement={'outside'} value={parseDate(dataNascimento)} aria-label={' '} className={'w-full'} isRequired={true}
                                        errorMessage={'Data inválida'} onChange={(novaData) => {
                                 setDataNascimento(novaData!.toString())
-                            }} size={'lg'} endContent={<LiaBirthdayCakeSolid size={22} color={'black'}/>}/>
+                            }} size={'lg'}/>
                         </I18nProvider>
                     </div>
                     <CriarNoticiaInformacoesBasicasInputField
