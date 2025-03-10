@@ -72,7 +72,7 @@ function LoginPage() {
 
     return (
         <div className="flex h-screen">
-            <div className="w-3/5 bg-customGray p-10 flex items-center flex-col relative drop-shadow-2xl">
+            <div className="w-3/5 bg-customGray dark:bg-customDarkFooter p-10 flex items-center flex-col relative drop-shadow-2xl">
                 <div className="container drop-shadow-md items-center w-4/5 mt-24">
                     <h1 className="text-5xl font-bold mb-2">Login</h1>
                     <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
@@ -112,7 +112,7 @@ function LoginPage() {
                             <Button
                                 color={'warning'}
                                 type="submit"
-                                className="w-full bg-customDarkBrown rounded-lg text-white text-md bold mt-4"
+                                className="w-full dark:bg-orange-400 bg-customDarkBrown rounded-lg text-white text-md bold mt-4"
                                 disabled={isLoading}
                             >
                                 {isLoading ? <Spinner color={'default'} /> : 'Logar'}

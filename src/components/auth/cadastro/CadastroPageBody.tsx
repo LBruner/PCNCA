@@ -94,10 +94,10 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
     return (
         <div className="flex h-screen">
             <TermosCondicoesModal isOpen={isOpen} onClose={onClose}/>
-            <div className="w-3/5 bg-customGray p-10 flex items-center flex-col relative drop-shadow-2xl">
+            <div className="w-3/5 dark:bg-customDarkFooter bg-customGray p-10 flex items-center flex-col relative drop-shadow-2xl">
                 <div className="container drop-shadow-md items-center w-4/5 mt-24">
                     <h1 className="text-5xl font-bold mb-2">Cadastro</h1>
-                    <p className="text-xl font-semibold text-gray-800 mb-8">
+                    <p className="text-xl font-semibold dark:text-gray-300 text-gray-800 mb-8">
                         Junte-se a nós e tenha acesso a uma plataforma completa para a compra e venda de commodities
                         agrícolas de alta qualidade.
                     </p>
@@ -203,7 +203,7 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                             <Button
                                 color={'warning'}
                                 type="submit"
-                                className="w-full bg-customDarkBrown rounded-lg text-white text-md bold mt-4"
+                                className="w-full dark:bg-orange-400 bg-customDarkBrown rounded-lg text-white text-md bold mt-4"
                                 disabled={isLoading}
                             >
                                 {isLoading ? <Spinner color={'default'}/> : 'Cadastrar'}
