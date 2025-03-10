@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState, useCallback} from "react";
 import {LineChart} from "@mui/x-charts";
 import {CotacoesComCommodities, pegaHistoricoPrecoCommodities} from "@/actions/cotacoes";
 import {LineChartData} from "@/models/graficos/charts";
@@ -15,15 +15,13 @@ const CotacaoCommodityChart: React.FC<CotacaoCommodityChartProps> = ({selectedCo
     const [chartData, setChartData] = useState<LineChartData | undefined>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-
-    const getChartData = async () => {
+    const getChartData = useCallback(async () => {
         setIsLoading(true);
         const data = await pegaHistoricoPrecoCommodities(selectedCommodity.commodity.nome);
-        console.log(data)
 
         setChartData(data);
         setIsLoading(false);
-    }
+    }, [selectedCommodity.commodity.nome]);
 
     useEffect(() => {
         getChartData().then();

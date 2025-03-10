@@ -19,15 +19,15 @@ const EmptyState: React.FC<EmptyStateProps> = (
 
     return (
         <div
-            className="flex flex-col items-center justify-center min-h-[400px] h-[650px] mx-5 p-8 text-center bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg">
-            <div className="flex items-center justify-center w-20 h-20 mb-4 rounded-full bg-gray-100">
-                <FaRegFolderOpen size={36}/>
+            className="flex flex-col dark:bg-customDarkFooter items-center justify-center min-h-[400px] h-[650px] mx-5 p-8 text-center bg-gray-50 border-2 dark:border-none border-dashed border-gray-200 rounded-lg">
+            <div className="flex items-center justify-center w-20 h-20 mb-4 rounded-full bg-gray-100 dark:bg-gray-950">
+                <FaRegFolderOpen className={'dark:text-white'} size={36}/>
             </div>
-            <h3 className="mb-2 text-xl font-semibold text-gray-900">
+            <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
                 <p className={'text-2xl'}>Não tem nada por aqui</p>
             </h3>
 
-            <p className="max-w-sm mb-6 text-lg text-gray-500">
+            <p className="max-w-sm mb-6 text-lg text-gray-500  dark:text-gray-200">
                 {description}
             </p>
             <div className="flex gap-3">
@@ -50,7 +50,7 @@ const EmptyState: React.FC<EmptyStateProps> = (
                         title={'Voltar'}
                         url={paths.landingPage()}
                         icon={<BsArrowLeft size={20} className="mr-2"/>}
-                        className={'border-green-700 text-green-700 hover:bg-green-50 text'}
+                        className={'border-green-700 dark:hover:bg-green-800 dark:hover:text-white text-green-700 hover:bg-green-50 text'}
                         onClick={() => window.history.back()}
                     />
                 </div>
