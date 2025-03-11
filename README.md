@@ -229,7 +229,7 @@ Se você tiver sugestões para melhorar o projeto, sinta-se à vontade para faze
 <a id="licença"></a>
 ## Licença
 
-Distribuído sob a liçenca MIT. Veja `LICENSE.txt` para mais informações.
+Distribuído sob a liçenca MIT. Veja `LICENSE` para mais informações.
 
 <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 
@@ -276,7 +276,7 @@ Gostaria de reconhecer e agradecer os recursos e ferramentas que foram úteis no
 [issues-shield]: https://img.shields.io/github/issues/LBruner/PCNCA.svg?style=for-the-badge
 [issues-url]: https://github.com/LBruner/PCNCA/issues
 [license-shield]: https://img.shields.io/github/license/LBruner/PCNCA.svg?style=for-the-badge
-[license-url]: https://github.com/LBruner/PCNCA/blob/master/LICENSE.txt
+[license-url]: https://github.com/LBruner/PCNCA/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=333
 [linkedin-url]: https://www.linkedin.com/in/lbruner-dev/
 [product-screenshot]: images/screenshot.png
