@@ -133,7 +133,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
             case "contato":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small ">{formatPhoneNumber(pessoa.telefones[0].numero)}</p>
+                        <p className="text-bold text-small ">{formatPhoneNumber(pessoa?.telefones[0]?.numero)}</p>
                     </div>
                 );
             case "localizacao":
