@@ -153,19 +153,6 @@ Certifique-se de ter os seguintes requisitos instalados no seu sistema:
 * [![Postgres][Postgres-shield]][Postgres]
 * [![NodeJS][Node-shield]][Nodejs]
 
-<p align="center">
-  <img src="public/docs/images/noticias.jpg" height="400" alt="Notícias"/>
-  <img src="public/docs/images/cotacoes.jpg" height="400" alt="Cotações"/>
-</p>
-
-<p align="center">
-  <img src="public/docs/images/estoque.jpg" height="400" alt="Estoque"/>
-  <img src="public/docs/images/vendas.jpg" height="400" alt="Vendas"/>
-</p>
-<p align="center">
-  <img src="public/docs/images/culturas.jpg" height="400" alt="Culturas"/>
-</p>
-
 ### Instalação
 
 <a id="instalaçao"></a>
@@ -206,12 +193,22 @@ Certifique-se de ter os seguintes requisitos instalados no seu sistema:
 <!-- USAGE EXAMPLES -->
 <a id="uso"></a>
 
-## Uso
+## Imagens
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos
-work well in this space. You may also link to more resources.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+<p align="center">
+  <img src="public/docs/images/noticias.jpg" height="400" alt="Notícias"/>
+  <img src="public/docs/images/cotacoes.jpg" height="400" alt="Cotações"/>
+</p>
+
+<p align="center">
+  <img src="public/docs/images/estoque.jpg" height="400" alt="Estoque"/>
+  <img src="public/docs/images/vendas.jpg" height="400" alt="Vendas"/>
+</p>
+<p align="center">
+  <img src="public/docs/images/culturas.jpg" height="400" alt="Culturas"/>
+</p>
+
 
 <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 
