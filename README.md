@@ -154,16 +154,16 @@ Certifique-se de ter os seguintes requisitos instalados no seu sistema:
 * [![NodeJS][Node-shield]][Nodejs]
 
 <p align="center">
-  <img src="public/docs/images/noticias.jpg" height="220" alt="Notícias"/>
-  <img src="public/docs/images/cotacoes.jpg" height="220" alt="Cotações"/>
+  <img src="public/docs/images/noticias.jpg" height="400" alt="Notícias"/>
+  <img src="public/docs/images/cotacoes.jpg" height="400" alt="Cotações"/>
 </p>
 
 <p align="center">
-  <img src="public/docs/images/estoque.jpg" height="220" alt="Estoque"/>
-  <img src="public/docs/images/vendas.jpg" height="220" alt="Vendas"/>
+  <img src="public/docs/images/estoque.jpg" height="400" alt="Estoque"/>
+  <img src="public/docs/images/vendas.jpg" height="400" alt="Vendas"/>
 </p>
 <p align="center">
-  <img src="public/docs/images/culturas.jpg" height="250" alt="Culturas"/>
+  <img src="public/docs/images/culturas.jpg" height="400" alt="Culturas"/>
 </p>
 
 ### Instalação
