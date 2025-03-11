@@ -200,7 +200,6 @@ Certifique-se de ter os seguintes requisitos instalados no seu sistema:
   <img src="public/docs/images/noticias.jpg" height="400" alt="Notícias"/>
   <img src="public/docs/images/cotacoes.jpg" height="400" alt="Cotações"/>
 </p>
-
 <p align="center">
   <img src="public/docs/images/estoque.jpg" height="400" alt="Estoque"/>
   <img src="public/docs/images/vendas.jpg" height="400" alt="Vendas"/>
