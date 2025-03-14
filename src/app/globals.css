@@ -6,9 +6,6 @@
     html {
         @apply h-screen; /* Ensure html takes full viewport height */
     }
-    body{
-        @apply dark:bg-customDarkBg bg-slate-50
-    }
 }
 
 

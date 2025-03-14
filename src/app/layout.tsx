@@ -24,7 +24,7 @@ export default function RootLayout(
 
     return (
         <html className={'dark:bg-customDarkBg'} lang="en">
-        <body className={`${inter.className} dark:bg-customDarkBg`}>
+        <body className={`${inter.className} bg-slate-50 dark:bg-customDarkBg`}>
         <Providers>
             <Suspense fallback={<div></div>}>
                 <AdmNavbar/>
@@ -32,7 +32,6 @@ export default function RootLayout(
             <Suspense fallback={<div></div>}>
                 <CustomNavbar/>
             </Suspense>
-
             <div className="flex flex-col">
                 {children}
             </div>

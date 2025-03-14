@@ -3,19 +3,24 @@
 import React from "react";
 import {SessionProvider} from "next-auth/react";
 import {HeroUIProvider} from "@heroui/react";
-import {ThemeProvider as NextThemesProvider} from "next-themes";
+import dynamic from "next/dynamic";
 
 interface ProvidersProps {
     children: React.ReactNode;
 }
 
+const ThemeProvider = dynamic(
+    () => import("@/providers/ThemeProvider"),
+    { ssr: false }
+);
+
 export default function Providers({children}: ProvidersProps) {
     return (
         <SessionProvider>
             <HeroUIProvider className={''}>
-                <NextThemesProvider attribute="class" defaultTheme="dark">
+                <ThemeProvider attribute="class" defaultTheme="dark">
                 {children}
-                </NextThemesProvider>
+                </ThemeProvider>
             </HeroUIProvider>
         </SessionProvider>
     );
