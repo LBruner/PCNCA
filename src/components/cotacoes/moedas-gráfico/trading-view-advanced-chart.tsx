@@ -1,5 +1,6 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from 'react';
+import {useTheme} from "next-themes";
 
 interface TradingViewChartWidgetProps {
     symbol: string;
@@ -19,7 +20,6 @@ const TradingViewAdvancedChartWidget: React.FC<TradingViewChartWidgetProps> = (
         symbol,
         interval,
         timezone = 'America/Sao_Paulo',
-        theme = 'dark',
         style = '2',
         locale = 'br',
         withDateRanges = true,
@@ -28,6 +28,7 @@ const TradingViewAdvancedChartWidget: React.FC<TradingViewChartWidgetProps> = (
         supportHost = 'https://www.tradingview.com',
     }) => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const {theme} = useTheme(); // Get the current theme
 
     useEffect(() => {
         if (containerRef.current) {
@@ -42,7 +43,7 @@ const TradingViewAdvancedChartWidget: React.FC<TradingViewChartWidgetProps> = (
                 symbol,
                 interval,
                 timezone,
-                theme,
+                theme: theme === 'dark' ? 'dark' : 'light',
                 style,
                 locale,
                 withDateRanges,
@@ -75,8 +76,8 @@ const TradingViewAdvancedChartWidget: React.FC<TradingViewChartWidgetProps> = (
     ]);
 
     return (
-        <div className="tradingview-widget-container" ref={containerRef} style={{ height: '100%', width: '100%' }}>
-            <div className="tradingview-widget-container__widget" style={{ height: 'calc(100% - 32px)', width: '100%' }} />
+        <div className="tradingview-widget-container" ref={containerRef} style={{height: '100%', width: '100%'}}>
+            <div className="tradingview-widget-container__widget" style={{height: 'calc(100% - 32px)', width: '100%'}}/>
         </div>
     );
 };

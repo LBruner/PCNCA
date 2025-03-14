@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useTheme } from 'next-themes';
 
 const TradingViewWidget = () => {
-    const { resolvedTheme } = useTheme(); // Get the current theme
+    const { theme } = useTheme(); // Get the current theme
 
     useEffect(() => {
         const script = document.createElement('script');
@@ -16,7 +16,7 @@ const TradingViewWidget = () => {
             "symbol": "FX_IDC:USDBRL",
             "width": "100%",
             "isTransparent": false,
-            "colorTheme": resolvedTheme === 'dark' ? 'dark' : 'light', // Dynamic theme
+            "colorTheme": theme === 'dark' ? 'dark' : 'light', // Dynamic theme
             "locale": "br"
         });
 
@@ -34,10 +34,10 @@ const TradingViewWidget = () => {
                 widgetContainer.removeChild(script);
             }
         };
-    }, [resolvedTheme]);
+    }, [theme]);
 
     return (
-        <div key={resolvedTheme} className="tradingview-widget-container" id="tradingview-widget-container">
+        <div key={theme} className="tradingview-widget-container" id="tradingview-widget-container">
             <div className="tradingview-widget-container__widget"></div>
         </div>
     );

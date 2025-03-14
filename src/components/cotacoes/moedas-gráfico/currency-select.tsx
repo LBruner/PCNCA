@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import {Select, SelectItem} from "@heroui/react";
 import ReactCountryFlag from "react-country-flag";
@@ -45,7 +46,6 @@ const CustomSelect: React.FC<CustomInput & { collection: Moeda[] }> = (
 ) => {
     return <Select
         selectedKeys={[code]}
-        multiple={false}
         name={name}
         startContent={<div className="flex items-center">
             <ReactCountryFlag
