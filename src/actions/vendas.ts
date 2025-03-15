@@ -279,8 +279,7 @@ export async function getDadosGraficoPie(
         id: product,
         label: product,
         value: total,
-    }));
-
+    }))
     return data;
 }
 
