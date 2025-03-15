@@ -17,6 +17,7 @@ import autoTable from "jspdf-autotable";
 import {PiPrinterFill} from "react-icons/pi";
 import {RiFileExcel2Line} from "react-icons/ri";
 import {FaRegFilePdf} from "react-icons/fa";
+import {formatarData, formatToBrazilianCurrency} from "@/helpers";
 
 interface TabelaTopContentProps {
     categoriesOptions: FilterCollection[]
@@ -65,45 +66,53 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
             router.push(paths.createVenda());
         }
     };
-
     const imprimirExcel = async () => {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Produtos");
 
+        // Add header row
         worksheet.addRow(["Produto", "Categoria", "Tipo", "Data de Adição", "Preço", "Estoque"]);
 
+        // Add data rows
         products.forEach((produto) => {
             worksheet.addRow([
                 produto?.estoque?.produto || "",
-                produto?.estoque?.categoriaculturaId || "",
-                produto?.estoque?.tipo || "",
-                produto?.dataAlter || "",
-                produto?.estoque?.preco || "",
-                produto?.estoque?.quantidade || "",
+                produto?.estoque?.categoriaId?.nome || "",
+                `${produto?.estoque?.tipo === 'A' ? 'Agrícola' : 'Pecuária'}` || "",
+                formatarData(produto?.dataAlter) || "",
+                formatToBrazilianCurrency(produto?.estoque?.preco) || "",
+                `${produto?.estoque?.quantidade} UN` || "",
             ]);
         });
 
+        // Set column widths
         worksheet.columns = [
-            {width: 20},
-            {width: 30},
-            {width: 20},
-            {width: 20},
-            {width: 15},
-            {width: 15},
+            { width: 20 },
+            { width: 30 },
+            { width: 20 },
+            { width: 20 },
+            { width: 15 },
+            { width: 15 },
         ];
 
-        worksheet.eachRow((row) => {
+        worksheet.eachRow((row, rowNumber) => {
             row.eachCell((cell) => {
                 cell.border = {
-                    top: {style: "thin"},
-                    bottom: {style: "thin"},
-                    left: {style: "thin"},
-                    right: {style: "thin"},
+                    top: { style: "thin" },
+                    bottom: { style: "thin" },
+                    left: { style: "thin" },
+                    right: { style: "thin" },
                 };
-                cell.alignment = {horizontal: "center", vertical: "middle"};
+
+                cell.alignment = { horizontal: "center", vertical: "middle" };
+
+                if (cell.col == '5') {
+                    cell.alignment = { horizontal: "centerContinuous", vertical: "middle" };
+                }
             });
         });
 
+        // Save the workbook
         const buffer = await workbook.xlsx.writeBuffer();
         saveAs(new Blob([buffer]), "Relatório_Estoque.xlsx");
     };
@@ -118,11 +127,12 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
 
         const body = products.map((produto) => [
             produto?.estoque?.produto || "",
-            produto?.estoque?.categoriaculturaId || "",
-            produto?.estoque?.tipo || "",
-            produto?.dataAlter ? new Date(produto?.dataAlter).toLocaleDateString() : "",
-            produto?.estoque?.preco || "",
-            produto?.estoque?.quantidade || "",
+            produto?.estoque?.categoriaId?.nome || "",
+            `${produto?.estoque?.tipo === 'A' ? 'Agrícola' : 'Pecuária'}` || "",
+            formatarData(produto?.dataAlter) || "",
+            formatarData(produto?.dataAlter) || formatarData(new Date()),
+            formatToBrazilianCurrency(produto?.estoque?.preco) || "",
+            `${produto?.estoque?.quantidade} UN` || "",
         ]);
 
         autoTable(doc, {
