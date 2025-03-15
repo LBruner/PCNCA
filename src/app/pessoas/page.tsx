@@ -4,6 +4,7 @@ import TabelaPessoas from "@/components/pessoas/tabela/tabela-pessoas";
 import NoData from "@/components/UI/NoData";
 import CustomButton from "@/components/UI/CustomButton";
 import paths from "@/paths";
+import {ToastProvider} from "@heroui/toast";
 
 const PessoasPage: React.FC = async _ => {
     const pessoas = await pegaTodasPessoas();
@@ -27,6 +28,7 @@ const PessoasPage: React.FC = async _ => {
 
     return (
         <div className={'flex justify-center'}>
+            <ToastProvider placement={'top-right'} maxVisibleToasts={1} toastOffset={80}/>
             <TabelaPessoas pessoas={pessoas}
                            categoryFilterCollection={[{name: 'Física', uid: '1'}, {name: 'Jurídica', uid: '2'}]}
                            tipoFilterCollection={tiposPessoasMap}/>

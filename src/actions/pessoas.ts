@@ -1,7 +1,7 @@
 'use server';
 
 import {db} from "@/db";
-import {CategoriaPessoa, Endereco, Pessoa, PessoaFisica, PessoaJuridica, Telefone} from "@prisma/client";
+import {CategoriaPessoa, Endereco, Pessoa, PessoaFisica, PessoaJuridica, Telefone, VendaPessoa} from "@prisma/client";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {redirect} from "next/navigation";
@@ -12,6 +12,7 @@ export type PessoaFisJurEnd = Pessoa & {
     enderecos: Endereco[];
     telefones: Telefone[];
     categoria: CategoriaPessoa;
+    vendas: VendaPessoa[];
 }
 
 export interface PessoaCriacao {
@@ -49,7 +50,8 @@ export async function pegaTodasPessoas(): Promise<PessoaFisJurEnd[]> {
                 pessoaFisica: true,
                 pessoaJuridica: true,
                 telefones: true,
-                categoria: true
+                categoria: true,
+                vendas: true,
             }
         }
     );
@@ -69,7 +71,8 @@ export async function pegaUmaPessoa(id: number): Promise<PessoaFisJurEnd | null>
             pessoaJuridica: true,
             pessoaFisica: true,
             telefones: true,
-            categoria: true
+            categoria: true,
+            vendas: true,
         }
     });
 }
@@ -262,6 +265,19 @@ export const editarPessoa = async (pessoa: PessoaCriacao) => {
 
 export const deletePessoa = async (pessoaId: number) => {
     try {
+        const pessoa = await db.pessoa.findUnique({
+            where: {
+                id: pessoaId,
+            },
+            include: {
+                vendas: true,
+            },
+        });
+
+        if (!pessoa || pessoa.vendas.length > 0) {
+            return;
+        }
+
         await db.endereco.deleteMany({
             where: {
                 pessoaId: pessoaId,
@@ -273,6 +289,7 @@ export const deletePessoa = async (pessoaId: number) => {
                 pessoaId: pessoaId,
             },
         });
+
 
         await db.pessoaFisica.deleteMany({
             where: {

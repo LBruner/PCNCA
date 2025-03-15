@@ -1,7 +1,8 @@
 'use client';
 
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
+    addToast,
     SortDescriptor,
     Table,
     TableBody,
@@ -52,6 +53,16 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
         column: "id",
         direction: "ascending",
     });
+
+    const [isShowingToast, setIsShowingToast] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (isShowingToast) {
+            setTimeout(() => {
+                setIsShowingToast(false)
+            }, 5000)
+        }
+    }, [isShowingToast]);
 
     const addPessoaModal = useDisclosure();
     const deleteModal = useDisclosure();
@@ -106,6 +117,8 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
     }, [sortDescriptor, items]);
 
     const renderCell = React.useCallback((pessoa: PessoaFisJurEnd, columnKey: string) => {
+        const pessoaVendeu = pessoa.vendas.length > 0;
+
         switch (columnKey) {
             case "pessoa":
                 return (
@@ -131,6 +144,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                     </Chip>
                 );
             case "contato":
+                console.log(pessoa);
                 return (
                     <div className="flex flex-col">
                         <p className="text-bold text-small ">{formatPhoneNumber(pessoa?.telefones[0]?.numero)}</p>
@@ -152,14 +166,6 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
             case "actions":
                 return (
                     <div className="relative flex items-center justify-center gap-2">
-                        {/*<Tooltip content="Ver Detalhes">*/}
-                        {/*  <span className="text-lg text-default-700 cursor-pointer">*/}
-                        {/*    <EyeIcon onClick={() => {*/}
-                        {/*        setSelectedPessoa(pessoa);*/}
-                        {/*        addPessoaModal.onOpen();*/}
-                        {/*    }} color={'black'}/>*/}
-                        {/*  </span>*/}
-                        {/*</Tooltip>*/}
                         <Tooltip content="Editar Pessoa">
                             <Link href={paths.editPessoa(pessoa.id)}>
                            <span className="text-lg text-default-700 cursor-pointer">
@@ -169,14 +175,27 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                            </span>
                             </Link>
                         </Tooltip>
-                        <Tooltip color="danger" content="Excluir Notícia">
-                          <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                            <DeleteIcon onClick={() => {
-                                setSelectedPessoa(pessoa);
-                                deleteModal.onOpen();
-                            }}/>
-                          </span>
-                        </Tooltip>
+                        <span className="text-lg text-danger cursor-pointer active:opacity-75">
+                                <DeleteIcon
+                                    className={`${pessoaVendeu ? 'opacity-50 text-gray-500' : ''}`}
+                                    onClick={() => {
+                                        if (pessoaVendeu) {
+                                            if (!isShowingToast) {
+                                                addToast({
+                                                    color: 'danger',
+                                                    title: "Ação não permitida",
+                                                    description: "Essa pessoa foi utilizada em outras operações e não pode ser excluída.",
+                                                    timeout: 5000,
+                                                    onClose: () => setIsShowingToast(false),
+                                                });
+                                                setIsShowingToast(true);
+                                            }
+                                            return;
+                                        }
+                                        setSelectedPessoa(pessoa);
+                                        deleteModal.onOpen();
+                                    }}/>
+                            </span>
                     </div>
                 );
             default:
@@ -209,7 +228,8 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
 
     return (
         <div className={'w-11/12'}>
-            <PerfilModal user={getFlatPessoa(selectedPessoa!)} isOpen={addPessoaModal.isOpen} onClose={addPessoaModal.onClose}/>
+            <PerfilModal user={getFlatPessoa(selectedPessoa!)} isOpen={addPessoaModal.isOpen}
+                         onClose={addPessoaModal.onClose}/>
             <ItemDeleteModal
                 itemId={selectedPessoa?.id ?? 0}
                 settings={itemDeleteModalSettings}
