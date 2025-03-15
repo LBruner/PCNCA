@@ -9,23 +9,11 @@ import VendasGraficoLine from "@/components/vendas/graficos/vendas-grafico-line"
 import VendasGraficoPie from "@/components/vendas/graficos/vendas-grafico-pie";
 import TabelaVendas from "@/components/vendas/tabela/TabelaVendas";
 import VendasGraficoBar from "@/components/vendas/graficos/vendas-grafico-bar";
-import {
-    addToast,
-    Button,
-    DateRangePicker,
-    DateValue,
-    ModalContent,
-    RangeValue,
-    Spinner,
-    Tab,
-    Tabs,
-    useDisclosure
-} from "@heroui/react";
+import {addToast, Button, DateValue, ModalContent, RangeValue, Spinner, Tab, Tabs, useDisclosure} from "@heroui/react";
 import {CiViewTable} from "react-icons/ci";
 import {CgMenuGridO} from "react-icons/cg";
 import {GoFilter} from "react-icons/go";
 import {Modal, ModalBody, ModalFooter, ModalHeader} from "@heroui/modal";
-import {I18nProvider} from "@react-aria/i18n";
 import VendasTopContentDropdown from "@/components/vendas/vendas-top-content-dropdown";
 import {ToastProvider} from "@heroui/toast";
 
@@ -185,17 +173,17 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
                                                                       setFilterStatus={handleSelectionChange}
                                                                       allSelectedLabel={'Todos Produtos'}
                                                                       multipleSelectedLabel={'Vários Produtos'}/>
-                                            {selectedTab == 'detalhes' && <I18nProvider locale="pt-BR">
-                                                <DateRangePicker
-                                                    radius={'md'}
-                                                    fullWidth={true}
-                                                    label={'Data de início e fim'}
-                                                    labelPlacement={'outside'}
-                                                    className="max-w-xs"
-                                                    // @ts-ignore
-                                                    onChange={setDatesRange}
-                                                    disableAnimation={false} size={'md'} variant={'flat'}/>
-                                            </I18nProvider>}
+                                            {/*{selectedTab == 'detalhes' && <I18nProvider locale="pt-BR">*/}
+                                            {/*    <DateRangePicker*/}
+                                            {/*        radius={'md'}*/}
+                                            {/*        fullWidth={true}*/}
+                                            {/*        label={'Data de início e fim'}*/}
+                                            {/*        labelPlacement={'outside'}*/}
+                                            {/*        className="max-w-xs"*/}
+                                            {/*        // @ts-ignore*/}
+                                            {/*        onChange={setDatesRange}*/}
+                                            {/*        disableAnimation={false} size={'md'} variant={'flat'}/>*/}
+                                            {/*</I18nProvider>}*/}
                                         </div>
                                     </>
                                 </ModalBody>

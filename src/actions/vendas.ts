@@ -24,7 +24,11 @@ export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
 
     if (!session?.user?.email) return [];
 
+    // Fetch sales sorted by `dataAlter` in descending order
     const vendas = await db.historicoEstoque.findMany({
+        orderBy: {
+            dataAlter: 'desc',
+        },
         where: {
             usuarioId: session.user.id,
             comprador: false,
@@ -34,8 +38,8 @@ export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
                 include: {
                     estoques: {
                         include: {
-                            estoque: true
-                        }
+                            estoque: true,
+                        },
                     },
                     pessoas: {
                         include: {
@@ -47,11 +51,12 @@ export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
                             },
                         },
                     },
-                }
+                },
             },
-        }
+        },
     });
 
+    // Group sales by `vendaId`
     const vendasAgrupadas = vendas.reduce((acc, venda) => {
         const vendaId = venda.vendaId;
 
@@ -61,10 +66,21 @@ export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
 
         acc[vendaId].push(venda);
         return acc;
-    }, {} as { [key: string]: any[] });
+    }, {} as { [key: string]: typeof vendas });
 
-    return Object.values(vendasAgrupadas);
-}
+    // Convert the grouped object back to an array
+    const groupedSalesArray = Object.values(vendasAgrupadas);
+
+    // Sort the grouped sales array by the earliest `dataAlter` in each group (descending order)
+    groupedSalesArray.sort((a, b) => {
+        const dateA = new Date(a[0].dataAlter).getTime(); // Get the first sale's date in group A
+        const dateB = new Date(b[0].dataAlter).getTime(); // Get the first sale's date in group B
+        return dateB - dateA; // Sort in descending order
+    });
+
+    // @ts-ignore
+    return groupedSalesArray;
+};
 
 export async function criarVenda(vendas: VendaComDados): Promise<void> {
     const session = await getServerSession(authOptions)

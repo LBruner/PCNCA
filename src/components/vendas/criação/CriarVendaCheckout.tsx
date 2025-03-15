@@ -33,7 +33,7 @@ const CriarVendaCheckout: React.FC<CriarVendaCheckoutFormProps> = (
             <Autocomplete errorMessage={<p>Campo cliente é obrigatório</p>} isRequired={true} selectedKey={clienteSelecionadoId ?? null as any}
                           onSelectionChange={(key) => setSelectedClienteId(key as any)} size={'sm'} label={'Cliente'}>
                 {clientes[0].pessoas.map((cliente) => <AutocompleteItem
-                    key={cliente.pessoaJuridica != null ? cliente.pessoaJuridica!.id : cliente.pessoaFisica!.id}>{cliente.pessoaJuridica != null ? cliente.pessoaJuridica!.razaoSocial : cliente.pessoaFisica!.nome}</AutocompleteItem>)}
+                    key={cliente.id}>{cliente.pessoaJuridica != null ? cliente.pessoaJuridica!.razaoSocial : cliente.pessoaFisica!.nome}</AutocompleteItem>)}
             </Autocomplete>
             <div className={'flex flex-col gap-4'}>
                 <p className={'text-xl font-normal'}>Selecione o método de pagamento</p>

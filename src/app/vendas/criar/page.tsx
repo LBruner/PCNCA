@@ -17,7 +17,9 @@ const CriarVendasPage: React.FC = async () => {
     }
 
     return (
-        <CriarVendaForm clientes={clientes} formasPagamento={formaPagamento}/>
+        <div className={'h-svh'}>
+            <CriarVendaForm clientes={clientes} formasPagamento={formaPagamento}/>
+        </div>
     )
 };
 

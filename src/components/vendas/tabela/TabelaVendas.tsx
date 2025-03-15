@@ -59,7 +59,6 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
 
         if (clientesFilter !== "all" && Array.from(clientesFilterCollection).length !== clientesFilter.length) {
             let newFilteredVendas = [];
-
             for (let venda of filteredVendas) {
                 let nestedFilteredVendas = [];
                 for (let nestedVenda of venda) {
@@ -79,8 +78,6 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
 
             filteredVendas = newFilteredVendas;
         }
-
-
 
         return filteredVendas;
     }, [vendas, clientesFilter, clientesFilterCollection]);
@@ -116,6 +113,10 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
                     </Chip>
                 );
             case "produtos":
+
+                if(venda[0].venda.estoques.length == 0){
+                    console.log(venda)
+                }
                 return (
                     <div className="flex gap-4 flex-col">
                         {venda[0].venda.estoques.map((estoque) => (

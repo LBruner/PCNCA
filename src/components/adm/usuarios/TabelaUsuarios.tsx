@@ -97,6 +97,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
                     <Usuario
                         avatarProps={{radius: "lg", size: 'lg', src: usuario.imagemLink!}}
                         name={usuario.nome}
+                        description={usuario.email}
                     >
                         {usuario.email}
                     </Usuario>

@@ -43,26 +43,26 @@ const ResetPasswordPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="min-h-screen dark:bg-customDarkBg bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="flex justify-center">
                     <div className="rounded-full bg-warning-100 p-4">
                         <BiKey className="h-12 w-12 text-warning-600"/>
                     </div>
                 </div>
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                <h2 className="mt-6 text-center text-3xl font-extrabold dark:text-white text-gray-900">
                     Redefinir sua senha
                 </h2>
-                <p className="mt-2 text-center text-sm text-gray-600">
+                <p className="mt-2 text-center text-sm dark:text-gray-300 text-gray-600">
                     Digite sua nova senha abaixo
                 </p>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <div className="bg-white dark:bg-customDarkFooter py-8 px-4 shadow sm:rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="password" className="block dark:text-white text-sm font-medium text-gray-700">
                                 Nova senha
                             </label>
                             <div className="mt-1 relative">
@@ -90,7 +90,7 @@ const ResetPasswordPage = () => {
                         </div>
 
                         <div>
-                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="confirmPassword" className="block dark:text-white text-sm font-medium text-gray-700">
                                 Confirme a nova senha
                             </label>
                             <div className="mt-1 relative">
@@ -146,7 +146,7 @@ const ResetPasswordPage = () => {
                                         <span className="ml-2">Processando...</span>
                                     </div>
                                 ) : (
-                                    'Redefinir senha'
+                                    <p className={'dark:text-white text-white'}>Redefinir senha</p>
                                 )}
                             </button>
                         </div>
@@ -155,13 +155,13 @@ const ResetPasswordPage = () => {
                     <div className="mt-6">
                         <div className="relative">
                             <div className="relative flex justify-center text-sm">
-    <span className="px-2 bg-white text-gray-500">
+    <span className="px-2 dark:text-gray-200 text-gray-500">
         Requisitos de senha
     </span>
                             </div>
                         </div>
                         <div className="mt-6 text-sm">
-                            <ul className="list-disc space-y-2 pl-5 text-gray-500">
+                            <ul className="list-disc space-y-2 pl-5 dark:text-white text-gray-500">
                                 <li>Mínimo de 6 caracteres</li>
                             </ul>
                         </div>

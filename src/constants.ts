@@ -4,5 +4,6 @@ export const shouldHideFooterPaths = [
     paths.adm(),
     '/editar',
     '/auth',
-    '/configuracoes'
+    '/configuracoes',
+    '/vendas/criar'
 ]

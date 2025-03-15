@@ -290,7 +290,6 @@ export const deletePessoa = async (pessoaId: number) => {
             },
         });
 
-
         await db.pessoaFisica.deleteMany({
             where: {
                 pessoa: {

@@ -187,12 +187,13 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                         </Tooltip>
                         <Tooltip isDisabled={!product.estoque.ativo} color="danger" content="Deletar Produto">
                             <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                                <DeleteIcon className={`${!product.estoque.ativo ? 'opacity-25 text-gray-300' : ''}`} onClick={() => {
-                                    if (!product.estoque.ativo) return;
-                                    setSelectedKeys(new Set())
-                                    setSelectedProductId(product.id);
-                                    onOpen();
-                                }}/>
+                                <DeleteIcon className={`${!product.estoque.ativo ? 'opacity-25 text-gray-300' : ''}`}
+                                            onClick={() => {
+                                                if (!product.estoque.ativo) return;
+                                                setSelectedKeys(new Set())
+                                                setSelectedProductId(product.id);
+                                                onOpen();
+                                            }}/>
                             </span>
                         </Tooltip>
                     </div>
@@ -222,6 +223,14 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
         actionFn: deletarProduto,
         isOpen: isOpen,
         onClose: onClose,
+        onFail: () => {
+            addToast({
+                color: 'success',
+                title: "Produto inativado",
+                description: "Esse estoque já foi utilizado em uma venda.",
+                timeout: 5000,
+            });
+        }
     }
 
 
@@ -265,9 +274,9 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                     const product = products.find((item) => item.id === parseInt(lastSelectedKey!.toString()!));
 
                     if (product && product.estoque.ativo) {
-                        setSelectedKeys(keysSet as any); // Update state with the new Set
+                        setSelectedKeys(keysSet as any);
                     } else {
-                        keysSet.delete(lastSelectedKey!); // Remove the last selected key if the product is not available
+                        keysSet.delete(lastSelectedKey!);
 
                         if (!isShowingToast) {
                             addToast({
@@ -279,7 +288,6 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                             });
                             setIsShowingToast(true);
                         }
-
 
                         setSelectedKeys(new Set(keysSet) as any); // Update state with the filtered Set
                     }

@@ -41,6 +41,7 @@ export const pegaTodasNoticias = async ({idCultura}: getNoticiasArgs = {}): Prom
         idCultura: parseInt(idCultura)
     } : {};
 
+    console.log(where)
     return db.noticia.findMany({
         where,
         orderBy: {
