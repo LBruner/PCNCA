@@ -80,6 +80,7 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                         onChange={(newValue) => {
                             setNome(newValue);
                         }}
+                        errorMessage={'Nome Inválido'}
                         icon={<BsPerson size={22}/>}
                     />
 
@@ -92,6 +93,7 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                         onChange={(newValue) => {
                             setEmail(newValue)
                         }}
+                        errorMessage={'Email Inválido'}
                         icon={<MdOutlineAlternateEmail/>}
                     />
                     <CriarNoticiaInformacoesBasicasInputField
@@ -100,6 +102,7 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                         onChange={(newValue) => {
                             setImagemUrl(newValue)
                         }}
+                        errorMessage={'URL Inválida'}
                         icon={<IoMdImages size={22}/>}
                     />
 
@@ -112,7 +115,7 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                         </div>
                         <I18nProvider locale="pt-BR"
                         >
-                            <DatePicker maxValue={parseDate(new Date('2020-02-29').toISOString().slice(0, 10))} labelPlacement={'outside'} value={parseDate(dataNascimento)} aria-label={' '} className={'w-full'} isRequired={true}
+                            <DatePicker maxValue={parseDate(new Date().toISOString().slice(0, 10))} labelPlacement={'outside'} value={parseDate(dataNascimento)} aria-label={' '} className={'w-full'} isRequired={true}
                                        errorMessage={'Data inválida'} onChange={(novaData) => {
                                 setDataNascimento(novaData!.toString())
                             }} size={'lg'}/>
@@ -123,7 +126,9 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                         subtitulo={'Número de celular'}
                         value={telefone.toString()}
                         type={'tel'}
+                        minLength={15}
                         onChange={handleContatoChange}
+                        errorMessage={'Número inválido'}
                         icon={<MdOutlineLocalPhone/>}
                     />
                 </InputWrapper>

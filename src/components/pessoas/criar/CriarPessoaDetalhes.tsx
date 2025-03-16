@@ -12,6 +12,7 @@ import {AiOutlineIdcard} from "react-icons/ai";
 import {PessoaCriacao} from "@/actions/pessoas";
 import {estadosFilterCollection} from "@/constants/estados";
 import {FilterCollection} from "@/models/shared/FilterCollection";
+import {NumberInput} from "@heroui/react";
 
 interface PessoaFormProps {
     pessoa: PessoaCriacao;
@@ -103,6 +104,8 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
         <InputWrapper>
             <CriarNoticiaInformacoesBasicasInputField
                 titulo={'CEP *'}
+                minLength={9}
+                errorMessage={'CEP inválido'}
                 subtitulo={''} value={cep.toString()}
                 type={'text'}
                 onChange={(newValue) => {
@@ -112,6 +115,8 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
             />
             <CriarNoticiaInformacoesBasicasInputField
                 titulo={'Cidade *'}
+                minLength={3}
+                errorMessage={'Cidade inválida'}
                 subtitulo={''} value={cidade}
                 onChange={(newValue) => {
                     idade(newValue)
@@ -132,6 +137,9 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
             <CriarNoticiaInformacoesBasicasInputField
                 titulo={'Pais *'}
                 subtitulo={''} value={pais}
+                type={'text'}
+                errorMessage={'Pais inválido'}
+                minLength={3}
                 onChange={(newValue) => {
                     setPais(newValue)
                 }}
@@ -142,6 +150,9 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
             <CriarNoticiaInformacoesBasicasInputField
                 titulo={'Bairro *'}
                 subtitulo={''} value={bairro}
+                type={'text'}
+                errorMessage={'Bairro inválido'}
+                minLength={3}
                 onChange={(newValue) => {
                     setBairro(newValue)
                 }}
@@ -149,6 +160,9 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
             />
             <CriarNoticiaInformacoesBasicasInputField
                 titulo={'Logradouro *'}
+                minLength={3}
+                errorMessage={'Logradouro inválido'}
+                type={'text'}
                 subtitulo={''} value={logradouro}
                 onChange={(newValue) => {
                     setLogradouro(newValue)
@@ -157,17 +171,20 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
             />
         </InputWrapper>
         <InputWrapper>
-            <CriarNoticiaInformacoesBasicasInputField
-                titulo={'Número *'}
-                type={'number'}
-                subtitulo={''} value={numero == 0 ? '' : numero.toString()}
-                onChange={(newValue) => {
-                    setNumero(parseInt(newValue))
-                }}
-                icon={<PiCity size={22}/>}
-            />
+            <div className={'w-full flex items-center'}>
+                <div className={'flex flex-col '}>
+                    <p className={'text-lg w-48 font-semibold'}>{'Número'}</p>
+                </div>
+                <NumberInput size={'sm'} isClearable={true} maxValue={9999}
+                             label={''}
+                             onChange={(newValue: any) => {
+                                 setNumero(parseInt(newValue?.target?.value))
+                             }}/>
+            </div>
             <CriarNoticiaInformacoesBasicasInputField
                 titulo={'Complemento *'}
+                minLength={3}
+                errorMessage={'Complemento inválido'}
                 subtitulo={''} value={complemento}
                 onChange={(newComplemento) => {
                     setComplemento(newComplemento)
@@ -180,6 +197,8 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
         <InputWrapper>
             <CriarNoticiaInformacoesBasicasInputField
                 titulo={'CNPJ *'}
+                errorMessage={'CNPJ inválido'}
+                minLength={18}
                 subtitulo={''}
                 value={cnpj}
                 type={'text'}
@@ -201,6 +220,8 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
         <InputWrapper>
             <CriarNoticiaInformacoesBasicasInputField
                 titulo={'Inscrição Estadual *'}
+                minLength={12}
+                errorMessage={'Inscrição Estadual inválida'}
                 subtitulo={''}
                 type={'text'}
                 value={inscricaoEstadual.toString()}
@@ -211,6 +232,8 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
             />
             <CriarNoticiaInformacoesBasicasInputField
                 titulo={'Nome Fantasia'}
+                minLength={3}
+                errorMessage={'Nome Fantasia inválido'}
                 subtitulo={''}
                 required={false}
                 value={nomeFantasia}
@@ -228,6 +251,8 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
             <CriarNoticiaInformacoesBasicasInputField
                 titulo={'CPF *'}
                 subtitulo={''}
+                minLength={14}
+                errorMessage={'CPF inválido'}
                 type={'text'}
                 value={cpf != null ? cpf.toString() : ''}
                 onChange={(newValue) => {
@@ -238,6 +263,8 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
             <CriarNoticiaInformacoesBasicasInputField
                 titulo={'RG *'}
                 subtitulo={''}
+                minLength={12}
+                errorMessage={'RG inválido'}
                 value={rg != null ? rg.toString() : ''}
                 type={'text'}
                 onChange={(newValue) => {

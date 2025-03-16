@@ -1,3 +1,5 @@
+'use client';
+
 import React, {useState} from "react";
 import ProfileSettingsBody from "@/components/configuracoes/meu-perfil/ProfileSettingsBody";
 import CriarPessoaFormControls from "@/components/pessoas/criar/CriarPessoaFormControls";

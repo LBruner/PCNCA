@@ -31,6 +31,7 @@ const CriarNoticiaInformacoesBasicasSelectField: React.FC<ConfigurarNoticiaFormF
                 label={undefined}
                 onChange={event => onChange(event.target.value)}
                 value={valor}
+                errorMessage={'Seleção inválida'}
                 selectedKeys={selectedKeys}
                 name={'name'}
                 classNames={{

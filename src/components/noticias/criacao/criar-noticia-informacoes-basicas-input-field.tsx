@@ -10,6 +10,10 @@ interface ConfigurarNoticiaFormFieldProps {
     type?: HTMLInputTypeAttribute,
     required?: boolean,
     icon?: React.ReactNode
+    errorMessage?: string
+    isInvalid?: boolean;
+    minLength?: number;
+    maxLength?: number;
 }
 
 const formatBrazilianPhoneNumber = (value: string): string => {
@@ -40,7 +44,10 @@ const CriarNoticiaInformacoesBasicasInputField: React.FC<ConfigurarNoticiaFormFi
         placeholder,
         type,
         required,
-        icon
+        icon,
+        errorMessage,
+        isInvalid,
+        minLength,
     }
 ) => {
     return (
@@ -50,11 +57,12 @@ const CriarNoticiaInformacoesBasicasInputField: React.FC<ConfigurarNoticiaFormFi
                 <p className={'text-md w-48 text-gray-500 dark:text-gray-200'}>{subtitulo}</p>
             </div>
             <CustomInputButton
+                minLength={minLength}
                 required={required}
                 value={value} defaultValue={undefined} name={'nome'} label={''}
                 placeholder={placeholder || ''}
-                isInvalid={false}
-                errorMessage={''}
+                isInvalid={isInvalid ?? false}
+                errorMessage={errorMessage ?? ''}
                 onChange={onChange}
                 type={type}
                 endContent={icon}
@@ -77,7 +85,9 @@ interface CustomInput {
     type?: HTMLInputTypeAttribute,
     startContent?: React.ReactNode
     endContent?: React.ReactNode
-    required?: boolean
+    required?: boolean;
+    minLength?: number;
+    maxLength?: number;
 }
 
 const CustomInputButton: React.FC<CustomInput> = (
@@ -89,11 +99,12 @@ const CustomInputButton: React.FC<CustomInput> = (
         placeholder,
         onChange,
         errorMessage,
-        isInvalid,
         type,
         startContent,
         endContent,
-        required
+        required,
+        minLength,
+        maxLength
     }
 ) => {
 
@@ -106,6 +117,9 @@ const CustomInputButton: React.FC<CustomInput> = (
     };
 
     return <Input
+        maxLength={maxLength}
+        max={maxLength}
+        minLength={minLength}
         value={value} onChange={(event) => handleInputChange(event.target.value)}
         defaultValue={defaultValue} name={name}
         isRequired={required ?? true}
@@ -113,7 +127,7 @@ const CustomInputButton: React.FC<CustomInput> = (
         className={'font-medium w-full'} size={'lg'}
         type={type} label={label}
         labelPlacement={'outside'}
-        placeholder={placeholder} isInvalid={isInvalid} errorMessage={errorMessage}
+        placeholder={placeholder} errorMessage={errorMessage}
         startContent={startContent} endContent={endContent}
     />
 };
