@@ -271,6 +271,8 @@ export const deletePessoa = async (pessoaId: number) => {
             },
             include: {
                 vendas: true,
+                pessoaFisica: true,
+                pessoaJuridica: true,
             },
         });
 
@@ -290,21 +292,25 @@ export const deletePessoa = async (pessoaId: number) => {
             },
         });
 
-        await db.pessoaFisica.deleteMany({
-            where: {
-                pessoa: {
-                    id: pessoaId
+        if(pessoa.pessoaJuridica != null){
+            await db.pessoaJuridica.deleteMany({
+                where: {
+                    pessoa: {
+                        id: pessoaId
+                    },
                 },
-            },
-        });
+            });
+        }
 
-        await db.pessoaJuridica.deleteMany({
-            where: {
-                pessoa: {
-                    id: pessoaId
+        if(pessoa.pessoaFisica != null){
+            await db.pessoaFisica.deleteMany({
+                where: {
+                    pessoa: {
+                        id: pessoaId
+                    },
                 },
-            },
-        });
+            });
+        }
 
         await db.pessoa.delete({
             where: {
