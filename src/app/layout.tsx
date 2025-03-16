@@ -23,7 +23,7 @@ export default function RootLayout(
     }>) {
 
     return (
-        <html className={'dark:bg-customDarkBg'} lang="en">
+        <html className={'dark:bg-customDarkBg bg-slate-50'} lang="en">
         <body className={`${inter.className} bg-slate-50 dark:bg-customDarkBg`}>
         <Providers>
             <Suspense fallback={<div></div>}>
