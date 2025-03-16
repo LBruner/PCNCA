@@ -15,7 +15,7 @@ const createProductSchema = z.object({
     categoria: z.string(),
     preco: z.number().min(0, 'O preço deve ser maior que 0'),
     estoque: z.number().min(0, 'O valor em estoque deve ser maior que 0'),
-    imagem: z.string().url({message: 'URL inválida'}),
+    imagem: z.string({message: 'URL inválida'}),
     tipoComodity: z.string().min(1, 'Por favor, selecione um tipo'),
     descricao: z.string(),
     unidade: z.string(),

@@ -41,7 +41,6 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, cu
                         <CustomInputButton defaultValue={produto?.estoque.produto ?? undefined} name={'nome'}
                                            label={'Nome'}
                                            placeholder={'Digite um nome...'}
-                                           isInvalid={!!formState.errors.nome}
                                            errorMessage={formState.errors.nome?.join(', ')}/>
                         <CustomInputButton
                             defaultValue={produto?.estoque.preco.toString() ?? undefined} name={'preco'}
@@ -61,7 +60,6 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, cu
                         <CustomInputButton defaultValue={produto?.estoque.imagemLink ?? undefined} name={'imagem'}
                                            label={'Imagem principal'}
                                            placeholder={'Digite a url da imagem...'}
-                                           isInvalid={!!formState.errors.imagem}
                                            errorMessage={formState.errors.imagem?.join(', ')}/>
                     </div>
                 </div>
@@ -124,7 +122,7 @@ interface CustomInput {
     color?:  "default" | "primary" | "secondary" | "success" | "warning" | "danger",
     label: string,
     placeholder: string,
-    isInvalid: boolean,
+    isInvalid?: boolean,
     errorMessage?: string,
     type?: string,
     startContent?: React.ReactNode
@@ -145,10 +143,10 @@ const CustomInputButton: React.FC<CustomInput> = (
         endContent,
     }
 ) => {
-    return <Input defaultValue={defaultValue} name={name} isRequired={true} className={'font-medium dark:text-white'} size={'lg'}
+    return <Input minLength={3} defaultValue={defaultValue} name={name} isRequired={true} className={'font-medium dark:text-white'} size={'lg'}
                   type={type} label={label}
                   labelPlacement={'outside'}
-                  placeholder={placeholder} isInvalid={isInvalid} errorMessage={errorMessage}
+                  placeholder={placeholder} isInvalid={isInvalid} errorMessage={errorMessage ?? 'Digite no mínimo 3 caracteres.'}
                   startContent={startContent} endContent={endContent}/>
 };
 
