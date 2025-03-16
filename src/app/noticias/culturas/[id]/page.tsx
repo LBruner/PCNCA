@@ -2,7 +2,7 @@ import React from "react";
 import ShowCulturaPageBody from "@/components/noticias/culturas/show-cultura-page-body";
 import {Cultura} from "@prisma/client";
 import {pegaCulturaPorId} from "@/actions/culturas";
-import {NoticiaComAutorCultura, pegaNoticiasPorId} from "@/actions/noticias";
+import {NoticiaComCultura, pegaNoticiasPorId} from "@/actions/noticias";
 import EmptyState from "@/components/UI/NoData";
 import {db} from "@/db";
 
@@ -14,7 +14,7 @@ interface CulturaShowPageProps {
 
 const CulturaShowPage: React.FC<CulturaShowPageProps> = async ({params}) => {
     const culturaId = (await params).id;
-    const noticiasFiltradas: NoticiaComAutorCultura[] = await pegaNoticiasPorId(parseInt(culturaId));
+    const noticiasFiltradas: NoticiaComCultura[] = await pegaNoticiasPorId(parseInt(culturaId));
     const cultura: Cultura | null = await pegaCulturaPorId(parseInt(culturaId));
 
     if (noticiasFiltradas.length === 0) {

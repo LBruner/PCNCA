@@ -24,13 +24,12 @@ import paths from "@/paths";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
 import AdmNoticiasTableTopContent from "@/components/adm/noticias/adm-noticias-table-top-content";
 import {FilterCollection} from "@/models/shared/FilterCollection";
-import {deletarNoticia, NoticiaComAutorCultura} from "@/actions/noticias";
+import {deletarNoticia, NoticiaComCultura} from "@/actions/noticias";
 
 const columns = [
     {name: "ID", uid: "id", sortable: true},
     {name: "TÍTULO", uid: "titulo", sortable: false},
     {name: "IMAGEM", uid: "imagem", sortable: false},
-    {name: "AUTOR", uid: "author", sortable: true},
     {name: "CATEGORIA", uid: "categoria", sortable: false},
     {name: "DATA DE PUBLICAÇÃO", uid: "data", sortable: false},
     {name: "STATUS", uid: "status", sortable: true},
@@ -38,15 +37,13 @@ const columns = [
 ];
 
 interface AdmNoticiasProps {
-    noticias: NoticiaComAutorCultura[];
-    authorFilterCollection: FilterCollection[];
+    noticias: NoticiaComCultura[];
     categoryFilterCollection: FilterCollection[];
 }
 
-const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCollection, categoryFilterCollection}) => {
+const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, categoryFilterCollection}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [statusFilter, setStatusFilter] = React.useState<string | string[]>("all");
-    const [authorFilter, setAuthorFilter] = React.useState<string | string[]>("all");
     const [categoryFilter, setCategoryFilter] = React.useState<string | string[]>("all");
     const [dateRange, setDateRange] = useState<RangeValue<DateValue>>();
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
@@ -72,12 +69,6 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
             );
         }
 
-        if (authorFilter !== "all" && Array.from(authorFilterCollection).length !== authorFilter.length) {
-            filteredProducts = filteredProducts.filter((noticia) =>
-                Array.from(authorFilter).includes(noticia.autor.nomeAutor),
-            )
-        }
-
         if (categoryFilter !== "all" && Array.from(categoryFilterCollection).length !== categoryFilter.length) {
             filteredProducts = filteredProducts.filter((noticia) => {
                     return Array.from(categoryFilter).includes(noticia.cultura.nome);
@@ -95,7 +86,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
         }
 
         return filteredProducts;
-    }, [noticias, filterValue, authorFilter, categoryFilter, dateRange, authorFilterCollection, categoryFilterCollection, hasSearchFilter]);
+    }, [noticias, filterValue, categoryFilter, dateRange, categoryFilterCollection, hasSearchFilter]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -110,7 +101,7 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
         return getSortedNoticia(items, sortDescriptor)
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((noticia: NoticiaComAutorCultura, columnKey: string) => {
+    const renderCell = React.useCallback((noticia: NoticiaComCultura, columnKey: string) => {
         switch (columnKey) {
             case "id":
                 return (
@@ -121,12 +112,6 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
                 return (
                     <div className="flex flex-col">
                         <p className="text-bold text-small ">{noticia.titulo}</p>
-                    </div>
-                )
-            case "author":
-                return (
-                    <div className="flex flex-col">
-                        <p className="text-bold text-small ">{noticia.autor.nomeAutor}</p>
                     </div>
                 )
             case "categoria":
@@ -226,14 +211,12 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
                 topContent={<
                     AdmNoticiasTableTopContent
                     setDatesRange={setDateRange} datesRange={dateRange!}
-                    authorFilterCollection={authorFilterCollection}
                     categoryFilterCollection={categoryFilterCollection}
                     setCategoryFilter={setCategoryFilter}
-                    authorFilter={authorFilter} filterValue={filterValue}
+                     filterValue={filterValue}
                     setStatusFilter={setStatusFilter} onClear={onClear}
                     onSearchChange={onSearchChange} statusFilter={statusFilter}
                     categoryFilter={categoryFilter}
-                    setAuthorFilter={setAuthorFilter}
                     hasSearchFilter={hasSearchFilter}
                     itemsLenght={noticias.length}/>}
                 topContentPlacement={'inside'}
@@ -262,8 +245,8 @@ const AdmNoticiasTable: React.FC<AdmNoticiasProps> = ({noticias, authorFilterCol
                     )}
                 </TableHeader>
                 <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhum produtos encontrado"}
-                           items={sortedItems as NoticiaComAutorCultura[]}>
-                    {(noticia: NoticiaComAutorCultura) => (
+                           items={sortedItems as NoticiaComCultura[]}>
+                    {(noticia: NoticiaComCultura) => (
                         <TableRow key={noticia.notId}>
                             {
                                 columns.map((column) => (

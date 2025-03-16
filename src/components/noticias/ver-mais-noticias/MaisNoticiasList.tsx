@@ -5,10 +5,10 @@ import CustomBreadcumbs from "@/components/custom-breadcumbs";
 import paths from "@/paths";
 import LargeNoticiaCard from "@/components/noticias/large-noticia-card/large-noticia-card";
 import {Pagination} from "@heroui/react";
-import {NoticiaComAutorCultura} from "@/actions/noticias";
+import {NoticiaComCultura} from "@/actions/noticias";
 
 interface MaisNoticiasListProps {
-    noticias: NoticiaComAutorCultura[];
+    noticias: NoticiaComCultura[];
 }
 
 const MaisNoticiasList: React.FC<MaisNoticiasListProps> = ({noticias}) => {

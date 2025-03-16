@@ -9,14 +9,11 @@ import {FaCirclePlus} from "react-icons/fa6";
 import NovoItemButton from "@/components/UI/NovoItemButton";
 
 interface TabelaTopContentProps {
-    authorFilterCollection: FilterCollection[];
     categoryFilterCollection: FilterCollection[];
     statusFilter: string | string[];
-    authorFilter: string | string[];
     setStatusFilter: (keys: string | string[]) => void;
     categoryFilter: string | string[];
     setCategoryFilter: (keys: string | string[]) => void;
-    setAuthorFilter: (keys: string | string[]) => void;
     hasSearchFilter: boolean;
     filterValue: string;
     itemsLenght: number;
@@ -28,12 +25,9 @@ interface TabelaTopContentProps {
 
 const AdmNoticiasTableTopContent: React.FC<TabelaTopContentProps> = (
     {
-        authorFilterCollection,
         categoryFilterCollection,
         categoryFilter,
         setCategoryFilter,
-        setAuthorFilter,
-        authorFilter,
         setStatusFilter,
         statusFilter,
         filterValue,
@@ -67,10 +61,6 @@ const AdmNoticiasTableTopContent: React.FC<TabelaTopContentProps> = (
                 </div>
                 <Divider/>
                 <div className="flex justify-center gap-8 items-center">
-                    <TopContentDropDown collection={authorFilterCollection} label={'Autor'} width={size}
-                                        filterStatus={authorFilter} setFilterStatus={setAuthorFilter}
-                                        allSelectedLabel={'Todos autores'}
-                                        multipleSelectedLabel={'Vários Autores'}/>
                     <TopContentDropDown collection={categoryFilterCollection} label={'Categoria'} width={size}
                                         filterStatus={categoryFilter} setFilterStatus={setCategoryFilter}
                                         multipleSelectedLabel={'Várias Categorias'}
@@ -96,12 +86,9 @@ const AdmNoticiasTableTopContent: React.FC<TabelaTopContentProps> = (
     }, [
         filterValue,
         statusFilter,
-        authorFilter,
         categoryFilter,
-        authorFilterCollection,
         categoryFilterCollection,
         onClear,
-        setAuthorFilter,
         setCategoryFilter,
         setDatesRange,
         setStatusFilter,

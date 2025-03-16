@@ -1,7 +1,7 @@
 import type {Cultura} from "@prisma/client";
 import {SortDescriptor} from "@heroui/react";
 import {IFilterable} from "@/models/estoque/filters";
-import {NoticiaComAutorCultura} from "@/actions/noticias";
+import {NoticiaComCultura} from "@/actions/noticias";
 import {PessoaFisJurEnd} from "@/actions/pessoas";
 import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
 import {UsuarioComEmpresa} from "@/actions/usuarios";
@@ -80,21 +80,11 @@ export const getSortedPessoas = (items: PessoaFisJurEnd[], sortDescriptor: SortD
     });
 };
 
-export const getSortedNoticia = (items: NoticiaComAutorCultura[], sortDescriptor: SortDescriptor) => {
-    if (sortDescriptor.column == 'author') {
-        return [...items].sort((a: NoticiaComAutorCultura, b: NoticiaComAutorCultura) => {
-            const first = a.autor.nomeAutor;
-            const second = b.autor.nomeAutor;
+export const getSortedNoticia = (items: NoticiaComCultura[], sortDescriptor: SortDescriptor) => {
 
-            const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
-
-            return sortDescriptor.direction === "descending" ? -cmp : cmp;
-        });
-    }
-
-    return [...items].sort((a: NoticiaComAutorCultura, b: NoticiaComAutorCultura) => {
-        const first = a[sortDescriptor.column as keyof NoticiaComAutorCultura];
-        const second = b[sortDescriptor.column as keyof NoticiaComAutorCultura];
+    return [...items].sort((a: NoticiaComCultura, b: NoticiaComCultura) => {
+        const first = a[sortDescriptor.column as keyof NoticiaComCultura];
+        const second = b[sortDescriptor.column as keyof NoticiaComCultura];
 
         const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
 

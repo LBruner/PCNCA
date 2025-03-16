@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useRef, useState} from "react";
-import {criarNoticia, editarNoticia, NoticiaComAutorCultura, NoticiaCriacao, NoticiaEdicao} from "@/actions/noticias";
+import {criarNoticia, editarNoticia, NoticiaComCultura, NoticiaCriacao, NoticiaEdicao} from "@/actions/noticias";
 import CriarNoticiaVizualizarPublicar from "@/components/noticias/criacao/telas/criar-noticia-vizualizar-publicar";
 import {generateMarkdown} from "@/helpers/noticia/criacao/criar-noticia";
 import RoundedStepsGuide from "@/components/noticias/criacao/rounded-steps-guide";
@@ -14,16 +14,15 @@ import {NoticiaBasica} from "@/models/noticiaBasica";
 
 interface NoticiaCreateForm {
     culturas: Cultura[];
-    noticiaCriada?: NoticiaComAutorCultura;
+    noticiaCriada?: NoticiaComCultura;
 }
 
-const getInitialNoticia = (article: NoticiaComAutorCultura): NoticiaBasica => ({
+const getInitialNoticia = (article: NoticiaComCultura): NoticiaBasica => ({
     titulo: article.titulo,
     subtitulo: article.subtitulo,
     imagemLink: article.imagemLink,
     idCultura: article.idCultura,
     descricao: article.descricao!,
-    idAutor: article.idAutor,
 });
 
 const NoticiaCreateForm: React.FC<NoticiaCreateForm> = ({culturas, noticiaCriada}) => {

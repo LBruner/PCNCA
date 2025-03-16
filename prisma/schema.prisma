@@ -49,11 +49,6 @@ model Session {
   user         Usuario  @relation(fields: [userId], references: [id])
 }
 
-model Autor {
-  autorId   Int       @id @map("autor_id")
-  nomeAutor String    @map("nome_autor") @db.VarChar(100)
-  noticias  Noticia[]
-}
 
 model Noticia {
   notId                        Int                            @id @default(autoincrement())
@@ -62,11 +57,9 @@ model Noticia {
   corpo                        String                         @map("corpo")
   dataPubli                    DateTime                       @map("data_publicacao")
   descricao                    String?                        @map("descricao") @db.VarChar(1000)
-  idAutor                      Int                            @map("id_autor")
   idCultura                    Int                            @map("id_cultura")
   imagemLink                   String                         @map("imagem_link") @db.VarChar(300)
   ComercioInternacionalNoticia ComercioInternacionalNoticia[]
-  autor                        Autor                          @relation(fields: [idAutor], references: [autorId])
   cultura                      Cultura                        @relation(fields: [idCultura], references: [culturaId])
 }
 

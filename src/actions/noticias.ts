@@ -4,11 +4,10 @@ import {db} from "@/db";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {redirect} from "next/navigation";
-import {Autor, Cultura, Noticia} from "@prisma/client";
+import {Cultura, Noticia} from "@prisma/client";
 
-export type NoticiaComAutorCultura = Noticia & {
+export type NoticiaComCultura = Noticia & {
     cultura: Cultura;
-    autor: Autor;
 };
 
 export type NoticiaEdicao = { notId: number; } & NoticiaCriacao;
@@ -24,7 +23,6 @@ export const editarNoticia = async (noticia: NoticiaEdicao) => {
             titulo: noticia.titulo,
             subtitulo: noticia.subtitulo,
             corpo: noticia.corpo,
-            idAutor: noticia.idAutor,
             idCultura: noticia.idCultura,
             imagemLink: noticia.imagemLink,
             descricao: noticia.descricao,
@@ -36,28 +34,25 @@ export const editarNoticia = async (noticia: NoticiaEdicao) => {
     redirect(paths.showNoticia(noticiaEditada.notId))
 };
 
-export const pegaTodasNoticias = async ({idCultura}: getNoticiasArgs = {}): Promise<NoticiaComAutorCultura[]> => {
+export const pegaTodasNoticias = async ({idCultura}: getNoticiasArgs = {}): Promise<NoticiaComCultura[]> => {
     const where = idCultura ? {
         idCultura: parseInt(idCultura)
     } : {};
 
-    console.log(where)
     return db.noticia.findMany({
         where,
         orderBy: {
             dataPubli: 'desc'
         },
         include: {
-            autor: true,
             cultura: true,
         }
     });
 }
 
-export const pegaUmaNoticia = async (noticiaId: number): Promise<NoticiaComAutorCultura | null> => {
+export const pegaUmaNoticia = async (noticiaId: number): Promise<NoticiaComCultura | null> => {
     return db.noticia.findUnique({
         include:{
-          autor: true,
           cultura: true,
         },
         where: {
@@ -66,13 +61,12 @@ export const pegaUmaNoticia = async (noticiaId: number): Promise<NoticiaComAutor
     });
 }
 
-export const pegaNoticiasPorId = async (noticiaId: number): Promise<NoticiaComAutorCultura[]> => {
+export const pegaNoticiasPorId = async (noticiaId: number): Promise<NoticiaComCultura[]> => {
     return db.noticia.findMany({
         where: {
             idCultura: noticiaId,
         },
         include: {
-            autor: true,
             cultura: true,
         }
     });
@@ -104,7 +98,6 @@ export interface NoticiaCriacao {
     titulo: string;
     subtitulo: string;
     corpo: string;
-    idAutor: number;
     idCultura: number;
     imagemLink: string;
     descricao: string;
@@ -119,7 +112,6 @@ export const criarNoticia = async (
             subtitulo: noticiaCriacao.subtitulo,
             corpo: noticiaCriacao.corpo,
             dataPubli: new Date(),
-            idAutor: noticiaCriacao.idAutor,
             idCultura: noticiaCriacao.idCultura,
             imagemLink: noticiaCriacao.imagemLink,
             descricao: noticiaCriacao.descricao,

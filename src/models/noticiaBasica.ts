@@ -3,6 +3,5 @@ export interface NoticiaBasica {
     subtitulo: string;
     imagemLink: string | null;
     idCultura: number;
-    idAutor?: number;
     descricao?: string;
 }

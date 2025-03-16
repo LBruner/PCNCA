@@ -5,10 +5,10 @@ import paths from "@/paths";
 import LargeNoticiaCard from "@/components/noticias/large-noticia-card/large-noticia-card";
 import {Pagination} from "@heroui/react";
 import {Cultura} from "@prisma/client";
-import {NoticiaComAutorCultura} from "@/actions/noticias";
+import {NoticiaComCultura} from "@/actions/noticias";
 
 interface ShowCulturaPageBodyProps {
-    noticiasFiltradas: NoticiaComAutorCultura[];
+    noticiasFiltradas: NoticiaComCultura[];
     cultura?: Cultura;
 }
 
