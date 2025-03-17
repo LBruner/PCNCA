@@ -47,7 +47,7 @@ const VendasGraficoBar: React.FC<VendasGraficoBarProps> = ({produtosFilter, clie
             <div ref={containerRef} style={{width: '105%'}}>
                 <BarChart
                     borderRadius={12}
-                    width={700}
+                    width={780}
                     height={220}
                     series={[
                         {
