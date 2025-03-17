@@ -30,6 +30,7 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
     const [dataNascimento, setDataNascimento] = useState(pessoa?.dataNascimento ?? new Date('2020-02-29').toISOString().slice(0, 10));
     const [categoria, setCategoria] = useState(pessoa.categoria ?? 'Física');
     const [imagemUrl, setImagemUrl] = useState(pessoa?.imagemLink ?? '')
+    const [isPhoneInvalid, setIsPhoneInvalid] = useState(false);
 
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -45,7 +46,7 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
             nome: nome,
             razaoSocial: nome,
             email: email,
-            telefone: telefone,
+            telefone: formatPhoneNumber(telefone),
             dataNascimento: dataNascimento,
             imagemLink: imagemUrl,
             categoria,
@@ -57,6 +58,9 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
     const handleContatoChange = (newValue: string) => {
         const formattedNumber = formatPhoneNumber(newValue);
         setTelefone(formattedNumber);
+
+        const digits = newValue.replace(/\D/g, '');
+        setIsPhoneInvalid(digits.length < 11);
     };
 
     return (
@@ -125,8 +129,9 @@ const CriarPessoaInformacoesBasicas: React.FC<PessoaFormProps> = (props) => {
                         titulo={'Contato *'}
                         subtitulo={'Número de celular'}
                         value={telefone.toString()}
-                        type={'tel'}
+                        type={'text'}
                         minLength={15}
+                        isInvalid={isPhoneInvalid}
                         onChange={handleContatoChange}
                         errorMessage={'Número inválido'}
                         icon={<MdOutlineLocalPhone/>}

@@ -27,6 +27,7 @@ const CriarNoticiaInformacoesBasicasSelectField: React.FC<ConfigurarNoticiaFormF
                 <p className={'text-md w-48 text-gray-500 dark:text-gray-200'}>{subtitulo}</p>
             </div>
             <Select
+                isRequired={true}
                 aria-label={' '}
                 label={undefined}
                 onChange={event => onChange(event.target.value)}

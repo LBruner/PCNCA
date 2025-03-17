@@ -104,7 +104,8 @@ const CustomInputButton: React.FC<CustomInput> = (
         endContent,
         required,
         minLength,
-        maxLength
+        maxLength,
+        isInvalid
     }
 ) => {
 
@@ -117,6 +118,7 @@ const CustomInputButton: React.FC<CustomInput> = (
     };
 
     return <Input
+        isInvalid={isInvalid}
         maxLength={maxLength}
         max={maxLength}
         minLength={minLength}

@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
                     return user;
                 }
 
-                if (user && user.senha === credentials.password) {
+                if (user && user.senha === credentials.password && !user.inativado) {
                     return user;
                 }
 

@@ -2,16 +2,17 @@
 
 import {db} from "@/db";
 import {getServerSession} from "next-auth";
-import {Empresa, Usuario} from "@prisma/client";
+import {Empresa, HistoricoEstoque, Usuario} from "@prisma/client";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {authOptions} from "@/app/AuthOptions";
 
 export type UsuarioComEmpresa = Usuario & { empresa: Empresa }
+export type UsuarioComEmpresaEstoque = Usuario & { empresa: Empresa } & {historicos: HistoricoEstoque[]}
 
-export const pegaTodosUsuarios = async (): Promise<UsuarioComEmpresa[]> => {
+export const pegaTodosUsuarios = async (): Promise<UsuarioComEmpresaEstoque[]> => {
     return db.usuario.findMany({
-        include: {empresa: true}
+        include: {empresa: true, historicos: true}
     });
 }
 
@@ -29,7 +30,6 @@ export const pegaUsuario = async (): Promise<UsuarioComEmpresa | null> => {
 export const alterarSenha = async (novaSenha: string): Promise<void> => {
     const session = await getServerSession(authOptions)
 
-    console.log(session?.user)
     if (!session?.user?.email) return;
 
     const id = session.user.id;
@@ -63,6 +63,33 @@ export const deletarUsuario = async (idUsuario: string): Promise<void> => {
 
     revalidatePath(paths.configuracoesUsuario());
 }
+
+export const desativarUsuario = async (idUsuario: string): Promise<void> => {
+    await db.usuario.update(
+        {
+            where: {id: idUsuario},
+            data: {
+                inativado: true
+            }
+        },
+    );
+
+    revalidatePath(paths.configuracoesUsuario());
+}
+
+export const reativarUsuario = async (idUsuario: string): Promise<void> => {
+    await db.usuario.update(
+        {
+            where: {id: idUsuario},
+            data: {
+                inativado: false
+            }
+        },
+    );
+
+    revalidatePath(paths.configuracoesUsuario());
+}
+
 
 
 

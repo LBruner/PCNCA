@@ -144,7 +144,6 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
                     </Chip>
                 );
             case "contato":
-                console.log(pessoa);
                 return (
                     <div className="flex flex-col">
                         <p className="text-bold text-small ">{formatPhoneNumber(pessoa?.telefones[0]?.numero)}</p>

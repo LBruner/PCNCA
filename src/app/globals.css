@@ -4,10 +4,10 @@
 
 @layer base{
     html {
-        @apply h-screen  bg-slate-50 dark:bg-customDarkBg;/* Ensure html takes full viewport height */
+        @apply h-screen bg-slate-50 dark:bg-customDarkBg;/* Ensure html takes full viewport height */
     }
     body{
-        @apply bg-slate-50 dark:bg-customDarkBg
+        @apply bg-slate-50 dark:bg-customDarkBg;
     }
 }
 

@@ -36,6 +36,7 @@ const CriarVendaItemProduto: React.FC<CriarVendaItemProduto> = (props) => {
                         value={produto.quantity.toString()}
                         className="w-16"
                         min="1"
+                        errorMessage={'Quantidade Inválida'}
                         max={produto.estoque.quantidade}
                     />
                     <p>x</p>

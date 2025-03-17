@@ -9,7 +9,6 @@ interface RegisterFormSelectProps {
 }
 
 const RegisterFormSelect: React.FC<{selectProps: SelectProps & RegisterFormSelectProps}> = (props) => {
-    console.log(props.selectProps.collection)
     return (
         <div className={'h-full w-full'}>
             <Select

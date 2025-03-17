@@ -21,12 +21,13 @@ import {getFilteredItems, getSortedProduto} from "@/helpers/tabela";
 import Link from "next/link";
 import paths from "@/paths";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
-import {deletarProduto} from "@/actions/produto";
+import {ativaProduto, deletarProduto, desativaProduto} from "@/actions/produto";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import TabelaEstoquesTopContent from "@/components/estoque/tabela/TabelaEstoqueTopContent";
 import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
 import {priceOptions, stockOptions} from "@/models/estoque/filters";
 import {formatToBrazilianCurrency} from "@/helpers";
+import {RiInboxArchiveLine, RiInboxUnarchiveLine} from "react-icons/ri";
 
 const columns = [
     {name: "PRODUTO", uid: "nome", sortable: true},
@@ -57,7 +58,9 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
     });
     const [isShowingToast, setIsShowingToast] = useState<boolean>(false);
 
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const deleteProductModal = useDisclosure();
+    const disableProductModal = useDisclosure();
+    const enableProductModal = useDisclosure();
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
 
     const rowsPerPage = 6;
@@ -185,23 +188,58 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                                 <Link href={paths.editProduto(product.id.toString())}><EditIcon/></Link>
                             </span>
                         </Tooltip>
-                        <Tooltip isDisabled={!product.estoque.ativo} color="danger" content="Deletar Produto">
-                            <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                                <DeleteIcon className={`${!product.estoque.ativo ? 'opacity-25 text-gray-300' : ''}`}
+                        <Tooltip  color="danger" content="Deletar Produto">
+                            <span className="text-lg text-danger cursor-pointer active:opacity-70">
+                                <DeleteIcon className={`${product.estoque.foiUtilizado ? ' text-gray-300' : ''}`}
                                             onClick={() => {
-                                                if (!product.estoque.ativo) return;
+                                                if (product.estoque.foiUtilizado) {
+                                                    if (!isShowingToast) {
+                                                        addToast({
+                                                            color: 'danger',
+                                                            title: "Ação não permitida",
+                                                            description: "Esse estoque foi utilizada em outras operações e não pode ser excluído.",
+                                                            timeout: 5000,
+                                                            onClose: () => setIsShowingToast(false),
+                                                        });
+                                                        setSelectedKeys(new Set())
+                                                        setIsShowingToast(true);
+                                                    }
+                                                    return;
+                                                }
                                                 setSelectedKeys(new Set())
                                                 setSelectedProductId(product.id);
-                                                onOpen();
+                                                deleteProductModal.onOpen();
                                             }}/>
                             </span>
                         </Tooltip>
+                        {product.estoque.ativo ?  <Tooltip className={'bg-orange-300 text-white'} content="Inativar Produto">
+                            <span className="text-lg text-warning cursor-pointer">
+                                <RiInboxArchiveLine
+                                    onClick={() => {
+                                        setSelectedKeys(new Set())
+                                        setSelectedProductId(product.id);
+                                        disableProductModal.onOpen();
+                                    }}/>
+                            </span>
+                        </Tooltip> :
+                            <Tooltip className={'bg-green-600 text-white'} content="Ativar Produto">
+                            <span className="text-lg text-green-600 cursor-pointer">
+                                <RiInboxUnarchiveLine
+                                    onClick={() => {
+                                        setSelectedKeys(new Set())
+                                        setSelectedProductId(product.id);
+                                        enableProductModal.onOpen();
+                                    }}/>
+                            </span>
+                            </Tooltip>
+                        }
+
                     </div>
                 );
             default:
                 return <h1>Implementar</h1>;
         }
-    }, [onOpen]);
+    }, [deleteProductModal, enableProductModal, disableProductModal]);
 
     const onSearchChange = React.useCallback((value: string | null) => {
         if (value) {
@@ -221,8 +259,8 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
         title: 'Excluir/Inativar Estoque',
         text: 'Tem certeza que deseja excluir este estoque? Caso ele tenha sido utilizado em vendas, ele será inativado..',
         actionFn: deletarProduto,
-        isOpen: isOpen,
-        onClose: onClose,
+        isOpen: deleteProductModal.isOpen,
+        onClose: deleteProductModal.onClose,
         onFail: () => {
             addToast({
                 color: 'success',
@@ -232,11 +270,28 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
             });
         }
     }
+    const itemDisableModalSettings: DeletingItemModalSettings = {
+        title: 'Inativar Estoque',
+        text: 'Tem certeza que deseja inativar esse estoque? Após inativação o estoque não poderá ser utilizado em novas vendas.',
+        actionFn: desativaProduto,
+        isOpen: disableProductModal.isOpen,
+        onClose: disableProductModal.onClose,
+    }
+
+    const itemEnableModalSettings: DeletingItemModalSettings = {
+        title: 'Reativar Estoque',
+        text: 'Tem certeza que deseja reativar este estoque? Após ativação o estoque voltará a poder ser utilizado em novas vendas.',
+        actionFn: ativaProduto,
+        isOpen: enableProductModal.isOpen,
+        onClose: enableProductModal.onClose,
+    }
 
 
     return (
         <div className={'w-11/12'}>
             <ItemDeleteModal itemId={selectedProductId} settings={itemDeleteModalSettings}/>
+            <ItemDeleteModal itemId={selectedProductId} settings={itemEnableModalSettings}/>
+            <ItemDeleteModal itemId={selectedProductId} settings={itemDisableModalSettings}/>
             <div className={'bg-white dark:bg-customDarkFooter rounded-md p-4 mb-4 shadow-md'}>
                 <TabelaEstoquesTopContent
                     products={products}
@@ -270,6 +325,11 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                 onSelectionChange={(keys) => {
                     const keysSet = new Set(keys); // Convert Selection to Set
                     const lastSelectedKey = Array.from(keysSet).pop(); // Get the last selected key
+
+                    if(lastSelectedKey == null){
+                        setSelectedKeys(new Set());
+                        return;
+                    }
 
                     const product = products.find((item) => item.id === parseInt(lastSelectedKey!.toString()!));
 

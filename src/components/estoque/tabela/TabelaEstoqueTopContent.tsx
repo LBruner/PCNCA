@@ -60,6 +60,7 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
     const router = useRouter();
 
     const handleNewSale = () => {
+        if(selectedItems.length === 0) return;
         if (typeof window !== "undefined") {
             localStorage.removeItem('selectedItems');
             localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
@@ -181,7 +182,6 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
                                 Adicionar Estoque
                             </Button>
                         </Link>
-
                         <Dropdown shouldBlockScroll={false} className={'w-56'}>
                             <DropdownTrigger className={'w-56'}>
                                 <Button variant="bordered">{<PiPrinterFill size={20}/>} Exportar Dados</Button>

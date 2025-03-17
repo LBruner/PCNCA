@@ -2,16 +2,27 @@
 import {db} from "@/db";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
-import {Cultura} from "@prisma/client";
+import {Cultura, Noticia} from "@prisma/client";
 
-export const pegaTodasCulturas = async (): Promise<Cultura[]> => {
-    return db.cultura.findMany();
+export const pegaTodasCulturas = async (): Promise<CulturaComNoticia[]> => {
+    return db.cultura.findMany(
+        {
+            include: {
+                noticias: true
+            }
+        }
+    );
 }
 
-export const pegaCulturaPorId = async (id: number): Promise<Cultura | null> => {
+export type CulturaComNoticia = Cultura & { noticias: Noticia[] };
+
+export const pegaCulturaPorId = async (id: number): Promise<CulturaComNoticia | null> => {
     return db.cultura.findUnique({
         where: {
             culturaId: id
+        },
+        include: {
+            noticias: true
         }
     })
 }

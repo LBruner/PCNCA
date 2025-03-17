@@ -18,7 +18,6 @@ const getBreadcumbs = (fromPage: string) => {
         return [];
     }
     const fromPageUrl = fromPage.split('/');
-    console.log(fromPageUrl)
     if (fromPageUrl[0] === 'culturas') {
         return [
             {title: 'Todas Notícias', href: paths.noticias()},

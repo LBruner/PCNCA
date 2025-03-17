@@ -20,7 +20,7 @@ const page: React.FC = async _ => {
 
 
     return (
-        <div className={'ml-64 mt-12 flex justify-center'}>
+        <div className={'ml-64 mt-12 flex justify-center h-screen'}>
             <TabelaUsuarios usuarios={usuarios} empresasFilterCollection={empresasFilterCollection}/>
         </div>
     )

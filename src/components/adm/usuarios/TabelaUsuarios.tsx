@@ -17,12 +17,12 @@ import {Chip} from "@heroui/chip";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getSortedUsuario} from "@/helpers/tabela";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
-import {deletarUsuario, resetarSenha, UsuarioComEmpresa} from "@/actions/usuarios";
+import {desativarUsuario, reativarUsuario, resetarSenha, UsuarioComEmpresaEstoque} from "@/actions/usuarios";
 import TabelaUsuarioTopContent from "@/components/adm/usuarios/TabelaUsuarioTopContent";
 import {GrCheckbox, GrCheckboxSelected} from "react-icons/gr";
 import {RiLockPasswordLine, RiUserFollowLine} from "react-icons/ri";
-import {LuUserMinus} from "react-icons/lu";
 import {FilterCollection} from "@/models/shared/FilterCollection";
+import {LuUserMinus, LuUserRoundX} from "react-icons/lu";
 
 const columns = [
     {name: "USUARIO", uid: "usuario", sortable: true},
@@ -34,7 +34,7 @@ const columns = [
 ];
 
 interface TabelaUsuariosProps {
-    usuarios: UsuarioComEmpresa[],
+    usuarios: UsuarioComEmpresaEstoque[],
     empresasFilterCollection: FilterCollection[],
 }
 
@@ -49,6 +49,8 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
 
     const resetPasswordModal = useDisclosure();
     const deleteUserModal = useDisclosure();
+    const disableUserModal = useDisclosure();
+    const enableUserModal = useDisclosure();
 
     const [selectedUsuario, setSelectedUsuario] = useState<string | null>(null);
 
@@ -90,7 +92,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
         return getSortedUsuario(items, sortDescriptor)
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((usuario: UsuarioComEmpresa, columnKey: string) => {
+    const renderCell = React.useCallback((usuario: UsuarioComEmpresaEstoque, columnKey: string) => {
         switch (columnKey) {
             case "usuario":
                 return (
@@ -129,31 +131,40 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
             case "actions":
                 return (
                     <div className="relative flex items-center justify-center gap-2">
-                        <Tooltip content="Trocar Senha">
+                        {!usuario.alterarSenha && <Tooltip content="Trocar Senha">
                           <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                             <RiLockPasswordLine onClick={() => {
                                 setSelectedUsuario(usuario.id);
                                 resetPasswordModal.onOpen();
                             }}/>
                           </span>
-                        </Tooltip>
-                        {usuario.inativado ? <Tooltip color="success" content="Reativar Usuário">
+                        </Tooltip>}
+                        {!usuario.admin && usuario.historicos.length == 0 &&
+                            <Tooltip color="danger" content="Deletar Usuário">
+                          <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                            <LuUserRoundX  onClick={() => {
+                                setSelectedUsuario(usuario.id);
+                                deleteUserModal.onOpen();
+                            }}/>
+                          </span>
+                            </Tooltip>
+                        }
+                        {!usuario.admin && usuario.historicos.length > 0 && !usuario.inativado && <Tooltip color="warning" content="Inativar Usuário">
+                          <span className="text-lg text-warning cursor-pointer active:opacity-50">
+                            <LuUserMinus onClick={() => {
+                                setSelectedUsuario(usuario.id);
+                                disableUserModal.onOpen();
+                            }}/>
+                          </span>
+                        </Tooltip>}
+                        {!usuario.admin && usuario.inativado && <Tooltip color="success" content="Reativar Usuário">
                           <span className="text-lg text-success cursor-pointer active:opacity-50">
                             <RiUserFollowLine onClick={() => {
                                 setSelectedUsuario(usuario.id);
-                                deleteUserModal.onOpen();
+                                enableUserModal.onOpen();
                             }}/>
                           </span>
-                        </Tooltip> : <Tooltip color="danger" content="Deletar Usuário">
-                          <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                            <LuUserMinus onClick={() => {
-                                setSelectedUsuario(usuario.id);
-                                deleteUserModal.onOpen();
-                            }}/>
-                          </span>
-                        </Tooltip>
-                        }
-
+                        </Tooltip>}
                     </div>
                 );
             default:
@@ -185,10 +196,30 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
     }
 
     const itemDesativarUsuarioModalSettings: DeletingItemModalSettings = {
-        title: 'Excluir Usuário',
-        text: 'Ele estará incapacitado de fazer login através de seu usuário',
+        title: 'Inativar Usuário',
+        text: 'Ele estará incapacitado de fazer vendas ou adicionar produtos ao estoque.',
         actionFn: async () => {
-            await deletarUsuario(selectedUsuario!)
+            await desativarUsuario(selectedUsuario!)
+        },
+        isOpen: disableUserModal.isOpen,
+        onClose: disableUserModal.onClose,
+    }
+
+    const itemAtivarUsuarioModalSettings: DeletingItemModalSettings = {
+        title: 'Reativar Usuário',
+        text: 'Ele voltará a poder realizar vendas e adicionar produtos ao estoque.',
+        actionFn: async () => {
+            await reativarUsuario(selectedUsuario!)
+        },
+        isOpen: enableUserModal.isOpen,
+        onClose: enableUserModal.onClose,
+    }
+
+    const itemDeleteUsuarioModalSettings: DeletingItemModalSettings = {
+        title: 'Deletar Usuário',
+        text: 'Essa ação não pode ser revertida',
+        actionFn: async () => {
+            await desativarUsuario(selectedUsuario!)
         },
         isOpen: deleteUserModal.isOpen,
         onClose: deleteUserModal.onClose,
@@ -198,6 +229,8 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
         <div className={'w-11/12'}>
             <ItemDeleteModal itemId={selectedUsuario} settings={itemDesativarUsuarioModalSettings}/>
             <ItemDeleteModal itemId={selectedUsuario} settings={resetPasswordModalSettings}/>
+            <ItemDeleteModal itemId={selectedUsuario} settings={itemDeleteUsuarioModalSettings}/>
+            <ItemDeleteModal itemId={selectedUsuario} settings={itemAtivarUsuarioModalSettings}/>
             <div className={'bg-white dark:bg-customDarkFooter rounded-md p-4 mb-4 shadow-md'}>
                 <TabelaUsuarioTopContent
                     products={usuarios}
@@ -240,8 +273,8 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
                     )}
                 </TableHeader>
                 <TableBody className={'h-auto'} emptyContent={"Nenhum usuário disponível"}
-                           items={sortedItems as UsuarioComEmpresa[]}>
-                    {(usuario: UsuarioComEmpresa) => (
+                           items={sortedItems as UsuarioComEmpresaEstoque[]}>
+                    {(usuario: UsuarioComEmpresaEstoque) => (
                         <TableRow key={usuario.id}>
                             {
                                 columns.map((column) => (

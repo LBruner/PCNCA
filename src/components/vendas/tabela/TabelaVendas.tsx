@@ -113,10 +113,6 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
                     </Chip>
                 );
             case "produtos":
-
-                if(venda[0].venda.estoques.length == 0){
-                    console.log(venda)
-                }
                 return (
                     <div className="flex gap-4 flex-col">
                         {venda[0].venda.estoques.map((estoque) => (

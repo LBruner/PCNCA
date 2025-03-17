@@ -1,7 +1,8 @@
 'use client';
 
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
+    addToast,
     Image,
     SortDescriptor,
     Table,
@@ -13,7 +14,6 @@ import {
     Tooltip,
     useDisclosure,
 } from "@heroui/react";
-import type {Cultura} from '@prisma/client';
 import {DeleteIcon, EditIcon, EyeIcon} from "@heroui/shared-icons";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getSortedCategoria} from "@/helpers/tabela";
@@ -22,7 +22,7 @@ import CustomModal from "@/components/UI/CustomModal";
 import CulturaCard from "@/components/noticias/culturas/cultura-card";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
 import AdmCreateCategoryModal, {CreateItemModalSettings} from "@/components/adm/categorias/adm-create-category-modal";
-import {deletarCultura} from "@/actions/culturas";
+import {CulturaComNoticia, deletarCultura} from "@/actions/culturas";
 
 const columns = [
     {name: "ID", uid: "id", sortable: true},
@@ -34,12 +34,12 @@ const columns = [
 ];
 
 interface AdmCategoriasTable {
-    culturas: Cultura[]
+    culturas: CulturaComNoticia[]
 }
 
 const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
     const [filterValue, setFilterValue] = React.useState("");
-    const [selectedCultura, setSelectedCultura] = React.useState<Cultura | null>();
+    const [selectedCultura, setSelectedCultura] = React.useState<CulturaComNoticia | null>();
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
         column: "id",
         direction: "ascending",
@@ -50,7 +50,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
     const editModal = useDisclosure();
     const deleteModal = useDisclosure();
 
-    const rowsPerPage = 7;
+    const rowsPerPage = 6;
 
     const [currentPage, setCurrentPage] = React.useState(1);
 
@@ -67,6 +67,16 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
         return filteredProducts;
     }, [culturas, filterValue, hasSearchFilter]);
 
+    const [isShowingToast, setIsShowingToast] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (isShowingToast) {
+            setTimeout(() => {
+                setIsShowingToast(false)
+            }, 5000)
+        }
+    }, [isShowingToast]);
+
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
     const items = React.useMemo(() => {
@@ -80,7 +90,9 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
         return getSortedCategoria(items, sortDescriptor)
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((categoria: Cultura, columnKey: string) => {
+    const renderCell = React.useCallback((categoria: CulturaComNoticia, columnKey: string) => {
+        const podeExcluir = categoria.noticias == null || categoria.noticias?.length == 0;
+
         switch (columnKey) {
             case "id":
                 return (
@@ -134,13 +146,29 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
                               }}/>
                           </span>
                         </Tooltip>
-                        <Tooltip color="danger" content="Excluir Categoria">
-                          <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                            <DeleteIcon onClick={() => {
-                                setSelectedCultura(categoria);
-                                deleteModal.onOpen();
-                            }}/>
-                          </span>
+                        <Tooltip isDisabled={!podeExcluir} color="danger" content="Excluir Cultura">
+                        <span className="text-lg text-danger cursor-pointer active:opacity-75">
+                                <DeleteIcon
+                                    className={`${!podeExcluir ? 'opacity-50 text-gray-500' : ''}`}
+                                    onClick={() => {
+                                        if (!podeExcluir) {
+                                            if (!isShowingToast) {
+                                                addToast({
+                                                    color: 'danger',
+                                                    title: "Ação não permitida",
+                                                    description: "Essa cultura foi utilizada em notícias e não pode ser excluída.",
+                                                    timeout: 5000,
+                                                    onClose: () => setIsShowingToast(false),
+                                                });
+                                                setIsShowingToast(true);
+                                            }
+                                            return;
+                                        }
+
+                                        setSelectedCultura(categoria);
+                                        deleteModal.onOpen();
+                                    }}/>
+                            </span>
                         </Tooltip>
                     </div>
                 );
@@ -165,8 +193,8 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
     }, [])
 
     const itemDeleteModalSettings: DeletingItemModalSettings = {
-        title: 'Excluir Categoria',
-        text: `Tem certeza que deseja excluir a categoria: ${selectedCultura?.nome}? Essa ação não pode ser desfeita...`,
+        title: 'Excluir Cultura',
+        text: `Tem certeza que deseja excluir a cultura: ${selectedCultura?.nome}? Essa ação não pode ser desfeita...`,
         actionFn: deletarCultura.bind(null, selectedCultura?.culturaId ?? 0),
         isOpen: deleteModal.isOpen,
         onClose: deleteModal.onClose,
@@ -208,15 +236,19 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
             />
             <AdmCreateCategoryModal settings={itemCreateModalSettings}/>
             <AdmCreateCategoryModal settings={itemEditModalSettings}/>
-            <Table
-                aria-label={' '}
-                isHeaderSticky={false}
-                topContent={<AdmCategoriasTableTopContent
+            <div className={'bg-white dark:bg-customDarkFooter rounded-md p-4 mb-4 shadow-md'}>
+
+                <AdmCategoriasTableTopContent
                     openCreateCategoryModal={createModal.onOpen}
                     filterValue={filterValue} onClear={onClear}
                     onSearchChange={onSearchChange}
                     hasSearchFilter={hasSearchFilter}
-                    itemsLenght={culturas.length}/>}
+                    itemsLenght={culturas.length}/>
+            </div>
+            <Table
+                className={'mt-4'}
+                aria-label={' '}
+                isHeaderSticky={false}
                 bottomContentPlacement="inside"
                 topContentPlacement={'inside'}
                 bottomContent={<TabelaEstoqueBottomContent
@@ -228,7 +260,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
                 classNames={{
-                    wrapper: "h-auto",
+                    wrapper: "min-h-[20rem] h-auto",
                 }}
             >
                 <TableHeader columns={columns}>
@@ -242,9 +274,9 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody className={'min-h-96 h-96 max-h-96'} emptyContent={"Nenhuma categoria encontrada"}
-                           items={sortedItems as Cultura[]}>
-                    {(cultura: Cultura) => (
+                <TableBody className={'h-auto'} emptyContent={"Nenhuma categoria encontrada"}
+                           items={sortedItems as CulturaComNoticia[]}>
+                    {(cultura: CulturaComNoticia) => (
                         <TableRow key={cultura.culturaId}>
                             {
                                 columns.map((column) => (

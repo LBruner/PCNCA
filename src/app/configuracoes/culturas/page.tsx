@@ -3,6 +3,7 @@ import AdmCategoriasTable from "@/components/adm/categorias/adm-categorias-table
 import {pegaTodasCulturas} from "@/actions/culturas";
 import NoItemsFallback from "@/components/shared/no-items-fallback";
 import {noCulturesFallbackData} from "@/constants/messages/noticias/culturas";
+import {ToastProvider} from "@heroui/toast";
 
 const AdmCategoriasPage: React.FC = async _ => {
     const culturas = await pegaTodasCulturas();
@@ -16,7 +17,8 @@ const AdmCategoriasPage: React.FC = async _ => {
     }
 
     return (
-        <div className={'flex justify-center dark:bg-customDarkFooter bg-slate-50'}>
+        <div className={'flex justify-center h-screen'}>
+            <ToastProvider placement={'top-right'} maxVisibleToasts={1} toastOffset={80}/>
             {renderingContent}
         </div>
     )

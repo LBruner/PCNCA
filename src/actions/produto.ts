@@ -347,3 +347,51 @@ export async function deletarProduto(historicoEstoqueId: number) {
     revalidatePath(paths.estoque());
     return true;
 }
+
+export async function desativaProduto(historicoEstoqueId: number): Promise<void> {
+    const historicoEstoque = await db.historicoEstoque.findUnique({
+        where: {
+            id: historicoEstoqueId
+        },
+        include: {
+            estoque: true
+        }
+    });
+    if (!historicoEstoque) return;
+    console.log(historicoEstoque)
+
+    await db.estoque.updateMany({
+        where: {
+            id: historicoEstoque.estoqueId,
+        },
+        data: {
+            ativo: false
+        }
+    });
+
+    revalidatePath(paths.estoque());
+}
+
+export async function ativaProduto(historicoEstoqueId: number): Promise<void> {
+    const historicoEstoque = await db.historicoEstoque.findUnique({
+        where: {
+            id: historicoEstoqueId
+        },
+        include: {
+            estoque: true
+        }
+    });
+
+    if (!historicoEstoque) return;
+
+    await db.estoque.updateMany({
+        where: {
+            id: historicoEstoque.estoqueId,
+        },
+        data: {
+            ativo: true
+        }
+    });
+
+    revalidatePath(paths.estoque());
+}
