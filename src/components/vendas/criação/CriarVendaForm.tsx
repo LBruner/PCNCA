@@ -6,7 +6,6 @@ import {Accordion, AccordionItem, Divider, Spinner} from "@heroui/react";
 import CriarVendaSeletorProdutos from "@/components/vendas/criação/CriarVendaSeletorProdutos";
 import {ProdutosSelecionados} from "@/app/vendas/criar/page";
 import {CategoriaPessoaComEmpresa} from "@/actions/clientes";
-import {FormaPagamento} from "@prisma/client";
 import {BsChevronLeft} from "react-icons/bs";
 import CriarVendaCheckout from "@/components/vendas/criação/CriarVendaCheckout";
 import {criarVenda} from "@/actions/vendas";
@@ -16,21 +15,18 @@ import paths from "@/paths";
 
 interface CriarVendaFormProps {
     clientes: CategoriaPessoaComEmpresa[];
-    formasPagamento: FormaPagamento[];
 }
 
 export interface VendaComDados {
     vendas: ProdutosSelecionados[],
     clienteId: number;
-    formaPagamento: number;
 }
 
 
-const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes, formasPagamento}) => {
+const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes}) => {
     const [selectedProducts, setSelectedProducts] = useState<ProdutosSelecionados[]>([]);
     const [selectedKeys, setSelectedKeys] = React.useState(new Set(["1"]));
     const [selectedClienteId, setSelectedClienteId] = useState(new Set<number>([]));
-    const [selectedFormaPagamento, setSelectedFormaPagamento] = useState(new Set<number>([]));
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const router = useRouter();
@@ -78,7 +74,6 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes, formasPagament
             {
                 vendas: selectedProducts,
                 clienteId: parseInt(selectedClienteId as unknown as string),
-                formaPagamento: Array.from(selectedFormaPagamento)[0]
             }
         );
 
@@ -132,8 +127,7 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes, formasPagament
                     >
                         <Divider/>
                         <CriarVendaCheckout clienteSelecionadoId={selectedClienteId}
-                                            selectedFormaPagamento={selectedFormaPagamento} setSelectedClienteId={setSelectedClienteId}
-                                            formasPagamento={formasPagamento} setSelectedFormaPagamento={setSelectedFormaPagamento} clientes={clientes}
+                                            setSelectedClienteId={setSelectedClienteId} clientes={clientes}
                                             onFinalizaVenda={onFinalizaVenda}/>
                     </AccordionItem>
                 </Accordion>

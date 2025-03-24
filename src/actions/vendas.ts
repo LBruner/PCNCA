@@ -104,22 +104,6 @@ export async function criarVenda(vendas: VendaComDados): Promise<void> {
         }
     });
 
-    await db.vendaFormaPagamento.create({
-        data: {
-            venda: {
-                connect: {
-                    id: novaVenda.id
-                }
-            },
-            formaPagamento: {
-                connect: {
-                    id: vendas.formaPagamento
-                }
-            }
-        },
-
-    })
-
     await db.vendaPessoa.create({
         data: {
             venda: {
