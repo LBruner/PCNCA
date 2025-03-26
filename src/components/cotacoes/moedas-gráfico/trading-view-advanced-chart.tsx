@@ -13,6 +13,7 @@ interface TradingViewChartWidgetProps {
     allowSymbolChange?: boolean;
     calendar?: boolean;
     supportHost?: string;
+    showSymbol?: boolean;
 }
 
 const TradingViewAdvancedChartWidget: React.FC<TradingViewChartWidgetProps> = (
@@ -25,6 +26,7 @@ const TradingViewAdvancedChartWidget: React.FC<TradingViewChartWidgetProps> = (
         withDateRanges = true,
         allowSymbolChange = false,
         calendar = false,
+        showSymbol = false,
         supportHost = 'https://www.tradingview.com',
     }) => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -47,11 +49,13 @@ const TradingViewAdvancedChartWidget: React.FC<TradingViewChartWidgetProps> = (
                 style,
                 locale,
                 withDateRanges,
+                gridColor: "rgba(242, 242, 242, 0)",
                 allowSymbolChange,
                 calendar,
                 supportHost,
                 hide_top_toolbar: true,
                 hide_volume: true,
+                hide_legend: !showSymbol
             });
 
             containerRef.current.appendChild(script);
