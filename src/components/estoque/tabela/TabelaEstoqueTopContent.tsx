@@ -131,7 +131,6 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
             produto?.estoque?.categoriaId?.nome || "",
             `${produto?.estoque?.tipo === 'A' ? 'Agrícola' : 'Pecuária'}` || "",
             formatarData(produto?.dataAlter) || "",
-            formatarData(produto?.dataAlter) || formatarData(new Date()),
             formatToBrazilianCurrency(produto?.estoque?.preco) || "",
             `${produto?.estoque?.quantidade} UN` || "",
         ]);
