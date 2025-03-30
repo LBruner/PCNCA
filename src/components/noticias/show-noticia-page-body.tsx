@@ -6,6 +6,8 @@ import ShortNoticiaCardDetailedBottom
 import paths from "@/paths";
 import CustomBreadcumbs from "@/components/custom-breadcumbs";
 import {Noticia} from "@prisma/client";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 interface ShowNoticiaPageBodyProps {
     content: string;
@@ -50,17 +52,31 @@ const ShowNoticiaPageBody: React.FC<ShowNoticiaPageBodyProps> = ({content, notic
             <div className={'flex justify-center flex-col items-center'}>
                 <div className={'w-2/3'}>
                     <div className={'prose prose-full'}>
-                        <ReactMarkdown components={{
-                            img: ({node, ...props}) => (
-                                <img {...props} className="mx-auto my-4" alt={props.alt}/>
-                            ),
-                            h1: ({node, ...props}) => (
-                                <h1 {...props} className={'dark:text-green-600 text-green-700'}></h1>
-                            ),
-                            strong: ({node, ...props}) => (
-                                <strong {...props} className={'dark:text-white'}></strong>
-                            ),
-                        }} className="markdown-body text-xl dark:text-white">
+                        <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            rehypePlugins={[rehypeRaw]}
+                            components={{
+                                img: ({node, ...props}) => (
+                                    <img {...props} className="mx-auto my-4" alt={props.alt}/>
+                                ),
+                                h1: ({node, children, ...props}) => (
+                                    <h1 className="dark:text-green-600 text-green-700" {...props}>
+                                        {children}
+                                    </h1>
+                                ),
+                                strong: ({node, children, ...props}) => (
+                                    <strong className="dark:text-white" {...props}>
+                                        {children}
+                                    </strong>
+                                ),
+                                u: ({node, children, ...props}) => (
+                                    <u className="dark:text-white" {...props}>
+                                        {children}
+                                    </u>
+                                ),
+                            }}
+                            className="markdown-body text-xl dark:text-white"
+                        >
                             {content}
                         </ReactMarkdown>
                     </div>
