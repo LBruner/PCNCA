@@ -3,7 +3,6 @@ import {Divider, Input} from "@heroui/react";
 import {SearchIcon} from "@heroui/shared-icons";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import {UsuarioComEmpresa} from "@/actions/usuarios";
-import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
 
 interface TabelaUsuarioTopContentProps {
     empresasFilterCollection: FilterCollection[]
@@ -28,15 +27,10 @@ const TabelaUsuarioTopContent: React.FC<TabelaUsuarioTopContentProps> = (
         onClear,
     }
 ) => {
-    const size = 'w-full';
-
-    const imprimirExcel = ()=>{
-
-    }
 
     return (React.useMemo(() => {
         return (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 pb-4">
                 <div className="flex justify-between gap-2">
                     <div className={'flex gap-1 w-full'}>
                         <Input
@@ -50,12 +44,12 @@ const TabelaUsuarioTopContent: React.FC<TabelaUsuarioTopContentProps> = (
                             onValueChange={onSearchChange}
                         />
                     </div>
-                    <div className="flex gap-1 ">
-                        <TopContentDropDown collection={empresasFilterCollection} label={''} width={size}
-                                            filterStatus={empresaFilter} setFilterStatus={setEmpresaFilter}
-                                            allSelectedLabel={'Todas empresas'}
-                                            multipleSelectedLabel={'Várias empresas'}/>
-                    </div>
+                    {/*<div className="flex gap-1 ">*/}
+                    {/*    <TopContentDropDown collection={empresasFilterCollection} label={''} width={size}*/}
+                    {/*                        filterStatus={empresaFilter} setFilterStatus={setEmpresaFilter}*/}
+                    {/*                        allSelectedLabel={'Todas empresas'}*/}
+                    {/*                        multipleSelectedLabel={'Várias empresas'}/>*/}
+                    {/*</div>*/}
                 </div>
                 <Divider/>
             </div>

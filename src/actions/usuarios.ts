@@ -11,7 +11,20 @@ export type UsuarioComEmpresa = Usuario & { empresa: Empresa }
 export type UsuarioComEmpresaEstoque = Usuario & { empresa: Empresa } & {historicos: HistoricoEstoque[]}
 
 export const pegaTodosUsuarios = async (): Promise<UsuarioComEmpresaEstoque[]> => {
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.email) return [];
+
+    const usuarioLogado = await db.usuario.findFirst({
+        where: {email: session.user.email},
+    });
+
     return db.usuario.findMany({
+        where: {
+            empresaId: usuarioLogado?.empresaId,
+            id: {
+                not: usuarioLogado?.id
+            }
+        },
         include: {empresa: true, historicos: true}
     });
 }
