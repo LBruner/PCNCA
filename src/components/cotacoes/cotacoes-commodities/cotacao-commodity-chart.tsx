@@ -34,7 +34,7 @@ const CotacaoCommodityChart: React.FC<CotacaoCommodityChartProps> = ({selectedCo
     }
 
     return (
-        <div className="h-[320px] dark:invert my-4" ref={containerRef} style={{width: "100%"}}>
+        <div className="h-[320px] dark:invert my-4" ref={containerRef} style={{width: "103%"}}>
             <LineChart
                 loading={isLoading}
                 colors={["#4a946f"]}
@@ -45,7 +45,7 @@ const CotacaoCommodityChart: React.FC<CotacaoCommodityChartProps> = ({selectedCo
                         hidden: true,
                     },
                 }}
-                margin={{left: 70, right: 60, top: 20, bottom: 40}}
+                margin={{left: 73, right: 60, top: 20, bottom: 40}}
                 yAxis={[
                     {
                         tickLabelStyle: {fontSize: 15},

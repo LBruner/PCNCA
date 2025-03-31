@@ -13,7 +13,7 @@ export type CotacoesComCommodities = ComercioCommoditiesVariacaoPreco & {
 export const pegaCotacoes = async (): Promise<CotacoesComCommodities[]> => {
     const commodities = await db.comercioCommoditiesVariacaoPreco.findMany({
         orderBy: {
-            valor: 'asc',
+            data: 'asc',
         },
         include: {
             commodity: true,
@@ -64,7 +64,7 @@ export const pegaHistoricoPrecoCommodities = async (filter?: string): Promise<Li
             }
         },
         orderBy: {
-            valor: 'asc',
+            data: 'asc',
         },
         include: {
             commodity: true,
