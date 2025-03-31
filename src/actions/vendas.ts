@@ -34,6 +34,7 @@ export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
             comprador: false,
         },
         include: {
+            estoque: true, // Include the estoque directly to maintain proper association
             venda: {
                 include: {
                     estoques: {
@@ -56,7 +57,7 @@ export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
         },
     });
 
-    // Group sales by `vendaId`
+    // Group sales by `vendaId` while preserving product information
     const vendasAgrupadas = vendas.reduce((acc, venda) => {
         const vendaId = venda.vendaId;
 
@@ -64,7 +65,12 @@ export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
             acc[vendaId] = [];
         }
 
-        acc[vendaId].push(venda);
+        // Make sure estoque information is correctly associated with each record
+        acc[vendaId].push({
+            ...venda,
+            estoque: venda.estoque, // Ensure the correct product is associated
+        });
+
         return acc;
     }, {} as { [key: string]: typeof vendas });
 

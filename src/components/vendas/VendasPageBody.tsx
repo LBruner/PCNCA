@@ -112,21 +112,25 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
 
         vendas.forEach((vendaGroup) => {
             const firstItem = vendaGroup[0];
-            const { pessoas, dataVenda } = firstItem.venda;
+            const { pessoas, dataVenda, estoques } = firstItem.venda;
 
-            // Match each estoque with its corresponding valorAlter
-            vendaGroup.forEach((item, index) => {
-                const estoque = item.venda.estoques[index];
-                if (!estoque) return; // Skip if no matching product
+            // Process each product from estoques
+            estoques.forEach((estoque) => {
+                // Find the matching HistoricoEstoque record for this product
+                const matchingItem = vendaGroup.find(
+                    (item) => item.estoqueId === estoque.estoque.id
+                );
+
+                if (!matchingItem) return; // Skip if no matching record found
 
                 worksheet.addRow([
                     pessoas[0].pessoa.pessoaFisica?.nome ||
                     pessoas[0].pessoa.pessoaJuridica?.razaoSocial,
-                    formatarData(item.dataAlter || dataVenda),
+                    formatarData(matchingItem.dataAlter || dataVenda),
                     estoque.estoque.produto || "",
-                    `${item.valorAlter} unidade(s)`,
+                    `${matchingItem.valorAlter} unidade(s)`,
                     formatToBrazilianCurrency(estoque.estoque.preco),
-                    formatToBrazilianCurrency(estoque.estoque.preco * item.valorAlter),
+                    formatToBrazilianCurrency(estoque.estoque.preco * matchingItem.valorAlter),
                 ]);
             });
         });
@@ -175,21 +179,25 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
 
         vendas.forEach((vendaGroup) => {
             const firstItem = vendaGroup[0];
-            const { pessoas, dataVenda } = firstItem.venda;
+            const { pessoas, dataVenda, estoques } = firstItem.venda;
 
-            // Match each estoque with its corresponding valorAlter
-            vendaGroup.forEach((item, index) => {
-                const estoque = item.venda.estoques[index];
-                if (!estoque) return;
+            // Process each product from estoques
+            estoques.forEach((estoque) => {
+                // Find the matching HistoricoEstoque record for this product
+                const matchingItem = vendaGroup.find(
+                    (item) => item.estoqueId === estoque.estoque.id
+                );
+
+                if (!matchingItem) return; // Skip if no matching record found
 
                 rows.push([
                     pessoas[0].pessoa.pessoaFisica?.nome ||
                     pessoas[0].pessoa.pessoaJuridica?.razaoSocial,
-                    formatarData(item.dataAlter || dataVenda),
+                    formatarData(matchingItem.dataAlter || dataVenda),
                     estoque.estoque.produto || "",
-                    `${item.valorAlter} unidade(s)`,
+                    `${matchingItem.valorAlter} unidade(s)`,
                     formatToBrazilianCurrency(estoque.estoque.preco),
-                    formatToBrazilianCurrency(estoque.estoque.preco * item.valorAlter)
+                    formatToBrazilianCurrency(estoque.estoque.preco * matchingItem.valorAlter)
                 ]);
             });
         });
@@ -198,7 +206,7 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
         autoTable(doc, {
             startY: 25,
             head: [headers],
-        // @ts-ignore
+            // @ts-ignore
             body: rows,
             theme: "striped",
             styles: {

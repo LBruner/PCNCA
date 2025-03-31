@@ -96,6 +96,8 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes}) => {
         )
     }
 
+    console.log(selectedProducts)
+
     return (
         <div className={'flex justify-center w-full'}>
             <div className={'w-4/6 flex flex-col'}>

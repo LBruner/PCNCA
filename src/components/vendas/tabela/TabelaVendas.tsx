@@ -129,7 +129,18 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
             case "quantidadeUnitaria":
                 return (
                     <div className="flex gap-4 flex-col">
-                        {venda.map((venda) => <p key={venda.id}>{venda.valorAlter} unidade(s)</p>)}
+                        {venda[0].venda.estoques.map((estoque) => {
+                            // Find the matching HistoricoEstoque record for this product
+                            const matchingHistorico = venda.find(
+                                (historico) => historico.estoqueId === estoque.estoque.id
+                            );
+
+                            return (
+                                <p key={estoque.id}>
+                                    {matchingHistorico ? matchingHistorico.valorAlter : 0} unidade(s)
+                                </p>
+                            );
+                        })}
                     </div>);
             case "quantidadeGeral":
                 return (
@@ -189,6 +200,5 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
         </div>
     );
 };
-
 
 export default TabelaVendas;
