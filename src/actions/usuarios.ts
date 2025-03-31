@@ -25,6 +25,9 @@ export const pegaTodosUsuarios = async (): Promise<UsuarioComEmpresaEstoque[]> =
                 not: usuarioLogado?.id
             }
         },
+        orderBy: {
+            nome: 'asc'
+        },
         include: {empresa: true, historicos: true}
     });
 }
