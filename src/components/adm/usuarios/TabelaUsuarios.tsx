@@ -17,7 +17,13 @@ import {Chip} from "@heroui/chip";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
 import {getSortedUsuario} from "@/helpers/tabela";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
-import {desativarUsuario, reativarUsuario, resetarSenha, UsuarioComEmpresaEstoque} from "@/actions/usuarios";
+import {
+    deletarUsuario,
+    desativarUsuario,
+    reativarUsuario,
+    resetarSenha,
+    UsuarioComEmpresaEstoque
+} from "@/actions/usuarios";
 import TabelaUsuarioTopContent from "@/components/adm/usuarios/TabelaUsuarioTopContent";
 import {GrCheckbox, GrCheckboxSelected} from "react-icons/gr";
 import {RiLockPasswordLine, RiUserFollowLine} from "react-icons/ri";
@@ -140,7 +146,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
                           </span>
                         </Tooltip>}
                         {!usuario.admin && usuario.historicos.length == 0 &&
-                            <Tooltip color="danger" content="Deletar Usuário">
+                            <Tooltip color="danger" content="Desativar Usuário">
                           <span className="text-lg text-danger cursor-pointer active:opacity-50">
                             <LuUserRoundX  onClick={() => {
                                 setSelectedUsuario(usuario.id);
@@ -219,7 +225,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
         title: 'Deletar Usuário',
         text: 'Essa ação não pode ser revertida',
         actionFn: async () => {
-            await desativarUsuario(selectedUsuario!)
+            await deletarUsuario(selectedUsuario!)
         },
         isOpen: deleteUserModal.isOpen,
         onClose: deleteUserModal.onClose,
