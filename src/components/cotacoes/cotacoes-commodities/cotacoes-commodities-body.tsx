@@ -79,9 +79,9 @@ const CotacoesCommoditiesBody: React.FC<CotacoesCommoditiesProps> = ({cotacoes})
                     <TradingViewMilho/>
                 </div>
                 <div
-                    className={`w-full hover:bg-gray-100 hover:pointer-events-auto ${selectedSymbol == 'KT1!' ? 'bg-gray-100' : ''}`}
+                    className={`w-full hover:bg-gray-100 hover:pointer-events-auto ${selectedSymbol == 'ZL1!' ? 'bg-gray-100' : ''}`}
                     onClick={() => {
-                        setSelectedSymbol('KT1!')
+                        setSelectedSymbol('ZL1!')
                     }}>
                     <TradingViewCafe/>
                 </div>

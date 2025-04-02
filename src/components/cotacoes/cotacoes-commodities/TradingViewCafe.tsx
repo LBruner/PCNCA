@@ -13,7 +13,7 @@ const TradingViewWidgetBoiGordo = () => {
 
         // Set the colorTheme based on the resolved theme
         script.innerHTML = JSON.stringify({
-            "symbol": "KT1!",
+            "symbol": "ICF1!",
             "width": "100%",
             "isTransparent": true,
             // "colorTheme": theme === 'dark' ? 'dark' : 'light',
