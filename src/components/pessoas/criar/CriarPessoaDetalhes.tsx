@@ -61,8 +61,16 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
     const formRef = useRef<HTMLFormElement>(null);
 
     // Function to validate a field based on its minLength
-    const validateField = (fieldName: string, value: string, minLength: number) => {
+    const validateNumberField = (fieldName: string, value: string, minLength: number) => {
         const isValid = value.replace(/\D/g, '').length >= minLength;
+        setValidationState((prevState) => ({
+            ...prevState,
+            [fieldName]: !isValid, // Set to true if invalid
+        }));
+    };
+
+    const validateField = (fieldName: string, value: string, minLength: number) => {
+        const isValid = value.trim().length >= minLength;
         setValidationState((prevState) => ({
             ...prevState,
             [fieldName]: !isValid, // Set to true if invalid
@@ -98,31 +106,31 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
     const handleCpfChange = (newValue: string) => {
         const formattedCPF = formatCPF(newValue);
         setCpf(formattedCPF);
-        validateField('cpf', formattedCPF, 14);
+        validateNumberField('cpf', formattedCPF, 14);
     };
 
     const handleRgChange = (newValue: string) => {
         const formattedRg = formatRG(newValue);
         setRg(formattedRg);
-        validateField('rg', formattedRg, 12);
+        validateNumberField('rg', formattedRg, 12);
     };
 
     const handleCepChange = (newValue: string) => {
         const formattedCep = formatCEP(newValue);
         setCep(formattedCep);
-        validateField('cep', formattedCep, 9);
+        validateNumberField('cep', formattedCep, 9);
     };
 
     const handleCnpjChange = (newValue: string) => {
         const formattedCnpj = formatCNPJ(newValue);
         setCnpj(formattedCnpj);
-        validateField('cnpj', formattedCnpj, 14);
+        validateNumberField('cnpj', formattedCnpj, 14);
     };
 
     const handleInscricaoEstadualChange = (newValue: string) => {
         const formattedInscricaoEstadual = formatInscricaoEstadual(newValue);
         setInscricaoEstadual(formattedInscricaoEstadual);
-        validateField('inscricaoEstadual', formattedInscricaoEstadual, 12);
+        validateNumberField('inscricaoEstadual', formattedInscricaoEstadual, 12);
     };
 
     const enderecoFields = (
@@ -136,7 +144,7 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
                     type={'text'}
                     onChange={(newValue) => {
                         handleCepChange(newValue);
-                        validateField('cep', newValue, 8);
+                        validateNumberField('cep', newValue, 8);
                     }}
                     isInvalid={validationState.cep}
                     icon={<CiLocationOn size={22} />}
@@ -259,7 +267,7 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
                     type={'text'}
                     onChange={(newValue) => {
                         handleCnpjChange(newValue);
-                        validateField('cnpj', newValue, 14);
+                        validateNumberField('cnpj', newValue, 14);
                     }}
                     isInvalid={validationState.cnpj}
                     icon={<AiOutlineIdcard size={22} />}
@@ -319,7 +327,7 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
                     value={cpf != null ? cpf.toString() : ''}
                     onChange={(newValue) => {
                         handleCpfChange(newValue);
-                        validateField('cpf', newValue, 11);
+                        validateNumberField('cpf', newValue, 11);
                     }}
                     isInvalid={validationState.cpf}
                     icon={<AiOutlineIdcard size={22} />}
@@ -333,7 +341,7 @@ const CriarPessoaDetalhes: React.FC<PessoaFormProps> = (props) => {
                     type={'text'}
                     onChange={(newValue) => {
                         handleRgChange(newValue);
-                        validateField('rg', newValue, 9);
+                        validateNumberField('rg', newValue, 9);
                     }}
                     isInvalid={validationState.rg}
                     icon={<AiOutlineIdcard size={22} />}
