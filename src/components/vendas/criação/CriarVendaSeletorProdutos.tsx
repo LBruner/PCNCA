@@ -33,14 +33,6 @@ const CriarVendaSeletorProdutos: React.FC<CriarVendaSeletorProdutosProps> = (
             </div>
             <div className={'w-full flex flex-col items-end justify-end mr-4 mt-4'}>
                 <div className={'w-96 flex justify-between'}>
-                    <p className={'font-light text-lg'}>Subtotal</p>
-                    <p className={'text-lg tracking-wider'}> {formatToBrazilianCurrency(subtotal)}</p>
-                </div>
-                <div className={'w-96 flex justify-between'}>
-                    <p className={'font-light text-lg'}>Desconto</p>
-                    <p className={'text-lg tracking-wider'}> {formatToBrazilianCurrency(0)}</p>
-                </div>
-                <div className={'w-96 flex justify-between'}>
                     <p className={'font-light text-lg'}>Valor Total</p>
                     <p className={'text-lg tracking-wider'}> {formatToBrazilianCurrency(subtotal)}</p>
                 </div>
