@@ -130,6 +130,7 @@ model Empresa {
   nome     String    @db.VarChar(100)
   serial   BigInt
   usuarios Usuario[]
+  estoques Estoque[]
 }
 
 model Endereco {
@@ -158,9 +159,47 @@ model Estoque {
   imagemLink         String?            @map("imagem_link") @db.VarChar(300)
   ativo              Boolean            @default(true)
   foiUtilizado       Boolean            @default(false) @map("foi_utilizado")
+  
+  // Vendor/Company tracking
+  empresaId          Int?               @map("empresa_id")
+  vendorName         String?            @map("vendor_name") @db.VarChar(100)
+  
+  // Seeds-specific fields
+  genero              String?  // gênero
+  especie             String?  // espécie
+  variedade           String?  // variedade
+  corDaFolhagem       String?  // cor da folhagem
+  requisitosDeLuz     String?  // requisitos de luz
+  requisitosDeUmidade String?  // requisitos de umidade
+  tipoDeSolo          String?  // tipo de solo
+  zonaDeResistencia   String?  // zona de resistência
+  diasParaMaturidade  String?  // dias para maturidade
+  alturaMadura        String?  // altura madura
+  diasParaGerminacao  String?  // dias para germinação
+  infoSolSombra       String?  // informações sobre sol/sombra
+  
+  // Full description
+  fullDescription    String?            @map("full_description") @db.Text
+  
+  // Relations
   categoriaId        Cultura?           @relation(fields: [categoriaculturaId], references: [culturaId])
+  empresa            Empresa?           @relation(fields: [empresaId], references: [id])
   historicos         HistoricoEstoque[]
   vendas             VendaEstoque[]
+  reviews            EstoqueReview[]
+}
+
+model EstoqueReview {
+  id         Int      @id @default(autoincrement())
+  estoqueId  Int      @map("estoque_id")
+  rating     Int      // 1-5 stars
+  comment    String   @db.Text
+  reviewerName String @map("reviewer_name") @db.VarChar(100)
+  createdAt  DateTime @default(now()) @map("created_at")
+  
+  estoque    Estoque  @relation(fields: [estoqueId], references: [id], onDelete: Cascade)
+  
+  @@index([estoqueId])
 }
 
 model FormaPagamento {

@@ -1,12 +1,12 @@
-import React, {useState} from "react";
-import {Button, Input, Select, SelectItem} from "@heroui/react";
-import {Textarea} from "@heroui/input";
-import {Radio, RadioGroup} from "@heroui/radio";
-import {CreatePostFormState} from "@/actions/produto";
-import {Cultura} from "@prisma/client";
-import {FilterCollection} from "@/models/shared/FilterCollection";
-import {unidadesMedidaCollection} from "@/constants/UnidadesMedida";
-import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import React, { useState } from "react";
+import { Button, Input, Select, SelectItem, Checkbox } from "@heroui/react";
+import { Textarea } from "@heroui/input";
+import { Radio, RadioGroup } from "@heroui/radio";
+import { CreatePostFormState } from "@/actions/produto";
+import { Cultura } from "@prisma/client";
+import { FilterCollection } from "@/models/shared/FilterCollection";
+import { unidadesMedidaCollection } from "@/constants/UnidadesMedida";
+import { ProdutoEstoqueComRelacoes } from "@/actions/estoques";
 
 interface ProdutoFormProps {
     formState: CreatePostFormState,
@@ -15,9 +15,10 @@ interface ProdutoFormProps {
     culturas: Cultura[];
 }
 
-const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, culturas}) => {
+const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, culturas }) => {
     const [selectedChaveCategoria, setselectedChaveCategoria] = useState(produto?.estoque.categoriaId?.culturaId.toString() ?? '');
     const [unidadeMedidaChave, setUnidadeMedidaChave] = useState(produto?.estoque.unidadeMedida.toString() ?? '');
+    const isSeedsCategory = selectedChaveCategoria === '5000';
 
     const culturaCollection: FilterCollection[] = culturas.map((cultura) => {
         return {
@@ -25,6 +26,8 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, cu
             name: cultura.nome,
         }
     })
+
+    console.log('produto no form', produto);
 
     return (
         <form action={formData => {
@@ -39,9 +42,9 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, cu
                     <p className={'text-xl font-bold'}>Informações Gerais</p>
                     <div className={'flex flex-col gap-7'}>
                         <CustomInputButton defaultValue={produto?.estoque.produto ?? undefined} name={'nome'}
-                                           label={'Nome'}
-                                           placeholder={'Digite um nome...'}
-                                           errorMessage={formState.errors.nome?.join(', ')}/>
+                            label={'Nome'}
+                            placeholder={'Digite um nome...'}
+                            errorMessage={formState.errors.nome?.join(', ')} />
                         <CustomInputButton
                             defaultValue={produto?.estoque.preco.toString() ?? undefined} name={'preco'}
                             type={'number'} label={'Preço'}
@@ -58,19 +61,19 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, cu
                             errorMessage={formState.errors.categoria?.join(', ')}
                         />
                         <CustomInputButton defaultValue={produto?.estoque.imagemLink ?? undefined} name={'imagem'}
-                                           label={'Imagem principal'}
-                                           placeholder={'Digite a url da imagem...'}
-                                           errorMessage={formState.errors.imagem?.join(', ')}/>
+                            label={'Imagem principal'}
+                            placeholder={'Digite a url da imagem...'}
+                            errorMessage={formState.errors.imagem?.join(', ')} />
                     </div>
                 </div>
                 <div className={'flex flex-col gap-4 w-full px-8 py-6 mt-11'}>
                     <div className={'flex flex-col gap-7'}>
                         <CustomInputButton defaultValue={produto?.estoque.quantidade.toString() ?? undefined}
-                                           name={'estoque'}
-                                           type={'number'} label={'Estoque'}
-                                           placeholder={'0 Unidades'}
-                                           isInvalid={!!formState.errors.estoque}
-                                           errorMessage={formState.errors.estoque?.join(', ')}/>
+                            name={'estoque'}
+                            type={'number'} label={'Estoque'}
+                            placeholder={'0 Unidades'}
+                            isInvalid={!!formState.errors.estoque}
+                            errorMessage={formState.errors.estoque?.join(', ')} />
                         <CustomSelect
                             value={unidadeMedidaChave ?? undefined} name={'unidade'}
                             onChange={setUnidadeMedidaChave}
@@ -80,12 +83,12 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, cu
                             errorMessage={formState.errors.unidade?.join(', ')}
                         />
                         <Textarea defaultValue={produto?.estoque.descricao ?? undefined} name={'descricao'} size={'lg'}
-                                  minRows={1}
-                                  className={'font-semibold'}
-                                  labelPlacement={'outside'} label={'Descrição'}
-                                  placeholder={'Descreva seu produto em detalhes...'}
-                                  isInvalid={!!formState.errors.descricao}
-                                  errorMessage={formState.errors.descricao?.join(', ')}/>
+                            minRows={1}
+                            className={'font-semibold'}
+                            labelPlacement={'outside'} label={'Descrição'}
+                            placeholder={'Descreva seu produto em detalhes...'}
+                            isInvalid={!!formState.errors.descricao}
+                            errorMessage={formState.errors.descricao?.join(', ')} />
                         <RadioGroup
                             defaultValue={produto?.estoque?.tipo ?? 'A'}
                             name={'tipoComodity'}
@@ -101,11 +104,102 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({formState, action, produto, cu
                         >
                             <Radio className={'font-normal'} value="A">Agrícola</Radio>
                             <Radio className={'desativado'}
-                                   value="P">Pecuária</Radio>
+                                value="P">Pecuária</Radio>
                         </RadioGroup>
                     </div>
                 </div>
             </div>
+
+            {isSeedsCategory && (
+                <>
+                    {/* INFORMAÇÕES BOTÂNICAS */}
+                    <div className="w-5/6 px-4 py-2 flex justify-center dark:bg-customDarkFooter dark:border-gray-900 bg-white rounded-lg border-1 border-gray-200 mt-4">
+                        <div className="flex flex-col gap-4 w-full px-8 py-6">
+                            <p className="text-xl font-bold">Informações Botânicas</p>
+                            <div className="flex flex-col gap-7">
+                                <CustomInputButton
+                                    defaultValue={produto?.estoque.genero ?? undefined}
+                                    name="genero"
+                                    label="Gênero"
+                                    placeholder="Ex: Cosmos"
+                                    isRequired={false}
+                                />
+                                <CustomInputButton
+                                    defaultValue={produto?.estoque.especie ?? undefined}
+                                    name="especie"
+                                    label="Espécie"
+                                    placeholder="Ex: sulphureus"
+                                    isRequired={false}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-4 w-full px-8 py-6 mt-11">
+                            <div className="flex flex-col gap-7">
+                                <CustomInputButton
+                                    defaultValue={produto?.estoque.corDaFolhagem ?? undefined}
+                                    name="corDaFolhagem"
+                                    label="Cor da Folhagem"
+                                    placeholder="Ex: Verde Médio"
+                                    isRequired={false}
+                                />
+                                <CustomInputButton
+                                    defaultValue={produto?.estoque.alturaMadura ?? undefined}
+                                    name="alturaMadura"
+                                    label="Altura Madura"
+                                    placeholder="Ex: 90–120 cm"
+                                    isRequired={false}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* REQUISITOS DE CULTIVO */}
+                    <div className="w-5/6 px-4 py-2 mb-24 flex justify-center dark:bg-customDarkFooter dark:border-gray-900 bg-white rounded-lg border-1 border-gray-200 mt-4">
+                        <div className="flex flex-col gap-4 w-full px-8 py-6">
+                            <p className="text-xl font-bold">Requisitos de Cultivo</p>
+                            <div className="flex flex-col gap-7">
+                                <CustomInputButton
+                                    defaultValue={produto?.estoque.requisitosDeLuz ?? undefined}
+                                    name="requisitosDeLuz"
+                                    label="Requisitos de Luz"
+                                    placeholder="Ex: Sol pleno"
+                                    isRequired={false}
+                                />
+                                <CustomInputButton
+                                    defaultValue={produto?.estoque.requisitosDeUmidade ?? undefined}
+                                    name="requisitosDeUmidade"
+                                    label="Requisitos de Umidade"
+                                    placeholder="Ex: Solo levemente úmido"
+                                    isRequired={false}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-4 w-full px-8 py-6 mt-11">
+                            <div className="flex flex-col gap-7">
+                                <CustomInputButton
+                                    defaultValue={produto?.estoque.diasParaMaturidade ?? undefined}
+                                    name="diasParaMaturidade"
+                                    type="number"
+                                    label="Dias para Maturidade"
+                                    placeholder="Ex: 75"
+                                    isRequired={false}
+                                />
+                                <CustomInputButton
+                                    defaultValue={produto?.estoque.tipoDeSolo ?? undefined}
+                                    name="tipoDeSolo"
+                                    label="Tipo de Solo"
+                                    placeholder="Ex: Solo bem drenado"
+                                    isRequired={false}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
+
+
             {formState.errors._form ? <div
                 className={'p-2 bg-red-200 border border-red-400 rounded'}>{formState.errors._form.join(', ')}</div> : null}
             <div>
@@ -119,7 +213,7 @@ interface CustomInput {
     defaultValue?: string,
     name: string,
     variant?: "flat" | "faded" | "bordered" | "underlined",
-    color?:  "default" | "primary" | "secondary" | "success" | "warning" | "danger",
+    color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger",
     label: string,
     placeholder: string,
     isInvalid?: boolean,
@@ -127,6 +221,7 @@ interface CustomInput {
     type?: string,
     startContent?: React.ReactNode
     endContent?: React.ReactNode
+    isRequired?: boolean
 }
 
 
@@ -141,13 +236,14 @@ const CustomInputButton: React.FC<CustomInput> = (
         type,
         startContent,
         endContent,
+        isRequired = true,
     }
 ) => {
-    return <Input minLength={3} defaultValue={defaultValue} name={name} isRequired={true} className={'font-medium dark:text-white'} size={'lg'}
-                  type={type} label={label}
-                  labelPlacement={'outside'}
-                  placeholder={placeholder} isInvalid={isInvalid} errorMessage={errorMessage ?? 'Digite no mínimo 3 caracteres.'}
-                  startContent={startContent} endContent={endContent}/>
+    return <Input minLength={3} defaultValue={defaultValue} name={name} isRequired={isRequired} className={'font-medium dark:text-white'} size={'lg'}
+        type={type} label={label}
+        labelPlacement={'outside'}
+        placeholder={placeholder} isInvalid={isInvalid} errorMessage={errorMessage ?? 'Digite no mínimo 3 caracteres.'}
+        startContent={startContent} endContent={endContent} />
 };
 
 

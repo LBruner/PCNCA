@@ -1,41 +1,41 @@
 'use client';
 
+import { CategoriaPessoaComEmpresa } from "@/actions/clientes";
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import React from "react";
-import {Autocomplete, AutocompleteItem, Button} from "@heroui/react";
-import {CategoriaPessoaComEmpresa} from "@/actions/clientes";
+
+initMercadoPago('APP_USR-223affd2-b3f2-4522-a682-34d10eafe281');
 
 interface CriarVendaCheckoutFormProps {
     clienteSelecionadoId: Set<number> | null;
     clientes: CategoriaPessoaComEmpresa[];
-    onFinalizaVenda: () => void;
     setSelectedClienteId: React.Dispatch<React.SetStateAction<Set<number>>>;
+    preferenceId?: string | null;
 }
 
 const CriarVendaCheckout: React.FC<CriarVendaCheckoutFormProps> = (
     {
         clienteSelecionadoId,
-        clientes,
-        onFinalizaVenda,
-        setSelectedClienteId
+        preferenceId
     }) => {
-
-
-    console.log(clienteSelecionadoId)
-    return (
-        <form onSubmit={onFinalizaVenda} className={'mx-2 mt-6 flex flex-col gap-6 dark:bg-customDarkFooter'}>
-            <p className={'text-xl font-normal'}>Selecione o cliente para entrega</p>
-            <Autocomplete errorMessage={<p>Campo cliente é obrigatório</p>} isRequired={true} selectedKey={clienteSelecionadoId ?? null as any}
-                          onSelectionChange={(key) => setSelectedClienteId(key as any)} size={'sm'} label={'Cliente'}>
-                {clientes[0].pessoas.map((cliente) => <AutocompleteItem
-                    key={cliente.id}>{cliente.pessoaJuridica != null ? cliente.pessoaJuridica!.razaoSocial : cliente.pessoaFisica!.nome}</AutocompleteItem>)}
-            </Autocomplete>
-            <div className={'flex flex-col gap-4'}>
-                <p className={'text-xl font-normal'}>Selecione o método de pagamento</p>
-                <Button type={'submit'} disabled={clienteSelecionadoId?.size == 0}  className={'w-36'} color={`${clienteSelecionadoId?.size != 0 ? 'primary' : 'default'}`}>
-                    Finalizar Venda
-                </Button>
+    
+    if (!preferenceId) {
+        return (
+            <div className={'mx-2 mt-6 flex flex-col gap-6 dark:bg-customDarkFooter'}>
+                <p className={'text-lg text-gray-500'}>Aguarde enquanto preparamos seu checkout...</p>
             </div>
-        </form>
+        );
+    }
+
+    return (
+        <div className={'mx-2 mt-6 flex flex-col gap-6 dark:bg-customDarkFooter'}>
+            <div className={'flex flex-col gap-4'}>
+                <p className={'text-xl font-normal'}>Realize o pagamento abaixo</p>
+                <div style={{ width: '300px' }}>
+                    <Wallet initialization={{ preferenceId }} />
+                </div>
+            </div>
+        </div>
     )
 }
 

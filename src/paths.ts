@@ -38,6 +38,9 @@ const paths = {
     noticias() {
         return `/noticias`;
     },
+    ecommerce() {
+        return `/ecommerce`;
+    },
     criarNoticia() {
         return `/adm/noticias/criar`;
     },
@@ -97,6 +100,9 @@ const paths = {
     },
     prodInternacional() {
         return '/producao-internacional'
+    },
+    ecommerceProdutoView(produtoId: string) {
+        return `/ecommerce/produto/${produtoId}`;
     }
 }
 

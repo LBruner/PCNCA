@@ -95,3 +95,13 @@ export const pegaUmEstoque = async (estoqueId: number): Promise<ProdutoEstoqueCo
         }
     )
 }
+
+export const pegaDetalhesProduto = async (produtoId: string): Promise<Estoque | null> => {
+    return db.estoque.findUnique(
+        {
+            where: {
+                id: Number(produtoId),
+            }
+        }
+    )
+}

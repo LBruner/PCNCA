@@ -36,7 +36,7 @@ export default function RootLayout(
                 {children}
             </div>
             <ScrollToTop/>
-            <CustomFooter/>
+            {/* <CustomFooter/> */}
         </Providers>
         </body>
         </html>

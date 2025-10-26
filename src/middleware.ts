@@ -19,11 +19,11 @@ export default withAuth(
             );
         }
 
-        if (req.nextUrl.pathname.startsWith('/auth') && token && !req.nextUrl.pathname.startsWith('/auth/alterar-senha')) {
-            return NextResponse.redirect(
-                new URL(paths.noticias(), req.url)
-            );
-        }
+        // if (req.nextUrl.pathname.startsWith('/auth') && token && !req.nextUrl.pathname.startsWith('/auth/alterar-senha')) {
+        //     return NextResponse.redirect(
+        //         new URL(paths.noticias(), req.url)
+        //     );
+        // }
 
         return NextResponse.next();
     },

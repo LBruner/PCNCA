@@ -1,0 +1,25 @@
+<svg viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg" id="Layer_1">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #13799b;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-3 {
+        fill: none;
+        stroke: #fff;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 7px;
+      }
+    </style>
+  </defs>
+  <path d="M209.23,157.69c0,47.89-38.82,86.71-86.71,86.71s-86.71-38.82-86.71-86.71c0-43.81,52.15-106.81,79.71-140.78,3.62-4.46,10.41-4.47,14.05-.02,30.84,37.76,79.66,96.47,79.66,140.8Z" class="cls-1"></path>
+  <path d="M117.14,223.05c-25.77,2.48-50.42-13.87-58.29-38.47-2.06-6.43-2.95-13.23-2.6-19.97" class="cls-3"></path>
+  <path d="M57.35,155.06c4.5,0,4.51-7,0-7s-4.51,7,0,7h0Z" class="cls-2"></path>
+  <path d="M59.33,142.99c2.57,0,2.58-4,0-4s-2.58,4,0,4h0Z" class="cls-2"></path>
+</svg>

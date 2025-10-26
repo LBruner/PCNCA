@@ -1,25 +1,38 @@
 'use server';
 
-import {z, ZodError} from "zod";
-import {db} from "@/db";
-import {getServerSession} from "next-auth";
-import {revalidatePath} from "next/cache";
+import { z, ZodError } from "zod";
+import { db } from "@/db";
+import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 import paths from "@/paths";
-import {redirect} from "next/navigation";
-import {CategoriaPessoa, Estoque, Pessoa, PessoaJuridica} from "@prisma/client";
-import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
-import {authOptions} from "@/app/AuthOptions";
+import { redirect } from "next/navigation";
+import { CategoriaPessoa, Estoque, Pessoa, PessoaJuridica } from "@prisma/client";
+import { ProdutoEstoqueComRelacoes } from "@/actions/estoques";
+import { authOptions } from "@/app/AuthOptions";
 
 const createProductSchema = z.object({
     nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
     categoria: z.string(),
     preco: z.number().min(0, 'O preço deve ser maior que 0'),
     estoque: z.number().min(0, 'O valor em estoque deve ser maior que 0'),
-    imagem: z.string({message: 'URL inválida'}),
+    imagem: z.string({ message: 'URL inválida' }),
     tipoComodity: z.string().min(1, 'Por favor, selecione um tipo'),
     descricao: z.string(),
     unidade: z.string(),
     status: z.string(),
+
+    genero: z.string().optional().nullable(),
+    especie: z.string().optional().nullable(),
+    variedade: z.string().optional().nullable(),
+    corDaFolhagem: z.string().optional().nullable(),
+    requisitosDeLuz: z.string().optional().nullable(),
+    requisitosDeUmidade: z.string().optional().nullable(),
+    tipoDeSolo: z.string().optional().nullable(),
+    zonaDeResistencia: z.string().optional().nullable(),
+    diasParaMaturidade: z.string().optional().nullable(),
+    alturaMadura: z.string().optional().nullable(),
+    diasParaGerminacao: z.string().optional().nullable(),
+    infoSolSombra: z.string().optional().nullable(),
 });
 
 export interface CreatePostFormState {
@@ -34,6 +47,19 @@ export interface CreatePostFormState {
         fornecedor?: string[],
         unidade?: string[],
         status?: string[],
+        genero?: string[],
+        especie?: string[],
+        variedade?: string[],
+        corDaFolhagem?: string[],
+        requisitosDeLuz?: string[],
+        requisitosDeUmidade?: string[],
+        tipoDeSolo?: string[],
+        zonaDeResistencia?: string[],
+        diasParaMaturidade?: string[],
+        alturaMadura?: string[],
+        diasParaGerminacao?: number,
+        infoSolSombra?: string[],
+
         _form?: string[],
     }
 }
@@ -45,6 +71,7 @@ type FormDataValidationResult = {
 };
 
 function validateForm(formData: FormData): FormDataValidationResult {
+    console.log("Validating form data:", Object.fromEntries(formData.entries()));
     const result = createProductSchema.safeParse({
         nome: formData.get('nome'),
         categoria: formData.get('categoria'),
@@ -55,8 +82,19 @@ function validateForm(formData: FormData): FormDataValidationResult {
         imagem: formData.get('imagem'),
         unidade: formData.get('unidade'),
         status: (formData.get('status') == null ? 'Desativado' : 'Ativo'),
-    });
 
+        genero: formData.get('genero'),
+        especie: formData.get('especie'),
+        variedade: formData.get('variedade'),
+        corDaFolhagem: formData.get('corDaFolhagem'),
+        requisitosDeLuz: formData.get('requisitosDeLuz'),
+        requisitosDeUmidade: formData.get('requisitosDeUmidade'),
+        tipoDeSolo: formData.get('tipoDeSolo'),
+        zonaDeResistencia: formData.get('zonaDeResistencia'),
+        diasParaMaturidade: formData.get('diasParaMaturidade'),
+        alturaMadura: formData.get('alturaMadura'),
+        infoSolSombra: formData.get('infoSolSombra'),
+    });
 
     return {
         success: result.success,
@@ -94,7 +132,7 @@ export async function getSessionAndValidateForm(formData: FormData): Promise<{
         };
     }
 
-    return {session, result};
+    return { session, result };
 }
 
 export async function getUserId(email: string): Promise<string> {
@@ -114,11 +152,11 @@ export async function getUserId(email: string): Promise<string> {
 type CreateOrUpdateFn = (data: z.infer<typeof createProductSchema>, userId: string) => Promise<void>;
 
 async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOrUpdateFn): Promise<CreatePostFormState> {
-    const {session, result, errors} = await getSessionAndValidateForm(formData);
+    const { session, result, errors } = await getSessionAndValidateForm(formData);
 
     if (errors) {
         console.log(errors);
-        return {errors};
+        return { errors };
     }
 
     try {
@@ -151,34 +189,38 @@ export const pegaTodosProdutosQueVenderam = async (): Promise<Estoque[]> => {
     });
 };
 
+export const pegaTodosProdutos = async (): Promise<Estoque[]> => {
+    return db.estoque.findMany();
+};
+
 export async function pegaProduto(produtoId: number): Promise<ProdutoEstoqueComRelacoes | null> {
     return db.historicoEstoque.findUnique({
-            where: {
-                id: produtoId
-            },
-            include: {
-                venda: {
-                    include: {
-                        estoques: true,
-                        pessoas: {
-                            include: {
-                                pessoa: {
-                                    include: {
-                                        pessoaJuridica: true,
-                                    }
-                                },
+        where: {
+            id: produtoId
+        },
+        include: {
+            venda: {
+                include: {
+                    estoques: true,
+                    pessoas: {
+                        include: {
+                            pessoa: {
+                                include: {
+                                    pessoaJuridica: true,
+                                }
                             },
-                        }
+                        },
                     }
+                }
+            },
+            estoque: {
+                include: {
+                    categoriaId: true,
+                    historicos: true,
                 },
-                estoque: {
-                    include: {
-                        categoriaId: true,
-                        historicos: true,
-                    },
-                },
-            }
+            },
         }
+    }
     );
 }
 
@@ -207,9 +249,11 @@ export async function pegaFornecedores(): Promise<FornecedorComRelacoes[]> {
         }
     });
 }
-
 export async function criarProduto(_: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
     return handleFormSubmission(formData, async (data, userId) => {
+        // Check if it's a seeds category (5000)
+        const isSeedsCategory = parseInt(data.categoria) === 5000;
+        console.log("Creating product with data:", { data, userId, isSeedsCategory });
         const estoque = await db.estoque.create({
             data: {
                 produto: data.nome,
@@ -220,6 +264,21 @@ export async function criarProduto(_: CreatePostFormState, formData: FormData): 
                 imagemLink: data.imagem,
                 unidadeMedida: data.unidade,
                 categoriaculturaId: parseInt(data.categoria),
+
+                // Seeds-specific fields (only if seeds category)
+                ...(isSeedsCategory && {
+                    genero: data.genero || null,
+                    especie: data.especie || null,
+                    variedade: data.variedade || null,
+                    corDaFolhagem: data.corDaFolhagem || null,
+                    requisitosDeLuz: data.requisitosDeLuz || null,
+                    requisitosDeUmidade: data.requisitosDeUmidade || null,
+                    tipoDeSolo: data.tipoDeSolo || null,
+                    zonaDeResistencia: data.zonaDeResistencia || null,
+                    diasParaMaturidade: data.diasParaMaturidade ? data.diasParaMaturidade : null,
+                    alturaMadura: data.alturaMadura || null,
+                    infoSolSombra: data.infoSolSombra || null,
+                }),
             },
         });
 
@@ -269,6 +328,9 @@ export async function criarProduto(_: CreatePostFormState, formData: FormData): 
 
 export async function editarProduto(vendaId: number, estoqueId: number, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
     return handleFormSubmission(formData, async (data, userId) => {
+        const isSeedsCategory = parseInt(data.categoria) === 5000;
+
+        console.log("Editing product:", { vendaId, estoqueId, data, userId });
         await db.estoque.update({
             where: {
                 id: estoqueId,
@@ -282,7 +344,23 @@ export async function editarProduto(vendaId: number, estoqueId: number, _: Creat
                 imagemLink: data.imagem,
                 unidadeMedida: data.unidade,
                 categoriaculturaId: parseInt(data.categoria),
-            }
+
+                // Seeds-specific fields (only if seeds category)
+                ...(isSeedsCategory && {
+                    genero: data.genero || null,
+                    especie: data.especie || null,
+                    variedade: data.variedade || null,
+                    corDaFolhagem: data.corDaFolhagem || null,
+                    requisitosDeLuz: data.requisitosDeLuz || null,
+                    requisitosDeUmidade: data.requisitosDeUmidade || null,
+                    tipoDeSolo: data.tipoDeSolo || null,
+                    zonaDeResistencia: data.zonaDeResistencia || null,
+                    diasParaMaturidade: data.diasParaMaturidade ? data.diasParaMaturidade : null,
+                    alturaMadura: data.alturaMadura || null,
+                    diasParaGerminacao: data.diasParaGerminacao || null,
+                    infoSolSombra: data.infoSolSombra || null,
+                }),
+            },
         });
     });
 }
