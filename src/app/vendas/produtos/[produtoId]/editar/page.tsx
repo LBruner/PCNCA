@@ -1,6 +1,6 @@
 import React from "react";
 import ProdutoEditForm from "@/components/produtos/ProdutoEditForm";
-import {pegaUmEstoque, ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import {EstoqueComCultura, pegaUmEstoque} from "@/actions/estoques";
 import {pegaCulturasUnicas} from "@/actions/adm";
 
 interface EditProductPageProps {
@@ -11,14 +11,14 @@ interface EditProductPageProps {
 
 const EditProductPage: React.FC<EditProductPageProps> = async ({params}) => {
     const produtoId = (await params).produtoId;
-    const produto: ProdutoEstoqueComRelacoes | null = await pegaUmEstoque(parseInt(produtoId));
+    const estoque: EstoqueComCultura | null = await pegaUmEstoque(parseInt(produtoId));
     const culturas = await pegaCulturasUnicas();
 
-    if (!produto) {
+    if (!estoque) {
         return <h1>Produto Invalido</h1>
     }
 
-    return <ProdutoEditForm culturas={culturas} produto={produto} produtoId={produtoId}/>
+    return <ProdutoEditForm culturas={culturas} estoque={estoque} produtoId={produtoId}/>
 }
 
 export default EditProductPage;

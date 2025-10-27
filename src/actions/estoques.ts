@@ -1,98 +1,55 @@
 'use server';
 
-import {db} from "@/db";
-import {Cultura, Estoque, HistoricoEstoque, Pessoa, PessoaJuridica, Venda, VendaPessoa} from "@prisma/client";
-import {getServerSession, Session} from "next-auth";
-import {redirect} from "next/navigation";
+import { authOptions } from "@/app/AuthOptions";
+import { db } from "@/db";
 import paths from "@/paths";
-import {authOptions} from "@/app/AuthOptions";
+import { Cultura, Estoque } from "@prisma/client";
+import { getServerSession, Session } from "next-auth";
+import { redirect } from "next/navigation";
+import { pegaUsuario } from "./usuarios";
 
-export type ProdutoEstoqueComRelacoes = HistoricoEstoque & {
-    venda: Venda & {
-        pessoas: (VendaPessoa & { pessoa: Pessoa & { pessoaJuridica?: PessoaJuridica | null } })[]
-    }, estoque: Estoque & {
-        categoriaId: Cultura | null,
-        historicos: HistoricoEstoque[],
-    };
-}
+export type EstoqueComCultura = Estoque & {
+    categoriaId: Cultura | null,
+};
 
-export const pegaTodosEstoquesUsuario = async (): Promise<ProdutoEstoqueComRelacoes[]> => {
+export const pegaTodosEstoquesUsuario = async (): Promise<EstoqueComCultura[]> => {
     const session: Session | null = await getServerSession(authOptions);
 
+    console.log("session in pegaTodosEstoquesUsuario:", session);
     if (!session || !session.user) {
-        redirect(paths.noticias())
+        redirect(paths.noticias());
     }
 
-    return db.historicoEstoque.findMany({
-        orderBy:{
-          estoque:{
-              produto: 'asc',
-          },
-        },
-            where: {
-                usuarioId: session?.user.id,
-                comprador: true,
-                estoque:{
-                    quantidade: {
-                        gt: 0
-                    },
-                },
+    const user = await pegaUsuario();
+
+    if (!user) {
+        redirect(paths.noticias());
+    }
+
+    return db.estoque.findMany({
+        where: {
+            empresaId: user.empresaId!,
+            quantidade: {
+                gt: 0
             },
-            include: {
-                venda: {
-                    include: {
-                        estoques: true,
-                        pessoas: {
-                            include: {
-                                pessoa: {
-                                    include: {
-                                        pessoaJuridica: true,
-                                    }
-                                },
-                            },
-                        }
-                    }
-                },
-                estoque: {
-                    include: {
-                        categoriaId: true,
-                        historicos: true,
-                    },
-                },
-            }
+        },
+        include: {
+            categoriaId: true,
         }
+    },
     )
 }
 
-export const pegaUmEstoque = async (estoqueId: number): Promise<ProdutoEstoqueComRelacoes | null> => {
-    return db.historicoEstoque.findUnique(
+export const pegaUmEstoque = async (estoqueId: number): Promise<EstoqueComCultura | null> => {
+    return db.estoque.findUnique(
         {
             where: {
                 id: estoqueId,
             },
             include: {
-                venda: {
-                    include: {
-                        estoques: true,
-                        pessoas: {
-                            include: {
-                                pessoa: {
-                                    include: {
-                                        pessoaJuridica: true,
-                                    }
-                                },
-                            },
-                        }
-                    }
-                },
-                estoque: {
-                    include: {
-                        categoriaId: true,
-                        historicos: true,
-                    },
-                },
-            }
-        }
+                categoriaId: true,
+            },
+        },
     )
 }
 

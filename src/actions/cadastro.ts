@@ -20,11 +20,15 @@ export const pegaTodasEmpresas = async (): Promise<Empresa[]> => {
     return db.empresa.findMany();
 }
 
-
 const registerSchema = z.object({
-    nome: z.string().min(3, {message: 'O nome deve ter pelo menos 1 caractere'}),
+    nome: z.string().min(3, {message: 'O nome deve ter pelo menos 3 caracteres'}),
     cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}\-\d{2}$/, {message: 'CPF inválido'}),
-    empresa: z.number(),
+    empresa: z.string().transform((val) => {
+        // Se for vazio ou "nenhuma", retorna null
+        if (!val || val === '' || val === 'nenhuma') return null;
+        const num = parseInt(val);
+        return isNaN(num) ? null : num;
+    }).nullable(),
     email: z.string().email({message: 'E-mail inválido'}),
     senha: z.string().min(6, {message: 'A senha deve ter pelo menos 6 caracteres'}),
     termos: z.string({message: 'Você deve aceitar os termos'})
@@ -34,12 +38,11 @@ export async function validarCadastro(_: CreateUserProps, formData: FormData): P
     const result = registerSchema.safeParse({
         nome: formData.get('nome'),
         cpf: formData.get('cpf'),
-        empresa: parseInt(formData.get('empresa') as string),
+        empresa: formData.get('empresa'),
         email: formData.get('email'),
         senha: formData.get('senha'),
         termos: formData.get('termos'),
     });
-
 
     if (!result.success) {
         return {
@@ -52,21 +55,22 @@ export async function validarCadastro(_: CreateUserProps, formData: FormData): P
             data: {
                 nome: result.data.nome,
                 cpf: result.data.cpf,
-                empresaId: result.data.empresa,
+                ...(result.data.empresa && { empresaId: result.data.empresa }),
                 email: result.data.email,
                 senha: result.data.senha,
             }
         });
 
     } catch (err: unknown) {
+        console.log(err)
         if (err instanceof Prisma.PrismaClientKnownRequestError) {
-
             //Checa por campos únicos
             if (err.code === 'P2002') {
-                const target = err.meta?.target as string;
+                const target = err.meta?.target as string[];
+                const field = Array.isArray(target) ? target[0] : target;
                 return {
                     errors: {
-                        [target]: [`Campo ${target} já cadastrado`]
+                        [field]: [`Campo ${field} já cadastrado`]
                     }
                 }
             } else {

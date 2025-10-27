@@ -1,18 +1,16 @@
 'use client';
 
-import React, {useEffect, useState} from "react";
-import {pegaProduto} from "@/actions/produto";
-import {Accordion, AccordionItem, Divider, Spinner} from "@heroui/react";
-import CriarVendaSeletorProdutos from "@/components/vendas/criação/CriarVendaSeletorProdutos";
-import {ProdutosSelecionados} from "@/app/vendas/criar/page";
-import {CategoriaPessoaComEmpresa} from "@/actions/clientes";
-import {BsChevronLeft} from "react-icons/bs";
-import CriarVendaCheckout from "@/components/vendas/criação/CriarVendaCheckout";
-import {criarVenda} from "@/actions/vendas";
-import NoData from "@/components/UI/NoData";
-import {useRouter} from "next/navigation";
-import paths from "@/paths";
+import { CategoriaPessoaComEmpresa } from "@/actions/clientes";
 import { pegaPreference } from "@/actions/pagamentos";
+import { pegaProduto } from "@/actions/produto";
+import { ProdutosSelecionados } from "@/app/vendas/criar/page";
+import NoData from "@/components/UI/NoData";
+import CriarVendaCheckout from "@/components/vendas/criação/CriarVendaCheckout";
+import CriarVendaSeletorProdutos from "@/components/vendas/criação/CriarVendaSeletorProdutos";
+import { Accordion, AccordionItem, Divider, Spinner } from "@heroui/react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { BsChevronLeft } from "react-icons/bs";
 
 interface CriarVendaFormProps {
     clientes: CategoriaPessoaComEmpresa[];
@@ -48,6 +46,8 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes}) => {
     const getSelectedProducts = async () => {
         const items = localStorage.getItem('selectedItems');
 
+        console.log('Selected items from localStorage:', items);    
+
         if (items) {
             const selectedIds = await JSON.parse(items).map(String);
             const selectedProducts: ProdutosSelecionados[] = await Promise.all(
@@ -56,6 +56,8 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes}) => {
                     return {...product, quantity: 1};
                 })
             );
+
+            console.log('Fetched selected products:', selectedProducts);
 
             setSelectedProducts(selectedProducts);
             setIsLoading(false);
@@ -66,13 +68,13 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes}) => {
         setIsCreatingPreference(true);
         try {
             const preferenceResponse = await pegaPreference(
-                selectedProducts.map(produto => ({
-                    id: produto.id.toString(),
-                    title: produto.estoque.produto,
-                    quantity: produto.quantity,
-                    unit_price: produto.estoque.preco,
+                selectedProducts.map(estoque => ({
+                    id: estoque.id.toString(),
+                    title: estoque.produto,
+                    quantity: estoque.quantity,
+                    unit_price: estoque.preco,
                     currency_id: 'BRL',
-                    description: produto.estoque.descricao,
+                    description: estoque.descricao,
                     picture_url: 'https://m.media-amazon.com/images/M/MV5BMzE0ZDU1MzQtNTNlYS00YjNlLWE2ODktZmFmNDYzMTBlZTBmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'
                 }))
             );
@@ -134,7 +136,7 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({clientes}) => {
                     >
                         <Divider/>
                         <CriarVendaSeletorProdutos
-                            produtos={selectedProducts}
+                            estoques={selectedProducts}
                             changeProductQuantity={onChangeProductQuantity}
                             removeProduct={onRemoveProduct}
                             openCheckoutAccordion={() => setSelectedKeys(new Set(['2']))}

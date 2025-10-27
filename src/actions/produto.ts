@@ -6,9 +6,10 @@ import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import paths from "@/paths";
 import { redirect } from "next/navigation";
-import { CategoriaPessoa, Estoque, Pessoa, PessoaJuridica } from "@prisma/client";
-import { ProdutoEstoqueComRelacoes } from "@/actions/estoques";
+import { CategoriaPessoa, Estoque, Pessoa, PessoaJuridica, Usuario } from "@prisma/client";
 import { authOptions } from "@/app/AuthOptions";
+import { user } from "@heroui/react";
+import { EstoqueComCultura } from "./estoques";
 
 const createProductSchema = z.object({
     nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
@@ -20,6 +21,8 @@ const createProductSchema = z.object({
     descricao: z.string(),
     unidade: z.string(),
     status: z.string(),
+    empresaId: z.number().optional(),
+    categoriaCulturaId: z.number().optional(),
 
     genero: z.string().optional().nullable(),
     especie: z.string().optional().nullable(),
@@ -135,7 +138,7 @@ export async function getSessionAndValidateForm(formData: FormData): Promise<{
     return { session, result };
 }
 
-export async function getUserId(email: string): Promise<string> {
+export async function getUser(email: string): Promise<Usuario> {
     const user = await db.usuario.findUnique({
         where: {
             id: email
@@ -146,7 +149,7 @@ export async function getUserId(email: string): Promise<string> {
         throw new Error('User not found');
     }
 
-    return user.id;
+    return user;
 }
 
 type CreateOrUpdateFn = (data: z.infer<typeof createProductSchema>, userId: string) => Promise<void>;
@@ -161,8 +164,8 @@ async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOr
 
     try {
         // @ts-ignore
-        const userId = await getUserId(session!.user.id!);
-        await createOrUpdate(result?.data!, userId);
+        const user = await getUser(session!.user.id!);
+        await createOrUpdate({ ...result?.data!, empresaId: user.empresaId! }, user.id);
 
     } catch (error) {
         console.log(`Erro ao criar produto: ${error}`)
@@ -193,33 +196,14 @@ export const pegaTodosProdutos = async (): Promise<Estoque[]> => {
     return db.estoque.findMany();
 };
 
-export async function pegaProduto(produtoId: number): Promise<ProdutoEstoqueComRelacoes | null> {
-    return db.historicoEstoque.findUnique({
+export async function pegaProduto(produtoId: number): Promise<EstoqueComCultura | null> {
+    return db.estoque.findUnique({
         where: {
             id: produtoId
         },
         include: {
-            venda: {
-                include: {
-                    estoques: true,
-                    pessoas: {
-                        include: {
-                            pessoa: {
-                                include: {
-                                    pessoaJuridica: true,
-                                }
-                            },
-                        },
-                    }
-                }
-            },
-            estoque: {
-                include: {
-                    categoriaId: true,
-                    historicos: true,
-                },
-            },
-        }
+            categoriaId: true,
+        },
     }
     );
 }
@@ -249,6 +233,7 @@ export async function pegaFornecedores(): Promise<FornecedorComRelacoes[]> {
         }
     });
 }
+
 export async function criarProduto(_: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
     return handleFormSubmission(formData, async (data, userId) => {
         // Check if it's a seeds category (5000)
@@ -263,7 +248,8 @@ export async function criarProduto(_: CreatePostFormState, formData: FormData): 
                 quantidade: data.estoque,
                 imagemLink: data.imagem,
                 unidadeMedida: data.unidade,
-                categoriaculturaId: parseInt(data.categoria),
+                categoriaculturaId: parseInt(data.categoria), // Fixed: lowercase 'c'
+                empresaId: data.empresaId!,
 
                 // Seeds-specific fields (only if seeds category)
                 ...(isSeedsCategory && {
@@ -281,56 +267,15 @@ export async function criarProduto(_: CreatePostFormState, formData: FormData): 
                 }),
             },
         });
-
-        const venda = await db.venda.create({
-            data: {
-                dataVenda: new Date(),
-                valorVenda: (data.preco) * data.estoque,
-                quantidadeVenda: data.estoque,
-                desconto: 0,
-            }
-        });
-
-        await db.historicoEstoque.create({
-            data: {
-                venda: {
-                    connect: {
-                        id: venda.id
-                    }
-                },
-                comprador: true,
-                dataAlter: new Date(),
-                horaAlter: new Date().toISOString().slice(11, 16),
-                valorAlter: data.estoque,
-                usuario: {
-                    connect: {
-                        id: userId,
-                    },
-                },
-                estoque: {
-                    connect: {
-                        id: estoque.id,
-                    },
-                },
-            },
-        });
-
-        await db.vendaEstoque.create({
-            data: {
-                precoProp: data.preco,
-                estoqueId: estoque.id,
-                vendaId: venda.id,
-            },
-        });
     });
 }
 
 
-export async function editarProduto(vendaId: number, estoqueId: number, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
+export async function editarProduto(estoqueId: number, _: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
     return handleFormSubmission(formData, async (data, userId) => {
         const isSeedsCategory = parseInt(data.categoria) === 5000;
 
-        console.log("Editing product:", { vendaId, estoqueId, data, userId });
+        console.log("Editing product:", { estoqueId, data, userId });
         await db.estoque.update({
             where: {
                 id: estoqueId,
@@ -365,18 +310,18 @@ export async function editarProduto(vendaId: number, estoqueId: number, _: Creat
     });
 }
 
-export async function deletarProduto(historicoEstoqueId: number) {
-    const historicoEstoque = await db.historicoEstoque.findUnique({
-        where: {
-            id: historicoEstoqueId
-        },
-        include: {
-            venda: true
-        }
-    });
+export async function deletarProduto(estoqueId: number) {
+    // const historicoEstoque = await db.estoque.findUnique({
+    //     where: {
+    //         id: historicoEstoqueId
+    //     },
+    //     include: {
+    //         venda: true
+    //     }
+    // });
 
-    if (!historicoEstoque) return false;
-    const estoqueId = historicoEstoque?.estoqueId;
+    // if (!historicoEstoque) return false;
+    // const estoqueId = historicoEstoque?.estoqueId;
 
     const estoque = await db.estoque.findFirst({
         where: {
@@ -398,23 +343,23 @@ export async function deletarProduto(historicoEstoqueId: number) {
         return false;
     }
 
-    const vendaEstoque = await db.vendaEstoque.findFirst({
-        where: {
-            vendaId: historicoEstoque.venda.id
-        }
-    })
+    // const vendaEstoque = await db.vendaEstoque.findFirst({
+    //     where: {
+    //         vendaId: historicoEstoque.venda.id
+    //     }
+    // })
 
-    await db.historicoEstoque.delete({
-        where: {
-            id: historicoEstoque.id,
-        }
-    });
+    // await db.historicoEstoque.delete({
+    //     where: {
+    //         id: historicoEstoque.id,
+    //     }
+    // });
 
-    await db.vendaEstoque.delete({
-        where: {
-            id: vendaEstoque?.id,
-        }
-    });
+    // await db.vendaEstoque.delete({
+    //     where: {
+    //         id: vendaEstoque?.id,
+    //     }
+    // });
 
     await db.estoque.delete({
         where: {

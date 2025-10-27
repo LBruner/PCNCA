@@ -1,9 +1,9 @@
 import React from "react";
-import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import {EstoqueComCultura} from "@/actions/estoques";
 import CriarVendaForm from "@/components/vendas/criação/CriarVendaForm";
 import {pegaTodosClientes} from "@/actions/clientes";
 
-export type ProdutosSelecionados = ProdutoEstoqueComRelacoes & {
+export type ProdutosSelecionados = EstoqueComCultura & {
     quantity: number
 }
 

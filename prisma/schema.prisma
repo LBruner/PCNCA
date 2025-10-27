@@ -49,14 +49,13 @@ model Session {
   user         Usuario  @relation(fields: [userId], references: [id])
 }
 
-
 model Noticia {
   notId                        Int                            @id @default(autoincrement())
   titulo                       String                         @map("titulo") @db.VarChar(200)
   subtitulo                    String                         @map("subtitulo") @db.VarChar(1000)
   corpo                        String                         @map("corpo")
   dataPubli                    DateTime                       @map("data_publicacao")
-  descricao                    String?                        @map("descricao") @db.VarChar(1000)
+  descricao                    String?                        @map("descricao") @db.Text()
   idCultura                    Int                            @map("id_cultura")
   imagemLink                   String                         @map("imagem_link") @db.VarChar(300)
   ComercioInternacionalNoticia ComercioInternacionalNoticia[]
@@ -126,11 +125,14 @@ model ComercioInternacional {
 }
 
 model Empresa {
-  id       Int       @id @default(autoincrement()) @map("empresa_id")
-  nome     String    @db.VarChar(100)
-  serial   BigInt
-  usuarios Usuario[]
-  estoques Estoque[]
+  id               Int                @id @default(autoincrement()) @map("empresa_id")
+  nome             String             @db.VarChar(100)
+  serial           BigInt
+  usuarios         Usuario[]
+  estoques         Estoque[]
+  HistoricoEstoque HistoricoEstoque[]
+  transacoes       Transacao[]
+  Venda            Venda[]
 }
 
 model Endereco {
@@ -148,57 +150,53 @@ model Endereco {
 }
 
 model Estoque {
-  id                 Int                @id @default(autoincrement()) @map("estoque_id")
-  produto            String             @db.VarChar(50)
+  id                 Int      @id @default(autoincrement()) @map("estoque_id")
+  produto            String   @db.VarChar(50)
   categoriaculturaId Int?
-  tipo               String             @db.VarChar(1)
-  descricao          String             @db.VarChar(2000)
-  quantidade         Float              @map("qtd")
+  tipo               String   @db.VarChar(1)
+  descricao          String   @db.VarChar(2000)
+  quantidade         Float    @map("qtd")
   preco              Float
-  unidadeMedida      String             @map("unidade_medida") @db.VarChar(25)
-  imagemLink         String?            @map("imagem_link") @db.VarChar(300)
-  ativo              Boolean            @default(true)
-  foiUtilizado       Boolean            @default(false) @map("foi_utilizado")
-  
-  // Vendor/Company tracking
-  empresaId          Int?               @map("empresa_id")
-  vendorName         String?            @map("vendor_name") @db.VarChar(100)
-  
+  unidadeMedida      String   @map("unidade_medida") @db.VarChar(25)
+  imagemLink         String?  @map("imagem_link") @db.VarChar(300)
+  ativo              Boolean  @default(true)
+  foiUtilizado       Boolean  @default(false) @map("foi_utilizado")
+  empresaId          Int      @map("empresa_id")
+  dataAdicao         DateTime @default(now()) @map("dataAdicao")
+
   // Seeds-specific fields
-  genero              String?  // gênero
-  especie             String?  // espécie
-  variedade           String?  // variedade
-  corDaFolhagem       String?  // cor da folhagem
-  requisitosDeLuz     String?  // requisitos de luz
-  requisitosDeUmidade String?  // requisitos de umidade
-  tipoDeSolo          String?  // tipo de solo
-  zonaDeResistencia   String?  // zona de resistência
-  diasParaMaturidade  String?  // dias para maturidade
-  alturaMadura        String?  // altura madura
-  diasParaGerminacao  String?  // dias para germinação
-  infoSolSombra       String?  // informações sobre sol/sombra
-  
-  // Full description
-  fullDescription    String?            @map("full_description") @db.Text
-  
+  genero              String? // gênero
+  especie             String? // espécie
+  variedade           String? // variedade
+  corDaFolhagem       String? // cor da folhagem
+  requisitosDeLuz     String? // requisitos de luz
+  requisitosDeUmidade String? // requisitos de umidade
+  tipoDeSolo          String? // tipo de solo
+  zonaDeResistencia   String? // zona de resistência
+  diasParaMaturidade  String? // dias para maturidade
+  alturaMadura        String? // altura madura
+  diasParaGerminacao  String? // dias para germinação
+  infoSolSombra       String? // informações sobre sol/sombra
+
   // Relations
-  categoriaId        Cultura?           @relation(fields: [categoriaculturaId], references: [culturaId])
-  empresa            Empresa?           @relation(fields: [empresaId], references: [id])
-  historicos         HistoricoEstoque[]
-  vendas             VendaEstoque[]
-  reviews            EstoqueReview[]
+  categoriaId    Cultura?           @relation(fields: [categoriaculturaId], references: [culturaId])
+  empresa        Empresa?           @relation(fields: [empresaId], references: [id])
+  historicos     HistoricoEstoque[]
+  vendas         VendaEstoque[]
+  reviews        EstoqueReview[]
+  transacaoItens TransacaoItem[]
 }
 
 model EstoqueReview {
-  id         Int      @id @default(autoincrement())
-  estoqueId  Int      @map("estoque_id")
-  rating     Int      // 1-5 stars
-  comment    String   @db.Text
-  reviewerName String @map("reviewer_name") @db.VarChar(100)
-  createdAt  DateTime @default(now()) @map("created_at")
-  
-  estoque    Estoque  @relation(fields: [estoqueId], references: [id], onDelete: Cascade)
-  
+  id           Int      @id @default(autoincrement())
+  estoqueId    Int      @map("estoque_id")
+  rating       Int // 1-5 stars
+  comment      String   @db.Text
+  reviewerName String   @map("reviewer_name") @db.VarChar(100)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  estoque Estoque @relation(fields: [estoqueId], references: [id], onDelete: Cascade)
+
   @@index([estoqueId])
 }
 
@@ -217,10 +215,12 @@ model HistoricoEstoque {
   comprador  Boolean  @default(false)
   estoqueId  Int      @map("estoque_estoque_id")
   vendaId    Int      @map("venda_venda_id")
-  usuarioId  String   @map("usuario_usuario_id")
+  empresaId  Int      @map("empresa_id")
   estoque    Estoque  @relation(fields: [estoqueId], references: [id])
-  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  empresa    Empresa  @relation(fields: [empresaId], references: [id])
   venda      Venda    @relation(fields: [vendaId], references: [id])
+  Usuario    Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioId  String?
 }
 
 model HistoricoValores {
@@ -257,7 +257,6 @@ model Pessoa {
   pessoaFisica   PessoaFisica?
   pessoaJuridica PessoaJuridica?
   telefones      Telefone[]
-  vendas         VendaPessoa[]
 }
 
 model PessoaFisica {
@@ -307,34 +306,52 @@ model Usuario {
   email        String?            @db.VarChar(300)
   esp1         String?            @db.VarChar(20)
   esp2         String?            @db.VarChar(20)
-  empresaId    Int                @map("empresa_empresa_id")
+  empresaId    Int?               @map("empresa_empresa_id")
   Account      Account[]
   historicos   HistoricoEstoque[]
   Session      Session[]
-  empresa      Empresa            @relation(fields: [empresaId], references: [id])
+  empresa      Empresa?           @relation(fields: [empresaId], references: [id])
+  transacoes   Transacao[]
+  Venda        Venda[]
 }
 
 model Venda {
-  id              Int                   @id @default(autoincrement()) @map("venda_id")
-  dataVenda       DateTime              @map("dt_venda")
-  valorVenda      Float                 @map("valor_venda")
-  quantidadeVenda Float                 @map("qtd_venda")
-  desconto        Float?
-  historicos      HistoricoEstoque[]
-  estoques        VendaEstoque[]
-  formasPagamento VendaFormaPagamento[]
-  pessoas         VendaPessoa[]
+  id        Int     @id @default(autoincrement())
+  empresaId Int     @map("empresa_id")
+  usuarioId String  @map("usuario_id")
+  comprador Boolean @default(false)
+
+  // NOVOS CAMPOS
+  status        String    @default("PENDENTE") @db.VarChar(50)
+  valorTotal    Float?    @map("valor_total")
+  dataPagamento DateTime? @map("data_pagamento")
+  observacoes   String?   @db.Text
+  dataVenda     DateTime  @default(now()) @map("data_venda")
+
+  // Relações
+  empresa             Empresa               @relation(fields: [empresaId], references: [id])
+  usuario             Usuario               @relation(fields: [usuarioId], references: [id])
+  transacoes          Transacao[]
+  estoques            VendaEstoque[]
+  historicos          HistoricoEstoque[]
+  VendaFormaPagamento VendaFormaPagamento[]
+
+  @@map("vendas")
 }
 
 model VendaEstoque {
-  id        Int     @id @default(autoincrement()) @map("vest_id")
-  precoProp Float   @map("prc_prop")
-  estoqueId Int     @map("estoque_estoque_id")
-  vendaId   Int     @map("venda_venda_id")
-  estoque   Estoque @relation(fields: [estoqueId], references: [id])
-  venda     Venda   @relation(fields: [vendaId], references: [id])
+  id            Int   @id @default(autoincrement())
+  vendaId       Int   @map("venda_id")
+  estoqueId     Int   @map("estoque_id")
+  quantidade    Float
+  precoUnitario Float @map("preco_unitario")
 
-  @@unique([vendaId, estoqueId])
+  venda   Venda   @relation(fields: [vendaId], references: [id], onDelete: Cascade)
+  estoque Estoque @relation(fields: [estoqueId], references: [id])
+
+  @@index([vendaId])
+  @@index([estoqueId])
+  @@map("venda_estoque")
 }
 
 model VendaFormaPagamento {
@@ -347,13 +364,104 @@ model VendaFormaPagamento {
   @@unique([formaPagamentoId, vendaId])
 }
 
-model VendaPessoa {
-  id         Int    @id @default(autoincrement()) @map("vpes_id")
-  vendaId    Int    @map("venda_venda_id")
-  pessoaId   Int    @map("pessoa_pess_pessoa_id")
-  tipoPessoa String @map("tipo_pessoa") @db.VarChar(15)
-  pessoa     Pessoa @relation(fields: [pessoaId], references: [id])
-  venda      Venda  @relation(fields: [vendaId], references: [id])
+model Transacao {
+  id Int @id @default(autoincrement()) @map("transacao_id")
 
-  @@unique([vendaId, pessoaId])
+  // MercadoPago Payment Details
+  mercadoPagoPaymentId String  @unique @map("mp_payment_id") // ID do pagamento no MP
+  mercadoPagoOrderId   String? @map("mp_order_id") // ID do pedido no MP
+  externalReference    String? @map("external_reference") // Sua referência externa
+
+  // Payment Information
+  status        String  @db.VarChar(50) // approved, pending, rejected, cancelled, refunded
+  statusDetail  String? @map("status_detail") @db.VarChar(100)
+  paymentType   String  @map("payment_type") @db.VarChar(50) // credit_card, debit_card, pix, etc
+  paymentMethod String? @map("payment_method") @db.VarChar(50) // visa, master, pix, etc
+
+  // Financial Details
+  valorTotal         Float  @map("valor_total")
+  valorLiquido       Float? @map("valor_liquido") // Valor após taxas
+  taxaMercadoPago    Float? @map("taxa_mp") // Taxa cobrada pelo MP
+  parcelasQuantidade Int?   @default(1) @map("parcelas_qtd")
+
+  // Timestamps
+  dataCriacao     DateTime  @default(now()) @map("data_criacao")
+  dataAprovacao   DateTime? @map("data_aprovacao")
+  dataAtualizacao DateTime  @updatedAt @map("data_atualizacao")
+
+  // Customer Information
+  pagadorEmail     String? @map("pagador_email") @db.VarChar(255)
+  pagadorNome      String? @map("pagador_nome") @db.VarChar(255)
+  pagadorDocumento String? @map("pagador_documento") @db.VarChar(20)
+  pagadorTelefone  String? @map("pagador_telefone") @db.VarChar(20)
+
+  // Relations
+  vendaId   Int?   @map("venda_id")
+  empresaId Int    @map("empresa_id")
+  usuarioId String @map("usuario_id")
+
+  venda   Venda?  @relation(fields: [vendaId], references: [id])
+  empresa Empresa @relation(fields: [empresaId], references: [id])
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+
+  // Additional Details
+  itens       TransacaoItem[]
+  webhookLogs WebhookLog[]
+
+  // Metadata
+  metadata Json? // Para armazenar dados extras do MP
+
+  @@index([mercadoPagoPaymentId])
+  @@index([vendaId])
+  @@index([status])
+  @@index([dataCriacao])
+  @@map("transacoes")
+}
+
+model TransacaoItem {
+  id Int @id @default(autoincrement()) @map("item_id")
+
+  transacaoId Int @map("transacao_id")
+  estoqueId   Int @map("estoque_id")
+
+  produtoNome   String @map("produto_nome") @db.VarChar(255)
+  quantidade    Float  @map("quantidade")
+  precoUnitario Float  @map("preco_unitario")
+  precoTotal    Float  @map("preco_total")
+
+  transacao Transacao @relation(fields: [transacaoId], references: [id], onDelete: Cascade)
+  estoque   Estoque   @relation(fields: [estoqueId], references: [id])
+
+  @@index([transacaoId])
+  @@index([estoqueId])
+  @@map("transacao_itens")
+}
+
+model WebhookLog {
+  id Int @id @default(autoincrement()) @map("log_id")
+
+  transacaoId Int? @map("transacao_id")
+
+  // Webhook Details
+  tipo      String  @db.VarChar(50) // payment, merchant_order, etc
+  action    String? @db.VarChar(50) // payment.created, payment.updated, etc
+  paymentId String? @map("payment_id") @db.VarChar(100)
+
+  // Request Details
+  requestBody    Json @map("request_body")
+  responseStatus Int  @map("response_status")
+
+  // Timestamps
+  recebidoEm   DateTime  @default(now()) @map("recebido_em")
+  processadoEm DateTime? @map("processado_em")
+
+  // Error Handling
+  erro       String? @db.Text
+  tentativas Int     @default(1)
+
+  transacao Transacao? @relation(fields: [transacaoId], references: [id])
+
+  @@index([paymentId])
+  @@index([recebidoEm])
+  @@map("webhook_logs")
 }

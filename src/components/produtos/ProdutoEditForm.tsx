@@ -4,17 +4,17 @@ import React from "react";
 import { useActionState } from "react";
 import * as actions from "@/actions";
 import ProdutoForm from "@/components/produtos/ProdutoForm";
-import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import {EstoqueComCultura} from "@/actions/estoques";
 import {Cultura} from "@prisma/client";
 
 interface ProdutoEditFormProps {
     produtoId: string;
-    produto: ProdutoEstoqueComRelacoes;
+    estoque: EstoqueComCultura;
     culturas: Cultura[];
 }
 
-const ProdutoEditForm: React.FC<ProdutoEditFormProps> = ({culturas, produto}) => {
-    const [formState, action] = useActionState(actions.editarProduto.bind(null, produto.vendaId, produto.estoqueId), {
+const ProdutoEditForm: React.FC<ProdutoEditFormProps> = ({culturas, estoque}) => {
+    const [formState, action] = useActionState(actions.editarProduto.bind(null, estoque.id), {
         errors: {},
     })
 
@@ -23,7 +23,7 @@ const ProdutoEditForm: React.FC<ProdutoEditFormProps> = ({culturas, produto}) =>
             culturas={culturas}
             formState={formState}
             action={action}
-            produto={produto}
+            estoque={estoque}
         />
     )
 }

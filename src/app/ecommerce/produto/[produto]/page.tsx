@@ -1,8 +1,6 @@
 import React from "react";
-import Image from "next/image";
 import { Estoque } from "@prisma/client";
 import ProdutoDetalhes from "@/components/ecommerce/produto/detalhes/ProdutoDetalhes";
-import { getSortedProduto } from "@/helpers/tabela";
 import { pegaDetalhesProduto } from "@/actions/estoques";
 import { notFound } from "next/navigation";
 

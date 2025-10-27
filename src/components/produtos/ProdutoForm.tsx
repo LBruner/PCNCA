@@ -6,18 +6,18 @@ import { CreatePostFormState } from "@/actions/produto";
 import { Cultura } from "@prisma/client";
 import { FilterCollection } from "@/models/shared/FilterCollection";
 import { unidadesMedidaCollection } from "@/constants/UnidadesMedida";
-import { ProdutoEstoqueComRelacoes } from "@/actions/estoques";
+import { EstoqueComCultura } from "@/actions/estoques";
 
 interface ProdutoFormProps {
     formState: CreatePostFormState,
     action: (payload: FormData) => void,
-    produto?: ProdutoEstoqueComRelacoes;
+    estoque?: EstoqueComCultura;
     culturas: Cultura[];
 }
 
-const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, culturas }) => {
-    const [selectedChaveCategoria, setselectedChaveCategoria] = useState(produto?.estoque.categoriaId?.culturaId.toString() ?? '');
-    const [unidadeMedidaChave, setUnidadeMedidaChave] = useState(produto?.estoque.unidadeMedida.toString() ?? '');
+const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, estoque, culturas }) => {
+    const [selectedChaveCategoria, setselectedChaveCategoria] = useState(estoque?.categoriaId?.culturaId.toString() ?? '');
+    const [unidadeMedidaChave, setUnidadeMedidaChave] = useState(estoque?.unidadeMedida.toString() ?? '');
     const isSeedsCategory = selectedChaveCategoria === '5000';
 
     const culturaCollection: FilterCollection[] = culturas.map((cultura) => {
@@ -27,26 +27,24 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, c
         }
     })
 
-    console.log('produto no form', produto);
-
     return (
         <form action={formData => {
             action(formData);
         }} className={'flex flex-col justify-center items-center'}>
             <div className={'w-5/6 flex justify-between mb-4 items-center'}>
                 <p className={'text-2xl font-semibold'}>Criar Produto</p>
-                <Button type={'submit'}>{produto ? 'Editar' : 'Criar'} Produto</Button>
+                <Button type={'submit'}>{estoque ? 'Editar' : 'Criar'} Produto</Button>
             </div>
             <div className={'w-5/6 px-4 py-2 flex justify-center dark:bg-customDarkFooter dark:border-gray-900 bg-white rounded-lg border-1 border-gray-200'}>
                 <div className={'flex flex-col gap-4 w-full px-8 py-6'}>
                     <p className={'text-xl font-bold'}>Informações Gerais</p>
                     <div className={'flex flex-col gap-7'}>
-                        <CustomInputButton defaultValue={produto?.estoque.produto ?? undefined} name={'nome'}
+                        <CustomInputButton defaultValue={estoque?.produto ?? undefined} name={'nome'}
                             label={'Nome'}
                             placeholder={'Digite um nome...'}
                             errorMessage={formState.errors.nome?.join(', ')} />
                         <CustomInputButton
-                            defaultValue={produto?.estoque.preco.toString() ?? undefined} name={'preco'}
+                            defaultValue={estoque?.preco.toString() ?? undefined} name={'preco'}
                             type={'number'} label={'Preço'}
                             placeholder={'0'} isInvalid={!!formState.errors.preco}
                             errorMessage={formState.errors.preco?.join(', ')}
@@ -60,7 +58,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, c
                             collection={culturaCollection} isInvalid={!!formState.errors.categoria}
                             errorMessage={formState.errors.categoria?.join(', ')}
                         />
-                        <CustomInputButton defaultValue={produto?.estoque.imagemLink ?? undefined} name={'imagem'}
+                        <CustomInputButton defaultValue={estoque?.imagemLink ?? undefined} name={'imagem'}
                             label={'Imagem principal'}
                             placeholder={'Digite a url da imagem...'}
                             errorMessage={formState.errors.imagem?.join(', ')} />
@@ -68,7 +66,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, c
                 </div>
                 <div className={'flex flex-col gap-4 w-full px-8 py-6 mt-11'}>
                     <div className={'flex flex-col gap-7'}>
-                        <CustomInputButton defaultValue={produto?.estoque.quantidade.toString() ?? undefined}
+                        <CustomInputButton defaultValue={estoque?.quantidade.toString() ?? undefined}
                             name={'estoque'}
                             type={'number'} label={'Estoque'}
                             placeholder={'0 Unidades'}
@@ -82,7 +80,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, c
                             collection={unidadesMedidaCollection} isInvalid={!!formState.errors.unidade}
                             errorMessage={formState.errors.unidade?.join(', ')}
                         />
-                        <Textarea defaultValue={produto?.estoque.descricao ?? undefined} name={'descricao'} size={'lg'}
+                        <Textarea defaultValue={estoque?.descricao ?? undefined} name={'descricao'} size={'lg'}
                             minRows={1}
                             className={'font-semibold'}
                             labelPlacement={'outside'} label={'Descrição'}
@@ -90,7 +88,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, c
                             isInvalid={!!formState.errors.descricao}
                             errorMessage={formState.errors.descricao?.join(', ')} />
                         <RadioGroup
-                            defaultValue={produto?.estoque?.tipo ?? 'A'}
+                            defaultValue={estoque?.tipo ?? 'A'}
                             name={'tipoComodity'}
                             isRequired={true}
                             classNames={{
@@ -118,14 +116,14 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, c
                             <p className="text-xl font-bold">Informações Botânicas</p>
                             <div className="flex flex-col gap-7">
                                 <CustomInputButton
-                                    defaultValue={produto?.estoque.genero ?? undefined}
+                                    defaultValue={estoque?.genero ?? undefined}
                                     name="genero"
                                     label="Gênero"
                                     placeholder="Ex: Cosmos"
                                     isRequired={false}
                                 />
                                 <CustomInputButton
-                                    defaultValue={produto?.estoque.especie ?? undefined}
+                                    defaultValue={estoque?.especie ?? undefined}
                                     name="especie"
                                     label="Espécie"
                                     placeholder="Ex: sulphureus"
@@ -137,14 +135,14 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, c
                         <div className="flex flex-col gap-4 w-full px-8 py-6 mt-11">
                             <div className="flex flex-col gap-7">
                                 <CustomInputButton
-                                    defaultValue={produto?.estoque.corDaFolhagem ?? undefined}
+                                    defaultValue={estoque?.corDaFolhagem ?? undefined}
                                     name="corDaFolhagem"
                                     label="Cor da Folhagem"
                                     placeholder="Ex: Verde Médio"
                                     isRequired={false}
                                 />
                                 <CustomInputButton
-                                    defaultValue={produto?.estoque.alturaMadura ?? undefined}
+                                    defaultValue={estoque?.alturaMadura ?? undefined}
                                     name="alturaMadura"
                                     label="Altura Madura"
                                     placeholder="Ex: 90–120 cm"
@@ -160,14 +158,14 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, c
                             <p className="text-xl font-bold">Requisitos de Cultivo</p>
                             <div className="flex flex-col gap-7">
                                 <CustomInputButton
-                                    defaultValue={produto?.estoque.requisitosDeLuz ?? undefined}
+                                    defaultValue={estoque?.requisitosDeLuz ?? undefined}
                                     name="requisitosDeLuz"
                                     label="Requisitos de Luz"
                                     placeholder="Ex: Sol pleno"
                                     isRequired={false}
                                 />
                                 <CustomInputButton
-                                    defaultValue={produto?.estoque.requisitosDeUmidade ?? undefined}
+                                    defaultValue={estoque?.requisitosDeUmidade ?? undefined}
                                     name="requisitosDeUmidade"
                                     label="Requisitos de Umidade"
                                     placeholder="Ex: Solo levemente úmido"
@@ -179,7 +177,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, c
                         <div className="flex flex-col gap-4 w-full px-8 py-6 mt-11">
                             <div className="flex flex-col gap-7">
                                 <CustomInputButton
-                                    defaultValue={produto?.estoque.diasParaMaturidade ?? undefined}
+                                    defaultValue={estoque?.diasParaMaturidade ?? undefined}
                                     name="diasParaMaturidade"
                                     type="number"
                                     label="Dias para Maturidade"
@@ -187,7 +185,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, produto, c
                                     isRequired={false}
                                 />
                                 <CustomInputButton
-                                    defaultValue={produto?.estoque.tipoDeSolo ?? undefined}
+                                    defaultValue={estoque?.tipoDeSolo ?? undefined}
                                     name="tipoDeSolo"
                                     label="Tipo de Solo"
                                     placeholder="Ex: Solo bem drenado"

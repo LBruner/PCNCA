@@ -3,7 +3,7 @@ import {SortDescriptor} from "@heroui/react";
 import {IFilterable} from "@/models/estoque/filters";
 import {NoticiaComCultura} from "@/actions/noticias";
 import {PessoaFisJurEnd} from "@/actions/pessoas";
-import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import {EstoqueComCultura} from "@/actions/estoques";
 import {UsuarioComEmpresa} from "@/actions/usuarios";
 
 type FilterableItem = string | string[];
@@ -47,10 +47,10 @@ export const getSortedUsuario = (items: UsuarioComEmpresa[], sortDescriptor: Sor
     });
 }
 
-export const getSortedProduto = (items: ProdutoEstoqueComRelacoes[], sortDescriptor: SortDescriptor) => {
-    return [...items].sort((a: ProdutoEstoqueComRelacoes, b: ProdutoEstoqueComRelacoes) => {
-        const first = a.estoque.produto;
-        const second = b.estoque.produto;
+export const getSortedEstoque = (items: EstoqueComCultura[], sortDescriptor: SortDescriptor) => {
+    return [...items].sort((a: EstoqueComCultura, b: EstoqueComCultura) => {
+        const first = a.produto;
+        const second = b.produto;
 
         const cmp = first! < second! ? -1 : first! > second! ? 1 : 0;
 

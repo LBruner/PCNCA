@@ -9,7 +9,7 @@ import {FilterCollection} from "@/models/shared/FilterCollection";
 import {MdOutlineSell} from "react-icons/md";
 import {FaCirclePlus} from "react-icons/fa6";
 import {useRouter} from "next/navigation";
-import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import {EstoqueComCultura} from "@/actions/estoques";
 import ExcelJS from "exceljs";
 import {saveAs} from "file-saver";
 import jsPDF from "jspdf";
@@ -35,7 +35,7 @@ interface TabelaTopContentProps {
     onSearchChange: (value: string) => void;
     onClear: () => void;
     selectedItems: string | string[];
-    products: ProdutoEstoqueComRelacoes[],
+    products: EstoqueComCultura[],
 }
 
 const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
@@ -75,14 +75,14 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
         worksheet.addRow(["Produto", "Categoria", "Tipo", "Data de Adição", "Preço", "Estoque"]);
 
         // Add data rows
-        products.forEach((produto) => {
+        products.forEach((estoque) => {
             worksheet.addRow([
-                produto?.estoque?.produto || "",
-                produto?.estoque?.categoriaId?.nome || "",
-                `${produto?.estoque?.tipo === 'A' ? 'Agrícola' : 'Pecuária'}` || "",
-                formatarData(produto?.dataAlter) || "",
-                formatToBrazilianCurrency(produto?.estoque?.preco) || "",
-                `${produto?.estoque?.quantidade} UN` || "",
+                estoque?.produto || "",
+                estoque?.categoriaId?.nome || "",
+                `${estoque?.tipo === 'A' ? 'Agrícola' : 'Pecuária'}` || "",
+                // formatarData(produto?.dataAlter) || "",
+                formatToBrazilianCurrency(estoque?.preco) || "",
+                `${estoque?.quantidade} UN` || "",
             ]);
         });
 
@@ -126,13 +126,13 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
 
         const head = [["Produto", "Categoria", "Tipo", "Data de Adição", "Preço", "Estoque"]];
 
-        const body = products.map((produto) => [
-            produto?.estoque?.produto || "",
-            produto?.estoque?.categoriaId?.nome || "",
-            `${produto?.estoque?.tipo === 'A' ? 'Agrícola' : 'Pecuária'}` || "",
-            formatarData(produto?.dataAlter) || "",
-            formatToBrazilianCurrency(produto?.estoque?.preco) || "",
-            `${produto?.estoque?.quantidade} UN` || "",
+        const body = products.map((estoque) => [
+            estoque?.produto || "",
+            estoque?.categoriaId?.nome || "",
+            `${estoque?.tipo === 'A' ? 'Agrícola' : 'Pecuária'}` || "",
+            // formatarData(dataAlter) || "",
+            formatToBrazilianCurrency(estoque?.preco) || "",
+            `${estoque?.quantidade} UN` || "",
         ]);
 
         autoTable(doc, {

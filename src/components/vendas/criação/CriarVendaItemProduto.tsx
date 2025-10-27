@@ -5,23 +5,23 @@ import {LuTrash2} from "react-icons/lu";
 import {ProdutosSelecionados} from "@/app/vendas/criar/page";
 
 interface CriarVendaItemProduto {
-    produto: ProdutosSelecionados;
+    estoque: ProdutosSelecionados;
     changeProductQuantity: (productId: number, newQuantity: number) => void;
     removeProduct: (productId: number) => void;
 }
 
 const CriarVendaItemProduto: React.FC<CriarVendaItemProduto> = (props) => {
-    const {produto, removeProduct,changeProductQuantity} = props;
+    const {estoque, removeProduct,changeProductQuantity} = props;
     return (
-        <div key={produto.id} className={'flex justify-between items-center'}>
+        <div key={estoque.id} className={'flex justify-between items-center'}>
             <div className={'flex gap-4'}>
                 <div className={'h-auto w-24'}>
-                    <Image isZoomed={true} src={produto.estoque.imagemLink!} alt={produto.estoque.produto}/>
+                    <Image isZoomed={true} src={estoque.imagemLink!} alt={estoque.produto}/>
                 </div>
                 <div>
-                    <p className={'text-md dark:text-gray-300  text-gray-700 font-light'}>{produto.estoque.categoriaId?.nome ?? "Sem categoria"}</p>
-                    <p className={'text-2xl font-semibold'}>{produto.estoque.produto}</p>
-                    <p className={'text-sm text-gray-700 dark:text-gray-300 font-light'}>Disponíveis: {produto.estoque.quantidade}</p>
+                    <p className={'text-md dark:text-gray-300  text-gray-700 font-light'}>{estoque.categoriaId?.nome ?? "Sem categoria"}</p>
+                    <p className={'text-2xl font-semibold'}>{estoque.produto}</p>
+                    <p className={'text-sm text-gray-700 dark:text-gray-300 font-light'}>Disponíveis: {estoque.quantidade}</p>
                 </div>
             </div>
             <div className={'flex gap-8 items-center'}>
@@ -31,22 +31,22 @@ const CriarVendaItemProduto: React.FC<CriarVendaItemProduto> = (props) => {
                         variant={'flat'}
                         type="number"
                         onChange={event => {
-                            changeProductQuantity(produto.id, parseInt(event.target.value));
+                            changeProductQuantity(estoque.id, parseInt(event.target.value));
                         }}
-                        value={produto.quantity.toString()}
+                        value={estoque.quantity.toString()}
                         className="w-16"
                         min="1"
                         errorMessage={'Quantidade Inválida'}
-                        max={produto.estoque.quantidade}
+                        max={estoque.quantidade}
                     />
                     <p>x</p>
-                    <span className=""> {formatToBrazilianCurrency(produto.estoque.preco)}</span>
+                    <span className=""> {formatToBrazilianCurrency(estoque.preco)}</span>
                 </div>
                 <div className={'w-20'}>
-                    <p>{!produto.quantity ? 'R$ 0' : formatToBrazilianCurrency(produto.estoque.preco * produto.quantity)}</p>
+                    <p>{!estoque.quantity ? 'R$ 0' : formatToBrazilianCurrency(estoque.preco * estoque.quantity)}</p>
                 </div>
                 <div>
-                    <LuTrash2 onClick={() => removeProduct(produto.id)} className={`cursor-pointer hover:text-red-500`} size={22}/>
+                    <LuTrash2 onClick={() => removeProduct(estoque.id)} className={`cursor-pointer hover:text-red-500`} size={22}/>
                 </div>
             </div>
         </div>

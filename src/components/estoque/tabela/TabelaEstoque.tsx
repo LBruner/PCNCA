@@ -17,17 +17,18 @@ import {
 import {Chip} from "@heroui/chip";
 import {DeleteIcon, EditIcon} from "@heroui/shared-icons";
 import TabelaEstoqueBottomContent from "@/components/estoque/tabela/TabelaEstoqueBottomContent";
-import {getFilteredItems, getSortedProduto} from "@/helpers/tabela";
+import {getFilteredItems, getSortedEstoque} from "@/helpers/tabela";
 import Link from "next/link";
 import paths from "@/paths";
 import ItemDeleteModal, {DeletingItemModalSettings} from "@/components/produtos/ItemDeleteModal";
 import {ativaProduto, deletarProduto, desativaProduto} from "@/actions/produto";
 import {FilterCollection} from "@/models/shared/FilterCollection";
 import TabelaEstoquesTopContent from "@/components/estoque/tabela/TabelaEstoqueTopContent";
-import {ProdutoEstoqueComRelacoes} from "@/actions/estoques";
+import {EstoqueComCultura} from "@/actions/estoques";
 import {priceOptions, stockOptions} from "@/models/estoque/filters";
 import {formatToBrazilianCurrency} from "@/helpers";
 import {RiInboxArchiveLine, RiInboxUnarchiveLine} from "react-icons/ri";
+import { Estoque } from "@prisma/client";
 
 const columns = [
     {name: "PRODUTO", uid: "nome", sortable: true},
@@ -41,11 +42,11 @@ const columns = [
 ];
 
 interface TabelaEstoqueProps {
-    products: ProdutoEstoqueComRelacoes[],
+    estoques: EstoqueComCultura[],
     categoriesCollection: FilterCollection[]
 }
 
-const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollection}) => {
+const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({estoques, categoriesCollection}) => {
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set());
     const [statusFilter, setStatusFilter] = React.useState<string | string[]>("all");
@@ -76,44 +77,44 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
     }, [isShowingToast]);
 
     const filteredItems = React.useMemo(() => {
-        let filteredProducts = [...products];
+        let filteredProducts = [...estoques];
 
         if (hasSearchFilter) {
             filteredProducts = filteredProducts.filter((estoque) =>
-                estoque.estoque.produto.toLowerCase().includes(filterValue.toLowerCase()),
+                estoque.produto.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
 
         if (categoryFilter !== "all" && Array.from(categoriesCollection).length !== categoryFilter.length) {
-            filteredProducts = filteredProducts.filter((product) => {
-                    return Array.from(categoryFilter).includes(product.estoque.categoriaId?.nome!);
+            filteredProducts = filteredProducts.filter((estoque) => {
+                    return Array.from(categoryFilter).includes(estoque.categoriaId?.nome!);
                 }
             );
         }
 
         if (statusFilter !== "all") {
-            filteredProducts = filteredProducts.filter((product) => {
+            filteredProducts = filteredProducts.filter((estoque) => {
                 const statusMap = {
                     'Ativo': true,
                     'Inativo': false
                 };
 
                 return Array.from(statusFilter).some((status) => {
-                    return product.estoque.ativo === statusMap[status as keyof typeof statusMap];
+                    return estoque.ativo === statusMap[status as keyof typeof statusMap];
                 });
             });
         }
 
         if (stockFilter !== "all" && Array.from(stockOptions).length !== stockFilter.length) {
-            filteredProducts = filteredProducts.filter((product) => getFilteredItems(product.estoque.quantidade, stockFilter, stockOptions, ' unidades'));
+            filteredProducts = filteredProducts.filter((estoque) => getFilteredItems(estoque.quantidade, stockFilter, stockOptions, ' unidades'));
         }
 
         if (priceFilter !== "all" && Array.from(priceOptions).length !== priceFilter.length) {
-            filteredProducts = filteredProducts.filter((product) => getFilteredItems(product.estoque.preco, priceFilter, priceOptions, 'R$'));
+            filteredProducts = filteredProducts.filter((estoque) => getFilteredItems(estoque.preco, priceFilter, priceOptions, 'R$'));
         }
 
         return filteredProducts;
-    }, [products, filterValue, statusFilter, categoryFilter, priceFilter, stockFilter, hasSearchFilter, categoriesCollection]);
+    }, [estoques, filterValue, statusFilter, categoryFilter, priceFilter, stockFilter, hasSearchFilter, categoriesCollection]);
 
     const totalPagesQuantity = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -125,45 +126,45 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
     }, [currentPage, filteredItems, rowsPerPage]);
 
     const sortedItems = React.useMemo(() => {
-        return getSortedProduto(items, sortDescriptor)
+        return getSortedEstoque(items, sortDescriptor)
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((product: ProdutoEstoqueComRelacoes, columnKey: string) => {
+    const renderCell = React.useCallback((estoque: EstoqueComCultura, columnKey: string) => {
         switch (columnKey) {
             case "nome":
                 return (
                     <Usuario
-                        avatarProps={{radius: "lg", size: 'lg', src: product.estoque.imagemLink!}}
-                        name={product.estoque.produto}
+                        avatarProps={{radius: "lg", size: 'lg', src: estoque.imagemLink!}}
+                        name={estoque.produto}
                     >
-                        {product.estoque.produto}
+                        {estoque.produto}
                     </Usuario>
                 );
             case "categoria":
                 return (
                     <Chip className="capitalize" size="sm" variant="flat">
-                        {product.estoque.categoriaId?.nome}
+                        {estoque.categoriaId?.nome}
                     </Chip>
                 );
             case "tipo":
                 return (
-                    <Chip className="capitalize" color={product.estoque.tipo == 'A' ? 'success' : 'warning'} size="sm"
+                    <Chip className="capitalize" color={estoque.tipo == 'A' ? 'success' : 'warning'} size="sm"
                           variant="flat">
-                        {product.estoque.tipo == 'A' ? 'Agrícola' : 'Pecuária'}
+                        {estoque.tipo == 'A' ? 'Agrícola' : 'Pecuária'}
                     </Chip>
                 );
             case "status":
                 return (
                     <Chip classNames={{base: 'border-none'}} className="capitalize"
-                          color={product.estoque.ativo ? 'success' : 'danger'} size="sm"
+                          color={estoque.ativo ? 'success' : 'danger'} size="sm"
                           variant="dot">
-                        {product.estoque.ativo ? 'Ativo' : 'Inativo'}
+                        {estoque.ativo ? 'Ativo' : 'Inativo'}
                     </Chip>
                 );
             case "data":
                 return (
                     <p>
-                        {new Date(product.dataAlter).toLocaleDateString('pt-BR', {
+                        {new Date(estoque.dataAdicao).toLocaleDateString('pt-BR', {
                             day: '2-digit',
                             month: '2-digit',
                             year: 'numeric',
@@ -173,26 +174,26 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
             case "preco":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small capitalize">{formatToBrazilianCurrency(product.estoque.preco)}</p>
+                        <p className="text-bold text-small capitalize">{formatToBrazilianCurrency(estoque.preco)}</p>
                     </div>);
             case "quantidade":
                 return (
                     <div className="flex flex-col">
-                        <p className="text-bold text-small capitalize">{`${product.estoque.quantidade}`}</p>
+                        <p className="text-bold text-small capitalize">{`${estoque.quantidade}`}</p>
                     </div>);
             case "actions":
                 return (
                     <div className="relative flex items-center justify-center gap-2">
                         <Tooltip content="Editar Produto">
                             <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                <Link href={paths.editProduto(product.id.toString())}><EditIcon/></Link>
+                                <Link href={paths.editProduto(estoque.id.toString())}><EditIcon/></Link>
                             </span>
                         </Tooltip>
                         <Tooltip  color="danger" content="Deletar Produto">
                             <span className="text-lg text-danger cursor-pointer active:opacity-70">
-                                <DeleteIcon className={`${product.estoque.foiUtilizado ? ' text-gray-300' : ''}`}
+                                <DeleteIcon className={`${estoque.foiUtilizado ? ' text-gray-300' : ''}`}
                                             onClick={() => {
-                                                if (product.estoque.foiUtilizado) {
+                                                if (estoque.foiUtilizado) {
                                                     if (!isShowingToast) {
                                                         addToast({
                                                             color: 'danger',
@@ -207,17 +208,17 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                                                     return;
                                                 }
                                                 setSelectedKeys(new Set())
-                                                setSelectedProductId(product.id);
+                                                setSelectedProductId(estoque.id);
                                                 deleteProductModal.onOpen();
                                             }}/>
                             </span>
                         </Tooltip>
-                        {product.estoque.ativo ?  <Tooltip className={'bg-orange-300 text-white'} content="Inativar Produto">
+                        {estoque.ativo ?  <Tooltip className={'bg-orange-300 text-white'} content="Inativar Produto">
                             <span className="text-lg text-warning cursor-pointer">
                                 <RiInboxArchiveLine
                                     onClick={() => {
                                         setSelectedKeys(new Set())
-                                        setSelectedProductId(product.id);
+                                        setSelectedProductId(estoque.id);
                                         disableProductModal.onOpen();
                                     }}/>
                             </span>
@@ -227,7 +228,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                                 <RiInboxUnarchiveLine
                                     onClick={() => {
                                         setSelectedKeys(new Set())
-                                        setSelectedProductId(product.id);
+                                        setSelectedProductId(estoque.id);
                                         enableProductModal.onOpen();
                                     }}/>
                             </span>
@@ -294,7 +295,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
             <ItemDeleteModal itemId={selectedProductId} settings={itemDisableModalSettings}/>
             <div className={'bg-white dark:bg-customDarkFooter rounded-md p-4 mb-4 shadow-md'}>
                 <TabelaEstoquesTopContent
-                    products={products}
+                    products={estoques}
                     selectedItems={Array.from(selectedKeys)} // Convert Set to array
                     categoriesOptions={categoriesCollection}
                     setCategoryFilter={setCategoryFilter}
@@ -303,7 +304,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                     onSearchChange={onSearchChange} statusFilter={statusFilter} priceFilter={priceFilter}
                     setPriceFilter={setPriceFilter} stockFilter={stockFilter}
                     setStockFilter={setStockFilter} hasSearchFilter={hasSearchFilter}
-                    itemsLenght={products.length}
+                    itemsLenght={estoques.length}
                 />
             </div>
             <Table
@@ -331,9 +332,9 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                         return;
                     }
 
-                    const product = products.find((item) => item.id === parseInt(lastSelectedKey!.toString()!));
+                    const estoque = estoques.find((item) => item.id === parseInt(lastSelectedKey!.toString()!));
 
-                    if (product && product.estoque.ativo) {
+                    if (estoque && estoque.ativo) {
                         setSelectedKeys(keysSet as any);
                     } else {
                         keysSet.delete(lastSelectedKey!);
@@ -370,13 +371,13 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({products, categoriesCollec
                     )}
                 </TableHeader>
                 <TableBody className={'h-auto'} emptyContent={"Nenhum estoque disponível"}
-                           items={sortedItems as ProdutoEstoqueComRelacoes[]}>
-                    {(product: ProdutoEstoqueComRelacoes) => (
-                        <TableRow key={product.id}>
+                           items={sortedItems as EstoqueComCultura[]}>
+                    {(estoque: EstoqueComCultura) => (
+                        <TableRow key={estoque.id}>
                             {
                                 columns.map((column) => (
                                     <TableCell key={column.uid}>
-                                        {renderCell(product, column.uid)}
+                                        {renderCell(estoque, column.uid)}
                                     </TableCell>
                                 ))}
                         </TableRow>
