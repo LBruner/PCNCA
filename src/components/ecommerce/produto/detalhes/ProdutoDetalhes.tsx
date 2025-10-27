@@ -94,31 +94,31 @@ const ProdutoDetalhes: React.FC<ShowProductPageProps> = ({ product }) => {
                     <Image src={product.imagemLink!} alt={product.descricao} height={300} width={500} />
                 </div>
                 <div className="flex flex-col gap-4 w-4/12">
-                    <p className="text-4xl">{product.produto} Seeds</p>
+                    <p className="text-4xl">Sementes {product.produto}</p>
                     <p> ⭐⭐⭐⭐⭐ (3)</p>
                     <p>{formatToBrazilianCurrency(product.preco)}</p>
-                    <p className="font-bold">Seeds Per Pack: <span className="font-normal">{product.quantidade}</span></p>
+                    <p className="font-bold">Sementes por pacote: <span className="font-normal">{product.quantidade}</span></p>
                     <div className="flex items-center gap-2 py-2">
-                        <p className="text-sm text-gray-600">Sold by:</p>
-                        <p className="font-semibold text-gray-800">{product.vendor || 'Garden Seeds Co.'}</p>
+                        <p className="text-sm text-gray-600">Vendido Por:</p>
+                        <p className="font-semibold text-gray-800">{product.empresaId || 'Garden Seeds Co.'}</p>
                     </div>
                     <div className={'flex flex-col gap-2'}>
-                        <p className="text-sm font-light text-gray-600">Quantity</p>
+                        <p className="text-sm font-light text-gray-600">Quantidade</p>
                         <div className="border border-gray-400 w-36 flex items-center justify-between">
                             <button className={'px-4 py-2'} onClick={() => onChangeQuantity(quantity - 1)}>-</button>
                             <span className={'px-4 py-2'}>{quantity}</span>
                             <button className={'px-4 py-2'} onClick={() => onChangeQuantity(quantity + 1)}>+</button>
                         </div>
                     </div>
-                    <SimpleButton text={'Add to Cart'} bgColor="bg-green-800" />
-                    <SimpleButton text={'Checkout'} bgColor="bg-orange-700" />
+                    <SimpleButton text={'Adicionar ao carrinho'} bgColor="bg-green-800" />
+                    <SimpleButton text={'Fazer Checkout'} bgColor="bg-orange-700" />
                 </div>
             </div>
             <div className="my-12 w-full flex gap-8 justify-center">
-                <PlantDetails description="2 Feet" label="Mature Width" imageSrc="/images/width-ruler.svg" />
-                <PlantDetails description="Full Sun and Part Shade" label="Sun / Shade" imageSrc="/images/full-sun.svg" />
-                <PlantDetails description="75" label="Days to Maturity" imageSrc="/images/maturity.svg" />
-                <PlantDetails description="Moist, well-drained" label="Moisture" imageSrc="/images/moisture.svg" />
+                <PlantDetails description="2 Feet" label="Largura Madura" imageSrc="/images/width-ruler.svg" />
+                <PlantDetails description="Full Sun and Part Shade" label="Sol / Sombra" imageSrc="/images/full-sun.svg" />
+                <PlantDetails description="75" label="Dias para amadurecer" imageSrc="/images/maturity.svg" />
+                <PlantDetails description="Moist, well-drained" label="Umidade" imageSrc="/images/moisture.svg" />
             </div>
 
             <div className="w-8/12 my-12">
@@ -164,7 +164,7 @@ const ProdutoDetalhes: React.FC<ShowProductPageProps> = ({ product }) => {
             {/* Reviews Section */}
             <div className="w-8/12 my-12 mb-20">
                 <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-3xl font-semibold">Customer Reviews</h2>
+                    <h2 className="text-3xl font-semibold">Reviews do produto</h2>
                     <div className="flex items-center gap-3">
                         <span className="text-4xl font-bold">{averageRating.toFixed(1)}</span>
                         <div>
@@ -176,19 +176,19 @@ const ProdutoDetalhes: React.FC<ShowProductPageProps> = ({ product }) => {
 
                 {/* Write a Review */}
                 <div className="bg-gray-50 p-2 rounded-lg mb-8">
-                    <h3 className="text-xl font-semibold mb-4">Write a Review</h3>
+                    <h3 className="text-xl font-semibold mb-4">Escreva uma Review</h3>
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Your Rating</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Sua Nota</label>
                         <StarRating rating={rating} interactive={true} onRate={setRating} />
                     </div>
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Your Comment</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Seu Comentário</label>
                         <textarea
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
                             rows={4}
-                            placeholder="Share your experience with this product..."
+                            placeholder="Compartilhe a sua experiência com esse produto..."
                         />
                     </div>
                     <button

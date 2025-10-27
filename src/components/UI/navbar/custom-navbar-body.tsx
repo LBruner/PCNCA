@@ -30,11 +30,13 @@ const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
         return null;
     }
 
+    const isCompany = user?.empresaId != null;
+
     return (
         <>
             <Navbar maxWidth={'full'} shouldHideOnScroll={true}
                     className={'fixed shadow-sm dark:bg-customDarkBg dark:bg-opacity-40 bg-gray-100  bg-opacity-70 flex top-0 left-0 h-28 items-start py-5'}>
-                <div className={'w-96'}>
+                <div className={isCompany ? 'w-96': 'w-auto'}>
                     <MoedasCard/>
                     <div className='w-40'/>
                 </div>
@@ -48,11 +50,11 @@ const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({user}) => {
                     </div>
                     <NavbarContent className="hidden sm:flex gap-4" justify="center">
                         <NavLink path={paths.noticias()} text={'Notícias'}/>
-                        <NavLink path={paths.ecommerce()} text={'E-commerce'}/>
+                        {!isCompany && <NavLink path={paths.ecommerce()} text={'E-commerce'}/>}
                         <NavLink path={paths.cotacoesCommodities()} text={'Cotações'}/>
-                        {user && <NavLink path={paths.pessoas()} text={'Pessoas'}/>}
-                        {user && <NavLink path={paths.vendas()} text={'Vendas'}/>}
-                        {user && <NavLink path={paths.estoque()} text={'Estoque'}/>}
+                        {user && isCompany && <NavLink path={paths.pessoas()} text={'Pessoas'}/>}
+                        {user && isCompany && <NavLink path={paths.vendas()} text={'Vendas'}/>}
+                        {user && isCompany && <NavLink path={paths.estoque()} text={'Estoque'}/>}
                         <NavLink path={paths.prodInternacional()} text={'Produção Internacional'}/>
                     </NavbarContent>
                 </NavbarItem>

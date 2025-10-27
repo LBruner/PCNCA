@@ -3,7 +3,7 @@
 import {db} from "@/db";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/app/AuthOptions";
-import {getUserId} from "@/actions/produto";
+import {getUser} from "@/actions/produto";
 import {VendaComDados} from "@/components/vendas/criação/CriarVendaForm";
 import {Estoque, HistoricoEstoque, Pessoa, PessoaFisica, PessoaJuridica, Venda} from "@prisma/client";
 import {revalidatePath} from "next/cache";
@@ -91,7 +91,7 @@ export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
 export async function criarVenda(vendas: VendaComDados): Promise<void> {
     const session = await getServerSession(authOptions)
 
-    const userId = await getUserId(session!.user.id!);
+    const userId = await getUser(session!.user.id!);
     let subtotal = 0;
     let quantidadeVendida = 0;
 
@@ -552,4 +552,181 @@ export async function getDadosGraficoBar(
     };
 
     return data;
+}
+
+export type ItemCarrinho = {
+  estoqueId: number;
+  produto: string;
+  quantidade: number;
+  preco: number;
+  imagemLink?: string;
+};
+
+export type CriarVendaInput = {
+  itens: ItemCarrinho[];
+  compradorId?: number; // ID da pessoa que está comprando (se houver)
+  observacoes?: string;
+};
+
+export async function criarVendaPendente(input: CriarVendaInput): Promise<number> {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user) {
+    throw new Error('Usuário não autenticado');
+  }
+
+  const userId = session.user.id;
+
+  // Buscar empresa do usuário
+  const user = await db.usuario.findUnique({
+    where: { id: userId },
+    select: { empresaId: true },
+  });
+
+  // Calcular totais
+  const valorTotal = input.itens.reduce(
+    (sum, item) => sum + (item.preco * item.quantidade),
+    0
+  );
+
+  // Criar a venda com status PENDENTE
+  const venda = await db.venda.create({
+    data: {
+      usuarioId: userId!,
+      empresaId: user?.empresaId!,
+      comprador: false, 
+      status: 'PENDENTE',
+      valorTotal,
+      observacoes: input.observacoes || null,
+    },
+  });
+
+  for (const item of input.itens) {
+    console.log(item);
+    const estoque = await db.estoque.findUnique({
+      where: { id: item.estoqueId },
+    });
+
+    if (!estoque) {
+      // Rollback: deletar a venda criada
+      await db.venda.delete({ where: { id: venda.id } });
+      throw new Error(`Produto ${item.produto} não encontrado`);
+    }
+
+    if (estoque.quantidade < item.quantidade) {
+      // Rollback: deletar a venda criada
+      await db.venda.delete({ where: { id: venda.id } });
+      throw new Error(`Estoque insuficiente para ${item.produto}. Disponível: ${estoque.quantidade}`);
+    }
+
+    // Criar relacionamento VendaEstoque
+    await db.vendaEstoque.create({
+      data: {
+        vendaId: venda.id,
+        estoqueId: item.estoqueId,
+        quantidade: item.quantidade,
+        precoUnitario: item.preco,
+      },
+    });
+
+    // IMPORTANTE: Ainda não atualizar o estoque aqui
+    // O estoque será atualizado apenas quando o pagamento for aprovado
+  }
+
+  return venda.id;
+}
+
+export async function aprovarVenda(vendaId: number): Promise<void> {
+  const venda = await db.venda.findUnique({
+    where: { id: vendaId },
+    include: {
+      estoques: true,
+    },
+  });
+
+  if (!venda) {
+    throw new Error('Venda não encontrada');
+  }
+
+  if (venda.status === 'PAGO') {
+    // Já foi processada
+    return;
+  }
+
+  // Atualizar estoque de cada item
+  for (const vendaEstoque of venda.estoques) {
+    await db.estoque.update({
+      where: { id: vendaEstoque.estoqueId },
+      data: {
+        quantidade: {
+          decrement: vendaEstoque.quantidade,
+        },
+        foiUtilizado: true,
+      },
+    });
+  }
+
+  // Atualizar status da venda
+  await db.venda.update({
+    where: { id: vendaId },
+    data: {
+      status: 'PAGO',
+      dataPagamento: new Date(),
+    },
+  });
+}
+
+
+export async function cancelarVenda(vendaId: number): Promise<void> {
+  const venda = await db.venda.findUnique({
+    where: { id: vendaId },
+    include: {
+      estoques: true,
+    },
+  });
+
+  if (!venda) {
+    throw new Error('Venda não encontrada');
+  }
+
+  // Se já foi pago, precisa devolver o estoque
+  if (venda.status === 'PAGO') {
+    for (const vendaEstoque of venda.estoques) {
+      await db.estoque.update({
+        where: { id: vendaEstoque.estoqueId },
+        data: {
+          quantidade: {
+            increment: vendaEstoque.quantidade,
+          },
+        },
+      });
+    }
+  }
+
+  // Atualizar status da venda
+  await db.venda.update({
+    where: { id: vendaId },
+    data: {
+      status: 'CANCELADO',
+    },
+  });
+}
+
+export async function pegaVenda(vendaId: number) {
+  return db.venda.findUnique({
+    where: { id: vendaId },
+    include: {
+      estoques: {
+        include: {
+          estoque: true,
+        },
+      },
+      pessoas: {
+        include: {
+          pessoa: true,
+        },
+      },
+      transacoes: true,
+    },
+  });
 }

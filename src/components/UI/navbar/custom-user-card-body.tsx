@@ -67,9 +67,9 @@ const CustomUserCardBody: React.FC<CustomUserCardBodyProps> = ({user}) => {
                     <p className={'text-md font-medium text-lg whitespace-nowrap overflow-hidden text-ellipsis'}>
                         {user.nome}
                     </p>
-                    <p className={'text-md text-orange-400 font-semibold whitespace-nowrap overflow-hidden text-ellipsis'}>
-                        {user.empresa.nome}
-                    </p>
+                    {user.empresaId && <p className={'text-md text-orange-400 font-semibold whitespace-nowrap overflow-hidden text-ellipsis'}>
+                        {user.empresa?.nome}
+                    </p>}
                 </div>
             </NavbarContent>
         </>

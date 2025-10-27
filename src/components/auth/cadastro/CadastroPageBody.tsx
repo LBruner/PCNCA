@@ -1,37 +1,37 @@
 'use client';
 
-import React, {useRef, useState} from "react";
-import {Button, Checkbox, Spinner, useDisclosure} from "@heroui/react";
+import React, { useRef, useState } from "react";
+import { Button, Checkbox, Spinner, useDisclosure } from "@heroui/react";
 import * as actions from "@/actions";
-import {signIn} from "next-auth/react";
+import { signIn } from "next-auth/react";
 import TermosCondicoesModal from "@/components/auth/cadastro/TermosCondicoesModal";
 import RegisterFormInput from "@/components/UI/form/register-form-input";
-import {IoPersonOutline} from "react-icons/io5";
+import { IoPersonOutline } from "react-icons/io5";
 import CpfInput from "@/components/UI/form/cpf-input";
-import {MdOutlineMailOutline, MdPassword} from "react-icons/md";
+import { MdOutlineMailOutline, MdPassword } from "react-icons/md";
 import FormErrorText from "@/components/UI/form/form-error-text";
 import Link from "next/link";
 import paths from "@/paths";
 import Image from "next/image";
-import {Empresa} from "@prisma/client";
+import { Empresa } from "@prisma/client";
 import RegisterFormSelect from "@/components/UI/form/register-form-select";
-import {capitalizeFirstLetter} from "@/helpers";
+import { capitalizeFirstLetter } from "@/helpers";
 
 interface CadastroPageBodyProps {
     empresas: Empresa[];
 }
 
-const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
+const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({ empresas }) => {
     const [name, setFirstName] = useState('');
     const [email, setEmail] = useState('');
     const [company, setCompany] = useState<number>(0);
     const [cpf, setCpf] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [errors, setErrors] = useState<{[key: string]: string[]}>({});
+    const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
 
     const formRef = useRef<HTMLFormElement>(null);
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -85,7 +85,7 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
     // Clear specific field error when the field value changes
     const clearFieldError = (fieldName: string) => {
         if (errors[fieldName]) {
-            const newErrors = {...errors};
+            const newErrors = { ...errors };
             delete newErrors[fieldName];
             setErrors(newErrors);
         }
@@ -93,7 +93,7 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
 
     return (
         <div className="flex h-screen">
-            <TermosCondicoesModal isOpen={isOpen} onClose={onClose}/>
+            <TermosCondicoesModal isOpen={isOpen} onClose={onClose} />
             <div className="w-3/5 dark:bg-customDarkFooter bg-customGray p-10 flex items-center flex-col relative drop-shadow-2xl">
                 <div className="container drop-shadow-md items-center w-4/5 mt-24">
                     <h1 className="text-5xl font-bold mb-2">Cadastro</h1>
@@ -114,7 +114,7 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                                     setFirstName(e.target.value);
                                     clearFieldError('nome');
                                 }}
-                                endContent={<IoPersonOutline size={18}/>}
+                                endContent={<IoPersonOutline size={18} />}
                             />
                             <CpfInput
                                 cpf={cpf}
@@ -165,7 +165,7 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                                     setEmail(e.target.value);
                                     clearFieldError('email');
                                 }}
-                                endContent={<MdOutlineMailOutline size={18}/>}
+                                endContent={<MdOutlineMailOutline size={18} />}
                             />
                             <RegisterFormInput
                                 name={'senha'}
@@ -179,7 +179,7 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                                     setPassword(e.target.value);
                                     clearFieldError('senha');
                                 }}
-                                endContent={<MdPassword size={18}/>}
+                                endContent={<MdPassword size={18} />}
                             />
                         </div>
 
@@ -190,14 +190,14 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                         >
                         </Checkbox>
                         <span className="text-md font-light">
-                                Eu li e aceito os <span onClick={onOpen}
-                                                        className={'hover:cursor-pointer text-warning'}>Termos de Uso e a Política de Privacidade</span>. Ao continuar, concordo em cumprir esses termos e estou ciente das práticas de coleta, uso e compartilhamento de dados descritas.
-                            </span>
+                            Eu li e aceito os <span onClick={onOpen}
+                                className={'hover:cursor-pointer text-warning'}>Termos de Uso e a Política de Privacidade</span>. Ao continuar, concordo em cumprir esses termos e estou ciente das práticas de coleta, uso e compartilhamento de dados descritas.
+                        </span>
                         {errors.termos && errors.termos.length > 0 ? (
-                            <FormErrorText errors={errors.termos}/>
+                            <FormErrorText errors={errors.termos} />
                         ) : null}
                         {errors._form && errors._form.length > 0 ? (
-                            <FormErrorText errors={errors._form}/>
+                            <FormErrorText errors={errors._form} />
                         ) : null}
                         <div className="w-1/3">
                             <Button
@@ -206,19 +206,19 @@ const CadastroPageBody: React.FC<CadastroPageBodyProps> = ({empresas}) => {
                                 className="w-full dark:bg-orange-400 bg-customDarkBrown rounded-lg text-white text-md bold mt-4"
                                 disabled={isLoading}
                             >
-                                {isLoading ? <Spinner color={'default'}/> : 'Cadastrar'}
+                                {isLoading ? <Spinner color={'default'} /> : 'Cadastrar'}
                             </Button>
                         </div>
                     </form>
                 </div>
                 <div>
                     <p className={'mt-14'}>Já possui uma conta? <Link className={'text-orange-400 font-semibold'}
-                                                                      href={paths.login()}>Entrar</Link></p>
+                        href={paths.login()}>Entrar</Link></p>
                 </div>
             </div>
             <div className="w-2/5 relative">
-                <div className="absolute inset-0" style={{backgroundImage: `url('/images/login_background.jpg')`}}>
-                    <Image src={'/images/login_background.jpg'} objectFit="cover" fill={true} alt={'field plantation'}/>
+                <div className="absolute inset-0" style={{ backgroundImage: `url('/images/login_background.jpg')` }}>
+                    <Image src={'/images/login_background.jpg'} objectFit="cover" fill={true} alt={'field plantation'} />
                 </div>
             </div>
         </div>
