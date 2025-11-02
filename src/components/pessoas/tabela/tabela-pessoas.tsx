@@ -117,7 +117,7 @@ const PessoasTable: React.FC<PessoasTableProps> = ({pessoas, categoryFilterColle
     }, [sortDescriptor, items]);
 
     const renderCell = React.useCallback((pessoa: PessoaFisJurEnd, columnKey: string) => {
-        const pessoaVendeu = pessoa.vendas.length > 0;
+        const pessoaVendeu = pessoa.VendaPessoa.length > 0;
 
         switch (columnKey) {
             case "pessoa":

@@ -45,7 +45,7 @@ const CotacoesCommoditiesBody: React.FC<CotacoesCommoditiesProps> = ({cotacoes})
                                     setSelectedCommodity(currentSelecao);
                                 }
                             }}
-                            selectedKeys={new Set([selectedCommodity.variacao_id.toString()])}
+                            selectedKeys={new Set([selectedCommodity?.variacao_id?.toString()])}
                         >
                             {cotacoes.map((cotacao) => (
                                 <DropdownItem key={cotacao.variacao_id.toString()}>

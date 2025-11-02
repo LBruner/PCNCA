@@ -5,173 +5,138 @@ import {getServerSession} from "next-auth";
 import {authOptions} from "@/app/AuthOptions";
 import {getUser} from "@/actions/produto";
 import {VendaComDados} from "@/components/vendas/criação/CriarVendaForm";
-import {Estoque, HistoricoEstoque, Pessoa, PessoaFisica, PessoaJuridica, Venda} from "@prisma/client";
+import {Estoque, Pessoa, PessoaFisica, PessoaJuridica, Prisma, Usuario, Venda, VendaEstoque, VendaPessoa} from "@prisma/client";
 import {revalidatePath} from "next/cache";
 import paths from "@/paths";
 import {BarChartData, LineChartData, PieChartData} from "@/models/graficos/charts";
 
-export type VendasAgrupadas = HistoricoEstoque & {
-    venda: Venda & {
-        pessoas: (Pessoa & {
-            pessoa: Pessoa & { pessoaJuridica?: PessoaJuridica | null, pessoaFisica?: PessoaFisica }
-        })[],
-        estoques: (Estoque & { estoque: Estoque })[],
-    }
-}
+type VendaPessoaComDetalhes = VendaPessoa & {
+    pessoa: Pessoa & { pessoaJuridica?: PessoaJuridica | null; pessoaFisica?: PessoaFisica | null };
+};
+
+type VendaEstoqueComProduto = VendaEstoque & { estoque: Estoque };
+
+type VendaComRelacionamentos = Venda & {
+    pessoas: VendaPessoaComDetalhes[];
+    estoques: VendaEstoqueComProduto[];
+    usuario: Usuario;
+    valorVenda: number;
+    quantidadeVenda: number;
+};
+
+export type VendasAgrupadas = {
+    id: number;
+    dataAlter: Date;
+    horaAlter?: string;
+    valorAlter: number;
+    comprador: boolean;
+    estoqueId: number;
+    empresaId: number;
+    usuarioId: string | null;
+    vendaId?: number;
+    estoque: Estoque;
+    venda: VendaComRelacionamentos;
+};
+
+const transacaoInclude = {
+    itens: {
+        include: {
+            estoque: true,
+        },
+    },
+    venda: {
+        include: {
+            usuario: true,
+            estoques: {
+                include: {
+                    estoque: true,
+                },
+            }
+        },
+    },
+};
+
+const getEmpresaIdDoUsuario = async (usuarioId: string): Promise<number | null> => {
+    const usuario = await db.usuario.findUnique({
+        where: {id: usuarioId},
+        select: {empresaId: true},
+    });
+
+    return usuario?.empresaId ?? null;
+};
+
+const getDataReferenciaTransacao = (dataCriacao: Date, dataAprovacao?: Date | null): Date => {
+    return dataAprovacao ?? dataCriacao;
+};
 
 export const pegaTodasVendas = async (): Promise<VendasAgrupadas[][]> => {
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) return [];
 
-    // Fetch sales sorted by `dataAlter` in descending order
-    const vendas = await db.historicoEstoque.findMany({
-        orderBy: {
-            dataAlter: 'desc',
-        },
-        where: {
-            usuarioId: session.user.id,
-            comprador: false,
-        },
-        include: {
-            estoque: true, // Include the estoque directly to maintain proper association
-            venda: {
-                include: {
-                    estoques: {
-                        include: {
-                            estoque: true,
-                        },
-                    },
-                    pessoas: {
-                        include: {
-                            pessoa: {
-                                include: {
-                                    pessoaJuridica: true,
-                                    pessoaFisica: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    });
+    const empresaId = await getEmpresaIdDoUsuario(session.user.id!);
 
-    // Group sales by `vendaId` while preserving product information
-    const vendasAgrupadas = vendas.reduce((acc, venda) => {
-        const vendaId = venda.vendaId;
-
-        if (!acc[vendaId]) {
-            acc[vendaId] = [];
-        }
-
-        // Make sure estoque information is correctly associated with each record
-        acc[vendaId].push({
-            ...venda,
-            estoque: venda.estoque, // Ensure the correct product is associated
-        });
-
-        return acc;
-    }, {} as { [key: string]: typeof vendas });
-
-    // Convert the grouped object back to an array
-    const groupedSalesArray = Object.values(vendasAgrupadas);
-
-    // Sort the grouped sales array by the earliest `dataAlter` in each group (descending order)
-    groupedSalesArray.sort((a, b) => {
-        const dateA = new Date(a[0].dataAlter).getTime(); // Get the first sale's date in group A
-        const dateB = new Date(b[0].dataAlter).getTime(); // Get the first sale's date in group B
-        return dateB - dateA; // Sort in descending order
-    });
-
-    // @ts-ignore
-    return groupedSalesArray;
-};
-
-export async function criarVenda(vendas: VendaComDados): Promise<void> {
-    const session = await getServerSession(authOptions)
-
-    const userId = await getUser(session!.user.id!);
-    let subtotal = 0;
-    let quantidadeVendida = 0;
-
-    vendas.vendas.forEach((item) => {
-            subtotal = subtotal + (item.quantity * item.estoque.preco);
-            quantidadeVendida = quantidadeVendida + item.quantity
-        }
-    );
-
-    const novaVenda = await db.venda.create({
-        data: {
-            dataVenda: new Date(),
-            valorVenda: subtotal,
-            quantidadeVenda: quantidadeVendida,
-            desconto: 0,
-        }
-    });
-
-    await db.vendaPessoa.create({
-        data: {
-            venda: {
-                connect: {
-                    id: novaVenda.id
-                }
-            },
-            pessoa: {
-                connect: {
-                    id: vendas.clienteId
-                }
-            },
-            tipoPessoa: "Fornecedor"
-        }
-    });
-
-    for (const vendaAtual of vendas.vendas) {
-        await db.historicoEstoque.create({
-            data: {
-                venda: {
-                    connect: {
-                        id: novaVenda.id
-                    }
-                },
-                comprador: false,
-                dataAlter: new Date(),
-                horaAlter: new Date().toISOString().slice(11, 16),
-                valorAlter: vendaAtual.quantity,
-                usuario: {
-                    connect: {
-                        id: userId,
-                    },
-                },
-                estoque: {
-                    connect: {
-                        id: vendaAtual.estoque.id,
-                    },
-                },
-            },
-        });
-
-        await db.vendaEstoque.create({
-            data: {
-                precoProp: vendaAtual.estoque.preco,
-                estoqueId: vendaAtual.estoque.id,
-                vendaId: novaVenda.id,
-            },
-        });
-
-        await db.estoque.update({
-            where: {
-                id: vendaAtual.estoque.id
-            },
-            data: {
-                quantidade: vendaAtual.estoque.quantidade - vendaAtual.quantity
-            },
-        })
+    if (!empresaId) {
+        return [];
     }
 
-    revalidatePath(paths.estoque());
-}
+    const transacoes = await db.transacao.findMany({
+        orderBy: {
+            dataCriacao: 'desc',
+        },
+        where: {
+            empresaId,
+        },
+        include: transacaoInclude,
+    });
 
+    const vendasAgrupadas = transacoes
+        .filter((transacao) => transacao.venda && transacao.itens.length > 0)
+        .map((transacao) => {
+            const dataReferencia = getDataReferenciaTransacao(transacao.dataCriacao, transacao.dataAprovacao);
+            const horaReferencia = dataReferencia ? dataReferencia.toISOString().slice(11, 16) : undefined;
+
+            const quantidadeTotal = transacao.itens.reduce((acc, item) => acc + item.quantidade, 0);
+            const valorTotal = transacao.valorTotal ?? transacao.itens.reduce((acc, item) => acc + item.precoTotal, 0);
+
+            const {pessoas: pessoasRelacionadas = [], ...vendaBase} = transacao.venda! as any;
+
+            const vendaDetalhes: VendaComRelacionamentos = {
+                ...vendaBase,
+                pessoas: pessoasRelacionadas.map((vendaPessoa: any) => ({
+                    ...vendaPessoa,
+                    pessoa: vendaPessoa.pessoa,
+                })),
+                valorVenda: valorTotal,
+                quantidadeVenda: quantidadeTotal,
+            };
+
+            return transacao.itens
+                .filter((item) => item.estoque !== null)
+                .map((item) => ({
+                    id: item.id,
+                    dataAlter: dataReferencia,
+                    horaAlter: horaReferencia,
+                    valorAlter: item.quantidade,
+                    comprador: false,
+                    estoqueId: item.estoqueId,
+                    empresaId: transacao.empresaId,
+                    usuarioId: transacao.usuarioId,
+                    vendaId: transacao.vendaId ?? undefined,
+                    estoque: item.estoque,
+                    venda: vendaDetalhes,
+                }));
+        })
+        .filter((grupo) => grupo.length > 0);
+
+    vendasAgrupadas.sort((a, b) => {
+        const dateA = a[0].dataAlter instanceof Date ? a[0].dataAlter.getTime() : new Date(a[0].dataAlter).getTime();
+        const dateB = b[0].dataAlter instanceof Date ? b[0].dataAlter.getTime() : new Date(b[0].dataAlter).getTime();
+        return dateB - dateA;
+    });
+
+    return vendasAgrupadas;
+};
 
 export async function getDadosGraficoPie(
     produtosFilter: string[],
@@ -181,27 +146,29 @@ export async function getDadosGraficoPie(
 
     if (!session?.user?.email) return [];
 
-    let vendas: any[];
+    const empresaId = await getEmpresaIdDoUsuario(session.user.id!);
 
-    // Base filter for the user and non-buyer transactions
-    const baseFilter = {
-        comprador: false,
-        usuarioId: session.user.id,
+    if (!empresaId) return [];
+
+    const whereClause: Prisma.TransacaoWhereInput = {
+        empresaId,
     };
 
-    // Filter for produtos
-    const produtoFilter = produtosFilter.length > 0 ? {
-        estoque: {
-            produto: {
-                in: produtosFilter,
+    if (produtosFilter.length > 0) {
+        whereClause.itens = {
+            some: {
+                estoque: {
+                    produto: {
+                        in: produtosFilter,
+                    },
+                },
             },
-        },
-    } : {};
+        };
+    }
 
-    // Filter for clientes
-    const clienteFilter = clientesFilter.length > 0 ? {
-        venda: {
-            pessoas: {
+    if (clientesFilter.length > 0) {
+        whereClause.venda = {
+            VendaPessoa: {
                 some: {
                     pessoa: {
                         OR: [
@@ -223,54 +190,40 @@ export async function getDadosGraficoPie(
                     },
                 },
             },
-        },
-    } : {};
+        };
+    }
 
-    // Combine all filters
-    const whereClause = {
-        ...baseFilter,
-        ...produtoFilter,
-        ...clienteFilter,
-    };
-
-    // Fetch vendas with the combined filters
-    vendas = await db.historicoEstoque.findMany({
+    const transacoes = await db.transacao.findMany({
         where: whereClause,
         include: {
-            estoque: true,
-            venda: {
+            itens: {
                 include: {
-                    pessoas: {
-                        include: {
-                            pessoa: {
-                                include: {
-                                    pessoaJuridica: true,
-                                },
-                            },
-                        },
-                    },
+                    estoque: true,
                 },
             },
         },
     });
 
-    // Group data by product and sum valorAlter
-    const productDataMap = vendas.reduce<Record<string, number>>((acc, item) => {
-        const product = item.estoque.produto;
-        if (!acc[product]) {
-            acc[product] = 0;
-        }
-        acc[product] += item.valorAlter;
+    const productDataMap = transacoes.reduce<Record<string, number>>((acc, transacao) => {
+        transacao.itens.forEach((item) => {
+            const product = item.estoque?.produto;
+            if (!product) return;
+
+            if (produtosFilter.length > 0 && !produtosFilter.includes(product)) {
+                return;
+            }
+
+            acc[product] = (acc[product] ?? 0) + item.quantidade;
+        });
+
         return acc;
     }, {});
 
-    // Transform into PieChartData format
-    const data = Object.entries(productDataMap).map(([product, total]) => ({
+    return Object.entries(productDataMap).map(([product, total]) => ({
         id: product,
         label: product,
         value: total,
-    }))
-    return data;
+    }));
 }
 
 // Helper function to get the month name from a Date object
@@ -300,27 +253,47 @@ export async function getDadosGraficoLine(
 
     if (!session?.user?.email) throw new Error();
 
-    let vendas: any[];
+    const empresaId = await getEmpresaIdDoUsuario(session.user.id!);
 
-    // Base filter for the user and non-buyer transactions
-    const baseFilter = {
-        comprador: false,
-        usuarioId: session.user.id,
+    if (!empresaId) {
+        return {
+            xLabels: [],
+            datasets: [],
+        };
+    }
+
+    const currentDate = new Date();
+    const startDate = new Date(currentDate);
+    startDate.setMonth(currentDate.getMonth() - 11); // Go back 11 months to include the current month
+    startDate.setDate(1); // Set to the first day of the month
+    startDate.setHours(0, 0, 0, 0); // Set time to start of the day
+
+    const endDate = new Date(currentDate);
+    endDate.setHours(23, 59, 59, 999); // Set time to end of the day
+
+    const whereClause: Prisma.TransacaoWhereInput = {
+        empresaId,
+        dataCriacao: {
+            gte: startDate,
+            lte: endDate,
+        },
     };
 
-    // Filter for produtos
-    const produtoFilter = produtosFilter.length > 0 ? {
-        estoque: {
-            produto: {
-                in: produtosFilter,
+    if (produtosFilter.length > 0) {
+        whereClause.itens = {
+            some: {
+                estoque: {
+                    produto: {
+                        in: produtosFilter,
+                    },
+                },
             },
-        },
-    } : {};
+        };
+    }
 
-    // Filter for clientes
-    const clienteFilter = clientesFilter.length > 0 ? {
-        venda: {
-            pessoas: {
+    if (clientesFilter.length > 0) {
+        whereClause.venda = {
+            VendaPessoa: {
                 some: {
                     pessoa: {
                         OR: [
@@ -342,46 +315,15 @@ export async function getDadosGraficoLine(
                     },
                 },
             },
-        },
-    } : {};
+        };
+    }
 
-    const currentDate = new Date();
-    const startDate = new Date(currentDate);
-    startDate.setMonth(currentDate.getMonth() - 11); // Go back 11 months to include the current month
-    startDate.setDate(1); // Set to the first day of the month
-    startDate.setHours(0, 0, 0, 0); // Set time to start of the day
-
-    const endDate = new Date(currentDate);
-    endDate.setHours(23, 59, 59, 999); // Set time to end of the day
-
-    // Combine all filters
-    const whereClause = {
-        ...baseFilter,
-        ...produtoFilter,
-        ...clienteFilter,
-        dataAlter: {
-            gte: startDate, // Greater than or equal to the start of the last 12 months
-            lte: endDate, // Less than or equal to the current date
-        },
-    };
-
-    // Fetch vendas with the combined filters
-    vendas = await db.historicoEstoque.findMany({
+    const transacoes = await db.transacao.findMany({
         where: whereClause,
-
         include: {
-            estoque: true,
-            venda: {
+            itens: {
                 include: {
-                    pessoas: {
-                        include: {
-                            pessoa: {
-                                include: {
-                                    pessoaJuridica: true,
-                                },
-                            },
-                        },
-                    },
+                    estoque: true,
                 },
             },
         },
@@ -397,22 +339,29 @@ export async function getDadosGraficoLine(
     // Initialize a map to store summed values for each product by month
     const productDataMap: Record<string, Record<string, number>> = {};
 
-    // Iterate over the vendas data
-    vendas.forEach((item) => {
-        const date = new Date(item.dataAlter); // Convert dataAlter to a Date object
-        const month = getMonthName(date); // Get the month name
-        const product = item.estoque.produto; // Get the product name
+    // Iterate over the transação data
+    transacoes.forEach((transacao) => {
+        const dataReferencia = getDataReferenciaTransacao(transacao.dataCriacao, transacao.dataAprovacao);
+        const month = getMonthName(dataReferencia);
 
-        // Initialize the product in the map if it doesn't exist
-        if (!productDataMap[product]) {
-            productDataMap[product] = {};
-            monthNames.forEach((monthName) => {
-                productDataMap[product][monthName] = 0; // Initialize all months to 0
-            });
+        if (!monthNames.includes(month)) {
+            return;
         }
 
-        // Add the valorAlter to the corresponding month
-        productDataMap[product][month] += item.valorAlter;
+        transacao.itens.forEach((item) => {
+            const product = item.estoque?.produto;
+            if (!product) return;
+
+            if (produtosFilter.length > 0 && !produtosFilter.includes(product)) {
+                return;
+            }
+
+            if (!productDataMap[product]) {
+                productDataMap[product] = Object.fromEntries(monthNames.map((monthName) => [monthName, 0]));
+            }
+
+            productDataMap[product][month] += item.quantidade;
+        });
     });
 
     // Transform the map into LineChartData format
@@ -435,27 +384,50 @@ export async function getDadosGraficoBar(
 
     if (!session?.user?.email) throw new Error();
 
-    let vendas: any[] = [];
+    const empresaId = await getEmpresaIdDoUsuario(session.user.id!);
 
-    // Base filter for the user and non-buyer transactions
-    const baseFilter = {
-        comprador: false,
-        usuarioId: session.user.id,
+    if (!empresaId) {
+        return {
+            chartData: {
+                xLabels: [],
+                uData: [],
+            },
+        };
+    }
+
+    // Calculate the date range for the last 12 months
+    const currentDate = new Date();
+    const startDate = new Date(currentDate);
+    startDate.setMonth(currentDate.getMonth() - 11); // Go back 11 months to include the current month
+    startDate.setDate(1); // Set to the first day of the month
+    startDate.setHours(0, 0, 0, 0); // Set time to start of the day
+
+    const endDate = new Date(currentDate);
+    endDate.setHours(23, 59, 59, 999); // Set time to end of the day
+
+    const whereClause: Prisma.TransacaoWhereInput = {
+        empresaId,
+        dataCriacao: {
+            gte: startDate,
+            lte: endDate,
+        },
     };
 
-    // Filter for produtos
-    const produtoFilter = produtosFilter.length > 0 ? {
-        estoque: {
-            produto: {
-                in: produtosFilter,
+    if (produtosFilter.length > 0) {
+        whereClause.itens = {
+            some: {
+                estoque: {
+                    produto: {
+                        in: produtosFilter,
+                    },
+                },
             },
-        },
-    } : {};
+        };
+    }
 
-    // Filter for clientes
-    const clienteFilter = clientesFilter.length > 0 ? {
-        venda: {
-            pessoas: {
+    if (clientesFilter.length > 0) {
+        whereClause.venda = {
+            VendaPessoa: {
                 some: {
                     pessoa: {
                         OR: [
@@ -477,46 +449,15 @@ export async function getDadosGraficoBar(
                     },
                 },
             },
-        },
-    } : {};
+        };
+    }
 
-    // Calculate the date range for the last 12 months
-    const currentDate = new Date();
-    const startDate = new Date(currentDate);
-    startDate.setMonth(currentDate.getMonth() - 11); // Go back 11 months to include the current month
-    startDate.setDate(1); // Set to the first day of the month
-    startDate.setHours(0, 0, 0, 0); // Set time to start of the day
-
-    const endDate = new Date(currentDate);
-    endDate.setHours(23, 59, 59, 999); // Set time to end of the day
-
-    // Combine all filters
-    const whereClause = {
-        ...baseFilter,
-        // ...produtoFilter,
-        ...clienteFilter,
-        dataAlter: {
-            gte: startDate, // Greater than or equal to the start of the last 12 months
-            lte: endDate, // Less than or equal to the current date
-        },
-    };
-
-    // Fetch vendas with the combined filters
-    vendas = await db.historicoEstoque.findMany({
+    const transacoes = await db.transacao.findMany({
         where: whereClause,
         include: {
-            estoque: true,
-            venda: {
+            itens: {
                 include: {
-                    pessoas: {
-                        include: {
-                            pessoa: {
-                                include: {
-                                    pessoaJuridica: true,
-                                },
-                            },
-                        },
-                    },
+                    estoque: true,
                 },
             },
         },
@@ -532,15 +473,30 @@ export async function getDadosGraficoBar(
     // Initialize an array to store summed values for each month
     const uData: number[] = new Array(monthNames.length).fill(0);
 
-    // Iterate over the vendas data
-    vendas.forEach((item) => {
-        const date = new Date(item.venda.dataVenda); // Convert dataAlter to a Date object
-        const month = getShortMonthName(date); // Get the month name
+    // Iterate over the transações data
+    transacoes.forEach((transacao) => {
+        const dataReferencia = getDataReferenciaTransacao(transacao.dataCriacao, transacao.dataAprovacao);
+        const month = getShortMonthName(dataReferencia);
         const monthIndex = monthNames.indexOf(month); // Get the index of the month
 
         // Add the valorAlter to the corresponding month
         if (monthIndex !== -1) {
-            uData[monthIndex] += item.venda.valorVenda;
+            const itensConsiderados = produtosFilter.length > 0
+                ? transacao.itens.filter((item) => {
+                    const nomeProduto = item.estoque?.produto;
+                    return nomeProduto ? produtosFilter.includes(nomeProduto) : false;
+                })
+                : transacao.itens;
+
+            if (itensConsiderados.length === 0) {
+                return;
+            }
+
+            const valorTotal = produtosFilter.length > 0
+                ? itensConsiderados.reduce((acc, item) => acc + item.precoTotal, 0)
+                : transacao.valorTotal ?? transacao.itens.reduce((acc, item) => acc + item.precoTotal, 0);
+
+            uData[monthIndex] += valorTotal;
         }
     });
 
@@ -722,7 +678,7 @@ export async function pegaVenda(vendaId: number) {
           estoque: true,
         },
       },
-      pessoas: {
+      VendaPessoa: {
         include: {
           pessoa: true,
         },

@@ -163,7 +163,6 @@ model Estoque {
   foiUtilizado       Boolean  @default(false) @map("foi_utilizado")
   empresaId          Int      @map("empresa_id")
   dataAdicao         DateTime @default(now()) @map("dataAdicao")
-
   // Seeds-specific fields
   genero              String? // gênero
   especie             String? // espécie

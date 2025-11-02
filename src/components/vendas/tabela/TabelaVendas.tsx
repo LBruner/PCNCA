@@ -90,15 +90,14 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
 
         return filteredItems.slice(start, end);
     }, [currentPage, filteredItems, rowsPerPage]);
-
     const renderCell = React.useCallback((venda: VendasAgrupadas[], columnKey: string) => {
         switch (columnKey) {
             case "cliente":
                 return (
                     <User
-                        avatarProps={{radius: "lg", size: 'lg', src: venda[0].venda.pessoas[0].pessoa.imagemLink!}}
-                        name={venda[0].venda.pessoas[0].pessoa.pessoaJuridica != null ? venda[0].venda.pessoas[0].pessoa.pessoaJuridica.razaoSocial : venda[0].venda.pessoas[0].pessoa.pessoaFisica?.nome}
-                        description={<p>{venda[0].venda.pessoas[0].pessoa.email}</p>}
+                        avatarProps={{radius: "lg", size: 'lg', src: venda[0].venda.usuario.imagemLink!}}
+                        name={venda[0].venda.usuario.nome!}
+                        description={<p>{venda[0].venda.usuario.email!}</p>}
                     >
                     </User>
                 );
@@ -134,7 +133,7 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
                             const matchingHistorico = venda.find(
                                 (historico) => historico.estoqueId === estoque.estoque.id
                             );
-
+console.log(estoque)
                             return (
                                 <p key={estoque.id}>
                                     {matchingHistorico ? matchingHistorico.valorAlter : 0} unidade(s)
@@ -158,7 +157,7 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
                 aria-label={' '}
                 isStriped={true}
                 isHeaderSticky
-                key={`${sortDescriptor.column}-${sortDescriptor.direction}`}
+                // key={`${sortDescriptor.column}-${sortDescriptor.direction}`}
                 topContentPlacement={'outside'}
                 bottomContentPlacement="outside"
                 bottomContent={<VendasTabelaBottomContent
@@ -185,8 +184,10 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
                 </TableHeader>
                 <TableBody className={'h-auto'} emptyContent={"Nenhum estoque disponível"}
                            items={[...items]}>
-                    {(sale: VendasAgrupadas[]) => (
-                        <TableRow key={sale[0].venda.id}>
+                    {(sale: VendasAgrupadas[]) => {
+                        console.log(sale);
+                        return (
+                        <TableRow key={Math.random()}>
                             {
                                 columns.map((column) => (
                                     <TableCell key={column.uid}>
@@ -194,7 +195,8 @@ const TabelaVendas: React.FC<TabelaVendasProps> = (
                                     </TableCell>
                                 ))}
                         </TableRow>
-                    )}
+                    )
+                    }}
                 </TableBody>
             </Table>
         </div>

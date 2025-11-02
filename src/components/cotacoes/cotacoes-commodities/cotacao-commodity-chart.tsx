@@ -21,7 +21,7 @@ const CotacaoCommodityChart: React.FC<CotacaoCommodityChartProps> = ({selectedCo
 
         setChartData(data);
         setIsLoading(false);
-    }, [selectedCommodity.commodity.nome]);
+    }, [selectedCommodity?.commodity?.nome]);
 
     useEffect(() => {
         getChartData().then();

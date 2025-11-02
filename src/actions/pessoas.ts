@@ -12,7 +12,7 @@ export type PessoaFisJurEnd = Pessoa & {
     enderecos: Endereco[];
     telefones: Telefone[];
     categoria: CategoriaPessoa;
-    vendas: VendaPessoa[];
+    VendaPessoa: VendaPessoa[];
 }
 
 export interface PessoaCriacao {
@@ -51,7 +51,7 @@ export async function pegaTodasPessoas(): Promise<PessoaFisJurEnd[]> {
                 pessoaJuridica: true,
                 telefones: true,
                 categoria: true,
-                vendas: true,
+                VendaPessoa: true,
             }
         }
     );
@@ -72,7 +72,7 @@ export async function pegaUmaPessoa(id: number): Promise<PessoaFisJurEnd | null>
             pessoaFisica: true,
             telefones: true,
             categoria: true,
-            vendas: true,
+            VendaPessoa: true,
         }
     });
 }
@@ -270,13 +270,13 @@ export const deletePessoa = async (pessoaId: number) => {
                 id: pessoaId,
             },
             include: {
-                vendas: true,
+                VendaPessoa: true,
                 pessoaFisica: true,
                 pessoaJuridica: true,
             },
         });
 
-        if (!pessoa || pessoa.vendas.length > 0) {
+        if (!pessoa || pessoa.VendaPessoa.length > 0) {
             return;
         }
 
