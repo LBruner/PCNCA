@@ -6,16 +6,27 @@ interface PreferenceInputProps {
     id: string;
     title: string;
     quantity: number;
+    unit_price: number;
+    currency_id: string;
+    description?: string;
+    picture_url?: string;
 }
 
-export const pegaPreference = async (preferenceData: PreferenceInputProps[]): Promise<string> => {
+interface CreatePreferencePayload {
+    items: PreferenceInputProps[];
+    shippingCost?: number;
+    observacoes?: string;
+    compradorId?: number;
+}
+
+export const pegaPreference = async (payload: CreatePreferencePayload): Promise<string> => {
     try {
         const response = await fetch(`/api/create-preference`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({items: preferenceData}),
+            body: JSON.stringify(payload),
         });
 
         const data = await response.json();
@@ -38,7 +49,7 @@ interface SearchParams {
   external_reference?: string;
 }
 
-export async function CheckoutSuccessPage(searchParams: SearchParams) {
+export async function CheckoutSuccessPage(searchParams: SearchParams): Promise<any> {
   // Extrair IDs das vendas da URL
   const vendasParam = searchParams.vendas || searchParams.external_reference;
   

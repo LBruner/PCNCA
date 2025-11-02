@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, Package, ShoppingBag, ArrowRight, Download, Mail, Clock } from 'lucide-react';
+import { useCart } from '@/app/context/CartContext';
+import { CheckCircle, Package, ShoppingBag, ArrowRight, Mail, Clock } from 'lucide-react';
 
 interface VendaItem {
   id: number;
@@ -37,6 +38,13 @@ interface CheckoutSuccessProps {
 
 const CheckoutSuccess: React.FC<CheckoutSuccessProps> = ({ vendas, transacao }) => {
   const [confetti, setConfetti] = useState(true);
+  const { clearCart, isLoaded } = useCart();
+
+  useEffect(() => {
+    if (isLoaded) {
+      clearCart();
+    }
+  }, [clearCart, isLoaded]);
 
   useEffect(() => {
     // Remover confetti após animação

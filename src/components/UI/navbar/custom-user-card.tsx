@@ -5,11 +5,12 @@ import {UsuarioComEmpresa} from "@/actions/usuarios";
 
 interface CustomUserCardProps {
     user?: UsuarioComEmpresa;
+    displayDetails?: boolean;
 }
 
-const CustomUserCard: React.FC<CustomUserCardProps> = ({user}) => {
+const CustomUserCard: React.FC<CustomUserCardProps> = ({user, displayDetails = true}) => {
     return (
-        <CustomUserCardBody user={user}/>
+        <CustomUserCardBody displayDetails={displayDetails} user={user}/>
     )
 }
 

@@ -41,6 +41,9 @@ const paths = {
     ecommerce() {
         return `/ecommerce`;
     },
+    minhasCompras() {
+        return `/ecommerce/minhas-compras`;
+    },
     criarNoticia() {
         return `/adm/noticias/criar`;
     },

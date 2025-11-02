@@ -55,12 +55,9 @@ const TabelaUsuarioTopContent: React.FC<TabelaUsuarioTopContentProps> = (
             </div>
         );
     }, [
-        empresasFilterCollection,
         filterValue,
-        empresaFilter,
         onSearchChange,
         onClear,
-        setEmpresaFilter,
     ]))
 }
 

@@ -1,27 +1,23 @@
-import React from "react";
-import { Estoque } from "@prisma/client";
-import ProdutoDetalhes from "@/components/ecommerce/produto/detalhes/ProdutoDetalhes";
-import { pegaDetalhesProduto } from "@/actions/estoques";
 import { notFound } from "next/navigation";
+import { pegaDetalhesProduto } from "@/actions/estoques";
+import ProdutoDetalhes from "@/components/ecommerce/produto/detalhes/ProdutoDetalhes";
+import { Estoque } from "@prisma/client";
 
 interface ShowProductPageProps {
-    product: Estoque;
-    params: { produto: string };
+  params: Promise<{ produto: string }>;
 }
 
-const ShowProductPage: React.FC<ShowProductPageProps> = async ({ product, params }) => {
-    const produtoId = params.produto;
-    const produto = await pegaDetalhesProduto(produtoId);
+export default async function ShowProductPage({ params }: ShowProductPageProps) {
+  const { produto: produtoId } = await params;
+  const produto: Estoque | null = await pegaDetalhesProduto(produtoId);
 
-    if (!produto) {
-        return notFound();
-    }
+  if (!produto) {
+    notFound();
+  }
 
-    return (
-        <div className={'w-full'}>
-            <ProdutoDetalhes product={produto} />
-        </div>
-    )
+  return (
+    <div className="w-full">
+      <ProdutoDetalhes product={produto} />
+    </div>
+  );
 }
-
-export default ShowProductPage;

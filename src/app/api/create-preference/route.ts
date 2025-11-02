@@ -10,7 +10,7 @@ import { db } from "@/db";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { items } = body;
+    const { items, shippingCost } = body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
@@ -41,6 +41,8 @@ export async function POST(req: Request) {
       const produtoInfo = produtos.find(p => p.id === parseInt(item.id));
       if (!produtoInfo) return;
 
+      console.log("Produto info:", produtoInfo);
+
       const empresaId = produtoInfo.empresaId;
       
       if (!itemsPorEmpresa.has(empresaId)) {
@@ -68,7 +70,7 @@ export async function POST(req: Request) {
         })),
         observacoes: body.observacoes,
         compradorId: body.compradorId,
-        empresaId: empresaId, 
+        empresaId: empresaId!, 
       });
 
       vendasCriadas.push({
@@ -84,7 +86,7 @@ export async function POST(req: Request) {
     // Mas salvar metadata com múltiplas vendas
     const preference = new Preference(client);
 
-    const preferenceData = {
+    const preferenceData: any = {
       items: items.map((item: any) => ({
         id: item.id?.toString(),
         title: item.title,
@@ -122,6 +124,18 @@ export async function POST(req: Request) {
         created_at: new Date().toISOString(),
       },
     };
+
+    const parsedShippingCost =
+      typeof shippingCost === "number" && !Number.isNaN(shippingCost)
+        ? shippingCost
+        : 0;
+
+    if (parsedShippingCost > 0) {
+      preferenceData.shipments = {
+        cost: parsedShippingCost,
+        mode: "not_specified",
+      };
+    }
 
     const response = await preference.create({ body: preferenceData });
 

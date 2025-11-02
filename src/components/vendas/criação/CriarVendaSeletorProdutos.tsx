@@ -6,7 +6,7 @@ import {formatToBrazilianCurrency} from "@/helpers";
 import {Button} from "@heroui/react";
 
 interface CriarVendaSeletorProdutosProps {
-    estoques: ProdutosSelecionados[];
+    estoques: any[];
     changeProductQuantity: (productId: number, newQuantity: number) => void;
     removeProduct: (productId: number) => void;
     openCheckoutAccordion: () => void;

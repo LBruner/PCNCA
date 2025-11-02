@@ -257,6 +257,7 @@ model Pessoa {
   pessoaFisica   PessoaFisica?
   pessoaJuridica PessoaJuridica?
   telefones      Telefone[]
+  VendaPessoa    VendaPessoa[]
 }
 
 model PessoaFisica {
@@ -335,6 +336,7 @@ model Venda {
   estoques            VendaEstoque[]
   historicos          HistoricoEstoque[]
   VendaFormaPagamento VendaFormaPagamento[]
+  VendaPessoa         VendaPessoa[]
 
   @@map("vendas")
 }
@@ -416,6 +418,17 @@ model Transacao {
   @@index([status])
   @@index([dataCriacao])
   @@map("transacoes")
+}
+
+model VendaPessoa {
+  id         Int    @id @default(autoincrement()) @map("vpes_id")
+  vendaId    Int    @map("venda_venda_id")
+  pessoaId   Int    @map("pessoa_pess_pessoa_id")
+  tipoPessoa String @map("tipo_pessoa") @db.VarChar(15)
+  pessoa     Pessoa @relation(fields: [pessoaId], references: [id])
+  venda      Venda  @relation(fields: [vendaId], references: [id])
+
+  @@unique([vendaId, pessoaId])
 }
 
 model TransacaoItem {

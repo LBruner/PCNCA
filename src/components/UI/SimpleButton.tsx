@@ -1,9 +1,9 @@
 import { Button } from "@heroui/react"
 
-const SimpleButton: React.FC<{text:string, bgColor: string}> = ({text, bgColor}) => {
+const SimpleButton: React.FC<{text:string, bgColor: string, onClick: () => void}> = ({text, bgColor, onClick}) => {
     return (
         <>
-            <Button variant="solid" className={`${bgColor} text-white`}>{text}</Button>
+            <Button onPress={onClick} variant="solid" className={`${bgColor} text-white`}>{text}</Button>
         </>
     )
 }
