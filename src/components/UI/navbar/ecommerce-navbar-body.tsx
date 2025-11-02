@@ -55,7 +55,7 @@ const EcommerceNavbarBody: React.FC<EcommerceNavbarProps> = ({ user }) => {
                     </NavbarContent>
                 </NavbarItem>
             </Navbar>
-            <div className={'pb-40 bg-slate-50 dark:bg-customDarkBg'} />
+            <div className={' bg-slate-50 dark:bg-customDarkBg'} />
         </>
     );
 }

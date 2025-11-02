@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build_anyways": "NEXT_IGNORE_TYPE_ERRORS=true next build --no-lint",
     "start": "next start",
     "lint": "next lint"
   },

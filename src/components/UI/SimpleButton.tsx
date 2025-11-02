@@ -1,9 +1,18 @@
 import { Button } from "@heroui/react"
 
-const SimpleButton: React.FC<{text:string, bgColor: string, onClick: () => void}> = ({text, bgColor, onClick}) => {
+interface SimpleButtonProps {
+  text: string;
+  bgColor: string;
+  onClick: () => void;
+  disabled?: boolean;
+}
+
+const SimpleButton: React.FC<SimpleButtonProps> = ({text, bgColor, onClick, disabled}) => {
     return (
         <>
-            <Button onPress={onClick} variant="solid" className={`${bgColor} text-white`}>{text}</Button>
+            <Button onPress={onClick} variant="solid" className={`${bgColor} text-white`} isDisabled={disabled}>
+                {text}
+            </Button>
         </>
     )
 }

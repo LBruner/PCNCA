@@ -32,7 +32,7 @@ export default function RootLayout(
                     <Suspense fallback={<div></div>}>
                         <CustomNavbar />
                     </Suspense>
-                    <div className="flex flex-col h-screen pt-32">
+                    <div className="flex flex-col h-screen">
                         {children}
                         <CustomFooter />
                     </div>

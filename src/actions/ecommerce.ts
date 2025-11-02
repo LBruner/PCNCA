@@ -1,5 +1,5 @@
 'use server';
-import {Prisma} from "@prisma/client";
+import {Estoque, Prisma} from "@prisma/client";
 import {db} from "@/db";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/app/AuthOptions";
@@ -46,3 +46,15 @@ export const pegaComprasUsuario = async (): Promise<TransacaoComVenda[]> => {
 
   return transacoes;
 }
+
+export const pegaProdutosPorCategoria = async (categoria: string): Promise<Estoque[]> => {
+    return db.estoque.findMany({
+      where: { 
+        tipo: categoria,
+        quantidade: {
+          gt: 0
+        },
+        ativo: true
+       }
+    });
+};

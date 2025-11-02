@@ -1,8 +1,10 @@
-import {pegaTodosProdutos} from "@/actions/produto";
+import { pegaTodosProdutos } from "@/actions/produto";
 import ProdutosLista from "@/components/ecommerce/produtos/lista/ecommerceProdutosLista";
-import {mainList} from "@/constants";
+import { mainList } from "@/constants";
 import React from "react";
 import ProdutosSlider from "@/components/ecommerce/produtos/lista/ecommercerProdutosSlider";
+import Link from "next/link";
+import Image from "next/image";
 
 const EcommercePage: React.FC = async _ => {
     const todosProdutos = await pegaTodosProdutos();
@@ -19,16 +21,21 @@ const EcommercePage: React.FC = async _ => {
                 </p>
 
                 <div className={'w-9/12 flex gap-6 justify-center'}>
-                    <ProdutosLista productList={mainList}/>
+                {
+                    mainList.map((produto) => <Link key={produto.produto} href={produto.url} className="flex flex-col gap-2">
+                        <Image className={`max-h-[20.4rem]`} width={300} height={50} alt={produto.produto} src={produto.imagemLink!} />
+                        <p className="text-center text-lg font-semibold dark:text-green-600 text-green-800">{produto.produto}</p>
+                    </Link>)
+                }  
                 </div>
             </div>
 
-            <div className="w-full flex flex-col gap-8 items-center justify-center py-8 bg-white dark:bg-slate-800">
+            <div className="w-full flex flex-col gap-8 items-center justify-center py-8 bg-white dark:bg-customDarkBg">
                 <p className="text-4xl font-bold text-slate-900 dark:text-white">
                     Sementes de Flores Exclusivas
                 </p>
                 <div className="w-8/12 grid grid-cols-6 grid-rows-2 gap-4">
-                    <ProdutosLista productList={seedsProducts}/>
+                    <ProdutosLista productList={seedsProducts} />
                 </div>
             </div>
 
@@ -37,21 +44,21 @@ const EcommercePage: React.FC = async _ => {
                     Flores Vibrantes que Encantam o Ano Todo
                 </p>
                 <p className="w-9/12 text-white text-center">
-                    Dê vida ao seu jardim com nossas sementes de flores premium, selecionadas para garantir 
-                    floradas abundantes e duradouras. Cores intensas, perfumes irresistíveis e plantas robustas 
-                    que transformam qualquer espaço em um refúgio natural. Cada semente é uma promessa de beleza 
+                    Dê vida ao seu jardim com nossas sementes de flores premium, selecionadas para garantir
+                    floradas abundantes e duradouras. Cores intensas, perfumes irresistíveis e plantas robustas
+                    que transformam qualquer espaço em um refúgio natural. Cada semente é uma promessa de beleza
                     e renovação para seu lar!
                 </p>
             </div>
 
-            <ProdutosSlider productList={seedsProducts.slice(0, 8)}/>
+            <ProdutosSlider productList={seedsProducts.slice(0, 8)} />
 
-            <div className="w-full flex flex-col gap-8 items-center justify-center py-8 bg-slate-100 dark:bg-slate-900">
+            <div className="w-full flex flex-col gap-8 items-center justify-center py-8 bg-slate-100 dark:bg-customDarkBg">
                 <p className="text-4xl font-bold text-slate-900 dark:text-white">
                     Sementes de Frutas Selecionadas
                 </p>
                 <div className="w-8/12 grid grid-cols-6 grid-rows-2 gap-4">
-                    <ProdutosLista productList={seedsProducts}/>
+                    <ProdutosLista productList={seedsProducts} />
                 </div>
             </div>
 
@@ -60,13 +67,13 @@ const EcommercePage: React.FC = async _ => {
                     Colha Frutas Frescas Direto do Seu Quintal
                 </p>
                 <p className="w-9/12 text-white text-center">
-                    Sabor incomparável, qualidade garantida e economia na sua mesa! Nossas sementes de frutas 
-                    são certificadas com alta taxa de germinação, perfeitas para hortas caseiras, varandas ou 
-                    pequenos espaços. Cultive morangos suculentos, tomates doces e muito mais. Experimente a 
+                    Sabor incomparável, qualidade garantida e economia na sua mesa! Nossas sementes de frutas
+                    são certificadas com alta taxa de germinação, perfeitas para hortas caseiras, varandas ou
+                    pequenos espaços. Cultive morangos suculentos, tomates doces e muito mais. Experimente a
                     satisfação de colher e saborear frutas 100% naturais cultivadas por você!
                 </p>
             </div>
-            <ProdutosSlider productList={seedsProducts.slice(0, 8)}/>
+            <ProdutosSlider productList={seedsProducts.slice(0, 8)} />
         </div>
     )
 }

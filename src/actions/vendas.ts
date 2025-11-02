@@ -564,8 +564,9 @@ export type ItemCarrinho = {
 
 export type CriarVendaInput = {
   itens: ItemCarrinho[];
-  compradorId?: number; // ID da pessoa que está comprando (se houver)
+  compradorId?: number; 
   observacoes?: string;
+  empresaId?: number;
 };
 
 export async function criarVendaPendente(input: CriarVendaInput): Promise<number> {
@@ -593,7 +594,7 @@ export async function criarVendaPendente(input: CriarVendaInput): Promise<number
   const venda = await db.venda.create({
     data: {
       usuarioId: userId!,
-      empresaId: user?.empresaId!,
+      empresaId: input?.empresaId!,
       comprador: false, 
       status: 'PENDENTE',
       valorTotal,

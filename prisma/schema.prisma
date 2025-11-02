@@ -153,7 +153,7 @@ model Estoque {
   id                 Int      @id @default(autoincrement()) @map("estoque_id")
   produto            String   @db.VarChar(50)
   categoriaculturaId Int?
-  tipo               String   @db.VarChar(1)
+  tipo               String   @db.VarChar(255)
   descricao          String   @db.VarChar(2000)
   quantidade         Float    @map("qtd")
   preco              Float
@@ -194,10 +194,14 @@ model EstoqueReview {
   comment      String   @db.Text
   reviewerName String   @map("reviewer_name") @db.VarChar(100)
   createdAt    DateTime @default(now()) @map("created_at")
+  usuarioId    String   @map("usuario_id")
 
   estoque Estoque @relation(fields: [estoqueId], references: [id], onDelete: Cascade)
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@index([estoqueId])
+  @@index([usuarioId])
+  @@unique([estoqueId, usuarioId])
 }
 
 model FormaPagamento {
@@ -314,6 +318,7 @@ model Usuario {
   empresa      Empresa?           @relation(fields: [empresaId], references: [id])
   transacoes   Transacao[]
   Venda        Venda[]
+  reviews      EstoqueReview[]
 }
 
 model Venda {

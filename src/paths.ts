@@ -41,6 +41,9 @@ const paths = {
     ecommerce() {
         return `/ecommerce`;
     },
+    ecommerceCategoria(categoria: string) {
+        return `/ecommerce/categorias/${categoria}`;
+    },
     minhasCompras() {
         return `/ecommerce/minhas-compras`;
     },
