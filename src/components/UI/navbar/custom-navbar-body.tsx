@@ -63,7 +63,7 @@ const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({ user }) => {
                     <NavbarContent className={'flex justify-end w-full'}>
                         <div className={' justify-center flex items-center gap-5'}>
                             <ThemeButton />
-                            <CartButton />
+                            {!isCompany && user && <CartButton />}
                             <div className="flex items-center gap-4">
                             </div>
                             <CustomUserCard user={user} />

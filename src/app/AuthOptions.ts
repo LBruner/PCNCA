@@ -2,6 +2,7 @@ import {NextAuthOptions} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import {PrismaAdapter} from "@next-auth/prisma-adapter";
 import {PrismaClient} from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -23,15 +24,21 @@ export const authOptions: NextAuthOptions = {
                     where: { email: credentials.email }
                 });
 
-                if (user?.alterarSenha) {
+                if (!user || user.inativado) {
+                    return null;
+                }
+
+                if (user.alterarSenha) {
                     return user;
                 }
 
-                if (user && user.senha === credentials.password && !user.inativado) {
-                    return user;
+                const senhaValida = await bcrypt.compare(credentials.password, user.senha);
+
+                if (!senhaValida) {
+                    return null;
                 }
 
-                return null;
+                return user;
             }
         })
     ],

@@ -1,23 +1,26 @@
 'use client';
 
-import React, {useState, useRef} from 'react';
-import {Button, Spinner} from "@heroui/react";
-import {MdOutlineMailOutline, MdPassword} from "react-icons/md";
+import React, { useState, useRef, useEffect } from 'react';
+import { Button, Spinner } from "@heroui/react";
+import { MdOutlineMailOutline, MdPassword } from "react-icons/md";
 import Image from "next/image";
-import {validarLogin} from "@/actions/login";
-import {signIn} from "next-auth/react";
+import { validarLogin } from "@/actions/login";
+import { signIn } from "next-auth/react";
 import FormErrorText from "@/components/UI/form/form-error-text";
 import RegisterFormInput from "@/components/UI/form/register-form-input";
 import Link from "next/link";
 import paths from "@/paths";
+import { useCart } from '@/app/context/CartContext';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [errors, setErrors] = useState<{[key: string]: string[]}>({});
+    const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
+    const { clearCart } = useCart();
 
     const formRef = useRef<HTMLFormElement>(null);
+    useEffect(() => { clearCart() }, [])
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -64,7 +67,7 @@ function LoginPage() {
     // Clear specific field error when the field value changes
     const clearFieldError = (fieldName: string) => {
         if (errors[fieldName]) {
-            const newErrors = {...errors};
+            const newErrors = { ...errors };
             delete newErrors[fieldName];
             setErrors(newErrors);
         }
@@ -88,7 +91,7 @@ function LoginPage() {
                                     setEmail(e.target.value);
                                     clearFieldError('email');
                                 }}
-                                endContent={<MdOutlineMailOutline size={18}/>}
+                                endContent={<MdOutlineMailOutline size={18} />}
                             />
                             <RegisterFormInput
                                 name={'senha'}
@@ -102,11 +105,11 @@ function LoginPage() {
                                     setPassword(e.target.value);
                                     clearFieldError('senha');
                                 }}
-                                endContent={<MdPassword size={18}/>}
+                                endContent={<MdPassword size={18} />}
                             />
                         </div>
                         {errors._form && errors._form.length > 0 ? (
-                            <FormErrorText errors={errors._form}/>
+                            <FormErrorText errors={errors._form} />
                         ) : null}
                         <div className="w-1/3">
                             <Button
@@ -125,8 +128,8 @@ function LoginPage() {
                 </div>
             </div>
             <div className="w-2/5 relative">
-                <div className="absolute inset-0" style={{backgroundImage: `url('/images/login_background.jpg')`}}>
-                    <Image src={'/images/login_background.jpg'} objectFit="cover" fill={true} alt={'field plantation'}/>
+                <div className="absolute inset-0" style={{ backgroundImage: `url('/images/login_background.jpg')` }}>
+                    <Image src={'/images/login_background.jpg'} objectFit="cover" fill={true} alt={'field plantation'} />
                 </div>
             </div>
         </div>

@@ -104,6 +104,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Limpar carrinho
   const clearCart = useCallback(() => {
     setItems([]);
+    localStorage.removeItem(CART_STORAGE_KEY);
   }, []);
 
   // Verificar se item está no carrinho

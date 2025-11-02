@@ -3,6 +3,7 @@
 import {z} from "zod";
 import {db} from "@/db";
 import {Empresa, Prisma} from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 export interface CreateUserProps {
     errors: {
@@ -51,13 +52,17 @@ export async function validarCadastro(_: CreateUserProps, formData: FormData): P
     }
 
     try {
+        const senhaHash = await bcrypt.hash(result.data.senha, 10);
+        const cpfNumerico = result.data.cpf.replace(/\D/g, "");
+        const cpfHash = await bcrypt.hash(cpfNumerico, 10);
+
         await db.usuario.create({
             data: {
                 nome: result.data.nome,
-                cpf: result.data.cpf,
+                cpf: cpfHash,
                 ...(result.data.empresa && { empresaId: result.data.empresa }),
                 email: result.data.email,
-                senha: result.data.senha,
+                senha: senhaHash,
             }
         });
 

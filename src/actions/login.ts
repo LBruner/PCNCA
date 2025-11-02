@@ -28,6 +28,37 @@ export async function validarLogin(formState: LoginProps, formData: FormData): P
         }
     }
 
+    try {
+        const verifyResponse = await fetch('/api/auth/check-credentials', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: result.data.email,
+                password: result.data.senha,
+            }),
+        });
+
+        if (!verifyResponse.ok) {
+            const payload = await verifyResponse.json().catch(() => ({}));
+            const message = typeof payload?.message === 'string' ? payload.message : 'Email ou senha inválidos';
+
+            return {
+                errors: {
+                    _form: [message],
+                },
+            };
+        }
+    } catch (error) {
+        console.error('Erro ao verificar credenciais:', error);
+        return {
+            errors: {
+                _form: ['Não foi possível validar as credenciais. Tente novamente.'],
+            },
+        };
+    }
+
     const response = await signIn('credentials', {
         redirect: false,
         email: result.data.email,
