@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { pegaDetalhesProduto } from "@/actions/estoques";
 import ProdutoDetalhes from "@/components/ecommerce/produto/detalhes/ProdutoDetalhes";
-import { Estoque } from "@prisma/client";
 
 interface ShowProductPageProps {
   params: Promise<{ produto: string }>;
@@ -9,7 +8,7 @@ interface ShowProductPageProps {
 
 export default async function ShowProductPage({ params }: ShowProductPageProps) {
   const { produto: produtoId } = await params;
-  const produto: Estoque | null = await pegaDetalhesProduto(produtoId);
+  const produto = await pegaDetalhesProduto(produtoId);
 
   if (!produto) {
     notFound();

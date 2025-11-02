@@ -1,14 +1,14 @@
-import type {Metadata} from "next";
-import {Inter} from "next/font/google";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "@/app/providers";
-import React, {Suspense} from "react";
+import React, { Suspense } from "react";
 import CustomNavbar from "@/components/UI/navbar/CustomNavbar";
 import ScrollToTop from "@/components/UI/scroll-to-top";
 import AdmNavbar from "@/components/adm/adm-navbar";
 import CustomFooter from "@/components/UI/footer/custom-footer";
 
-const inter = Inter({subsets: ["latin"]});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "PCNCA",
@@ -23,22 +23,22 @@ export default function RootLayout(
     }>) {
 
     return (
-        <html className={'dark:bg-black bg-slate-50 h-screen'}  lang="en">
-        <body className={`${inter.className} bg-slate-50 dark:bg-customDarkBg`}>
-        <Providers>
-            <Suspense fallback={<div></div>}>
-                <AdmNavbar/>
-            </Suspense>
-            <Suspense fallback={<div></div>}>
-                <CustomNavbar/>
-            </Suspense>
-            <div className="flex flex-col">
-                {children}
-            </div>
-            <ScrollToTop/>
-            {/* <CustomFooter/> */}
-        </Providers>
-        </body>
+        <html className={'bg-slate-50 dark:bg-customDarkBg'} lang="pt-br">
+            <body>
+                <Providers>
+                    <Suspense fallback={<div></div>}>
+                        <AdmNavbar />
+                    </Suspense>
+                    <Suspense fallback={<div></div>}>
+                        <CustomNavbar />
+                    </Suspense>
+                    <div className="flex flex-col h-screen pt-32">
+                        {children}
+                        <CustomFooter />
+                    </div>
+                    <ScrollToTop />
+                </Providers>
+            </body>
         </html>
     );
 }

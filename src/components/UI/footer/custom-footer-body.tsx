@@ -28,7 +28,7 @@ const CustomFooterBody: React.FC<CustomFooterProps> = ({culturas,}) => {
     }
 
     return (
-        <footer className="shadow mt-12 pt-14 bg-green-900 dark:bg-customDarkFooter text-white py-10 px-5">
+        <footer className="shadow py-14 bg-green-900 dark:bg-customDarkFooter text-white px-5">
             <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
                 {/* Logo and Social Section */}
                 <div className="space-y-4">
@@ -46,19 +46,19 @@ const CustomFooterBody: React.FC<CustomFooterProps> = ({culturas,}) => {
                     </div>
                     <div className="text-sm space-y-2">
                         <div>
-                            <a href="#" className="hover:underline">Termos de uso</a> |
-                            <a href="#" className="hover:underline"> Privacidade</a>
+                            <a href="#" className="hover:underline text-white">Termos de uso</a> |
+                            <a href="#" className="hover:underline text-white"> Privacidade</a>
                         </div>
                         <p>2024, Todos os direitos reservados</p>
                     </div>
                 </div>
                 {/* Culturas Section */}
                 <div className="space-y-4">
-                    <h2 className="text-xl font-semibold">Culturas</h2>
+                    <h2 className="text-xl font-semibold text-white">Culturas</h2>
                     <ul className="space-y-2">
                         {culturas.map((cultura) => (
                             <li key={cultura.culturaId}>
-                                <Link href={paths.getCultura(cultura.culturaId)}>{cultura.nome}</Link>
+                                <Link href={paths.getCultura(cultura.culturaId)}><p className="text-white">{cultura.nome}</p></Link>
                             </li>
                         ))}
                     </ul>

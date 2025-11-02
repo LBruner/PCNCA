@@ -3,7 +3,7 @@
 import { authOptions } from "@/app/AuthOptions";
 import { db } from "@/db";
 import paths from "@/paths";
-import { Cultura, Estoque } from "@prisma/client";
+import { Cultura, Empresa, Estoque } from "@prisma/client";
 import { getServerSession, Session } from "next-auth";
 import { redirect } from "next/navigation";
 import { pegaUsuario } from "./usuarios";
@@ -53,11 +53,18 @@ export const pegaUmEstoque = async (estoqueId: number): Promise<EstoqueComCultur
     )
 }
 
-export const pegaDetalhesProduto = async (produtoId: string): Promise<Estoque | null> => {
+export type EstoqueComEmpresa = Estoque & {
+    empresa: Empresa | null;
+}
+
+export const pegaDetalhesProduto = async (produtoId: string): Promise<EstoqueComEmpresa | null> => {
     return db.estoque.findUnique(
         {
             where: {
                 id: Number(produtoId),
+            },
+            include: {
+                empresa: true,
             }
         }
     )

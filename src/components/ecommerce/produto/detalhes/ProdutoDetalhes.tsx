@@ -9,9 +9,10 @@ import { Estoque } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import paths from "@/paths";
+import { EstoqueComEmpresa } from "@/actions/estoques";
 
 interface ShowProductPageProps {
-    product: Estoque
+    product: EstoqueComEmpresa
 }
 
 const ProdutoDetalhes: React.FC<ShowProductPageProps> = ({ product }) => {
@@ -106,7 +107,7 @@ const ProdutoDetalhes: React.FC<ShowProductPageProps> = ({ product }) => {
     const averageRating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
 
     return (
-        <div className={'w-full flex flex-col items-center justify-center dark:bg-slate-900'}>
+        <div className={'w-full pt-12 flex flex-col items-center justify-center dark:bg-slate-900'}>
             <div className={'w-8/12 flex justify-center gap-16 items-center'}>
                 <div className={'h-auto'}>
                     <Image
@@ -126,7 +127,7 @@ const ProdutoDetalhes: React.FC<ShowProductPageProps> = ({ product }) => {
                     </p>
                     <div className="flex items-center gap-2 py-2">
                         <p className="text-sm text-gray-600 dark:text-slate-400">Vendido Por:</p>
-                        <p className="font-semibold text-gray-800 dark:text-slate-200">{product.empresaId || 'Garden Seeds Co.'}</p>
+                        <p className="font-semibold text-gray-800 dark:text-slate-200">{product?.empresa?.nome || 'Garden Seeds Co.'}</p>
                     </div>
                     <div className={'flex flex-col gap-2'}>
                         <p className="text-sm font-light text-gray-600 dark:text-slate-400">Quantidade</p>

@@ -72,7 +72,6 @@ const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({ user }) => {
                 </NavbarItem>
 
             </Navbar>
-            <div className={'pb-40 bg-slate-50 dark:bg-customDarkBg'} />
         </>
     );
 }
