@@ -38,7 +38,8 @@ async function ensureOwnership(reviewId: number, userId: string) {
   return {review};
 }
 
-export async function PATCH(request: Request, {params}: {params: {reviewId: string}}) {
+export async function PATCH(request: Request, props: {params: Promise<{reviewId: string}>}) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
@@ -75,7 +76,8 @@ export async function PATCH(request: Request, {params}: {params: {reviewId: stri
   return NextResponse.json(updated);
 }
 
-export async function DELETE(_: Request, {params}: {params: {reviewId: string}}) {
+export async function DELETE(_: Request, props: {params: Promise<{reviewId: string}>}) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {

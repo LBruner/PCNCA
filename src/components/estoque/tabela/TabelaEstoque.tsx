@@ -240,7 +240,7 @@ const TabelaEstoque: React.FC<TabelaEstoqueProps> = ({estoques, categoriesCollec
             default:
                 return <h1>Implementar</h1>;
         }
-    }, [deleteProductModal, enableProductModal, disableProductModal]);
+    }, [deleteProductModal, enableProductModal, disableProductModal, isShowingToast]);
 
     const onSearchChange = React.useCallback((value: string | null) => {
         if (value) {

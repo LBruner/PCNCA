@@ -56,7 +56,7 @@ const ProdutoDetalhes: React.FC<ProdutoDetalhesProps> = ({ product, initialRevie
             setRating(0);
             setComment("");
         }
-    }, [currentUserId, existingReview?.id, existingReview?.rating, existingReview?.comment]);
+    }, [currentUserId, existingReview?.id, existingReview?.rating, existingReview?.comment, existingReview]);
 
     const onChangeQuantity = (newQuantity: number) => {
         if (newQuantity <= 0) return;

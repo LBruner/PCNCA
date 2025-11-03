@@ -68,6 +68,7 @@ const TradingViewAdvancedChartWidget: React.FC<TradingViewChartWidgetProps> = (
         };
     }, [
         symbol,
+        showSymbol,
         interval,
         timezone,
         theme,

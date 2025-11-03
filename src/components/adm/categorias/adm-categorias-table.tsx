@@ -175,7 +175,7 @@ const AdmCategoriasTable: React.FC<AdmCategoriasTable> = ({culturas}) => {
             default:
                 return <h1>Implementar</h1>;
         }
-    }, [deleteModal, editModal, previewModal]);
+    }, [deleteModal, editModal, previewModal, isShowingToast]);
 
 
     const onSearchChange = React.useCallback((value: string | null) => {

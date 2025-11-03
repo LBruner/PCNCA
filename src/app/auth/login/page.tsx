@@ -20,7 +20,7 @@ function LoginPage() {
     const { clearCart } = useCart();
 
     const formRef = useRef<HTMLFormElement>(null);
-    useEffect(() => { clearCart() }, [])
+    useEffect(() => { clearCart() }, [clearCart])
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

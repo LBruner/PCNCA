@@ -77,7 +77,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
 
         if (empresaFilter !== "all" && Array.from(empresasFilterCollection).length !== empresaFilter.length) {
             filteredProducts = filteredProducts.filter((usuario) => {
-                    return Array.from(empresaFilter).includes(usuario.empresa.nome!);
+                    return Array.from(empresaFilter).includes(usuario.empresa?.nome!);
                 }
             );
         }
@@ -131,7 +131,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
             case "empresa":
                 return (
                     <p>
-                        {usuario.empresa.nome}
+                        {usuario.empresa?.nome}
                     </p>
                 );
             case "actions":
@@ -176,7 +176,7 @@ const TabelaUsuarios: React.FC<TabelaUsuariosProps> = ({usuarios, empresasFilter
             default:
                 return <h1>Implementar</h1>;
         }
-    }, [deleteUserModal, resetPasswordModal]);
+    }, [deleteUserModal, resetPasswordModal, disableUserModal, enableUserModal]);
 
 
     const onSearchChange = React.useCallback((value: string | null) => {

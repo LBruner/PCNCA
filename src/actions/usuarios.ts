@@ -1,24 +1,24 @@
 'use server';
 
-import {db} from "@/db";
-import {getServerSession} from "next-auth";
-import {Empresa, HistoricoEstoque, Usuario} from "@prisma/client";
-import {revalidatePath} from "next/cache";
+import { db } from "@/db";
+import { getServerSession } from "next-auth";
+import { Empresa, HistoricoEstoque, Usuario } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import paths from "@/paths";
-import {authOptions} from "@/app/AuthOptions";
+import { authOptions } from "@/app/AuthOptions";
 
-export type UsuarioComEmpresa = Usuario & { empresa: Empresa }
-export type UsuarioComEmpresaEstoque = Usuario & { empresa: Empresa } & {historicos: HistoricoEstoque[]}
+export type UsuarioComEmpresa = Usuario & { empresa: Empresa | null }
+export type UsuarioComEmpresaEstoque = Usuario & { empresa: Empresa | null } & { historicos: HistoricoEstoque[] }
 
 export const pegaTodosUsuarios = async (): Promise<UsuarioComEmpresaEstoque[]> => {
     const session = await getServerSession(authOptions)
     if (!session?.user?.email) return [];
 
     const usuarioLogado = await db.usuario.findFirst({
-        where: {email: session.user.email},
+        where: { email: session.user.email },
     });
 
-    return db.usuario.findMany({
+    const data = db.usuario.findMany({
         where: {
             empresaId: usuarioLogado?.empresaId,
             id: {
@@ -28,8 +28,10 @@ export const pegaTodosUsuarios = async (): Promise<UsuarioComEmpresaEstoque[]> =
         orderBy: {
             nome: 'asc'
         },
-        include: {empresa: true, historicos: true}
+        include: { empresa: true, historicos: true }
     });
+
+    return data;
 }
 
 export const pegaUsuario = async (): Promise<UsuarioComEmpresa | null> => {
@@ -38,8 +40,8 @@ export const pegaUsuario = async (): Promise<UsuarioComEmpresa | null> => {
     if (!session?.user?.email) return null;
 
     return db.usuario.findFirst({
-        where: {email: session.user.email},
-        include: {empresa: true}
+        where: { email: session.user.email },
+        include: { empresa: true }
     });
 }
 
@@ -51,7 +53,7 @@ export const alterarSenha = async (novaSenha: string): Promise<void> => {
     const id = session.user.id;
 
     await db.usuario.update({
-        where: {id: id},
+        where: { id: id },
         data: {
             senha: novaSenha,
             alterarSenha: false,
@@ -61,7 +63,7 @@ export const alterarSenha = async (novaSenha: string): Promise<void> => {
 
 export const resetarSenha = async (idUsuario: string): Promise<void> => {
     await db.usuario.update({
-        where: {id: idUsuario},
+        where: { id: idUsuario },
         data: {
             alterarSenha: true,
         }
@@ -73,7 +75,7 @@ export const resetarSenha = async (idUsuario: string): Promise<void> => {
 export const deletarUsuario = async (idUsuario: string): Promise<void> => {
     await db.usuario.delete(
         {
-            where: {id: idUsuario},
+            where: { id: idUsuario },
         }
     );
 
@@ -83,7 +85,7 @@ export const deletarUsuario = async (idUsuario: string): Promise<void> => {
 export const desativarUsuario = async (idUsuario: string): Promise<void> => {
     await db.usuario.update(
         {
-            where: {id: idUsuario},
+            where: { id: idUsuario },
             data: {
                 inativado: true
             }
@@ -96,7 +98,7 @@ export const desativarUsuario = async (idUsuario: string): Promise<void> => {
 export const reativarUsuario = async (idUsuario: string): Promise<void> => {
     await db.usuario.update(
         {
-            where: {id: idUsuario},
+            where: { id: idUsuario },
             data: {
                 inativado: false
             }

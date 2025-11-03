@@ -43,15 +43,6 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({ clientes }) => {
         unidadeMedida: item.unidadeMedida,
     }));
 
-    useEffect(() => {
-        const checkoutIsOpen = selectedKeys.has("2");
-        const canGeneratePreference = shippingValue !== null;
-
-        if (checkoutIsOpen && canGeneratePreference && !preferenceId && !isCreatingPreference && selectedProducts.length > 0) {
-            createPreference();
-        }
-    }, [selectedKeys, preferenceId, isCreatingPreference, selectedProducts.length, shippingValue]);
-
     const createPreference = async () => {
         if (shippingValue === null) return;
 
@@ -84,6 +75,15 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({ clientes }) => {
             setIsCreatingPreference(false);
         }
     }
+
+     useEffect(() => {
+        const checkoutIsOpen = selectedKeys.has("2");
+        const canGeneratePreference = shippingValue !== null;
+
+        if (checkoutIsOpen && canGeneratePreference && !preferenceId && !isCreatingPreference && selectedProducts.length > 0) {
+            createPreference();
+        }
+    }, [selectedKeys, preferenceId, isCreatingPreference, selectedProducts.length, shippingValue, createPreference]);
 
     useEffect(() => {
         if (shippingValue === null) {

@@ -18,7 +18,8 @@ const selectUsuario = {
   },
 };
 
-export async function GET(_: Request, {params}: {params: {produtoId: string}}) {
+export async function GET(_: Request, props: {params: Promise<{produtoId: string}>}) {
+  const params = await props.params;
   const produtoId = Number(params.produtoId);
 
   if (!Number.isFinite(produtoId)) {
@@ -36,7 +37,8 @@ export async function GET(_: Request, {params}: {params: {produtoId: string}}) {
   return NextResponse.json(reviews);
 }
 
-export async function POST(request: Request, {params}: {params: {produtoId: string}}) {
+export async function POST(request: Request, props: {params: Promise<{produtoId: string}>}) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
