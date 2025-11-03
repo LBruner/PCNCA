@@ -55,6 +55,60 @@ const statusConfig: Record<string, {bg: string; text: string; label: string}> = 
   },
 };
 
+const normalizeShippingValue = (value: Prisma.JsonValue | undefined): number | null => {
+  if (typeof value === "number" && !Number.isNaN(value)) {
+    return value;
+  }
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isNaN(parsed) ? null : parsed;
+  }
+  return null;
+};
+
+const extractShippingCost = (metadata: TransacaoComVenda["metadata"]): number | null => {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) {
+    return null;
+  }
+
+  const jsonMetadata = metadata as Prisma.JsonObject;
+
+  const nestedMetadata =
+    jsonMetadata.metadata && typeof jsonMetadata.metadata === "object" && !Array.isArray(jsonMetadata.metadata)
+      ? (jsonMetadata.metadata as Prisma.JsonObject)
+      : undefined;
+
+  const shipmentsObject =
+    jsonMetadata.shipments && typeof jsonMetadata.shipments === "object" && !Array.isArray(jsonMetadata.shipments)
+      ? (jsonMetadata.shipments as Prisma.JsonObject)
+      : undefined;
+
+  const nestedShipments =
+    nestedMetadata?.shipments && typeof nestedMetadata.shipments === "object" && !Array.isArray(nestedMetadata.shipments)
+      ? (nestedMetadata.shipments as Prisma.JsonObject)
+      : undefined;
+
+  const candidates = [
+    jsonMetadata.shippingCost,
+    jsonMetadata.shipping_cost,
+    jsonMetadata.shipping_amount,
+    nestedMetadata?.shippingCost,
+    nestedMetadata?.shipping_cost,
+    nestedMetadata?.shipping_amount,
+    shipmentsObject?.cost,
+    nestedShipments?.cost,
+  ];
+
+  for (const candidate of candidates) {
+    const normalized = normalizeShippingValue(candidate);
+    if (normalized !== null) {
+      return normalized;
+    }
+  }
+
+  return null;
+};
+
 const extractItems = (metadata: TransacaoComVenda["metadata"]): MetadataItem[] => {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return [];
 
@@ -147,6 +201,14 @@ const MinhasComprasPage = async () => {
               const venda = transacao.venda;
               const produtosVenda: VendaProduto[] = venda?.estoques ?? [];
               const statusInfo = getStatusConfig(transacao.status);
+              const shippingCost = extractShippingCost(transacao.metadata);
+              const valorLiquidoBase =
+                typeof transacao.valorLiquido === "number" && !Number.isNaN(transacao.valorLiquido)
+                  ? transacao.valorLiquido
+                  : null;
+              const valorLiquidoComFrete =
+                (valorLiquidoBase ?? 0) + (typeof shippingCost === "number" ? shippingCost : 0);
+              const mostrarValorLiquido = valorLiquidoBase !== null || typeof shippingCost === "number";
 
               return (
                 <article
@@ -166,8 +228,16 @@ const MinhasComprasPage = async () => {
                           </span>
                         </div>
                         <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
-                          {currencyFormatter.format(transacao.valorTotal)}
+                          {currencyFormatter.format(valorLiquidoComFrete)}
                         </h2>
+                        {typeof shippingCost === "number" && (
+                          <p className="text-sm text-slate-500 dark:text-slate-400">
+                            Frete:{" "}
+                            <span className="font-semibold text-slate-900 dark:text-white">
+                              {currencyFormatter.format(shippingCost)}
+                            </span>
+                          </p>
+                        )}
                         <p className="text-sm text-slate-500 dark:text-slate-400">
                           {dateFormatter.format(transacao.dataCriacao)}
                         </p>
@@ -215,8 +285,8 @@ const MinhasComprasPage = async () => {
                           Valor Líquido
                         </dt>
                         <dd className="text-sm font-medium text-slate-900 dark:text-white">
-                          {transacao.valorLiquido
-                            ? currencyFormatter.format(transacao.valorLiquido)
+                          {mostrarValorLiquido
+                            ? currencyFormatter.format(valorLiquidoComFrete)
                             : "—"}
                         </dd>
                       </div>
@@ -326,7 +396,7 @@ const MinhasComprasPage = async () => {
                                     )}
                                     {estoqueDetalhes?.unidadeMedida && (
                                       <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
-                                        {estoqueDetalhes.unidadeMedida}
+                                        {estoqueDetalhes.unidadeMedida === 'pct' ? 'Pacote': estoqueDetalhes.unidadeMedida}
                                       </span>
                                     )}
                                   </div>

@@ -51,6 +51,7 @@ export const pegaProdutosPorCategoria = async (categoria: string): Promise<Estoq
     return db.estoque.findMany({
       where: { 
         tipo: categoria,
+        categoriaculturaId: 5000,
         quantidade: {
           gt: 0
         },

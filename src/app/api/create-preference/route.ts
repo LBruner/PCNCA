@@ -85,7 +85,11 @@ export async function POST(req: Request) {
     // 4. CRIAR PREFERÊNCIA DO MERCADOPAGO COM TODOS OS ITEMS
     // Mas salvar metadata com múltiplas vendas
     const preference = new Preference(client);
-
+    
+    const parsedShippingCost =
+      typeof shippingCost === "number" && !Number.isNaN(shippingCost)
+        ? shippingCost
+        : 0;
     const preferenceData: any = {
       items: items.map((item: any) => ({
         id: item.id?.toString(),
@@ -122,13 +126,11 @@ export async function POST(req: Request) {
         vendas_ids: vendasCriadas.map(v => v.vendaId),
         empresas_ids: vendasCriadas.map(v => v.empresaId),
         created_at: new Date().toISOString(),
+        shipping_cost: parsedShippingCost,
       },
     };
 
-    const parsedShippingCost =
-      typeof shippingCost === "number" && !Number.isNaN(shippingCost)
-        ? shippingCost
-        : 0;
+
 
     if (parsedShippingCost > 0) {
       preferenceData.shipments = {

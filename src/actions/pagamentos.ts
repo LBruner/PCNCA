@@ -130,7 +130,8 @@ export async function CheckoutSuccessPage(searchParams: SearchParams): Promise<a
       valorTotal: true,
       pagadorEmail: true,
       mercadoPagoPaymentId: true,
-      status: true
+      status: true,
+      metadata: true,
     },
     orderBy: {
       id: 'desc'
@@ -150,8 +151,54 @@ export async function CheckoutSuccessPage(searchParams: SearchParams): Promise<a
     }))
   }));
 
+  const normalizeShippingValue = (value: unknown): number | null => {
+    if (typeof value === 'number' && !Number.isNaN(value)) {
+      return value;
+    }
+    if (typeof value === 'string') {
+      const parsed = Number(value);
+      return Number.isNaN(parsed) ? null : parsed;
+    }
+    return null;
+  };
+
+  let shippingCost: number | null = null;
+
+  if (transacao && transacao.metadata && typeof transacao.metadata === 'object' && !Array.isArray(transacao.metadata)) {
+    const metadata = transacao.metadata as Record<string, any>;
+    const nestedMetadata = metadata?.metadata && typeof metadata.metadata === 'object' && !Array.isArray(metadata.metadata)
+      ? metadata.metadata as Record<string, any>
+      : null;
+
+    const shippingCostCandidates = [
+      metadata?.shippingCost,
+      metadata?.shipping_cost,
+      nestedMetadata?.shippingCost,
+      nestedMetadata?.shipping_cost,
+      metadata?.shipments && typeof metadata.shipments === 'object' && !Array.isArray(metadata.shipments)
+        ? (metadata.shipments as Record<string, any>)?.cost
+        : null,
+      metadata?.shipping_amount,
+    ];
+
+    shippingCost =
+      shippingCostCandidates
+        .map(normalizeShippingValue)
+        .find((value): value is number => value !== null) ?? null;
+  }
+
+  const transacaoFormatada = transacao
+    ? {
+        id: transacao.id,
+        valorTotal: transacao.valorTotal,
+        pagadorEmail: transacao.pagadorEmail || undefined,
+        mercadoPagoPaymentId: transacao.mercadoPagoPaymentId,
+        shippingCost: shippingCost ?? undefined,
+      }
+    : undefined;
+
   return {
     vendas: vendasFormatadas,
-    transacao: transacao || undefined
+    transacao: transacaoFormatada
   };
 }

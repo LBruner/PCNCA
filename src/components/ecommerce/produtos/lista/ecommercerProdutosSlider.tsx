@@ -5,6 +5,7 @@ import { Estoque } from "@prisma/client";
 import { Button } from "@heroui/react";
 import Image from "next/image";
 import { formatToBrazilianCurrency } from "@/helpers";
+import { useCart } from "@/app/context/CartContext";
 
 interface Props {
   productList: Estoque[];
@@ -17,6 +18,7 @@ const ProdutosSlider: React.FC<Props> = ({ productList }) => {
   const WINDOW_SIZE = 4; 
   const total = productList.length;
   const [index, setIndex] = useState(0);
+  const { incrementItem } = useCart();
 
   const handlePrevious = () => {
     if (index > 0) setIndex(index - 1);
@@ -24,6 +26,20 @@ const ProdutosSlider: React.FC<Props> = ({ productList }) => {
 
   const handleNext = () => {
     if (index < total - WINDOW_SIZE) setIndex(index + 1);
+  };
+
+  const handleAddToCart = (product: Estoque) => {
+    incrementItem(
+      {
+        id: product.id,
+        produto: product.produto,
+        preco: product.preco,
+        imagemLink: product.imagemLink ?? undefined,
+        empresaId: product.empresaId ?? undefined,
+        unidadeMedida: product.unidadeMedida ?? undefined,
+      },
+      1
+    );
   };
 
   return (
@@ -63,7 +79,10 @@ const ProdutosSlider: React.FC<Props> = ({ productList }) => {
                           {formatToBrazilianCurrency(prod.preco)}
                         </p>
                       </div>
-                      <Button className="p-6 bg-green-800 dark:bg-green-700 text-white hover:bg-green-900 dark:hover:bg-green-800 transition-colors">
+                      <Button
+                        className="p-6 bg-green-800 dark:bg-green-700 text-white hover:bg-green-900 dark:hover:bg-green-800 transition-colors"
+                        onClick={() => handleAddToCart(prod)}
+                      >
                         Adicionar ao carrinho
                       </Button>
                     </div>

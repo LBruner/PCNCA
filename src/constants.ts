@@ -12,22 +12,22 @@ export const shouldHideFooterPaths = [
 export const mainList = [
     {
         produto: 'Sementes Agrícolas',
-        url: paths.ecommerceCategoria('agricola'),
+        url: paths.ecommerceCategoria('Agricola'),
         imagemLink: '/images/corn-plantation.png',
     },
     {
         produto: 'Sementes de Horta',
-        url: paths.ecommerceCategoria('horta'),
+        url: paths.ecommerceCategoria('Horta'),
         imagemLink: '/images/1.jpg',
     },
     {
         produto: 'Sementes de Frutíferas',
-        url: paths.ecommerceCategoria('frutifera'),
+        url: paths.ecommerceCategoria('Frutifera'),
         imagemLink: '/images/image.jpg',
     },
     {
         produto: 'Sementes de Flores',
-        url: paths.ecommerceCategoria('flor'),
+        url: paths.ecommerceCategoria('Flor'),
         imagemLink: 'https://www.parkseed.com/cdn/shop/files/Product_MediaImage_04930-PK-P1_1.jpg',
     },
 ]

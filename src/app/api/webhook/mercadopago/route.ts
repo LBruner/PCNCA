@@ -52,6 +52,30 @@ export async function POST(req: Request) {
 
     console.log("Detalhes do pagamento:", result);
 
+    const metadataPayload = (result as any)?.metadata as Record<string, unknown> | undefined;
+    const normalizeShippingValue = (value: unknown): number | null => {
+      if (typeof value === "number" && !Number.isNaN(value)) {
+        return value;
+      }
+      if (typeof value === "string") {
+        const parsed = Number(value);
+        return Number.isNaN(parsed) ? null : parsed;
+      }
+      return null;
+    };
+
+    const shippingCostCandidates = [
+      metadataPayload?.["shipping_cost"],
+      metadataPayload?.["shippingCost"],
+      (result as any)?.shipments?.cost,
+      (result as any)?.shipping_amount,
+    ];
+
+    const shippingCost =
+      shippingCostCandidates
+        .map(normalizeShippingValue)
+        .find((value): value is number => value !== null) ?? null;
+
     const externalRef = result.external_reference;
     let vendasIds: number[] = [];
     let isMultipleVendors = false;
@@ -121,7 +145,12 @@ export async function POST(req: Request) {
               ? new Date(result.date_approved) 
               : new Date(),
           }),
-          metadata: result as any,
+          metadata: {
+            ...(result as any),
+            vendasIds,
+            isMultipleVendors,
+            shippingCost,
+          },
         },
       });
 
@@ -177,6 +206,7 @@ export async function POST(req: Request) {
             ...result as any,
             vendasIds, // Adicionar array de vendas ao metadata
             isMultipleVendors,
+            shippingCost,
           },
         },
       });

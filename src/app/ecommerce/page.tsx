@@ -8,7 +8,9 @@ import Image from "next/image";
 
 const EcommercePage: React.FC = async _ => {
     const todosProdutos = await pegaTodosProdutos();
-    const seedsProducts = todosProdutos.filter((produto) => produto.categoriaculturaId === 5000);
+    const sementesHorta = todosProdutos.filter((produto) => produto.categoriaculturaId === 5000 && produto.tipo === 'Horta').slice(0,12);
+    const sementesFlores = todosProdutos.filter((produto) => produto.categoriaculturaId === 5000 && produto.tipo === 'Flor').slice(0,12);
+    const sementesFrutiferas = todosProdutos.filter((produto) => produto.categoriaculturaId === 5000 && produto.tipo === 'Frutifera').slice(0,12);
 
     return (
         <div className="w-full flex flex-col items-center justify-center">
@@ -30,12 +32,37 @@ const EcommercePage: React.FC = async _ => {
                 </div>
             </div>
 
+            {/* SEÇÃO HORTA */}
             <div className="w-full flex flex-col gap-8 items-center justify-center py-8 bg-white dark:bg-customDarkBg">
+                <p className="text-4xl font-bold text-slate-900 dark:text-white">
+                    Sementes de Horta Selecionadas
+                </p>
+                <div className="w-8/12 grid grid-cols-6 grid-rows-2 gap-4">
+                    <ProdutosLista productList={sementesHorta} />
+                </div>
+            </div>
+
+            <div className="w-full flex flex-col gap-4 justify-center items-center py-14 bg-green-900 dark:bg-green-950">
+                <p className="text-white text-xl text-center font-bold">
+                    Cultive Alimentos Frescos e Saudáveis em Casa
+                </p>
+                <p className="w-9/12 text-white text-center">
+                    Monte sua horta caseira com nossas sementes de alta qualidade e germinação garantida. 
+                    Alfaces crocantes, tomates suculentos, temperos aromáticos e muito mais! Economize no 
+                    supermercado enquanto garante alimentos 100% orgânicos e livres de agrotóxicos para sua 
+                    família. Cultivar nunca foi tão fácil e recompensador!
+                </p>
+            </div>
+
+            <ProdutosSlider productList={sementesHorta.slice(0, 8)} />
+
+            {/* SEÇÃO FLORES */}
+            <div className="w-full flex flex-col gap-8 items-center justify-center py-8 bg-slate-100 dark:bg-customDarkBg">
                 <p className="text-4xl font-bold text-slate-900 dark:text-white">
                     Sementes de Flores Exclusivas
                 </p>
                 <div className="w-8/12 grid grid-cols-6 grid-rows-2 gap-4">
-                    <ProdutosLista productList={seedsProducts} />
+                    <ProdutosLista productList={sementesFlores} />
                 </div>
             </div>
 
@@ -50,15 +77,15 @@ const EcommercePage: React.FC = async _ => {
                     e renovação para seu lar!
                 </p>
             </div>
+            <ProdutosSlider productList={sementesFlores.slice(0, 8)} />
 
-            <ProdutosSlider productList={seedsProducts.slice(0, 8)} />
-
+            {/* SEÇÃO FRUTÍFERAS */}
             <div className="w-full flex flex-col gap-8 items-center justify-center py-8 bg-slate-100 dark:bg-customDarkBg">
                 <p className="text-4xl font-bold text-slate-900 dark:text-white">
-                    Sementes de Frutas Selecionadas
+                    Sementes de Frutíferas Selecionadas
                 </p>
                 <div className="w-8/12 grid grid-cols-6 grid-rows-2 gap-4">
-                    <ProdutosLista productList={seedsProducts} />
+                    <ProdutosLista productList={sementesFrutiferas} />
                 </div>
             </div>
 
@@ -67,15 +94,14 @@ const EcommercePage: React.FC = async _ => {
                     Colha Frutas Frescas Direto do Seu Quintal
                 </p>
                 <p className="w-9/12 text-white text-center">
-                    Sabor incomparável, qualidade garantida e economia na sua mesa! Nossas sementes de frutas
-                    são certificadas com alta taxa de germinação, perfeitas para hortas caseiras, varandas ou
-                    pequenos espaços. Cultive morangos suculentos, tomates doces e muito mais. Experimente a
-                    satisfação de colher e saborear frutas 100% naturais cultivadas por você!
+                    Sabor incomparável, qualidade garantida e economia na sua mesa! Nossas sementes de frutíferas
+                    são certificadas com alta taxa de germinação, perfeitas para pomares caseiros e jardins
+                    produtivos. Cultive árvores frutíferas saudáveis e colha frutas deliciosas por anos a fio.
+                    Experimente a satisfação de saborear frutas 100% naturais cultivadas por você!
                 </p>
             </div>
-            <ProdutosSlider productList={seedsProducts.slice(0, 8)} />
+            <ProdutosSlider productList={sementesFrutiferas.slice(0, 8)} />
         </div>
     )
 }
-
 export default EcommercePage;

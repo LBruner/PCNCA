@@ -3,14 +3,13 @@ import ProdutosCategoria from "@/components/ecommerce/categorias/ProdutosCategor
 import { notFound } from "next/navigation";
 
 interface ShowProductByCategoryPageProps {
-    params: Promise<{ estoque: string }>;
+    params: Promise<{ categoria: string }>;
 }
 
 const page: React.FC<ShowProductByCategoryPageProps> = async ({ params }) => {
-    const { estoque } = await params;
+    const { categoria } = await params;
 
-    const produtosCategoria = await pegaProdutosPorCategoria(estoque);
-console.log(produtosCategoria)
+    const produtosCategoria = await pegaProdutosPorCategoria(categoria);
     if (!produtosCategoria) {
         return notFound();
     }
