@@ -15,7 +15,7 @@ const CriarVendasPage: React.FC = async () => {
     }
 
     return (
-        <div className={'h-svh'}>
+        <div className="pt-6 pb-12 dark:bg-customDarkBg">
             <CriarVendaForm clientes={clientes}/>
         </div>
     )

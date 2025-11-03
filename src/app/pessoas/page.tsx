@@ -27,7 +27,7 @@ const PessoasPage: React.FC = async _ => {
     })
 
     return (
-        <div className={'flex justify-center'}>
+        <div className={'flex justify-center pt-6 pb-12 dark:bg-customDarkBg'}>
             <ToastProvider placement={'top-right'} maxVisibleToasts={1} toastOffset={80}/>
             <TabelaPessoas pessoas={pessoas}
                            categoryFilterCollection={[{name: 'Física', uid: '1'}, {name: 'Jurídica', uid: '2'}]}

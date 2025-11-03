@@ -1,23 +1,22 @@
-import React from "react";
-import {Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Tooltip} from "@heroui/react";
-import {SearchIcon} from "@heroui/shared-icons";
+import { EstoqueComCultura } from "@/actions/estoques";
 import TopContentDropDown from "@/components/estoque/tabela/top-content-dropdown";
-import {priceOptions, statusOptions, stockOptions} from "@/models/estoque/filters";
-import Link from "next/link";
+import { formatToBrazilianCurrency } from "@/helpers";
+import { priceOptions, statusOptions, stockOptions } from "@/models/estoque/filters";
+import { FilterCollection } from "@/models/shared/FilterCollection";
 import paths from "@/paths";
-import {FilterCollection} from "@/models/shared/FilterCollection";
-import {MdOutlineSell} from "react-icons/md";
-import {FaCirclePlus} from "react-icons/fa6";
-import {useRouter} from "next/navigation";
-import {EstoqueComCultura} from "@/actions/estoques";
+import { Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from "@heroui/react";
+import { SearchIcon } from "@heroui/shared-icons";
 import ExcelJS from "exceljs";
-import {saveAs} from "file-saver";
+import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import {PiPrinterFill} from "react-icons/pi";
-import {RiFileExcel2Line} from "react-icons/ri";
-import {FaRegFilePdf} from "react-icons/fa";
-import {formatarData, formatToBrazilianCurrency} from "@/helpers";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { FaRegFilePdf } from "react-icons/fa";
+import { FaCirclePlus } from "react-icons/fa6";
+import { PiPrinterFill } from "react-icons/pi";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 interface TabelaTopContentProps {
     categoriesOptions: FilterCollection[]
@@ -165,16 +164,6 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
                         />
                     </div>
                     <div className="flex gap-1 ">
-                        <Tooltip color={'foreground'}
-                                 content={`${selectedItems.length === 0 ? 'Selecione produtos para criar uma venda' : 'Criar venda com produtos selecionados'}`}>
-                            {
-                                <Button onPress={handleNewSale} variant={'flat'}
-                                        disabled={selectedItems.length === 0} color={'primary'} className={'w-52'}
-                                        startContent={<MdOutlineSell size={20}/>}>
-                                    Criar Venda
-                                </Button>
-                            }
-                        </Tooltip>
                         <Link href={paths.createProduto()}>
                             <Button className={'w-56'} variant={'flat'} color={'warning'}
                                     startContent={<FaCirclePlus size={20}/>}>
@@ -232,7 +221,8 @@ const TabelaEstoquesTopContent: React.FC<TabelaTopContentProps> = (
         setStockFilter,
         selectedItems,
         imprimirExcel,
-        imprimirPDF
+        imprimirPDF,
+        handleNewSale
     ]))
 }
 

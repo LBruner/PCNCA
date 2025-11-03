@@ -10,14 +10,14 @@ interface CulturaPageBodyProps {
 
 const CulturaPageBody: React.FC<CulturaPageBodyProps> = ({culturas}) => {
     return (
-        <>
+        <div className="pt-6 pb-12 dark:bg-customDarkBg">
             <CustomBreadcumbs breadcumbs={
                 [{title: 'Todas Notícias', href: paths.noticias()}, {title: 'Todas Culturas', href: paths.culturas()}]
             }/>
             <div className={'w-full flex justify-center'}>
                 <CulturaList culturas={culturas}/>
             </div>
-        </>
+        </div>
     )
 }
 

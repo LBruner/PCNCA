@@ -15,7 +15,7 @@ const EstoquePage: React.FC = async _ => {
 
     return (
         <div>
-            <div className={'flex flex-col justify-center items-center'}>
+            <div className={'flex flex-col justify-center items-center pt-6 pb-12 dark:bg-customDarkBg'}>
                 <ToastProvider placement={'top-right'} toastProps={{size: 'lg'}} maxVisibleToasts={2} toastOffset={80}/>
                 <TabelaEstoque estoques={produtosEstoque} categoriesCollection={categorias}/>
             </div>

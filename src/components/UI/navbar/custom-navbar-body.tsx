@@ -72,6 +72,7 @@ const CustomNavbarBody: React.FC<CustomNavbarBodyProps> = ({ user }) => {
                 </NavbarItem>
 
             </Navbar>
+            <div className={'pt-[7rem]'} />
         </>
     );
 }

@@ -47,7 +47,7 @@ const getBreadcumbs = (fromPage: string) => {
 const ShowNoticiaPageBody: React.FC<ShowNoticiaPageBodyProps> = ({content, noticiasRelacionadas, from}) => {
 
     return (
-        <>
+        <div className="pt-6 pb-12 dark:bg-customDarkBg">
             <CustomBreadcumbs breadcumbs={getBreadcumbs(from!)}/>
             <div className={'flex justify-center flex-col items-center'}>
                 <div className={'w-2/3'}>
@@ -98,7 +98,7 @@ const ShowNoticiaPageBody: React.FC<ShowNoticiaPageBodyProps> = ({content, notic
                     </div>}
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

@@ -38,7 +38,7 @@ const MaisNoticiasList: React.FC<MaisNoticiasListProps> = ({noticias}) => {
     }, [currentPage]);
 
     return (
-        <div>
+        <div className="pt-6 pb-12 dark:bg-customDarkBg">
             <CustomBreadcumbs breadcumbs={[
                 {
                     title: 'Todas Notícias',

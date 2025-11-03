@@ -30,7 +30,7 @@ const ProdutoForm: React.FC<ProdutoFormProps> = ({ formState, action, estoque, c
     return (
         <form action={formData => {
             action(formData);
-        }} className={'flex flex-col justify-center items-center'}>
+        }} className={'flex flex-col justify-center items-center pt-6 pb-12 dark:bg-customDarkBg'}>
             <div className={'w-5/6 flex justify-between mb-4 items-center'}>
                 <p className={'text-2xl font-semibold'}>Criar Produto</p>
                 <Button type={'submit'}>{estoque ? 'Editar' : 'Criar'} Produto</Button>

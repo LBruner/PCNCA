@@ -18,12 +18,9 @@ interface TradingViewWidgetProps {
 const TradingViewWidget: React.FC<TradingViewWidgetProps> = (
     {
         symbols = [
-            ['BMFBOVESPA:JBSS3|1D'],
-            ['BMFBOVESPA:BEEF3|1D'],
-            ['BMFBOVESPA:BRFS3|1D'],
-            ['BMFBOVESPA:SMTO3|1D'],
-            ['BMFBOVESPA:MRFG3|1D'],
             ['BMFBOVESPA:RAIZ4|1D'],
+            ['BMFBOVESPA:BEEF3|1D'],
+            ['BMFBOVESPA:SMTO3|1D'],
             ['BMFBOVESPA:SLCE3|1D'],
             ['BMFBOVESPA:TTEN3|1D'],
             ['BMFBOVESPA:KEPL3|1D'],
@@ -78,7 +75,7 @@ const TradingViewWidget: React.FC<TradingViewWidgetProps> = (
                 containerRef.current.innerHTML = ''; // Cleanup on unmount
             }
         };
-    }, [symbols, chartOnly, locale, autosize, showVolume, width, height, resolvedTheme]); // Add resolvedTheme as a dependency
+    }, [symbols, chartOnly, locale, autosize, showVolume, width, height, resolvedTheme, timezone]); // Add resolvedTheme as a dependency
 
     return (
         <div className="tradingview-widget-container" ref={containerRef} style={{ height: '100%', width: '100%' }}>

@@ -114,7 +114,7 @@ const MinhasComprasPage = async () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
+    <div className="h-auto bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 pt-6 pb-12 dark:bg-customDarkBg">
       <div className="mx-auto max-w-6xl px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12">
         <div className="mb-8 space-y-2">
           <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">

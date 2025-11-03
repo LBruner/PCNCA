@@ -247,7 +247,7 @@ const VendasPageBody: React.FC<VendasPageBodyProps> = ({clientes, vendas, produt
 
     return (
         <>
-            <div className={'flex flex-col w-full gap-1 min-h-[800px]'}>
+            <div className={'flex flex-col w-full gap-1 pt-6 pb-12 dark:bg-customDarkBg'}>
                 <div className={'flex justify-between items-center'}>
                     <div className={'flex flex-col w-full gap-4 justify-start pl-24'}>
                         <p className={'text-3xl font-bold'}>Dashboard de Vendas</p>

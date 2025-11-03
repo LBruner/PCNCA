@@ -22,7 +22,7 @@ const MoedasPageBody: React.FC<MoedasPageBodyProps> = ({moedas}) => {
     const [selectedInterval, setSetselectedInterval] = useState<ChartInterval>(intervals[1]);
 
     return (
-        <div className={'flex flex-col items-center'}>
+        <div className={'flex flex-col items-center pt-6 pb-12 dark:bg-customDarkBg'}>
             <div className={'mb-8 flex flex-col items-center justify-start'}>
                 <p className={'text-3xl font-bold'}>Cotações de moedas</p>
                 <p className={'text-lg text-gray-500'}>Compare o valor das moedas estrangeiras</p>

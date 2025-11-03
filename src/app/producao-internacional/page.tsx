@@ -8,7 +8,7 @@ const ClimaPage: React.FC = _ => {
     const [selectedProduct, setSelectedProduct] = useState<ProductionProduct>(productionProducts[0]);
 
     return (
-        <div className={'overflow-hidden px-20 flex gap-4 flex-col w-full h-full justify-center'}>
+        <div className={'overflow-hidden px-20 flex gap-4 flex-col w-full h-full justify-center pt-6 pb-12 dark:bg-customDarkBg'}>
             <ProductionProductPicker selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct}/>
             <div className={'dark:invert h-[890px] w-full relative overflow-hidden  mb-[-105px]'}>
                 <iframe
