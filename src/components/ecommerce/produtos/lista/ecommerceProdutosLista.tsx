@@ -6,13 +6,23 @@ interface ProdutosListaProps {
     productList: Estoque[]
 }
 
+const BASE_DELAY = 0.10;
+
 const ProdutosLista: React.FC<ProdutosListaProps> = ({ productList }) => {
     return (
         <>
             {
-                productList.map((produto) => <div key={produto.id} >
-                    <ProdutosItem produto={produto} />
-                </div>)
+                productList.map((produto, index) => {
+                    const delay = index * BASE_DELAY;
+
+                    return (
+                        <ProdutosItem
+                            key={produto.id}
+                            produto={produto}
+                            animationDelay={delay}
+                        />
+                    );
+                })
             }
         </>
     );

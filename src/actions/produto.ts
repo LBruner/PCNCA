@@ -183,12 +183,17 @@ async function handleFormSubmission(formData: FormData, createOrUpdate: CreateOr
 export const pegaTodosProdutosQueVenderam = async (): Promise<Estoque[]> => {
     return db.estoque.findMany({
         where: {
-            historicos: {
+            transacaoItens: {
                 some: {
-                    comprador: false
+                    transacao: {
+                        status: {
+                            in: ["approved", "PAGO"],
+                        },
+                    },
                 },
             },
         },
+        distinct: ["id"],
     });
 };
 

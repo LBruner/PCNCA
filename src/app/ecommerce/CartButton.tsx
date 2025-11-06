@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function CartButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,17 +28,29 @@ export default function CartButton() {
 
   const cartSidebar = (
     <>
-      {isOpen && (
-        <>
-          {/* Overlay */}
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            key="overlay"
+            className="fixed inset-0 z-40 bg-black"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
             onClick={() => setIsOpen(false)}
           />
+        )}
+      </AnimatePresence>
 
-          <div
-            className={`fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-gray-800 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'
-              }`}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            key="panel"
+            className="fixed top-0 right-0 z-50 h-full w-full max-w-md transform bg-white shadow-2xl dark:bg-gray-800"
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
           >
             <div className="flex flex-col h-full">
               {/* Header */}
@@ -185,9 +198,9 @@ export default function CartButton() {
                 </div>
               )}
             </div>
-          </div>
-        </>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 

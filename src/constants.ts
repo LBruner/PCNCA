@@ -16,7 +16,7 @@ export const mainList = [
         imagemLink: '/images/corn-plantation.png',
     },
     {
-        produto: 'Sementes de Horta',
+        produto: 'Sementes de Horticultura',
         url: paths.ecommerceCategoria('Horta'),
         imagemLink: '/images/1.jpg',
     },
@@ -28,7 +28,7 @@ export const mainList = [
     {
         produto: 'Sementes de Flores',
         url: paths.ecommerceCategoria('Flor'),
-        imagemLink: 'https://www.parkseed.com/cdn/shop/files/Product_MediaImage_04930-PK-P1_1.jpg',
+        imagemLink: 'https://assets.eflorist.com/site/EF-5303/Homepage/event%20flowers.jpg',
     },
 ]
 

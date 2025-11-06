@@ -92,7 +92,7 @@ const ProdutosCategoria: React.FC<ProdutosCategoriaProps> = ({ estoques }) => {
   }
 
   return (
-    <div className="w-full bg-gradient-to-b from-white via-lime-50/60 to-white pb-20 dark:from-slate-950 dark:via-emerald-950/60 dark:to-slate-950">
+    <div className="w-full dark:bg-customDarkBg">
       <div className="mx-auto w-full max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
         <section className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-r from-lime-100 via-emerald-50 to-emerald-100 px-6 py-11 shadow-sm dark:border-emerald-900/60 dark:from-emerald-950 dark:via-emerald-900 dark:to-emerald-950 sm:px-12">
           <span className="absolute -left-20 top-24 h-40 w-40 rounded-full bg-lime-300/40 blur-3xl dark:bg-emerald-700/40" />

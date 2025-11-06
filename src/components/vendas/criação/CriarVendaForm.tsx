@@ -8,9 +8,9 @@ import NoData from "@/components/UI/NoData";
 import CriarVendaCheckout from "@/components/vendas/criação/CriarVendaCheckout";
 import CriarVendaSeletorProdutos from "@/components/vendas/criação/CriarVendaSeletorProdutos";
 import { Accordion, AccordionItem, Divider, Spinner } from "@heroui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BsChevronLeft } from "react-icons/bs";
-import FreteCalculator from "./FreteCalculator";
+import FreteCalculator, { FreteCalculatorState } from "./FreteCalculator";
 
 interface CriarVendaFormProps {
     clientes: CategoriaPessoaComEmpresa[];
@@ -29,6 +29,11 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({ clientes }) => {
     const [isCreatingPreference, setIsCreatingPreference] = useState(false);
     const [shippingValue, setShippingValue] = useState<number | null>(null);
     const [lastPreferenceShippingValue, setLastPreferenceShippingValue] = useState<number | null>(null);
+    const freteStateRef = useRef<FreteCalculatorState | null>(null);
+
+    const handleFreteStateChange = useCallback((state: FreteCalculatorState) => {
+        freteStateRef.current = state;
+    }, []);
 
     // Converter items do carrinho para o formato esperado
     const selectedProducts = items.map(item => ({
@@ -153,7 +158,13 @@ const CriarVendaForm: React.FC<CriarVendaFormProps> = ({ clientes }) => {
                     >
                         <Divider />
                         <div className="py-6">
-                            <FreteCalculator shippingValue={shippingValue} setShippingValue={setShippingValue} openCheckoutAccordion={() => setSelectedKeys(new Set(['2']))} />
+                            <FreteCalculator
+                                shippingValue={shippingValue}
+                                setShippingValue={setShippingValue}
+                                openCheckoutAccordion={() => setSelectedKeys(new Set(['2']))}
+                                initialState={freteStateRef.current}
+                                onStateChange={handleFreteStateChange}
+                            />
                         </div>
                     </AccordionItem>
                     <AccordionItem

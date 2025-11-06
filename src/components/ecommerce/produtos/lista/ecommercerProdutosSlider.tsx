@@ -81,7 +81,7 @@ const ProdutosSlider: React.FC<Props> = ({ productList }) => {
                       </div>
                       <Button
                         className="p-6 bg-green-800 dark:bg-green-700 text-white hover:bg-green-900 dark:hover:bg-green-800 transition-colors"
-                        onClick={() => handleAddToCart(prod)}
+                        onPress={() => handleAddToCart(prod)}
                       >
                         Adicionar ao carrinho
                       </Button>

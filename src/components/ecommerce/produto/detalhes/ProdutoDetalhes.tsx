@@ -32,7 +32,7 @@ const ProdutoDetalhes: React.FC<ProdutoDetalhesProps> = ({ product, initialRevie
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const { incrementItem } = useCart();
+    const { addItem, getItemQuantity } = useCart();
     const router = useRouter();
     const { data: session, status } = useSession();
     const currentUserId = session?.user?.id ?? null;
@@ -64,17 +64,19 @@ const ProdutoDetalhes: React.FC<ProdutoDetalhesProps> = ({ product, initialRevie
     };
 
     const handleAddToCart = () => {
-        incrementItem(
+        const nextQuantity = getItemQuantity(product.id) + quantity;
+
+        addItem(
             {
                 id: product.id,
                 produto: product.produto,
                 preco: product.preco,
-                imagemLink: product.imagemLink!,
+                imagemLink: product.imagemLink ?? undefined,
                 empresaId: product.empresaId,
                 vendorName: product.empresa?.nome ?? undefined,
                 unidadeMedida: product.unidadeMedida,
             },
-            quantity,
+            nextQuantity,
         );
     };
 
