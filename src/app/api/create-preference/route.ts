@@ -109,7 +109,7 @@ export async function POST(req: Request) {
       back_urls: {
         success: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?vendas=${vendasCriadas.map(v => v.vendaId).join(',')}`,
         failure: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/failure?vendas=${vendasCriadas.map(v => v.vendaId).join(',')}`,
-        pending: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/pending?vendas=${vendasCriadas.map(v => v.vendaId).join(',')}`,
+        pending: `${process.env.NEXT_PUBLIC_APP_URL}/ecommerce`
       },
 
       auto_return: "approved",

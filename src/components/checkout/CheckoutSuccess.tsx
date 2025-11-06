@@ -249,7 +249,7 @@ const CheckoutSuccess: React.FC<CheckoutSuccessProps> = ({ vendas, transacao }) 
             <ArrowRight className="w-5 h-5" />
           </button>
           <button 
-            onClick={() => window.location.href = '/loja'}
+            onClick={() => window.location.href = '/ecommerce'}
             className="flex items-center justify-center gap-2 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 px-6 py-4 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
           >
             Continuar Comprando

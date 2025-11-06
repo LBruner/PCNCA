@@ -1,17 +1,19 @@
 'use client';
 
-import React, {useEffect, useState} from "react";
-import {usePathname} from "next/navigation";
-import {FaEnvelope, FaFacebook, FaInstagram, FaLinkedin, FaTwitter, FaYoutube} from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { FaEnvelope, FaFacebook, FaInstagram, FaLinkedin, FaTwitter, FaYoutube } from "react-icons/fa";
 import Link from "next/link";
 import paths from "@/paths";
-import {Cultura} from "@prisma/client";
-import {shouldHideFooterPaths} from "@/constants";
+import { Cultura } from "@prisma/client";
+import { shouldHideFooterPaths } from "@/constants";
+import { UsuarioComEmpresa } from "@/actions/usuarios";
 
-interface CustomFooterProps{
+interface CustomFooterProps {
     culturas: Cultura[],
+    user?: UsuarioComEmpresa | null;
 }
-const CustomFooterBody: React.FC<CustomFooterProps> = ({culturas,}) => {
+const CustomFooterBody: React.FC<CustomFooterProps> = ({ culturas, user }) => {
     const pathname = usePathname();
     const [mounted, setMounted] = useState(false);
 
@@ -23,9 +25,11 @@ const CustomFooterBody: React.FC<CustomFooterProps> = ({culturas,}) => {
         return null;
     }
 
-    if(shouldHideFooterPaths.some((path) => pathname.includes(path))){
+    if (shouldHideFooterPaths.some((path) => pathname.includes(path))) {
         return null;
     }
+
+    const isCompany = user?.empresaId != null;
 
     return (
         <footer className="shadow py-14 bg-green-900 dark:bg-customDarkFooter text-white px-5">
@@ -36,12 +40,12 @@ const CustomFooterBody: React.FC<CustomFooterProps> = ({culturas,}) => {
                     <div>
                         <p className="text-lg font-semibold">Conecte-se conosco.</p>
                         <div className="flex space-x-4 my-2">
-                            <FaFacebook className="hover:text-blue-500 cursor-pointer"/>
-                            <FaInstagram className="hover:text-pink-500 cursor-pointer"/>
-                            <FaLinkedin className="hover:text-blue-700 cursor-pointer"/>
-                            <FaTwitter className="hover:text-blue-400 cursor-pointer"/>
-                            <FaYoutube className="hover:text-red-600 cursor-pointer"/>
-                            <FaEnvelope className="hover:text-gray-400 cursor-pointer"/>
+                            <FaFacebook className="hover:text-blue-500 cursor-pointer" />
+                            <FaInstagram className="hover:text-pink-500 cursor-pointer" />
+                            <FaLinkedin className="hover:text-blue-700 cursor-pointer" />
+                            <FaTwitter className="hover:text-blue-400 cursor-pointer" />
+                            <FaYoutube className="hover:text-red-600 cursor-pointer" />
+                            <FaEnvelope className="hover:text-gray-400 cursor-pointer" />
                         </div>
                     </div>
                     <div className="text-sm space-y-2">
@@ -71,15 +75,21 @@ const CustomFooterBody: React.FC<CustomFooterProps> = ({culturas,}) => {
                         <li>
                             <Link href={paths.noticias()}>Notícias</Link>
                         </li>
-                        <li>
-                            <Link href={paths.vendas()}>Vendas</Link>
-                        </li>
+                        {
+                            isCompany && <li>
+                                <Link href={paths.vendas()}>Vendas</Link>
+                            </li>
+                        }
+
                         <li>
                             <Link href={paths.cotacoesMoedas()}>Cotações</Link>
                         </li>
-                        <li>
-                            <Link href={paths.estoque()}>Estoque</Link>
-                        </li>
+                        {
+                            isCompany && <li>
+                                <Link href={paths.estoque()}>Estoque</Link>
+                            </li>
+                        }
+
                         <li>
                             <Link href={paths.prodInternacional()}>Prod. Internacional</Link>
                         </li>
